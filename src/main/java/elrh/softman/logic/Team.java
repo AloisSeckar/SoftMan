@@ -19,12 +19,24 @@ public class Team {
         return battingOrder[order];
     }
     
-    public LineupPosition getFielder(Position position) {
-        LineupPosition ret = null;
+    public Player getFielder(int order) {
+        Player ret = null;
+        
+        LineupPosition pos = battingOrder[order];
+        if (pos != null) {
+            ret = pos.getPlayer();
+        }
+        
+        return ret;
+    }
+    
+    public Player getFielder(Position position) {
+        Player ret = null;
         
         for (int i = 0; i < 10; i++) {
-            if (battingOrder[i].getPosition() == position) {
-                ret = battingOrder[i];
+            LineupPosition pos = battingOrder[i];
+            if (pos != null && pos.getPosition() == position) {
+                ret = pos.getPlayer();
                 break;
             }
         }

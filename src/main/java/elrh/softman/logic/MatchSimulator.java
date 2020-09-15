@@ -31,11 +31,11 @@ public class MatchSimulator {
             System.out.println("INNING " + inning);
 
             System.out.println("TOP");
-            simulateInning(true, awayTeam);
+            simulateInning(true);
             getScore();
 
             System.out.println("BOTTOM");
-            simulateInning(false, homeTeam);
+            simulateInning(false);
             getScore();
 
             inning++;
@@ -45,23 +45,54 @@ public class MatchSimulator {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    private static void simulateInning(boolean top, Team team) {
+    private static void simulateInning(boolean top) {
+        Player pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
+        
+        System.out.println("PITCHER: " + pitcher.toString() + " (" + pitcher.getPitchingSkill() + ")");
+        
         int outs = 0;
         while (outs < 3) {
             LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
-            if (random.nextBoolean()) {
-                if (random.nextBoolean()) {
-                    System.out.println(batter + " SCORED");
-                    if (top) {
-                        awayPoints++;
+            if (batter != null) {
+                
+                System.out.println("BATTER: " + batter.getPlayer().toString() + " (" + batter.getPlayer().getBattingSkill() + ")");
+                
+                int pitchQuality = pitcher.getPitchingSkill() + random.nextInt(100);
+                int hitQuality = batter.getPlayer().getBattingSkill() + random.nextInt(100);
+                
+                System.out.println(pitchQuality + " vs. " + hitQuality);
+                
+                if (hitQuality >= pitchQuality) {
+                    if (hitQuality - pitchQuality > 50) {
+                        System.out.println(batter + " SCORED");
+                        if (top) {
+                            awayPoints++;
+                        } else {
+                            homePoints++;
+                        }
                     } else {
-                        homePoints++;
+                        
+                        int randomLocation = random.nextInt(9);
+                        Player fielder = top ? homeTeam.getFielder(randomLocation) : awayTeam.getFielder(randomLocation);
+                        
+                        if (fielder != null) {
+                            int fieldingQuality = fielder.getFieldingSkill()+ random.nextInt(100);
+                            if (hitQuality >= fieldingQuality) {
+                                System.out.println(batter + " reached");
+                            } else {
+                                System.out.println(batter + " is OUT");
+                                outs++;
+                            }
+                        } else {
+                            System.out.println(batter + " reached");
+                        }
                     }
                 } else {
-                    System.out.println(batter + " reached");
+                    System.out.println(batter + " is OUT");
+                    outs++;
                 }
             } else {
-                System.out.println(batter + " is OUT");
+                System.out.println("Position not filled => OUT");
                 outs++;
             }
 
