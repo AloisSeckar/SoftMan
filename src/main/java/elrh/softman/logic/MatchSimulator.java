@@ -5,6 +5,9 @@ import java.util.Random;
 public class MatchSimulator {
 
     private static final Random random = new Random();
+    
+    private static int inning;
+    private static boolean top;
 
     private static Team awayTeam;
     private static int awayPoints;
@@ -26,32 +29,38 @@ public class MatchSimulator {
         
         System.out.println("GAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() );
 
-        int inning = 1;
-        while (inning < 8 || homePoints == awayPoints) {
-            System.out.println("INNING " + inning);
+        top = true;
+        inning = 1;
+        while (playNextInning()) {
+            System.out.println("\n\nINNING " + inning);
 
-            System.out.println("TOP");
-            simulateInning(true);
+            System.out.println("\n\nTOP");
+            simulateInning();
             getScore();
 
-            System.out.println("BOTTOM");
-            simulateInning(false);
-            getScore();
+            top = false;
+            if (continueInning()) {
+                System.out.println("\n\nBOTTOM");
+                simulateInning();
+                getScore();
+            }
 
+            System.out.println("\n\nINNING " + inning);
             inning++;
+            top = true;
         }
 
-        System.out.println("GAME OVER");
+        System.out.println("\n\nGAME OVER");
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    private static void simulateInning(boolean top) {
+    private static void simulateInning() {
         Player pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         
         System.out.println("PITCHER: " + pitcher.toString() + " (" + pitcher.getPitchingSkill() + ")");
         
         int outs = 0;
-        while (outs < 3) {
+        while ((top || continueInning()) && outs < 3) {
             LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
             if (batter != null) {
                 
@@ -63,7 +72,7 @@ public class MatchSimulator {
                 System.out.println(pitchQuality + " vs. " + hitQuality);
                 
                 if (hitQuality >= pitchQuality) {
-                    if (hitQuality - pitchQuality > 50) {
+                    if (hitQuality - pitchQuality > 25) {
                         System.out.println(batter + " SCORED");
                         if (top) {
                             awayPoints++;
@@ -111,8 +120,42 @@ public class MatchSimulator {
     }
 
     private static void getScore() {
-        System.out.println(awayTeam.getName() + ": " + awayPoints);
+        System.out.println("\n\n" + awayTeam.getName() + ": " + awayPoints);
         System.out.println(homeTeam.getName() + ": " + homePoints);
+    }
+
+    private static boolean playNextInning() {
+        boolean ret = true;
+        
+        if (inning >= 4 && (awayPoints - homePoints >= 15 || homePoints - awayPoints >= 15)) {
+            ret = false;
+        } else if (inning >= 5 && (awayPoints - homePoints >= 10 || homePoints - awayPoints >= 10)) {
+            ret = false;
+        } else if (inning >= 6 && (awayPoints - homePoints >= 7 || homePoints - awayPoints >= 7)) {
+            ret = false;
+        } else if (inning >= 8 && (homePoints - awayPoints > 0 || awayPoints - homePoints > 0)) {
+            ret = false;
+        }
+        
+        return ret;
+    }
+
+    private static boolean continueInning() {
+        boolean ret = true;
+        
+        if (!top) {
+            if (inning >= 3 && homePoints - awayPoints >= 15) {
+                ret = false;
+            } else if (inning >= 4 && homePoints - awayPoints >= 10) {
+                ret = false;
+            } else if (inning >= 5 && homePoints - awayPoints >= 7) {
+                ret = false;
+            } else if (inning >= 7 && homePoints - awayPoints > 0) {
+                ret = false;
+            }
+        }
+        
+        return ret;
     }
 
 }
