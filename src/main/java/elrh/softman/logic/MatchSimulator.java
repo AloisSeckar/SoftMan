@@ -1,5 +1,6 @@
 package elrh.softman.logic;
 
+import elrh.softman.logic.stats.BoxScore;
 import java.util.Random;
 
 public class MatchSimulator {
@@ -8,22 +9,21 @@ public class MatchSimulator {
     
     private static int inning;
     private static boolean top;
-
+    
+    private static BoxScore boxScore;
+    
     private static Team awayTeam;
-    private static int awayPoints;
     private static int awayBatter;
 
     private static Team homeTeam;
-    private static int homePoints;
     private static int homeBatter;
 
-    public static void simulateMatch(Team awayTeam, Team homeTeam) {
+    public static void simulateMatch(Match match) {
 
-        MatchSimulator.awayTeam = awayTeam;
-        MatchSimulator.homeTeam = homeTeam;
-
-        homePoints = 0;
-        awayPoints = 0;
+        awayTeam = match.getAwayTeam();
+        homeTeam = match.getHomeTeam();
+        boxScore = match.getBoxScore();
+        
         homeBatter = 0;
         awayBatter = 0;
         
@@ -74,11 +74,8 @@ public class MatchSimulator {
                 if (hitQuality >= pitchQuality) {
                     if (hitQuality - pitchQuality > 25) {
                         System.out.println(batter + " SCORED");
-                        if (top) {
-                            awayPoints++;
-                        } else {
-                            homePoints++;
-                        }
+                        boxScore.addHit(top);
+                        boxScore.addPoint(inning, top);
                     } else {
                         
                         int randomLocation = random.nextInt(9);
@@ -87,13 +84,19 @@ public class MatchSimulator {
                         if (fielder != null) {
                             int fieldingQuality = fielder.getFieldingSkill()+ random.nextInt(100);
                             if (hitQuality >= fieldingQuality) {
-                                System.out.println(batter + " reached");
+                                if (random.nextBoolean()) {
+                                    System.out.println(batter + " reached after a hit");
+                                    boxScore.addHit(top);
+                                } else {
+                                    System.out.println(batter + " reached otherwise");
+                                }
                             } else {
                                 System.out.println(batter + " is OUT");
                                 outs++;
                             }
                         } else {
-                            System.out.println(batter + " reached");
+                            System.out.println(batter + " reached after a hit");
+                            boxScore.addHit(top);
                         }
                     }
                 } else {
@@ -120,12 +123,15 @@ public class MatchSimulator {
     }
 
     private static void getScore() {
-        System.out.println("\n\n" + awayTeam.getName() + ": " + awayPoints);
-        System.out.println(homeTeam.getName() + ": " + homePoints);
+        System.out.println("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true));
+        System.out.println(homeTeam.getName() + ": " + boxScore.getPoints(false));
     }
 
     private static boolean playNextInning() {
         boolean ret = true;
+        
+        int awayPoints = boxScore.getPoints(true);
+        int homePoints = boxScore.getPoints(false);
         
         if (inning >= 4 && (awayPoints - homePoints >= 15 || homePoints - awayPoints >= 15)) {
             ret = false;
@@ -142,6 +148,9 @@ public class MatchSimulator {
 
     private static boolean continueInning() {
         boolean ret = true;
+        
+        int awayPoints = boxScore.getPoints(true);
+        int homePoints = boxScore.getPoints(false);
         
         if (!top) {
             if (inning >= 3 && homePoints - awayPoints >= 15) {

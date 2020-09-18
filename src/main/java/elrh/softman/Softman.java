@@ -10,7 +10,8 @@ public class Softman {
         Team homeTeam = MockTeamFactory.getMockHomeTeam();
         Team awayTeam = MockTeamFactory.getMockAwayTeam();
         
-        MatchSimulator.simulateMatch(awayTeam, homeTeam);
+        Match testMatch = new Match(awayTeam, homeTeam);
+        testMatch.simulate();
         
     }
     
