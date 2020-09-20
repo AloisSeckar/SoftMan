@@ -4,21 +4,21 @@ import elrh.softman.constants.Constants;
 import java.sql.*;
 import org.slf4j.*;
 
-public class DBManager {
+public class SourcesDBManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DBManager.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SourcesDBManager.class);
 
-    private static DBManager INSTANCE;
+    private static SourcesDBManager INSTANCE;
 
     private final Connection conn;
 
-    private DBManager() {
+    private SourcesDBManager() {
         conn = connect();
     }
 
-    public static DBManager getInstance() {
+    public static SourcesDBManager getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new DBManager();
+            INSTANCE = new SourcesDBManager();
         }
         return INSTANCE;
     }
@@ -37,7 +37,7 @@ public class DBManager {
             try {
                 conn.close();
             } catch (SQLException ex) {
-                LOG.error("DBManager.closeConnection", ex);
+                LOG.error("SourcesDBManager.closeConnection", ex);
             }
         }
     }
@@ -47,14 +47,14 @@ public class DBManager {
         Connection newConnection = null;
 
         try {
-            newConnection = DriverManager.getConnection(Constants.SQLITE_DB);
+            newConnection = DriverManager.getConnection(Constants.SOURCES_DB);
             if (newConnection.isValid(5)) {
-                LOG.info("DB connection successful");
+                LOG.info("DB connection to 'SOURCES' successful");
             } else {
-                LOG.warn("DB connection failed");
+                LOG.warn("DB connection to 'SOURCES' failed");
             }
         } catch (SQLException ex) {
-            LOG.error("DBManager.connect", ex);
+            LOG.error("SourcesDBManager.connect", ex);
         }
 
         return newConnection;
@@ -70,7 +70,7 @@ public class DBManager {
             ret = rs.getString("name");
 
         } catch (SQLException ex) {
-            LOG.error("DBManager.getRandomName", ex);
+            LOG.error("SourcesDBManager.getRandomName", ex);
         }
 
         return ret;

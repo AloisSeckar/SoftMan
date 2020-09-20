@@ -1,6 +1,6 @@
 package elrh.softman.mock;
 
-import elrh.softman.db.DBManager;
+import elrh.softman.db.SourcesDBManager;
 import elrh.softman.logic.*;
 
 public class MockTeamFactory {
@@ -48,7 +48,7 @@ public class MockTeamFactory {
     
     ////////////////////////////////////////////////////////////////////////////
     private static String getRandomPlayerName() {
-        return DBManager.getInstance().getRandomFirstName() + " " + DBManager.getInstance().getRandomLastName();
+        return SourcesDBManager.getInstance().getRandomFirstName() + " " + SourcesDBManager.getInstance().getRandomLastName();
     }
     
 }
