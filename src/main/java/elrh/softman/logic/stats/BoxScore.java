@@ -48,11 +48,31 @@ public class BoxScore {
         }
     }
 
+    public int getInnings() {
+        return innings;
+    }
+    
     public int getPoints(boolean away) {
         if (away) {
             return sumPoints(awayPoints);
         } else {
             return sumPoints(homePoints);
+        }
+    }
+    
+    public int getHits(boolean away) {
+        if (away) {
+            return awayHits;
+        } else {
+            return homeHits;
+        }
+    }
+    
+    public int getErrors(boolean away) {
+        if (away) {
+            return awayErrors;
+        } else {
+            return homeErrors;
         }
     }
 
