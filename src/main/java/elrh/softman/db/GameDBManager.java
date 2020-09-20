@@ -7,12 +7,11 @@ import elrh.softman.constants.Constants;
 import elrh.softman.db.orm.*;
 import elrh.softman.logic.Match;
 import java.sql.SQLException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.*;
 
+@Slf4j
 public class GameDBManager {
-
-    private static final Logger LOG = LoggerFactory.getLogger(GameDBManager.class);
 
     private static GameDBManager INSTANCE;
 

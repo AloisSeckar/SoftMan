@@ -2,11 +2,10 @@ package elrh.softman.db;
 
 import elrh.softman.constants.Constants;
 import java.sql.*;
-import org.slf4j.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SourcesDBManager {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SourcesDBManager.class);
 
     private static SourcesDBManager INSTANCE;
 
