@@ -1,14 +1,11 @@
 package elrh.softman.db;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.dao.*;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import elrh.softman.constants.Constants;
-import elrh.softman.db.orm.DBMatch;
+import elrh.softman.db.orm.*;
 import elrh.softman.logic.Match;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.*;
@@ -21,7 +18,7 @@ public class GameDBManager {
 
     private JdbcPooledConnectionSource conn;
     
-    private Dao<DBMatch, Long> matchDao;
+    private Dao<Result, Long> matchDao;
 
     private GameDBManager() {
     }
@@ -61,7 +58,7 @@ public class GameDBManager {
     
     public void saveMatch(Match match) {
         try {
-            DBMatch dbObject = new DBMatch(match);
+            Result dbObject = new Result(match);
             matchDao.create(dbObject);
             LOG.info("SAVED");
         } catch (Exception ex) {
@@ -71,9 +68,13 @@ public class GameDBManager {
 
     ////////////////////////////////////////////////////////////////////////////
     private void setUpDatabase() throws SQLException {
-        TableUtils.createTableIfNotExists(conn, DBMatch.class);
-        TableUtils.clearTable(conn, DBMatch.class); // TODO remove this to allow re-loading
-        matchDao = DaoManager.createDao(conn, DBMatch.class);
+        TableUtils.createTableIfNotExists(conn, TeamInfo.class);
+        TableUtils.createTableIfNotExists(conn, Result.class);
+        
+        matchDao = DaoManager.createDao(conn, Result.class);
+        
+        TableUtils.clearTable(conn, Result.class); // TODO remove this to allow re-loading
+        TableUtils.clearTable(conn, Result.class); // TODO remove this to allow re-loading
     }
 
 }

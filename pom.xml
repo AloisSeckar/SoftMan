@@ -11,6 +11,16 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+        </plugins>
+    </build>
+    
     <dependencies>
         
         <!-- for StringUtils and other features -->
@@ -32,6 +42,14 @@
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
             <version>5.1</version>
+        </dependency>
+        
+        <!-- for simplier getters and setters -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
         </dependency>
         
         <!-- for logging -->

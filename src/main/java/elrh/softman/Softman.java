@@ -1,10 +1,8 @@
 package elrh.softman;
 
-import elrh.softman.db.GameDBManager;
-import elrh.softman.db.SourcesDBManager;
+import elrh.softman.db.*;
 import elrh.softman.logic.*;
 import elrh.softman.mock.MockTeamFactory;
-import java.util.UUID;
 
 public class Softman {
 
@@ -18,7 +16,7 @@ public class Softman {
             Team homeTeam = MockTeamFactory.getMockHomeTeam();
             Team awayTeam = MockTeamFactory.getMockAwayTeam();
 
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 2; i++) {
                 Match testMatch = new Match(awayTeam, homeTeam);
                 testMatch.simulate();
 
