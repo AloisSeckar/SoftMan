@@ -3,6 +3,8 @@ package elrh.softman;
 import elrh.softman.db.*;
 import elrh.softman.logic.*;
 import elrh.softman.mock.MockTeamFactory;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Softman {
 
@@ -13,15 +15,20 @@ public class Softman {
             String gameId = "test";
             GameDBManager.getInstance().setConnection(gameId);
 
-            Team homeTeam = MockTeamFactory.getMockHomeTeam();
-            Team awayTeam = MockTeamFactory.getMockAwayTeam();
-
-            for (int i = 0; i < 2; i++) {
-                Match testMatch = new Match(awayTeam, homeTeam);
-                testMatch.simulate();
-
-                GameDBManager.getInstance().saveMatch(testMatch);
-            }
+            ArrayList<Team> teams = new ArrayList<>();
+            teams.add(MockTeamFactory.getMockTeam("REDS"));
+            teams.add(MockTeamFactory.getMockTeam("BLUES"));
+            teams.add(MockTeamFactory.getMockTeam("GREENS"));
+            teams.add(MockTeamFactory.getMockTeam("YELLOWS"));
+            teams.add(MockTeamFactory.getMockTeam("BLACKS"));
+            teams.add(MockTeamFactory.getMockTeam("WHITES"));
+            teams.add(MockTeamFactory.getMockTeam("SILVERS"));
+            teams.add(MockTeamFactory.getMockTeam("VIOLETS"));
+            teams.add(MockTeamFactory.getMockTeam("BROWNS"));
+            teams.add(MockTeamFactory.getMockTeam("GOLDS"));
+            
+            League testLeague = new League(teams);
+            testLeague.playLeague();
 
         } finally {
             SourcesDBManager.getInstance().closeConnection();
