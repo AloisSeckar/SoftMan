@@ -72,7 +72,7 @@ public class GameDBManager {
         
         matchDao = DaoManager.createDao(conn, Result.class);
         
-        TableUtils.clearTable(conn, Result.class); // TODO remove this to allow re-loading
+        TableUtils.clearTable(conn, TeamInfo.class); // TODO remove this to allow re-loading
         TableUtils.clearTable(conn, Result.class); // TODO remove this to allow re-loading
     }
 

@@ -1,40 +1,59 @@
 package elrh.softman;
 
-import elrh.softman.db.*;
-import elrh.softman.logic.*;
-import elrh.softman.mock.MockTeamFactory;
-import java.util.ArrayList;
-import java.util.Arrays;
+import elrh.softman.gui.MainLayout;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
+import javafx.stage.Stage;
 
-public class Softman {
+public class Softman extends Application {
+    
+    private static Stage primaryStage;
 
-    public static void main(String[] args) {
-
-        try {
-
-            String gameId = "test";
-            GameDBManager.getInstance().setConnection(gameId);
-
-            ArrayList<Team> teams = new ArrayList<>();
-            teams.add(MockTeamFactory.getMockTeam("REDS"));
-            teams.add(MockTeamFactory.getMockTeam("BLUES"));
-            teams.add(MockTeamFactory.getMockTeam("GREENS"));
-            teams.add(MockTeamFactory.getMockTeam("YELLOWS"));
-            teams.add(MockTeamFactory.getMockTeam("BLACKS"));
-            teams.add(MockTeamFactory.getMockTeam("WHITES"));
-            teams.add(MockTeamFactory.getMockTeam("SILVERS"));
-            teams.add(MockTeamFactory.getMockTeam("VIOLETS"));
-            teams.add(MockTeamFactory.getMockTeam("BROWNS"));
-            teams.add(MockTeamFactory.getMockTeam("GOLDS"));
-            
-            League testLeague = new League(teams);
-            testLeague.playLeague();
-
-        } finally {
-            SourcesDBManager.getInstance().closeConnection();
-            GameDBManager.getInstance().closeConnection();
-        }
-
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        Softman.primaryStage = primaryStage;
+        setupStage();
+        primaryStage.show();
     }
 
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    public static void closeIfConfirmed() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Really quit?", ButtonType.YES, ButtonType.NO);
+        alert.initOwner(primaryStage);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.YES) {
+            primaryStage.close();
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    private void setupStage() {
+        MainLayout mainLayout = MainLayout.getInstance();
+        
+        Scene scene = new Scene(mainLayout, 0, 0);
+        scene.getStylesheets().add(getClass().getResource("/css/softman.css").toExternalForm());
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
+        
+        primaryStage.setTitle("SOFTMAN 0.1");
+        primaryStage.setScene(scene);
+        primaryStage.setFullScreenExitHint("");
+        primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        primaryStage.setFullScreen(true);
+        primaryStage.setResizable(false);
+
+        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+            if (KeyCode.ESCAPE == event.getCode()) {
+                closeIfConfirmed();
+            }
+        });
+    }
 }
