@@ -44,8 +44,8 @@ public class Result {
     }
     
     public Result(Match source) {
-        awayTeam = new TeamInfo(source.getAwayTeam().getName());
-        homeTeam = new TeamInfo(source.getHomeTeam().getName());
+        awayTeam = source.getAwayTeam().getTeamInfo();
+        homeTeam = source.getHomeTeam().getTeamInfo();
         
         BoxScore boxScore = source.getBoxScore();
         innings = boxScore.getInnings();

@@ -1,5 +1,7 @@
 package elrh.softman;
 
+import elrh.softman.db.GameDBManager;
+import elrh.softman.db.SourcesDBManager;
 import elrh.softman.gui.MainLayout;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,6 +15,8 @@ public class Softman extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        setupGame();
+        
         Softman.primaryStage = primaryStage;
         setupStage();
         primaryStage.show();
@@ -31,6 +35,7 @@ public class Softman extends Application {
         alert.initOwner(primaryStage);
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
+            tearDownGame();
             primaryStage.close();
         }
     }
@@ -55,5 +60,15 @@ public class Softman extends Application {
                 closeIfConfirmed();
             }
         });
+    }
+
+    private static void setupGame() {
+        String gameId = "test";
+        GameDBManager.getInstance().setConnection(gameId);
+    }
+    
+    private static void tearDownGame() {
+        SourcesDBManager.getInstance().closeConnection();
+        GameDBManager.getInstance().closeConnection();
     }
 }

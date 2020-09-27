@@ -1,7 +1,7 @@
 package elrh.softman.gui.view;
 
+import elrh.softman.Softman;
 import elrh.softman.db.GameDBManager;
-import elrh.softman.db.SourcesDBManager;
 import elrh.softman.logic.League;
 import elrh.softman.logic.Team;
 import elrh.softman.mock.MockTeamFactory;
@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class MainView extends AnchorPane {
     
     private static MainView INSTANCE;
@@ -34,9 +36,6 @@ public class MainView extends AnchorPane {
 
     private void mock() {
         try {
-            String gameId = "test";
-            GameDBManager.getInstance().setConnection(gameId);
-
             ArrayList<Team> teams = new ArrayList<>();
             teams.add(MockTeamFactory.getMockTeam("REDS"));
             teams.add(MockTeamFactory.getMockTeam("BLUES"));
@@ -49,11 +48,14 @@ public class MainView extends AnchorPane {
             teams.add(MockTeamFactory.getMockTeam("BROWNS"));
             teams.add(MockTeamFactory.getMockTeam("GOLDS"));
             
-            League testLeague = new League(teams);
+            League testLeague = new League("Test league", teams);
             testLeague.playLeague();
-        } finally {
-            SourcesDBManager.getInstance().closeConnection();
-            GameDBManager.getInstance().closeConnection();
+            GameDBManager.getInstance().saveLeague(testLeague);
+            
+            Softman.closeIfConfirmed();
+            
+        } catch (Exception ex) {
+            LOG.error("MOCK FAILED", ex);
         }
     }
     

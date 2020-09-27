@@ -1,22 +1,26 @@
 package elrh.softman.logic;
 
 import elrh.softman.db.GameDBManager;
+import elrh.softman.db.orm.LeagueInfo;
 import java.util.ArrayList;
 import lombok.Getter;
 
 public class League {
     
+    @Getter
+    private final LeagueInfo leagueInfo;
+    
     private ArrayList<Team> teams = new ArrayList<>();
     
-    @Getter
-    private int round = 1;
-    
-    public League(ArrayList<Team> teams) {
+    public League(String name, ArrayList<Team> teams) {
+        this.leagueInfo = new LeagueInfo(name);
         this.teams = teams;
+        
+        GameDBManager.getInstance().saveTeams(teams);
     }
     
     public void playLeague() {
-        for (int i = 1; i <= 36; i++) {
+        for (int i = 1; i <= 9; i++) {
             previewCurrentRound();
             playRound();
         }
@@ -25,7 +29,7 @@ public class League {
     public void playRound() {
         Match match;
         for (int i = 0; i < 5; i ++) {
-            if (round % 2 == 0) {
+            if (leagueInfo.getRound() % 2 == 0) {
                 match = new Match(teams.get(i), teams.get(9 - i));
             } else {
                 match = new Match(teams.get(9 - i), teams.get(i));
@@ -35,13 +39,13 @@ public class League {
         }
         
         shiftTeams();
-        round++;
+        leagueInfo.setRoundPlayed();
     }
     
     public void previewCurrentRound() {
-        System.out.println("LEAGUE ROUND " + round);
+        System.out.println("LEAGUE ROUND " + leagueInfo.getRound());
         for (int i = 0; i < 5; i ++) {
-            if (round % 2 == 0) {
+            if (leagueInfo.getRound() % 2 == 0) {
                 System.out.println(teams.get(i).getName() + " @ " + teams.get(9 - i).getName());
             } else {
                 System.out.println(teams.get(9 - i).getName() + " @ " + teams.get(i).getName());

@@ -1,18 +1,22 @@
 package elrh.softman.logic;
 
+import elrh.softman.db.orm.TeamInfo;
+import lombok.Getter;
+
 public class Team {
     
-    private final String name;
+    @Getter
+    private final TeamInfo teamInfo;
     
     private final LineupPosition[] battingOrder = new LineupPosition[10];
     private final Player[] substitutes = new Player[8];
 
     public Team(String name) {
-        this.name = name;
+        this.teamInfo = new TeamInfo(name);
     }
 
     public String getName() {
-        return name;
+        return teamInfo.getTeamName();
     }
     
     public LineupPosition getBatter(int order) {
