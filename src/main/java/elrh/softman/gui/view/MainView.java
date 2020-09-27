@@ -1,6 +1,7 @@
 package elrh.softman.gui.view;
 
 import elrh.softman.db.GameDBManager;
+import elrh.softman.gui.table.LeagueStadingsTable;
 import elrh.softman.logic.League;
 import elrh.softman.logic.Team;
 import elrh.softman.mock.MockTeamFactory;
@@ -18,6 +19,7 @@ public class MainView extends AnchorPane {
     private League testLeague;
     
     private final TextArea testTextArea;  
+    private final LeagueStadingsTable leagueTable;  
     
     private static MainView INSTANCE;
     
@@ -29,6 +31,9 @@ public class MainView extends AnchorPane {
     }
     
     private MainView() {
+        
+        prepareLeague();
+        
         Button testButton = new Button("MOCK Play league");
         testButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> {
             mockLeague();
@@ -52,12 +57,17 @@ public class MainView extends AnchorPane {
         super.getChildren().add(testTextArea);
         AnchorPane.setLeftAnchor(testTextArea, 5d);
         AnchorPane.setTopAnchor(testTextArea, 85d);
+        
+        leagueTable = new LeagueStadingsTable(testLeague.getStandings());
+        super.getChildren().add(leagueTable);
+        AnchorPane.setRightAnchor(leagueTable, 5d);
+        AnchorPane.setTopAnchor(leagueTable, 85d);
     }
 
     private void mockLeague() {
         try {
-            prepareLeague();
             testLeague.playLeague();
+            leagueTable.refresh();
             
             InfoUtils.showMessage("Finished");
             
@@ -69,12 +79,9 @@ public class MainView extends AnchorPane {
     
     private void mockRound() {
         try {
-            prepareLeague();
             testLeague.previewCurrentRound();
             testLeague.playRound();
-            
-            InfoUtils.showMessage("Round played");
-            
+            leagueTable.refresh();
         } catch (Exception ex) {
             LOG.error("ROUND FAILED", ex);
             InfoUtils.showMessage("ROUND FAILED");
