@@ -2,6 +2,7 @@ package elrh.softman.logic;
 
 import elrh.softman.db.GameDBManager;
 import elrh.softman.db.orm.LeagueInfo;
+import elrh.softman.gui.view.MainView;
 import java.util.ArrayList;
 import lombok.Getter;
 
@@ -43,15 +44,17 @@ public class League {
     }
     
     public void previewCurrentRound() {
-        System.out.println("LEAGUE ROUND " + leagueInfo.getRound());
+        StringBuilder sb = new StringBuilder();
+        sb.append("LEAGUE ROUND ").append(leagueInfo.getRound()).append("\n");
         for (int i = 0; i < 5; i ++) {
             if (leagueInfo.getRound() % 2 == 0) {
-                System.out.println(teams.get(i).getName() + " @ " + teams.get(9 - i).getName());
+                sb.append(teams.get(i).getName()).append(" @ ").append(teams.get(9 - i).getName()).append("\n");
             } else {
-                System.out.println(teams.get(9 - i).getName() + " @ " + teams.get(i).getName());
+                sb.append(teams.get(9 - i).getName()).append(" @ ").append(teams.get(i).getName()).append("\n");
             }
         }
-        System.out.println("-----------------------");
+        sb.append("-----------------------");
+        MainView.getInstance().writeIntoConsole(sb.toString());
     }
 
     ////////////////////////////////////////////////////////////////////////////

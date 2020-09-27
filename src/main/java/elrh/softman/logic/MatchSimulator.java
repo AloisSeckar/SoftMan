@@ -1,5 +1,6 @@
 package elrh.softman.logic;
 
+import elrh.softman.gui.view.MainView;
 import elrh.softman.logic.stats.BoxScore;
 import java.util.Random;
 
@@ -27,53 +28,53 @@ public class MatchSimulator {
         homeBatter = 0;
         awayBatter = 0;
         
-        System.out.println("GAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() );
+        writeIntoConsole("GAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() );
 
         top = true;
         inning = 1;
         while (playNextInning()) {
-            System.out.println("\n\nINNING " + inning);
+            writeIntoConsole("\n\nINNING " + inning);
 
-            System.out.println("\n\nTOP");
+            writeIntoConsole("\n\nTOP");
             simulateInning();
             getScore();
 
             top = false;
             if (continueInning()) {
-                System.out.println("\n\nBOTTOM");
+                writeIntoConsole("\n\nBOTTOM");
                 simulateInning();
                 getScore();
             }
 
-            System.out.println("\n\nINNING " + inning);
+            writeIntoConsole("\n\nINNING " + inning);
             inning++;
             top = true;
         }
 
-        System.out.println("\n\nGAME OVER");
+        writeIntoConsole("\n\nGAME OVER");
     }
 
     ////////////////////////////////////////////////////////////////////////////
     private static void simulateInning() {
         Player pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         
-        System.out.println("PITCHER: " + pitcher.toString() + " (" + pitcher.getPitchingSkill() + ")");
+        writeIntoConsole("PITCHER: " + pitcher.toString() + " (" + pitcher.getPitchingSkill() + ")");
         
         int outs = 0;
         while ((top || continueInning()) && outs < 3) {
             LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
             if (batter != null) {
                 
-                System.out.println("BATTER: " + batter.getPlayer().toString() + " (" + batter.getPlayer().getBattingSkill() + ")");
+                writeIntoConsole("BATTER: " + batter.getPlayer().toString() + " (" + batter.getPlayer().getBattingSkill() + ")");
                 
                 int pitchQuality = pitcher.getPitchingSkill() + random.nextInt(100);
                 int hitQuality = batter.getPlayer().getBattingSkill() + random.nextInt(100);
                 
-                System.out.println(pitchQuality + " vs. " + hitQuality);
+                writeIntoConsole(pitchQuality + " vs. " + hitQuality);
                 
                 if (hitQuality >= pitchQuality) {
                     if (hitQuality - pitchQuality > 25) {
-                        System.out.println(batter + " SCORED");
+                        writeIntoConsole(batter + " SCORED");
                         boxScore.addHit(top);
                         boxScore.addPoint(inning, top);
                     } else {
@@ -85,26 +86,26 @@ public class MatchSimulator {
                             int fieldingQuality = fielder.getFieldingSkill()+ random.nextInt(100);
                             if (hitQuality >= fieldingQuality) {
                                 if (random.nextBoolean()) {
-                                    System.out.println(batter + " reached after a hit");
+                                    writeIntoConsole(batter + " reached after a hit");
                                     boxScore.addHit(top);
                                 } else {
-                                    System.out.println(batter + " reached otherwise");
+                                    writeIntoConsole(batter + " reached otherwise");
                                 }
                             } else {
-                                System.out.println(batter + " is OUT");
+                                writeIntoConsole(batter + " is OUT");
                                 outs++;
                             }
                         } else {
-                            System.out.println(batter + " reached after a hit");
+                            writeIntoConsole(batter + " reached after a hit");
                             boxScore.addHit(top);
                         }
                     }
                 } else {
-                    System.out.println(batter + " is OUT");
+                    writeIntoConsole(batter + " is OUT");
                     outs++;
                 }
             } else {
-                System.out.println("Position not filled => OUT");
+                writeIntoConsole("Position not filled => OUT");
                 outs++;
             }
 
@@ -123,8 +124,8 @@ public class MatchSimulator {
     }
 
     private static void getScore() {
-        System.out.println("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true));
-        System.out.println(homeTeam.getName() + ": " + boxScore.getPoints(false));
+        writeIntoConsole("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true));
+        writeIntoConsole(homeTeam.getName() + ": " + boxScore.getPoints(false));
     }
 
     private static boolean playNextInning() {
@@ -165,6 +166,10 @@ public class MatchSimulator {
         }
         
         return ret;
+    }
+    
+    private static void writeIntoConsole(String message) {
+        MainView.getInstance().writeIntoConsole(message);
     }
 
 }

@@ -1,6 +1,7 @@
 package elrh.softman.logic.stats;
 
 import elrh.softman.constants.Constants;
+import elrh.softman.gui.view.MainView;
 import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 
@@ -77,44 +78,51 @@ public class BoxScore {
     }
 
     public void printBoxScore() {
+        StringBuilder sb = new StringBuilder();
         
-        printLineSeparator();
+        printLineSeparator(sb);
         
-        System.out.print("| TEAM  | ");
+        sb.append("| TEAM  | ");
         for (int i = 1; i <= innings; i++) {
-            System.out.print(pad(i) + " | ");
+            sb.append(pad(i)).append(" | ");
         }
-        System.out.println(" R |  H |  E | ");
+        sb.append(" R |  H |  E | ");
+        MainView.getInstance().writeIntoConsole(sb.toString());
         
-        printLineSeparator();
+        printLineSeparator(sb);
 
-        System.out.print("| AWAY  | ");
+        sb.append("| AWAY  | ");
         for (int i = 0; i < innings; i++) {
-            System.out.print(pad(awayPoints[i]) + " | ");
+            sb.append(pad(awayPoints[i])).append(" | ");
         }
-        System.out.print(pad(sumPoints(awayPoints)) + " | ");
-        System.out.print(pad(awayHits) + " | ");
-        System.out.println(pad(awayErrors) + " | ");
+        sb.append(pad(sumPoints(awayPoints))).append(" | ");
+        sb.append(pad(awayHits)).append(" | ");
+        sb.append(pad(awayErrors)).append(" | ");
+        MainView.getInstance().writeIntoConsole(sb.toString());
 
-        printLineSeparator();
+        printLineSeparator(sb);
 
-        System.out.print("| HOME  | ");
+        sb.append("| HOME  | ");
         for (int i = 0; i < innings; i++) {
-            System.out.print(pad(homePoints[i]) + " | ");
+            sb.append(pad(homePoints[i])).append(" | ");
         }
-        System.out.print(pad(sumPoints(homePoints)) + " | ");
-        System.out.print(pad(homeHits) + " | ");
-        System.out.println(pad(homeErrors) + " | ");
+        sb.append(pad(sumPoints(homePoints))).append(" | ");
+        sb.append(pad(homeHits)).append(" | ");
+        sb.append(pad(homeErrors)).append(" | ");
+        MainView.getInstance().writeIntoConsole(sb.toString());
 
-        printLineSeparator();
+        printLineSeparator(sb);
     }
 
-    private void printLineSeparator() {
-        System.out.print("---------");
+    private void printLineSeparator(StringBuilder sb) {
+        sb.setLength(0);
+        sb.append("---------");
         for (int i = 0; i < awayPoints.length; i++) {
-            System.out.print("-----");
+            sb.append("-----");
         }
-        System.out.println("---------------");
+        sb.append("---------------");
+        MainView.getInstance().writeIntoConsole(sb.toString());
+        sb.setLength(0);
     }
 
     private int sumPoints(int[] innings) {
