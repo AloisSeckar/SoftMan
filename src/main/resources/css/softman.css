@@ -21,6 +21,15 @@
     -fx-alignment: CENTER;
 }
 
+.close-button:hover {
+    -fx-background-color: #ff3333;
+    -fx-border-color: white;
+}
+
+.close-button:hover > .glyph-icon {
+    -fx-fill: white;
+}
+
 .output-window {
     -fx-font: 14px "Courier New";
 }
