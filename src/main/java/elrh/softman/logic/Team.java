@@ -1,15 +1,20 @@
 package elrh.softman.logic;
 
-import elrh.softman.db.orm.TeamInfo;
-import lombok.Getter;
+import elrh.softman.db.orm.*;
+import static elrh.softman.logic.Position.*;
+import java.util.*;
+import lombok.*;
 
 public class Team {
     
     @Getter
     private final TeamInfo teamInfo;
     
+    @Getter
+    private final List<PlayerInfo> players = new ArrayList<>();
+    
     private final LineupPosition[] battingOrder = new LineupPosition[10];
-    private final Player[] substitutes = new Player[8];
+    private final PlayerInfo[] substitutes = new PlayerInfo[8];
 
     public Team(String name) {
         this.teamInfo = new TeamInfo(name);
@@ -19,12 +24,16 @@ public class Team {
         return teamInfo.getTeamName();
     }
     
+    public void addPlayer(PlayerInfo player) {
+        players.add(player);
+    }
+    
     public LineupPosition getBatter(int order) {
         return battingOrder[order];
     }
     
-    public Player getFielder(int order) {
-        Player ret = null;
+    public PlayerInfo getFielder(int order) {
+        PlayerInfo ret = null;
         
         LineupPosition pos = battingOrder[order];
         if (pos != null) {
@@ -34,8 +43,8 @@ public class Team {
         return ret;
     }
     
-    public Player getFielder(Position position) {
-        Player ret = null;
+    public PlayerInfo getFielder(Position position) {
+        PlayerInfo ret = null;
         
         for (int i = 0; i < 10; i++) {
             LineupPosition pos = battingOrder[i];
@@ -48,12 +57,12 @@ public class Team {
         return ret;
     }
     
-    public void fillPosition(Player player, Position position, int order) {
+    public void fillPosition(PlayerInfo player, Position position, int order) {
         LineupPosition newPosition = new LineupPosition(player, position);
         battingOrder[order] = newPosition;
     }
     
-    public void addSubtitute(Player player) {
+    public void addSubtitute(PlayerInfo player) {
         int maxSubstitutes = battingOrder[9] == null ? 8 : 7;
         for (int i = 0; i < maxSubstitutes; i++) {
             if (substitutes[i] == null) {
@@ -61,6 +70,29 @@ public class Team {
                 break;
             }
         }
+    }
+
+    public void randomizeLineup() {
+        Random rand = new Random();
+        boolean useDP = rand.nextBoolean();
+        
+        List<PlayerInfo> availablePlayers = new ArrayList<>(players);
+        
+        List<Position> availablePositions = new ArrayList<>();
+        availablePositions.addAll(Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD));
+        if (useDP) {
+            availablePositions.add(DESIGNATED_PLAYER);
+        }
+        
+        int lineup = useDP ? 10 : 9;
+        for (int i = 0; i < lineup; i++) {
+            PlayerInfo player = availablePlayers.remove(rand.nextInt(availablePlayers.size()));
+            Position position = availablePositions.remove(rand.nextInt(availablePositions.size()));
+            fillPosition(player, position, i);
+        }
+        availablePlayers.forEach((player) -> {
+            addSubtitute(player);
+        });
     }
     
 }

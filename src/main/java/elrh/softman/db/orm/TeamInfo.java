@@ -2,6 +2,7 @@ package elrh.softman.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import elrh.softman.constants.Constants;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_teams")
@@ -28,7 +29,7 @@ public class TeamInfo {
 
     public TeamInfo(String teamName) {
         this.teamName = teamName;
-        this.gender = "m";
+        this.gender = Constants.GENDER_MALE;
         this.city = "City";
         this.year = 2020;
     }

@@ -11,7 +11,7 @@ public enum Position {
     LEFT_FIELD("LF"),
     CENTER_FIELD("CF"),
     RIGHT_FIELD("RF"),
-    DESIGNATED_HITTER("DH"),
+    DESIGNATED_PLAYER("DP"),
     OFFENSIVE_ONLY("OPO");
     
     private final String pos;

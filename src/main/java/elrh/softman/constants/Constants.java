@@ -10,4 +10,7 @@ public class Constants {
     
     public static final int INNINGS = 7;
     
+    public static final String GENDER_MALE = "m";
+    public static final String GENDER_FEMALE = "f";
+    
 }

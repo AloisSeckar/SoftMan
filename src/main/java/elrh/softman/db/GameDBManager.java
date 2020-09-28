@@ -5,11 +5,9 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import elrh.softman.constants.Constants;
 import elrh.softman.db.orm.*;
-import elrh.softman.logic.League;
-import elrh.softman.logic.Match;
-import elrh.softman.logic.Team;
+import elrh.softman.logic.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,6 +21,7 @@ public class GameDBManager {
     private Dao<Result, Long> matchDao;
     private Dao<LeagueInfo, Long> leagueDao;
     private Dao<TeamInfo, Long> teamDao;
+    private Dao<PlayerInfo, Long> playerDao;
 
     private GameDBManager() {
     }
@@ -79,10 +78,22 @@ public class GameDBManager {
         }
     }
 
-    public void saveTeams(ArrayList<Team> teams) {
+    public void savePlayers(List<PlayerInfo> players) {
+        try {
+            for (PlayerInfo player : players) {
+                playerDao.create(player);
+            }
+            LOG.info("PLAYERS SAVED");
+        } catch (Exception ex) {
+            LOG.error("GameDBManager.savePlayers", ex);
+        }
+    }
+
+    public void saveTeams(List<Team> teams) {
         try {
             for (Team team : teams) {
                 teamDao.create(team.getTeamInfo());
+                savePlayers(team.getPlayers());
             }
             LOG.info("TEAMS SAVED");
         } catch (Exception ex) {
@@ -94,16 +105,19 @@ public class GameDBManager {
     private void setUpDatabase() throws SQLException {
         // TODO remove this to allow re-loading
         TableUtils.dropTable(conn, LeagueInfo.class, true);
+        TableUtils.dropTable(conn, PlayerInfo.class, true);
         TableUtils.dropTable(conn, TeamInfo.class, true);
         TableUtils.dropTable(conn, Result.class, true);
         // TODO remove this to allow re-loading
         
         TableUtils.createTableIfNotExists(conn, LeagueInfo.class);
+        TableUtils.createTableIfNotExists(conn, PlayerInfo.class);
         TableUtils.createTableIfNotExists(conn, TeamInfo.class);
         TableUtils.createTableIfNotExists(conn, Result.class);
         
         matchDao = DaoManager.createDao(conn, Result.class);
         leagueDao = DaoManager.createDao(conn, LeagueInfo.class);
+        playerDao = DaoManager.createDao(conn, PlayerInfo.class);
         teamDao = DaoManager.createDao(conn, TeamInfo.class);
     }
 

@@ -1,10 +1,10 @@
 package elrh.softman.logic.stats;
 
-import elrh.softman.logic.Player;
+import elrh.softman.db.orm.PlayerInfo;
 
 public class Stats {
     
-    private final Player player;
+    private final PlayerInfo player;
     
     private int PA;
     private int AB;
@@ -14,11 +14,11 @@ public class Stats {
     
     private int IP;
 
-    public Stats(Player player) {
+    public Stats(PlayerInfo player) {
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public PlayerInfo getPlayer() {
         return player;
     }
 

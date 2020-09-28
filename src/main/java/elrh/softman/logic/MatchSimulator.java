@@ -1,5 +1,6 @@
 package elrh.softman.logic;
 
+import elrh.softman.db.orm.PlayerInfo;
 import elrh.softman.gui.view.MainView;
 import elrh.softman.logic.stats.BoxScore;
 import java.util.Random;
@@ -56,7 +57,7 @@ public class MatchSimulator {
 
     ////////////////////////////////////////////////////////////////////////////
     private static void simulateInning() {
-        Player pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
+        PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         
         writeIntoConsole("PITCHER: " + pitcher.toString() + " (" + pitcher.getPitchingSkill() + ")");
         
@@ -80,7 +81,7 @@ public class MatchSimulator {
                     } else {
                         
                         int randomLocation = random.nextInt(9);
-                        Player fielder = top ? homeTeam.getFielder(randomLocation) : awayTeam.getFielder(randomLocation);
+                        PlayerInfo fielder = top ? homeTeam.getFielder(randomLocation) : awayTeam.getFielder(randomLocation);
                         
                         if (fielder != null) {
                             int fieldingQuality = fielder.getFieldingSkill()+ random.nextInt(100);
