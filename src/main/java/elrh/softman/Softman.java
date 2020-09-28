@@ -31,13 +31,16 @@ public class Softman extends Application {
     }
     
     public static void closeIfConfirmed() {
+        /* TODO enable confirmation before going live!
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Really quit?", ButtonType.YES, ButtonType.NO);
         alert.initOwner(primaryStage);
         alert.showAndWait();
         if (alert.getResult() == ButtonType.YES) {
-            tearDownGame();
-            primaryStage.close();
+             
         }
+        */
+        tearDownGame();
+        primaryStage.close();
     }
 
     ////////////////////////////////////////////////////////////////////////////
