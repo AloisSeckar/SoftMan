@@ -16,6 +16,9 @@ public class AssociationManager {
     @Getter
     @Setter
     private Team playerTeam;
+    
+    @Getter
+    private int season;
 
     private static AssociationManager INSTANCE;
 
@@ -28,6 +31,10 @@ public class AssociationManager {
             INSTANCE = new AssociationManager();
         }
         return INSTANCE;
+    }
+    
+    public void nextSeason() {
+        season++;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -52,6 +59,8 @@ public class AssociationManager {
         managedLeagues.add(testLeague);
         playerLeague = testLeague;
         playerTeam = testTeam;
+        
+        season = 2021;
     }
 
 }

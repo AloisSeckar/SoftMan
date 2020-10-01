@@ -3,12 +3,13 @@ package elrh.softman.db.orm;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.constants.Constants;
+import elrh.softman.logic.AssociationManager;
 import java.util.Random;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_players")
 @Data @NoArgsConstructor
-public class PlayerInfo {
+public class PlayerInfo implements Comparable<PlayerInfo> {
     
     @DatabaseField(generatedId = true)
     private long playerId;
@@ -49,6 +50,23 @@ public class PlayerInfo {
     @Override
     public String toString() {
         return "#" + number + " " + name;
+    }
+
+    @Override
+    public int compareTo(PlayerInfo other) {
+        int ret;
+        
+        if (other != null) {
+            ret = Integer.compare(this.getNumber(), other.getNumber());
+        } else {
+            ret = 1;
+        }
+        
+        return ret;
+    }
+    
+    public int getAge() {
+        return AssociationManager.getInstance().getSeason() - birth;
     }
     
 }

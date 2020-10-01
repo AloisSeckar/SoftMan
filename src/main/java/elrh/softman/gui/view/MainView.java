@@ -1,6 +1,7 @@
 package elrh.softman.gui.view;
 
 import elrh.softman.gui.table.LeagueStadingsTable;
+import elrh.softman.gui.table.TeamPlayersTable;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.League;
 import elrh.softman.utils.InfoUtils;
@@ -17,6 +18,7 @@ public class MainView extends AnchorPane {
     
     private final TextArea testTextArea;  
     private final LeagueStadingsTable leagueTable;  
+    private final TeamPlayersTable playersTable;  
     
     private static MainView INSTANCE;
     
@@ -59,6 +61,11 @@ public class MainView extends AnchorPane {
         super.getChildren().add(leagueTable);
         AnchorPane.setRightAnchor(leagueTable, 5d);
         AnchorPane.setTopAnchor(leagueTable, 85d);
+        
+        playersTable = new TeamPlayersTable(AssociationManager.getInstance().getPlayerTeam().getPlayers());
+        super.getChildren().add(playersTable);
+        AnchorPane.setRightAnchor(playersTable, 5d);
+        AnchorPane.setBottomAnchor(playersTable, 5d);
     }
 
     private void mockLeague() {
