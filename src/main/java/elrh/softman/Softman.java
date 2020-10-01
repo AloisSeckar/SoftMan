@@ -3,6 +3,7 @@ package elrh.softman;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.db.SourcesDBManager;
 import elrh.softman.gui.MainLayout;
+import elrh.softman.logic.AssociationManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -68,6 +69,8 @@ public class Softman extends Application {
     private static void setupGame() {
         String gameId = "test";
         GameDBManager.getInstance().setConnection(gameId);
+        
+        AssociationManager.getInstance();
     }
     
     private static void tearDownGame() {
