@@ -4,7 +4,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.constants.Constants;
 import elrh.softman.logic.AssociationManager;
-import java.util.Random;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_players")
@@ -26,25 +25,15 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     @DatabaseField(canBeNull = false)
     private int number;
     
-    @DatabaseField(canBeNull = false)
-    private int battingSkill;
-    
-    @DatabaseField(canBeNull = false)
-    private int pitchingSkill;
-    
-    @DatabaseField(canBeNull = false)
-    private int fieldingSkill;
+    @DatabaseField(canBeNull = false, foreign = true)
+    private PlayerStats stats;
     
     public PlayerInfo(String player, int number) {
         this.name = player;
         this.gender = Constants.GENDER_MALE;
         this.birth = 2000;
         this.number = number;
-        
-        Random rand = new Random();
-        this.battingSkill = rand.nextInt(100) + 1;
-        this.pitchingSkill = rand.nextInt(100) + 1;
-        this.fieldingSkill = rand.nextInt(100) + 1;
+        this.stats = new PlayerStats();
     }
 
     @Override
@@ -67,6 +56,10 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     
     public int getAge() {
         return AssociationManager.getInstance().getSeason() - birth;
+    }
+    
+    public PlayerStats getStats() {
+        return stats;
     }
     
 }

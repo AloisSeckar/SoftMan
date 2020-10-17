@@ -64,44 +64,55 @@ public class TeamPlayersTable extends Pane {
             @Override
             public Integer getValue() {
                 PlayerInfo plr = p.getValue();
-                return (plr.getBattingSkill() + plr.getPitchingSkill() + plr.getFieldingSkill()) / 3;
+                return plr.getStats().getTotal();
             }
         });
 
-        TableColumn<PlayerInfo, Integer> battingCol = new TableColumn("Bat");
+        TableColumn<PlayerInfo, Integer> battingCol = new TableColumn("Batting");
         battingCol.setMinWidth(COLUMN_WIDTH);
         battingCol.setMaxWidth(COLUMN_WIDTH);
         battingCol.getStyleClass().add("column-centered");
         battingCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
             @Override
             public Integer getValue() {
-                return p.getValue().getBattingSkill();
+                return p.getValue().getStats().getBattingSkill();
             }
         });
 
-        TableColumn<PlayerInfo, Integer> pitchingCol = new TableColumn("Pitch");
+        TableColumn<PlayerInfo, Integer> pitchingCol = new TableColumn("Pitching");
         pitchingCol.setMinWidth(COLUMN_WIDTH);
         pitchingCol.setMaxWidth(COLUMN_WIDTH);
         pitchingCol.getStyleClass().add("column-centered");
         pitchingCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
             @Override
             public Integer getValue() {
-                return p.getValue().getPitchingSkill();
+                return p.getValue().getStats().getPitchingSkill();
             }
         });
 
-        TableColumn<PlayerInfo, Integer> fieldingCol = new TableColumn("Field");
+        TableColumn<PlayerInfo, Integer> fieldingCol = new TableColumn("Fielding");
         fieldingCol.setMinWidth(COLUMN_WIDTH);
         fieldingCol.setMaxWidth(COLUMN_WIDTH);
         fieldingCol.getStyleClass().add("column-centered");
         fieldingCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
             @Override
             public Integer getValue() {
-                return p.getValue().getFieldingSkill();
+                return p.getValue().getStats().getFieldingSkill();
+            }
+        });
+
+        TableColumn<PlayerInfo, Integer> physicalCol = new TableColumn("Physical");
+        physicalCol.setMinWidth(COLUMN_WIDTH);
+        physicalCol.setMaxWidth(COLUMN_WIDTH);
+        physicalCol.getStyleClass().add("column-centered");
+        physicalCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
+            @Override
+            public Integer getValue() {
+                return p.getValue().getStats().getPhysicalSkill();
             }
         });
         
-        table.getColumns().setAll(numberCol, nameCol, ageCol, skillCol, battingCol, pitchingCol, fieldingCol);
+        table.getColumns().setAll(numberCol, nameCol, ageCol, skillCol, battingCol, pitchingCol, fieldingCol, physicalCol);
         
         table.setFixedCellSize(25);
         table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(40));

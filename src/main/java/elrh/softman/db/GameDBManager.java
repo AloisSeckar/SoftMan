@@ -106,12 +106,14 @@ public class GameDBManager {
         // TODO remove this to allow re-loading
         TableUtils.dropTable(conn, LeagueInfo.class, true);
         TableUtils.dropTable(conn, PlayerInfo.class, true);
+        TableUtils.dropTable(conn, PlayerStats.class, true);
         TableUtils.dropTable(conn, TeamInfo.class, true);
         TableUtils.dropTable(conn, Result.class, true);
         // TODO remove this to allow re-loading
         
         TableUtils.createTableIfNotExists(conn, LeagueInfo.class);
         TableUtils.createTableIfNotExists(conn, PlayerInfo.class);
+        TableUtils.createTableIfNotExists(conn, PlayerStats.class);
         TableUtils.createTableIfNotExists(conn, TeamInfo.class);
         TableUtils.createTableIfNotExists(conn, Result.class);
         

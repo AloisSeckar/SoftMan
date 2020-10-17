@@ -59,17 +59,17 @@ public class MatchSimulator {
     private static void simulateInning() {
         PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         
-        writeIntoConsole("PITCHER: " + pitcher.toString() + " (" + pitcher.getPitchingSkill() + ")");
+        writeIntoConsole("PITCHER: " + pitcher.toString() + " (" + pitcher.getStats().getPitchingSkill() + ")");
         
         int outs = 0;
         while ((top || continueInning()) && outs < 3) {
             LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
             if (batter != null) {
                 
-                writeIntoConsole("BATTER: " + batter.getPlayer().toString() + " (" + batter.getPlayer().getBattingSkill() + ")");
+                writeIntoConsole("BATTER: " + batter.getPlayer().toString() + " (" + batter.getPlayer().getStats().getBattingSkill() + ")");
                 
-                int pitchQuality = pitcher.getPitchingSkill() + random.nextInt(100);
-                int hitQuality = batter.getPlayer().getBattingSkill() + random.nextInt(100);
+                int pitchQuality = pitcher.getStats().getPitchingSkill() + random.nextInt(100);
+                int hitQuality = batter.getPlayer().getStats().getBattingSkill() + random.nextInt(100);
                 
                 writeIntoConsole(pitchQuality + " vs. " + hitQuality);
                 
@@ -84,7 +84,7 @@ public class MatchSimulator {
                         PlayerInfo fielder = top ? homeTeam.getFielder(randomLocation) : awayTeam.getFielder(randomLocation);
                         
                         if (fielder != null) {
-                            int fieldingQuality = fielder.getFieldingSkill()+ random.nextInt(100);
+                            int fieldingQuality = fielder.getStats().getFieldingSkill()+ random.nextInt(100);
                             if (hitQuality >= fieldingQuality) {
                                 if (random.nextBoolean()) {
                                     writeIntoConsole(batter + " reached after a hit");
