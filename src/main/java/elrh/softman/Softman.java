@@ -1,12 +1,10 @@
 package elrh.softman;
 
-import elrh.softman.db.GameDBManager;
-import elrh.softman.db.SourcesDBManager;
+import elrh.softman.db.*;
 import elrh.softman.gui.MainLayout;
 import elrh.softman.logic.AssociationManager;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.stage.Stage;
 

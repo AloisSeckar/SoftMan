@@ -2,7 +2,7 @@ package elrh.softman.logic;
 
 import elrh.softman.db.GameDBManager;
 import elrh.softman.db.orm.LeagueInfo;
-import elrh.softman.gui.view.MainView;
+import elrh.softman.gui.view.tab.StandingsTab;
 import java.util.ArrayList;
 import lombok.Getter;
 
@@ -63,7 +63,7 @@ public class League {
             }
         }
         sb.append("-----------------------");
-        MainView.getInstance().writeIntoConsole(sb.toString());
+        StandingsTab.getInstance().writeIntoConsole(sb.toString());
     }
 
     ////////////////////////////////////////////////////////////////////////////

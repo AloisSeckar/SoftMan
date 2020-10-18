@@ -1,7 +1,7 @@
 package elrh.softman.logic.stats;
 
 import elrh.softman.constants.Constants;
-import elrh.softman.gui.view.MainView;
+import elrh.softman.gui.view.tab.StandingsTab;
 import java.util.Arrays;
 import org.apache.commons.lang3.StringUtils;
 
@@ -87,7 +87,7 @@ public class BoxScore {
             sb.append(pad(i)).append(" | ");
         }
         sb.append(" R |  H |  E | ");
-        MainView.getInstance().writeIntoConsole(sb.toString());
+        StandingsTab.getInstance().writeIntoConsole(sb.toString());
         
         printLineSeparator(sb);
 
@@ -98,7 +98,7 @@ public class BoxScore {
         sb.append(pad(sumPoints(awayPoints))).append(" | ");
         sb.append(pad(awayHits)).append(" | ");
         sb.append(pad(awayErrors)).append(" | ");
-        MainView.getInstance().writeIntoConsole(sb.toString());
+        StandingsTab.getInstance().writeIntoConsole(sb.toString());
 
         printLineSeparator(sb);
 
@@ -109,7 +109,7 @@ public class BoxScore {
         sb.append(pad(sumPoints(homePoints))).append(" | ");
         sb.append(pad(homeHits)).append(" | ");
         sb.append(pad(homeErrors)).append(" | ");
-        MainView.getInstance().writeIntoConsole(sb.toString());
+        StandingsTab.getInstance().writeIntoConsole(sb.toString());
 
         printLineSeparator(sb);
     }
@@ -121,7 +121,7 @@ public class BoxScore {
             sb.append("-----");
         }
         sb.append("---------------");
-        MainView.getInstance().writeIntoConsole(sb.toString());
+        StandingsTab.getInstance().writeIntoConsole(sb.toString());
         sb.setLength(0);
     }
 

@@ -1,7 +1,7 @@
 package elrh.softman.logic;
 
 import elrh.softman.db.orm.PlayerInfo;
-import elrh.softman.gui.view.MainView;
+import elrh.softman.gui.view.tab.StandingsTab;
 import elrh.softman.logic.stats.BoxScore;
 import java.util.Random;
 
@@ -170,7 +170,7 @@ public class MatchSimulator {
     }
     
     private static void writeIntoConsole(String message) {
-        MainView.getInstance().writeIntoConsole(message);
+        StandingsTab.getInstance().writeIntoConsole(message);
     }
 
 }

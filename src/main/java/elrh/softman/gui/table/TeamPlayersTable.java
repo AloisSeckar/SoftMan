@@ -2,7 +2,6 @@ package elrh.softman.gui.table;
 
 import elrh.softman.Softman;
 import elrh.softman.db.orm.PlayerInfo;
-import elrh.softman.logic.Standing;
 import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
@@ -12,7 +11,7 @@ import javafx.collections.*;
 
 public class TeamPlayersTable extends Pane {
 
-    private static final double COLUMN_WIDTH = 80d;
+    private static final double COLUMN_WIDTH = 100d;
 
     private final TableView<PlayerInfo> table;
     private final ObservableList<PlayerInfo> data;
@@ -117,7 +116,6 @@ public class TeamPlayersTable extends Pane {
         table.setFixedCellSize(25);
         table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(40));
 
-        super.prefWidthProperty().bind(Softman.getPrimaryStage().widthProperty().multiply(0.5));
         super.getChildren().add(table);
     }
 
