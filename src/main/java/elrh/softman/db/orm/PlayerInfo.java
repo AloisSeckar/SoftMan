@@ -26,14 +26,14 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     private int number;
     
     @DatabaseField(canBeNull = false, foreign = true)
-    private PlayerStats stats;
+    private PlayerAttributes attributes;
     
     public PlayerInfo(String player, int number) {
         this.name = player;
         this.gender = Constants.GENDER_MALE;
         this.birth = 2000;
         this.number = number;
-        this.stats = new PlayerStats();
+        this.attributes = new PlayerAttributes();
     }
 
     @Override
@@ -58,8 +58,8 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
         return AssociationManager.getInstance().getSeason() - birth;
     }
     
-    public PlayerStats getStats() {
-        return stats;
+    public PlayerAttributes getAttributes() {
+        return attributes;
     }
     
 }

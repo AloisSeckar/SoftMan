@@ -63,7 +63,7 @@ public class TeamPlayersTable extends Pane {
             @Override
             public Integer getValue() {
                 PlayerInfo plr = p.getValue();
-                return plr.getStats().getTotal();
+                return plr.getAttributes().getTotal();
             }
         });
 
@@ -74,7 +74,7 @@ public class TeamPlayersTable extends Pane {
         battingCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
             @Override
             public Integer getValue() {
-                return p.getValue().getStats().getBattingSkill();
+                return p.getValue().getAttributes().getBattingSkill();
             }
         });
 
@@ -85,7 +85,7 @@ public class TeamPlayersTable extends Pane {
         pitchingCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
             @Override
             public Integer getValue() {
-                return p.getValue().getStats().getPitchingSkill();
+                return p.getValue().getAttributes().getPitchingSkill();
             }
         });
 
@@ -96,7 +96,7 @@ public class TeamPlayersTable extends Pane {
         fieldingCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
             @Override
             public Integer getValue() {
-                return p.getValue().getStats().getFieldingSkill();
+                return p.getValue().getAttributes().getFieldingSkill();
             }
         });
 
@@ -107,7 +107,7 @@ public class TeamPlayersTable extends Pane {
         physicalCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
             @Override
             public Integer getValue() {
-                return p.getValue().getStats().getPhysicalSkill();
+                return p.getValue().getAttributes().getPhysicalSkill();
             }
         });
         

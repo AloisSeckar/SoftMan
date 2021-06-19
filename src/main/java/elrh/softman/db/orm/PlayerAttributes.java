@@ -2,16 +2,15 @@ package elrh.softman.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.constants.Constants;
 import java.util.Random;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_player_stats")
+@DatabaseTable(tableName = "softman_player_attributes")
 @Data
-public class PlayerStats {
+public class PlayerAttributes {
     
     @DatabaseField(generatedId = true)
-    private long statsId;
+    private long attributesId;
     
     @DatabaseField(canBeNull = false)
     private int battingPower;
@@ -61,7 +60,7 @@ public class PlayerStats {
     @DatabaseField(canBeNull = false)
     private int luck;
     
-    public PlayerStats() {
+    public PlayerAttributes() {
         Random rand = new Random();
         this.battingPower = rand.nextInt(100) + 1;
         this.swingControl = rand.nextInt(100) + 1;
