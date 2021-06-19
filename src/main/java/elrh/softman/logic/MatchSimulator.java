@@ -1,5 +1,6 @@
 package elrh.softman.logic;
 
+import elrh.softman.db.orm.PlayerAttributes;
 import elrh.softman.db.orm.PlayerInfo;
 import elrh.softman.gui.view.tab.StandingsTab;
 import elrh.softman.logic.stats.BoxScore;
@@ -29,7 +30,7 @@ public class MatchSimulator {
         homeBatter = 0;
         awayBatter = 0;
         
-        writeIntoConsole("GAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() );
+        writeIntoConsole("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() );
 
         top = true;
         inning = 1;
@@ -58,18 +59,21 @@ public class MatchSimulator {
     ////////////////////////////////////////////////////////////////////////////
     private static void simulateInning() {
         PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
+        PlayerAttributes pitcherAttr = pitcher.getAttributes();
         
-        writeIntoConsole("PITCHER: " + pitcher.toString() + " (" + pitcher.getAttributes().getPitchingSkill() + ")");
+        writeIntoConsole("PITCHER: " + pitcher.toString() + " (" + pitcherAttr.getPitchingSkill() + ")");
         
         int outs = 0;
         while ((top || continueInning()) && outs < 3) {
             LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
             if (batter != null) {
+                PlayerInfo batterInfo = batter.getPlayer();
+                PlayerAttributes batterAttr = batterInfo.getAttributes();
                 
-                writeIntoConsole("BATTER: " + batter.getPlayer().toString() + " (" + batter.getPlayer().getAttributes().getBattingSkill() + ")");
+                writeIntoConsole("BATTER: " + batterInfo.toString() + " (" + batterAttr.getBattingSkill() + ")");
                 
-                int pitchQuality = pitcher.getAttributes().getPitchingSkill() + random.nextInt(100);
-                int hitQuality = batter.getPlayer().getAttributes().getBattingSkill() + random.nextInt(100);
+                int pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
+                int hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);
                 
                 writeIntoConsole(pitchQuality + " vs. " + hitQuality);
                 
