@@ -1,5 +1,6 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.constants.Constants;
 import elrh.softman.db.orm.PlayerInfo;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.GaugeBuilder;
@@ -17,6 +18,8 @@ public class PlayerInfoTile extends VBox {
     private final Label nameLabel;
     private final Label ageLabel;
 
+    private final ImageView imgView;
+
     private final Gauge overallGauge;
     private final Gauge battingGauge;
     private final Gauge pitchingGauge;
@@ -33,13 +36,13 @@ public class PlayerInfoTile extends VBox {
         nameLabel.getStyleClass().add("player-name");
         super.getChildren().add(nameLabel);
 
-        var imgView = new ImageView();
+        imgView = new ImageView();
         imgView.setFitWidth(150);
         imgView.setFitHeight(150);
         imgView.getStyleClass().add("player-img");
         super.getChildren().add(imgView);
 
-        Image defaultImg = new Image(getClass().getResourceAsStream("/img/player.png"));
+        Image defaultImg = new Image(getClass().getResourceAsStream("/img/player-f.png"));
         imgView.setImage(defaultImg);
 
         ageLabel = new Label();
@@ -103,6 +106,12 @@ public class PlayerInfoTile extends VBox {
         if (player != null) {
             nameLabel.setText(player.getName());
             ageLabel.setText(player.getAge() + " yrs");
+
+            if (Constants.GENDER_FEMALE.equals(player.getGender())) {
+                imgView.setImage(new Image(getClass().getResourceAsStream("/img/player-f.png")));
+            } else {
+                imgView.setImage(new Image(getClass().getResourceAsStream("/img/player-m.png")));
+            }
 
             overallGauge.setValue(player.getAttributes().getTotal());
             battingGauge.setValue(player.getAttributes().getBattingSkill());
