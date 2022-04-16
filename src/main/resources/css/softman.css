@@ -54,6 +54,9 @@
     -fx-min-width: 400px;
     -fx-pref-width: 400px;
     -fx-max-width: 400px;
+    -fx-min-height: 700px;
+    -fx-pref-height: 700px;
+    -fx-max-height: 700px;
     -fx-padding: 15px;
 }
 
@@ -67,4 +70,10 @@
 }
 
 .player-age {
+}
+
+.player-stats {
+    -fx-min-height: 100px;
+    -fx-pref-height: 100px;
+    -fx-max-height: 100px;
 }
