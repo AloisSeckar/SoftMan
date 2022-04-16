@@ -29,6 +29,9 @@ nbproject/
 target/
 nbactions.xml
 
+# IDEA project files
+.idea/
+
 # local app files
 sav/
 log/
