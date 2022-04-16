@@ -4,10 +4,10 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.logic.Match;
 import elrh.softman.logic.stats.BoxScore;
-import lombok.Data;
+import lombok.*;
 
 @DatabaseTable(tableName = "softman_results")
-@Data
+@Data @NoArgsConstructor
 public class Result {
     
     @DatabaseField(generatedId = true)
@@ -39,9 +39,6 @@ public class Result {
     
     @DatabaseField(canBeNull = false)
     private int homeErrors;
-
-    public Result() {
-    }
     
     public Result(Match source) {
         awayTeam = source.getAwayTeam().getTeamInfo();

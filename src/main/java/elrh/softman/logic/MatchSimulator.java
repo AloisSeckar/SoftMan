@@ -61,7 +61,7 @@ public class MatchSimulator {
         PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         PlayerAttributes pitcherAttr = pitcher.getAttributes();
         
-        writeIntoConsole("PITCHER: " + pitcher.toString() + " (" + pitcherAttr.getPitchingSkill() + ")");
+        writeIntoConsole("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")");
         
         int outs = 0;
         while ((top || continueInning()) && outs < 3) {
@@ -70,7 +70,7 @@ public class MatchSimulator {
                 PlayerInfo batterInfo = batter.getPlayer();
                 PlayerAttributes batterAttr = batterInfo.getAttributes();
                 
-                writeIntoConsole("BATTER: " + batterInfo.toString() + " (" + batterAttr.getBattingSkill() + ")");
+                writeIntoConsole("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")");
                 
                 int pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
                 int hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);

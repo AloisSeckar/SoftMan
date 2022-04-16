@@ -13,7 +13,7 @@ public class Softman extends Application {
     private static Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         setupGame();
         
         Softman.primaryStage = primaryStage;

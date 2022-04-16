@@ -77,8 +77,8 @@ public class Team {
         boolean useDP = rand.nextBoolean();
         
         List<PlayerInfo> availablePlayers = new ArrayList<>(players);
-        
-        List<Position> availablePositions = new ArrayList<>();
+
+        var availablePositions = new ArrayList<Position>();
         availablePositions.addAll(Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD));
         if (useDP) {
             availablePositions.add(DESIGNATED_PLAYER);
@@ -90,9 +90,7 @@ public class Team {
             Position position = availablePositions.remove(rand.nextInt(availablePositions.size()));
             fillPosition(player, position, i);
         }
-        availablePlayers.forEach((player) -> {
-            addSubtitute(player);
-        });
+        availablePlayers.forEach(this::addSubtitute);
     }
     
 }

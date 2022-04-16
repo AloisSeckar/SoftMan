@@ -16,7 +16,7 @@ public enum Position {
     
     private final String pos;
     
-    private Position(String pos) {
+    Position(String pos) {
         this.pos = pos;
     }
     

@@ -1,7 +1,6 @@
 package elrh.softman.gui.view.tab;
 
 import elrh.softman.gui.table.LeagueStadingsTable;
-import elrh.softman.gui.table.TeamPlayersTable;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.League;
 import elrh.softman.utils.InfoUtils;
@@ -32,18 +31,14 @@ public class StandingsTab extends AnchorPane {
         
         testLeague = AssociationManager.getInstance().getPlayerLeague();
         
-        Button testButton = new Button("MOCK Play league");
-        testButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> {
-            mockLeague();
-        });
+        var testButton = new Button("MOCK Play league");
+        testButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> mockLeague());
         super.getChildren().add(testButton);
         AnchorPane.setLeftAnchor(testButton, 5d);
         AnchorPane.setTopAnchor(testButton, 5d);
         
-        Button testRoundButton = new Button("MOCK Play round");
-        testRoundButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> {
-            mockRound();
-        });
+        var testRoundButton = new Button("MOCK Play round");
+        testRoundButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> mockRound());
         super.getChildren().add(testRoundButton);
         AnchorPane.setLeftAnchor(testRoundButton, 5d);
         AnchorPane.setTopAnchor(testRoundButton, 45d);

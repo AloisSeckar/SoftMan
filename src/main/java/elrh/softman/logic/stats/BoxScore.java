@@ -117,9 +117,7 @@ public class BoxScore {
     private void printLineSeparator(StringBuilder sb) {
         sb.setLength(0);
         sb.append("---------");
-        for (int i = 0; i < awayPoints.length; i++) {
-            sb.append("-----");
-        }
+        sb.append("-----".repeat(awayPoints.length));
         sb.append("---------------");
         StandingsTab.getInstance().writeIntoConsole(sb.toString());
         sb.setLength(0);
@@ -128,8 +126,8 @@ public class BoxScore {
     private int sumPoints(int[] innings) {
         int ret = 0;
 
-        for (int i = 0; i < innings.length; i++) {
-            ret += innings[i];
+        for (int inning : innings) {
+            ret += inning;
         }
 
         return ret;

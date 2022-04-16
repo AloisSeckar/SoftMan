@@ -20,14 +20,14 @@ public class LeagueStadingsTable extends Pane {
         data = FXCollections.observableList(standings);
         FXCollections.sort(data);
 
-        table = new TableView();
+        table = new TableView<>();
         table.setItems(data);
 
-        TableColumn<Standing, String> numberCol = new TableColumn("#");
+        TableColumn<Standing, String> numberCol = new TableColumn<>("#");
         numberCol.setMinWidth(WIDTH);
         numberCol.setMaxWidth(WIDTH);
         numberCol.getStyleClass().add("column-centered");
-        numberCol.setCellValueFactory((p) -> new ObservableValueBase<String>() {
+        numberCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public String getValue() {
                 return String.valueOf(table.getItems().indexOf(p.getValue()) + 1);
@@ -35,10 +35,10 @@ public class LeagueStadingsTable extends Pane {
         });
         numberCol.setSortable(false);
 
-        TableColumn<Standing, String> teamCol = new TableColumn("Team");
+        TableColumn<Standing, String> teamCol = new TableColumn<>("Team");
         teamCol.setMinWidth(200d);
         teamCol.setMaxWidth(200d);
-        teamCol.setCellValueFactory((p) -> new ObservableValueBase<String>() {
+        teamCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public String getValue() {
                 return p.getValue().getTeam();
@@ -46,66 +46,66 @@ public class LeagueStadingsTable extends Pane {
         });
         teamCol.setSortable(false);
 
-        TableColumn<Standing, Integer> gamesCol = new TableColumn("Games");
+        TableColumn<Standing, Integer> gamesCol = new TableColumn<>("Games");
         gamesCol.setMinWidth(WIDTH);
         gamesCol.setMaxWidth(WIDTH);
         gamesCol.getStyleClass().add("column-centered");
-        gamesCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
+        gamesCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public Integer getValue() {
                 return p.getValue().getGames();
             }
         });
 
-        TableColumn<Standing, Integer> winsCol = new TableColumn("W");
+        TableColumn<Standing, Integer> winsCol = new TableColumn<>("W");
         winsCol.setMinWidth(WIDTH);
         winsCol.setMaxWidth(WIDTH);
         winsCol.getStyleClass().add("column-centered");
-        winsCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
+        winsCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public Integer getValue() {
                 return p.getValue().getWins();
             }
         });
 
-        TableColumn<Standing, Integer> losesCol = new TableColumn("L");
+        TableColumn<Standing, Integer> losesCol = new TableColumn<>("L");
         losesCol.setMinWidth(WIDTH);
         losesCol.setMaxWidth(WIDTH);
         losesCol.getStyleClass().add("column-centered");
-        losesCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
+        losesCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public Integer getValue() {
                 return p.getValue().getLoses();
             }
         });
 
-        TableColumn<Standing, Integer> runsForCol = new TableColumn("RF");
+        TableColumn<Standing, Integer> runsForCol = new TableColumn<>("RF");
         runsForCol.setMinWidth(WIDTH);
         runsForCol.setMaxWidth(WIDTH);
         runsForCol.getStyleClass().add("column-centered");
-        runsForCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
+        runsForCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public Integer getValue() {
                 return p.getValue().getRunsFor();
             }
         });
 
-        TableColumn<Standing, Integer> runsAgainstCol = new TableColumn("RA");
+        TableColumn<Standing, Integer> runsAgainstCol = new TableColumn<>("RA");
         runsAgainstCol.setMinWidth(WIDTH);
         runsAgainstCol.setMaxWidth(WIDTH);
         runsAgainstCol.getStyleClass().add("column-centered");
-        runsAgainstCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
+        runsAgainstCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public Integer getValue() {
                 return p.getValue().getRunsAgainst();
             }
         });
 
-        TableColumn<Standing, Integer> pointsCol = new TableColumn("Points");
+        TableColumn<Standing, Integer> pointsCol = new TableColumn<>("Points");
         pointsCol.setMinWidth(WIDTH);
         pointsCol.setMaxWidth(WIDTH);
         pointsCol.getStyleClass().add("column-centered");
-        pointsCol.setCellValueFactory((p) -> new ObservableValueBase<Integer>() {
+        pointsCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public Integer getValue() {
                 return p.getValue().getPoints();

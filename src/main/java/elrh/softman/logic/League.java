@@ -22,9 +22,7 @@ public class League {
 
         GameDBManager.getInstance().saveTeams(teams);
 
-        teams.forEach(team -> {
-            standings.add(new Standing(team.getName()));
-        });
+        teams.forEach(team -> standings.add(new Standing(team.getName())));
     }
 
     public void playLeague() {

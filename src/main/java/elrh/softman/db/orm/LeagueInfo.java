@@ -3,6 +3,7 @@ package elrh.softman.db.orm;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.constants.Constants;
+import java.util.Objects;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_leagues")
@@ -48,7 +49,7 @@ public class LeagueInfo {
             return false;
         }
         final LeagueInfo other = (LeagueInfo) obj;
-        return (this.leagueName == null ? other.leagueName == null : this.leagueName.equals(other.leagueName));
+        return (Objects.equals(this.leagueName, other.leagueName));
     }
 
     public void setRoundPlayed() {

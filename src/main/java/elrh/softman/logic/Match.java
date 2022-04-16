@@ -8,7 +8,7 @@ public class Match {
     private final Team awayTeam;
     private final Team homeTeam;
     
-    private BoxScore boxScore = new BoxScore();
+    private final BoxScore boxScore = new BoxScore();
     private List<Stats> stats;
 
     public Match(Team awayTeam, Team homeTeam) {
