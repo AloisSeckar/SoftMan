@@ -1,5 +1,8 @@
 package elrh.softman.logic;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Position {
     
     PITCHER("P"),
@@ -23,5 +26,10 @@ public enum Position {
     @Override
     public String toString() {
         return pos;
+    }
+
+    public static List<Position> getAvailablePositions() {
+        // TODO allow playing with DP/FLEX
+        return Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD);
     }
 }
