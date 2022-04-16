@@ -2,6 +2,8 @@ package elrh.softman.gui.table;
 
 import elrh.softman.db.orm.PlayerInfo;
 import java.util.List;
+
+import elrh.softman.gui.tile.PlayerInfoTile;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
 import javafx.scene.layout.*;
@@ -14,6 +16,8 @@ public class TeamPlayersTable extends Pane {
 
     private final TableView<PlayerInfo> table;
     private final ObservableList<PlayerInfo> data;
+
+    private PlayerInfoTile playerInfo;
 
     public TeamPlayersTable(List<PlayerInfo> players) {
         data = FXCollections.observableList(players);
@@ -115,11 +119,27 @@ public class TeamPlayersTable extends Pane {
         table.setFixedCellSize(25);
         table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(40));
 
+        var selectionModel = table.getSelectionModel();
+        selectionModel.setSelectionMode(SelectionMode.SINGLE);
+
+        var selectedItems = selectionModel.getSelectedItems();
+        selectedItems.addListener(
+                (ListChangeListener<PlayerInfo>) change -> {
+                    if (playerInfo != null) {
+                        playerInfo.reload(change.getList().get(0));
+                    }
+                }
+        );
+
         super.getChildren().add(table);
     }
 
     public void refresh() {
         FXCollections.sort(data);
         table.refresh();
+    }
+
+    public void setPlayerInfo(PlayerInfoTile playerDetail) {
+        this.playerInfo = playerDetail;
     }
 }

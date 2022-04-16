@@ -46,3 +46,25 @@
 .column-centered { 
   -fx-alignment: center; 
 }
+
+.info {
+    -fx-background-color: #5F9EA0;
+    -fx-border-color: black;
+    -fx-border-width: 3px;
+    -fx-min-width: 400px;
+    -fx-pref-width: 400px;
+    -fx-max-width: 400px;
+    -fx-padding: 15px;
+}
+
+.player-name {
+    -fx-font-size: 30;
+}
+
+.player-img {
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
+
+.player-age {
+}

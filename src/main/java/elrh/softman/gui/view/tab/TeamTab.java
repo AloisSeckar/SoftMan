@@ -1,6 +1,7 @@
 package elrh.softman.gui.view.tab;
 
 import elrh.softman.gui.table.TeamPlayersTable;
+import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.*;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
@@ -30,6 +31,12 @@ public class TeamTab extends AnchorPane {
         super.getChildren().add(playersTable);
         AnchorPane.setLeftAnchor(playersTable, 10d);
         AnchorPane.setTopAnchor(playersTable, 40d);
+
+        var playerInfo = new PlayerInfoTile();
+        super.getChildren().add(playerInfo);
+        AnchorPane.setRightAnchor(playerInfo, 10d);
+        AnchorPane.setTopAnchor(playerInfo, 10d);
+        playersTable.setPlayerInfo(playerInfo);
         
     }
     
