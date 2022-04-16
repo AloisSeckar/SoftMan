@@ -9,6 +9,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <fx.version>17.0.2</fx.version>
+
     </properties>
     
     <build>
@@ -18,19 +21,16 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
             </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>elrh.softman.Softman</mainClass>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-    
-    <repositories>
-        
-        <!-- for fontawesomefx -->
-        <repository>
-            <id>bintray</id>
-            <name>bintray</name>
-            <url>https://jcenter.bintray.com</url>
-        </repository>
-        
-    </repositories>
     
     <dependencies>
         
@@ -38,28 +38,50 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.11</version>
+            <version>3.12.0</version>
         </dependency>
     
         <!-- for build-in SQLite database -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
-            <version>3.32.3</version>
+            <version>3.36.0.3</version>
         </dependency>
         
         <!-- for lightweight ORM -->
         <dependency>
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
-            <version>5.1</version>
+            <version>6.1</version>
+        </dependency>
+
+        <!-- external JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${fx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${fx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${fx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${fx.version}</version>
         </dependency>
         
         <!-- for simplier getters and setters -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
         
@@ -67,31 +89,31 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
+            <version>1.7.36</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.30</version>
+            <version>1.7.36</version>
         </dependency>
         
         <!-- for GUI enhancements -->
         <dependency>
             <groupId>org.kordamp.bootstrapfx</groupId>
             <artifactId>bootstrapfx-core</artifactId>
-            <version>0.2.4</version>
+            <version>0.4.0</version>
         </dependency>
         
         <!-- for GUI enhancements -->
         <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-commons</artifactId>
-            <version>8.15</version>
+            <version>9.1.2</version>
         </dependency>
         <dependency>
             <groupId>de.jensd</groupId>
             <artifactId>fontawesomefx-fontawesome</artifactId>
-            <version>4.7.0-5</version>
+            <version>4.7.0-9.1.2</version>
         </dependency>
         
     </dependencies>
