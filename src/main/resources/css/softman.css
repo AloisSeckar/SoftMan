@@ -77,3 +77,11 @@
     -fx-pref-height: 100px;
     -fx-max-height: 100px;
 }
+
+.padding-5 {
+    -fx-padding: 5px;
+}
+.framed {
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}

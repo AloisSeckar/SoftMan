@@ -15,9 +15,9 @@ public class MainView extends TabPane {
     }
     
     private MainView() {
-        Tab tab1 = new Tab("Team"  , TeamTab.getInstance());
-        Tab tab2 = new Tab("Match"  , new Label("Play upcomming match of your team"));
-        Tab tab3 = new Tab("Lineup" , LineupTab.getInstance());
+        Tab tab1 = new Tab("Team", TeamTab.getInstance());
+        Tab tab2 = new Tab("Match" , MatchTab.getInstance());
+        Tab tab3 = new Tab("Lineup", LineupTab.getInstance());
         Tab tab4 = new Tab("Training", new Label("Manage your player's training and progress"));
         Tab tab5 = new Tab("Standings", StandingsTab.getInstance());
         Tab tab6 = new Tab("Stats", new Label("Statistics center"));
