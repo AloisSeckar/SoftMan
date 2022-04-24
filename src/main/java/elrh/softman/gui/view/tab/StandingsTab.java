@@ -45,7 +45,7 @@ public class StandingsTab extends AnchorPane {
         
         testTextArea = new TextArea();
         testTextArea.getStyleClass().setAll("output-window");
-        testTextArea.setPrefWidth(800d);
+        testTextArea.setPrefWidth(700d);
         testTextArea.setPrefHeight(500d);
         super.getChildren().add(testTextArea);
         AnchorPane.setLeftAnchor(testTextArea, 5d);
@@ -59,7 +59,7 @@ public class StandingsTab extends AnchorPane {
 
     private void mockLeague() {
         try {
-            testLeague.playLeague();
+            testLeague.playLeague(testTextArea);
             leagueTable.refresh();
             
             InfoUtils.showMessage("Finished");
@@ -72,16 +72,12 @@ public class StandingsTab extends AnchorPane {
     
     private void mockRound() {
         try {
-            testLeague.previewCurrentRound();
-            testLeague.playRound();
+            testLeague.previewCurrentRound(testTextArea);
+            testLeague.playRound(testTextArea);
             leagueTable.refresh();
         } catch (Exception ex) {
             LOG.error("ROUND FAILED", ex);
             InfoUtils.showMessage("ROUND FAILED");
         }
-    }
-    
-    public void writeIntoConsole(String message) {
-        testTextArea.appendText(message + "\n");
     }
 }

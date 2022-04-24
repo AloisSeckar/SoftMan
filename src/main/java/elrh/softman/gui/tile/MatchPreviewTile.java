@@ -1,6 +1,6 @@
 package elrh.softman.gui.tile;
 
-import com.j256.ormlite.stmt.query.In;
+import elrh.softman.gui.view.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.League;
 import javafx.geometry.Insets;
@@ -62,7 +62,7 @@ public class MatchPreviewTile extends BorderPane {
 
     private void simulateGame() {
         League testLeague = AssociationManager.getInstance().getPlayerLeague();
-        testLeague.playGame();
+        testLeague.playGame(MatchTab.getTarget());
     }
 
 }

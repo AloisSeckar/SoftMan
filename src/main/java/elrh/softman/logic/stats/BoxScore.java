@@ -1,8 +1,8 @@
 package elrh.softman.logic.stats;
 
 import elrh.softman.constants.Constants;
-import elrh.softman.gui.view.tab.StandingsTab;
 import java.util.Arrays;
+import javafx.scene.control.TextArea;
 import org.apache.commons.lang3.StringUtils;
 
 public class BoxScore {
@@ -77,19 +77,20 @@ public class BoxScore {
         }
     }
 
-    public void printBoxScore() {
-        StringBuilder sb = new StringBuilder();
-        
-        printLineSeparator(sb);
+    public void printBoxScore(TextArea target) {
+        StringBuilder lineSeparator = new StringBuilder();
+        lineSeparator.append("---------");
+        lineSeparator.append("-----".repeat(awayPoints.length));
+        lineSeparator.append("---------------\n");
+
+        StringBuilder sb = new StringBuilder(lineSeparator);
         
         sb.append("| TEAM  | ");
         for (int i = 1; i <= innings; i++) {
             sb.append(pad(i)).append(" | ");
         }
-        sb.append(" R |  H |  E | ");
-        StandingsTab.getInstance().writeIntoConsole(sb.toString());
-        
-        printLineSeparator(sb);
+        sb.append(" R |  H |  E | \n");
+        sb.append(lineSeparator);
 
         sb.append("| AWAY  | ");
         for (int i = 0; i < innings; i++) {
@@ -97,10 +98,8 @@ public class BoxScore {
         }
         sb.append(pad(sumPoints(awayPoints))).append(" | ");
         sb.append(pad(awayHits)).append(" | ");
-        sb.append(pad(awayErrors)).append(" | ");
-        StandingsTab.getInstance().writeIntoConsole(sb.toString());
-
-        printLineSeparator(sb);
+        sb.append(pad(awayErrors)).append(" | \n");
+        sb.append(lineSeparator);
 
         sb.append("| HOME  | ");
         for (int i = 0; i < innings; i++) {
@@ -108,19 +107,10 @@ public class BoxScore {
         }
         sb.append(pad(sumPoints(homePoints))).append(" | ");
         sb.append(pad(homeHits)).append(" | ");
-        sb.append(pad(homeErrors)).append(" | ");
-        StandingsTab.getInstance().writeIntoConsole(sb.toString());
+        sb.append(pad(homeErrors)).append(" | \n");
+        sb.append(lineSeparator);
 
-        printLineSeparator(sb);
-    }
-
-    private void printLineSeparator(StringBuilder sb) {
-        sb.setLength(0);
-        sb.append("---------");
-        sb.append("-----".repeat(awayPoints.length));
-        sb.append("---------------");
-        StandingsTab.getInstance().writeIntoConsole(sb.toString());
-        sb.setLength(0);
+        target.appendText(sb + "\n");
     }
 
     private int sumPoints(int[] innings) {

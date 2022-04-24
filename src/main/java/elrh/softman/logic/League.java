@@ -4,6 +4,8 @@ import elrh.softman.db.GameDBManager;
 import elrh.softman.db.orm.LeagueInfo;
 import elrh.softman.gui.view.tab.StandingsTab;
 import java.util.ArrayList;
+
+import javafx.scene.control.TextArea;
 import lombok.Getter;
 
 public class League {
@@ -25,21 +27,21 @@ public class League {
         teams.forEach(team -> standings.add(new Standing(team.getName())));
     }
 
-    public void playLeague() {
+    public void playLeague(TextArea target) {
         for (int i = 1; i <= 18; i++) {
-            previewCurrentRound();
-            playRound();
+            previewCurrentRound(target);
+            playRound(target);
         }
     }
 
 
-    public void playGame() {
+    public void playGame(TextArea target) {
         Match match = new Match(teams.get(0), teams.get(1));
-        match.simulate();
+        match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
     }
 
-    public void playRound() {
+    public void playRound(TextArea target) {
         Match match;
         for (int i = 0; i < 5; i++) {
             if (leagueInfo.getRound() % 2 == 0) {
@@ -47,7 +49,7 @@ public class League {
             } else {
                 match = new Match(teams.get(9 - i), teams.get(i));
             }
-            match.simulate();
+            match.simulate(target);
             GameDBManager.getInstance().saveMatch(match);
 
             includeMatchIntoStandings(match);
@@ -57,7 +59,7 @@ public class League {
         leagueInfo.setRoundPlayed();
     }
 
-    public void previewCurrentRound() {
+    public void previewCurrentRound(TextArea target) {
         StringBuilder sb = new StringBuilder();
         sb.append("LEAGUE ROUND ").append(leagueInfo.getRound()).append("\n");
         for (int i = 0; i < 5; i++) {
@@ -67,8 +69,8 @@ public class League {
                 sb.append(teams.get(9 - i).getName()).append(" @ ").append(teams.get(i).getName()).append("\n");
             }
         }
-        sb.append("-----------------------");
-        StandingsTab.getInstance().writeIntoConsole(sb.toString());
+        sb.append("-----------------------\n");
+        target.appendText(sb.toString());
     }
 
     ////////////////////////////////////////////////////////////////////////////

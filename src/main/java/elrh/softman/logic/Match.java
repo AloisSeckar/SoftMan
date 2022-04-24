@@ -1,6 +1,8 @@
 package elrh.softman.logic;
 
 import elrh.softman.logic.stats.*;
+import javafx.scene.control.TextArea;
+
 import java.util.List;
 
 public class Match {
@@ -32,10 +34,10 @@ public class Match {
         this.stats = stats;
     }
     
-    public void simulate() {
-        MatchSimulator.simulateMatch(this);
+    public void simulate(TextArea target) {
+        MatchSimulator.simulateMatch(this, target);
         
-        boxScore.printBoxScore();
+        boxScore.printBoxScore(target);
     }
     
 }

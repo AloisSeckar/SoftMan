@@ -2,9 +2,9 @@ package elrh.softman.logic;
 
 import elrh.softman.db.orm.PlayerAttributes;
 import elrh.softman.db.orm.PlayerInfo;
-import elrh.softman.gui.view.tab.StandingsTab;
 import elrh.softman.logic.stats.BoxScore;
 import java.util.Random;
+import javafx.scene.control.TextArea;
 
 public class MatchSimulator {
 
@@ -21,7 +21,7 @@ public class MatchSimulator {
     private static Team homeTeam;
     private static int homeBatter;
 
-    public static void simulateMatch(Match match) {
+    public static void simulateMatch(Match match, TextArea target) {
 
         awayTeam = match.getAwayTeam();
         homeTeam = match.getHomeTeam();
@@ -29,39 +29,39 @@ public class MatchSimulator {
         
         homeBatter = 0;
         awayBatter = 0;
-        
-        writeIntoConsole("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() );
+
+        target.appendText("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() + "\n");
 
         top = true;
         inning = 1;
         while (playNextInning()) {
-            writeIntoConsole("\n\nINNING " + inning);
+            target.appendText("\n\nINNING " + inning + "\n");
 
-            writeIntoConsole("\n\nTOP");
-            simulateInning();
-            getScore();
+            target.appendText("\n\nTOP\n");
+            simulateInning(target);
+            getScore(target);
 
             top = false;
             if (continueInning()) {
-                writeIntoConsole("\n\nBOTTOM");
-                simulateInning();
-                getScore();
+                target.appendText("\n\nBOTTOM\n");
+                simulateInning(target);
+                getScore(target);
             }
 
-            writeIntoConsole("\n\nINNING " + inning);
+            target.appendText("\n\nINNING " + inning + "\n");
             inning++;
             top = true;
         }
 
-        writeIntoConsole("\n\nGAME OVER");
+        target.appendText("\n\nGAME OVER\n\n");
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    private static void simulateInning() {
+    private static void simulateInning(TextArea target) {
         PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         PlayerAttributes pitcherAttr = pitcher.getAttributes();
-        
-        writeIntoConsole("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")");
+
+        target.appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
         
         int outs = 0;
         while ((top || continueInning()) && outs < 3) {
@@ -69,17 +69,17 @@ public class MatchSimulator {
             if (batter != null) {
                 PlayerInfo batterInfo = batter.getPlayer();
                 PlayerAttributes batterAttr = batterInfo.getAttributes();
-                
-                writeIntoConsole("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")");
+
+                target.appendText("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")\n");
                 
                 int pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
                 int hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);
-                
-                writeIntoConsole(pitchQuality + " vs. " + hitQuality);
+
+                target.appendText(pitchQuality + " vs. " + hitQuality + "\n");
                 
                 if (hitQuality >= pitchQuality) {
                     if (hitQuality - pitchQuality > 25) {
-                        writeIntoConsole(batter + " SCORED");
+                        target.appendText(batter + " SCORED\n");
                         boxScore.addHit(top);
                         boxScore.addPoint(inning, top);
                     } else {
@@ -91,26 +91,26 @@ public class MatchSimulator {
                             int fieldingQuality = fielder.getAttributes().getFieldingSkill()+ random.nextInt(100);
                             if (hitQuality >= fieldingQuality) {
                                 if (random.nextBoolean()) {
-                                    writeIntoConsole(batter + " reached after a hit");
+                                    target.appendText(batter + " reached after a hit\n");
                                     boxScore.addHit(top);
                                 } else {
-                                    writeIntoConsole(batter + " reached otherwise");
+                                    target.appendText(batter + " reached otherwise\n");
                                 }
                             } else {
-                                writeIntoConsole(batter + " is OUT");
+                                target.appendText(batter + " is OUT\n");
                                 outs++;
                             }
                         } else {
-                            writeIntoConsole(batter + " reached after a hit");
+                            target.appendText(batter + " reached after a hit\n");
                             boxScore.addHit(top);
                         }
                     }
                 } else {
-                    writeIntoConsole(batter + " is OUT");
+                    target.appendText(batter + " is OUT\n");
                     outs++;
                 }
             } else {
-                writeIntoConsole("Position not filled => OUT");
+                target.appendText("Position not filled => OUT\n");
                 outs++;
             }
 
@@ -128,9 +128,9 @@ public class MatchSimulator {
         }
     }
 
-    private static void getScore() {
-        writeIntoConsole("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true));
-        writeIntoConsole(homeTeam.getName() + ": " + boxScore.getPoints(false));
+    private static void getScore(TextArea target) {
+        target.appendText("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true) + "\n");
+        target.appendText(homeTeam.getName() + ": " + boxScore.getPoints(false) + "\n");
     }
 
     private static boolean playNextInning() {
@@ -171,10 +171,6 @@ public class MatchSimulator {
         }
         
         return ret;
-    }
-    
-    private static void writeIntoConsole(String message) {
-        StandingsTab.getInstance().writeIntoConsole(message);
     }
 
 }
