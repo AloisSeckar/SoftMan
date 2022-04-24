@@ -32,6 +32,13 @@ public class League {
         }
     }
 
+
+    public void playGame() {
+        Match match = new Match(teams.get(0), teams.get(1));
+        match.simulate();
+        GameDBManager.getInstance().saveMatch(match);
+    }
+
     public void playRound() {
         Match match;
         for (int i = 0; i < 5; i++) {

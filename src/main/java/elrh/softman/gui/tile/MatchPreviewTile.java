@@ -1,12 +1,15 @@
 package elrh.softman.gui.tile;
 
 import com.j256.ormlite.stmt.query.In;
+import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.League;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
@@ -50,9 +53,16 @@ public class MatchPreviewTile extends BorderPane {
 
         var simButton = new Button("Simulate game");
         buttonBar.getChildren().add(simButton);
+        simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateGame());
+
         var playButton = new Button("Play game");
         buttonBar.getChildren().add(playButton);
 
+    }
+
+    private void simulateGame() {
+        League testLeague = AssociationManager.getInstance().getPlayerLeague();
+        testLeague.playGame();
     }
 
 }
