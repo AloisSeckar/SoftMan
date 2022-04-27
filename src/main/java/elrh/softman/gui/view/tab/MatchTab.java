@@ -27,7 +27,7 @@ public class MatchTab extends AnchorPane {
         matchOverview = new TextArea();
         matchOverview.getStyleClass().setAll("output-window");
         matchOverview.setPrefWidth(500);
-        matchOverview.setPrefRowCount(50);
+        matchOverview.setPrefRowCount(40);
         super.getChildren().add(matchOverview);
         AnchorPane.setRightAnchor(matchOverview, 10d);
         AnchorPane.setTopAnchor(matchOverview, 10d);

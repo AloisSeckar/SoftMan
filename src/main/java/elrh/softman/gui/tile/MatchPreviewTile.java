@@ -3,6 +3,8 @@ package elrh.softman.gui.tile;
 import elrh.softman.gui.view.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.League;
+import elrh.softman.logic.Match;
+import elrh.softman.logic.MatchSimulator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -16,6 +18,8 @@ import javafx.scene.layout.HBox;
 public class MatchPreviewTile extends BorderPane {
 
     private static final int LOGO_WIDTH = 150;
+
+    private MatchSimulator sim;
 
     public MatchPreviewTile() {
 
@@ -53,16 +57,27 @@ public class MatchPreviewTile extends BorderPane {
 
         var simButton = new Button("Simulate game");
         buttonBar.getChildren().add(simButton);
-        simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateGame());
+        simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
 
         var playButton = new Button("Play game");
         buttonBar.getChildren().add(playButton);
+        playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
 
     }
 
-    private void simulateGame() {
+    private void playMatch() {
+        if (sim == null) {
+            League testLeague = AssociationManager.getInstance().getPlayerLeague();
+            Match testMatch = testLeague.getMatch();
+            sim = new MatchSimulator(testMatch, MatchTab.getTarget());
+        }
+
+        sim.playMatch();
+    }
+
+    private void simulateMatch() {
         League testLeague = AssociationManager.getInstance().getPlayerLeague();
-        testLeague.playGame(MatchTab.getTarget());
+        testLeague.playMatch(MatchTab.getTarget());
     }
 
 }

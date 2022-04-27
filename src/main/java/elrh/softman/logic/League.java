@@ -2,7 +2,7 @@ package elrh.softman.logic;
 
 import elrh.softman.db.GameDBManager;
 import elrh.softman.db.orm.LeagueInfo;
-import elrh.softman.gui.view.tab.StandingsTab;
+
 import java.util.ArrayList;
 
 import javafx.scene.control.TextArea;
@@ -34,8 +34,11 @@ public class League {
         }
     }
 
+    public Match getMatch() {
+        return new Match(teams.get(0), teams.get(1));
+    }
 
-    public void playGame(TextArea target) {
+    public void playMatch(TextArea target) {
         Match match = new Match(teams.get(0), teams.get(1));
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);

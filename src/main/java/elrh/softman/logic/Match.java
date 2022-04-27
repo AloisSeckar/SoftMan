@@ -35,7 +35,8 @@ public class Match {
     }
     
     public void simulate(TextArea target) {
-        MatchSimulator.simulateMatch(this, target);
+        MatchSimulator sim = new MatchSimulator(this, target);
+        sim.simulateMatch();
         
         boxScore.printBoxScore(target);
     }

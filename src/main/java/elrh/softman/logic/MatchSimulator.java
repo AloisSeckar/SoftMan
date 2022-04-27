@@ -9,131 +9,164 @@ import javafx.scene.control.TextArea;
 public class MatchSimulator {
 
     private static final Random random = new Random();
-    
-    private static int inning;
-    private static boolean top;
-    
-    private static BoxScore boxScore;
-    
-    private static Team awayTeam;
-    private static int awayBatter;
 
-    private static Team homeTeam;
-    private static int homeBatter;
+    private final TextArea target;
+    private final BoxScore boxScore;
+    private final Team awayTeam;
+    private final Team homeTeam;
+    
+    private boolean header = true;
+    private int inning = 1;
+    private boolean top = true;
+    private int outs = 0;
+    private int awayBatter = 0;
+    private int homeBatter = 0;
 
-    public static void simulateMatch(Match match, TextArea target) {
-
+    public MatchSimulator(Match match, TextArea target) {
+        this.target = target;
         awayTeam = match.getAwayTeam();
         homeTeam = match.getHomeTeam();
         boxScore = match.getBoxScore();
-        
-        homeBatter = 0;
-        awayBatter = 0;
+    }
 
-        target.appendText("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() + "\n");
+    public void playMatch() {
+        if (header) {
+            if (top && playNextInning()) {
+                if (inning == 1) {
+                    target.appendText("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() + "\n");
+                }
+                target.appendText("\n\nINNING " + inning + "\n");
+                target.appendText("\n\nTOP\n");
+            } else if (continueInning()) {
+                target.appendText("\n\nBOTTOM\n");
+            }
+            header = false;
+        }
 
-        top = true;
-        inning = 1;
+        if (playNextInning()) {
+            if ((top || continueInning()) && outs < 3) {
+                simulatePlay();
+            }
+            if (outs == 3) {
+                getScore();
+                swapTeams();
+            }
+        }
+
+        if (!continueInning()) {
+            boxScore.printBoxScore(target);
+            target.appendText("\n\nGAME OVER\n\n");
+        }
+    }
+
+
+    public void simulateMatch() {
+
         while (playNextInning()) {
             target.appendText("\n\nINNING " + inning + "\n");
 
             target.appendText("\n\nTOP\n");
-            simulateInning(target);
-            getScore(target);
+            simulateInning();
 
-            top = false;
             if (continueInning()) {
                 target.appendText("\n\nBOTTOM\n");
-                simulateInning(target);
-                getScore(target);
+                simulateInning();
             }
-
-            target.appendText("\n\nINNING " + inning + "\n");
-            inning++;
-            top = true;
         }
 
         target.appendText("\n\nGAME OVER\n\n");
     }
+    public void simulateInning() {
+        while (outs < 3) {
+            simulatePlay();
+        }
+        getScore();
+        swapTeams();
+    }
 
-    ////////////////////////////////////////////////////////////////////////////
-    private static void simulateInning(TextArea target) {
+    private void simulatePlay() {
         PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         PlayerAttributes pitcherAttr = pitcher.getAttributes();
 
         target.appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
-        
-        int outs = 0;
-        while ((top || continueInning()) && outs < 3) {
-            LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
-            if (batter != null) {
-                PlayerInfo batterInfo = batter.getPlayer();
-                PlayerAttributes batterAttr = batterInfo.getAttributes();
 
-                target.appendText("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")\n");
-                
-                int pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
-                int hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);
+        LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
+        if (batter != null) {
+            PlayerInfo batterInfo = batter.getPlayer();
+            PlayerAttributes batterAttr = batterInfo.getAttributes();
 
-                target.appendText(pitchQuality + " vs. " + hitQuality + "\n");
-                
-                if (hitQuality >= pitchQuality) {
-                    if (hitQuality - pitchQuality > 25) {
-                        target.appendText(batter + " SCORED\n");
-                        boxScore.addHit(top);
-                        boxScore.addPoint(inning, top);
-                    } else {
-                        
-                        int randomLocation = random.nextInt(9);
-                        PlayerInfo fielder = top ? homeTeam.getFielder(randomLocation) : awayTeam.getFielder(randomLocation);
-                        
-                        if (fielder != null) {
-                            int fieldingQuality = fielder.getAttributes().getFieldingSkill()+ random.nextInt(100);
-                            if (hitQuality >= fieldingQuality) {
-                                if (random.nextBoolean()) {
-                                    target.appendText(batter + " reached after a hit\n");
-                                    boxScore.addHit(top);
-                                } else {
-                                    target.appendText(batter + " reached otherwise\n");
-                                }
+            target.appendText("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")\n");
+
+            int pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
+            int hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);
+
+            target.appendText(pitchQuality + " vs. " + hitQuality + "\n");
+
+            if (hitQuality >= pitchQuality) {
+                if (hitQuality - pitchQuality > 25) {
+                    target.appendText(batter + " SCORED\n");
+                    boxScore.addHit(top);
+                    boxScore.addPoint(inning, top);
+                } else {
+
+                    int randomLocation = random.nextInt(9);
+                    PlayerInfo fielder = top ? homeTeam.getFielder(randomLocation) : awayTeam.getFielder(randomLocation);
+
+                    if (fielder != null) {
+                        int fieldingQuality = fielder.getAttributes().getFieldingSkill()+ random.nextInt(100);
+                        if (hitQuality >= fieldingQuality) {
+                            if (random.nextBoolean()) {
+                                target.appendText(batter + " reached after a hit\n");
+                                boxScore.addHit(top);
                             } else {
-                                target.appendText(batter + " is OUT\n");
-                                outs++;
+                                target.appendText(batter + " reached otherwise\n");
                             }
                         } else {
-                            target.appendText(batter + " reached after a hit\n");
-                            boxScore.addHit(top);
+                            target.appendText(batter + " is OUT\n");
+                            outs++;
                         }
+                    } else {
+                        target.appendText(batter + " reached after a hit\n");
+                        boxScore.addHit(top);
                     }
-                } else {
-                    target.appendText(batter + " is OUT\n");
-                    outs++;
                 }
             } else {
-                target.appendText("Position not filled => OUT\n");
+                target.appendText(batter + " is OUT\n");
                 outs++;
             }
+        } else {
+            target.appendText("Position not filled => OUT\n");
+            outs++;
+        }
 
-            if (top) {
-                awayBatter++;
-                if (awayBatter > 8) {
-                    awayBatter = 0;
-                }
-            } else {
-                homeBatter++;
-                if (homeBatter > 8) {
-                    homeBatter = 0;
-                }
+        if (top) {
+            awayBatter++;
+            if (awayBatter > 8) {
+                awayBatter = 0;
+            }
+        } else {
+            homeBatter++;
+            if (homeBatter > 8) {
+                homeBatter = 0;
             }
         }
     }
 
-    private static void getScore(TextArea target) {
+    private void swapTeams() {
+        header = true;
+        outs = 0;
+        top = !top;
+        if (top) {
+            inning++;
+        }
+    }
+
+    private void getScore() {
         target.appendText("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true) + "\n");
         target.appendText(homeTeam.getName() + ": " + boxScore.getPoints(false) + "\n");
     }
 
-    private static boolean playNextInning() {
+    private boolean playNextInning() {
         boolean ret = true;
         
         int awayPoints = boxScore.getPoints(true);
@@ -152,7 +185,7 @@ public class MatchSimulator {
         return ret;
     }
 
-    private static boolean continueInning() {
+    private boolean continueInning() {
         boolean ret = true;
         
         int awayPoints = boxScore.getPoints(true);
