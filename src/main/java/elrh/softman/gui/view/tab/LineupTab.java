@@ -1,16 +1,22 @@
 package elrh.softman.gui.view.tab;
 
+import elrh.softman.gui.tile.DefenseTile;
 import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.LineupPosition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 public class LineupTab extends AnchorPane {
 
     private final LineupTile lineupTile;
+
+    private final DefenseTile defenseTile;
     private static LineupTab INSTANCE;
 
     public static LineupTab getInstance() {
@@ -35,12 +41,18 @@ public class LineupTab extends AnchorPane {
         AnchorPane.setLeftAnchor(saveButton, 10d);
         AnchorPane.setTopAnchor(saveButton, 525d);
 
+        defenseTile = new DefenseTile();
+        super.getChildren().add(defenseTile);
+        AnchorPane.setRightAnchor(defenseTile, 10d);
+        AnchorPane.setTopAnchor(defenseTile, 10d);
+
     }
 
     private void saveLineup() {
         String check = lineupTile.checkLineup();
         if (StringUtils.isBlank(check)) {
-
+            List<LineupPosition> lineup = lineupTile.getLineup();
+            lineup.forEach(defenseTile::setPosition);
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText(check);

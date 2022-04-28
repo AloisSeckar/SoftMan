@@ -81,6 +81,7 @@
 .padding-5 {
     -fx-padding: 5px;
 }
+
 .framed {
     -fx-border-color: black;
     -fx-border-width: 2px;

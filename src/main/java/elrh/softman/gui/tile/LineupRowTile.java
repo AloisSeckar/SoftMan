@@ -42,4 +42,8 @@ public class LineupRowTile extends HBox {
         return new LineupPosition(playerCB.getValue(), positionCB.getValue());
     }
 
+    public boolean isFilled() {
+        return playerCB.getValue() != null && positionCB.getValue() != null;
+    }
+
 }

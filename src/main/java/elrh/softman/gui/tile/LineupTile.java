@@ -3,12 +3,11 @@ package elrh.softman.gui.tile;
 import elrh.softman.db.orm.PlayerInfo;
 import elrh.softman.logic.LineupPosition;
 import elrh.softman.logic.Position;
-import javafx.collections.ObservableList;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LineupTile extends VBox {
 
@@ -58,6 +57,12 @@ public class LineupTile extends VBox {
         }
 
         return null;
+    }
+
+    public List<LineupPosition> getLineup() {
+        List<LineupPosition> ret = new ArrayList<>();
+        lineupRows.stream().filter(LineupRowTile::isFilled).forEach(row -> ret.add(row.getCurrentSelection()));
+        return Collections.unmodifiableList(ret);
     }
 
 }
