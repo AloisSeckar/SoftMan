@@ -92,5 +92,19 @@ public class Team {
         }
         availablePlayers.forEach(this::addSubtitute);
     }
-    
+
+    public void setLineup(List<LineupPosition> lineup) {
+        if (lineup != null) {
+            int ord = 0;
+            for (LineupPosition row : lineup) {
+                PlayerInfo player = row.getPlayer();
+                Position position = row.getPosition();
+                if (position != null) {
+                    fillPosition(player, position, ord++);
+                } else {
+                    addSubtitute(player);
+                }
+            }
+        }
+    }
 }
