@@ -14,13 +14,10 @@ import java.util.List;
 
 public class LineupRowTile extends HBox {
 
-    private final int row;
-
     private final ComboBox<PlayerInfo> playerCB;
     private final ComboBox<Position> positionCB;
 
-    public LineupRowTile(int row, List<PlayerInfo> players) {
-        this.row = row;
+    public LineupRowTile(int row, List<PlayerInfo> players, LineupPosition current) {
 
         super.setSpacing(10);
         super.setAlignment(Pos.CENTER);
@@ -36,6 +33,11 @@ public class LineupRowTile extends HBox {
             positionCB.setDisable(true);
         }
         super.getChildren().add(positionCB);
+
+        if (current != null) {
+            playerCB.setValue(current.getPlayer());
+            positionCB.setValue(current.getPosition());
+        }
     }
 
     public LineupPosition getCurrentSelection() {

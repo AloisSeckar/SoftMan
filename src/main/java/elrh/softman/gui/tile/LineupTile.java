@@ -6,6 +6,8 @@ import elrh.softman.logic.Position;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import elrh.softman.logic.Team;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 
@@ -15,11 +17,12 @@ public class LineupTile extends VBox {
 
     private final List<LineupRowTile> lineupRows = new ArrayList<>(MAX_PLAYERS);
 
-    public LineupTile(List<PlayerInfo> players) {
+    public LineupTile(Team team) {
         super.setSpacing(5);
 
+        List<PlayerInfo> players = team.getPlayers();
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            var lineupRowTile = new LineupRowTile(i + 1, players);
+            var lineupRowTile = new LineupRowTile(i + 1, players, i < 9 ? team.getBatter(i) : null);
             lineupRows.add(lineupRowTile);
             super.getChildren().add(lineupRowTile);
 
