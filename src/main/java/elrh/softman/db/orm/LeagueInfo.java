@@ -23,13 +23,13 @@ public class LeagueInfo {
     private int year;
     
     @DatabaseField(canBeNull = false)
-    private int round;
+    private int matchId;
     
     public LeagueInfo(String leagueName) {
         this.leagueName = leagueName;
         this.gender = Constants.GENDER_MALE;
         this.year = 2020;
-        this.round = 1;
+        this.matchId = 1000;
     }
     
     @Override
@@ -50,10 +50,6 @@ public class LeagueInfo {
         }
         final LeagueInfo other = (LeagueInfo) obj;
         return (Objects.equals(this.leagueName, other.leagueName));
-    }
-
-    public void setRoundPlayed() {
-        this.round++;
     }
     
 }

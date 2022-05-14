@@ -46,16 +46,19 @@ public class League {
     }
 
     public Match mockGetMatch() {
-        return new Match(LocalDate.now(), teams.get(0), teams.get(1));
+        return new Match(1, LocalDate.now(), 1, teams.get(0), teams.get(1));
     }
 
     public void mockPlayMatch(TextArea target) {
-        Match match = new Match(LocalDate.now(), teams.get(0), teams.get(1));
+        Match match = new Match(1, LocalDate.now(), 1, teams.get(0), teams.get(1));
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
     }
 
     public void mockPlayRound(TextArea target) {
+        // TODO REMOVE
+        target.appendText("MOCK BROKEN AND HOPEFULLY DEAD");
+        /*
         Match match;
         for (int i = 0; i < 5; i++) {
             if (leagueInfo.getRound() % 2 == 0) {
@@ -71,9 +74,13 @@ public class League {
 
         shiftTeams();
         leagueInfo.setRoundPlayed();
+         */
     }
 
     public void mockPreviewCurrentRound(TextArea target) {
+        // TODO REMOVE
+        target.appendText("MOCK BROKEN AND HOPEFULLY DEAD");
+        /*
         StringBuilder sb = new StringBuilder();
         sb.append("LEAGUE ROUND ").append(leagueInfo.getRound()).append("\n");
         for (int i = 0; i < 5; i++) {
@@ -85,6 +92,7 @@ public class League {
         }
         sb.append("-----------------------\n");
         target.appendText(sb.toString());
+         */
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -93,14 +101,21 @@ public class League {
         var scheduledMatches = new ArrayList<Match>();
         var roundDate = LocalDate.of(2023,4,1);
         int rounds = teams.size() * 4;
+        int matchIdBase = leagueInfo.getMatchId();
         for (int i = 1; i <= rounds; i++) {
-            Match match;
             for (int j = 0; j < 5; j++) {
-                if (leagueInfo.getRound() % 2 == 0) {
-                    match = new Match(roundDate, teams.get(j), teams.get(9 - j));
+                Match match;
+                int matchId = matchIdBase + i * (j + 1);
+                int homeTeamIndex;
+                int awayTeamIndex;
+                if (i % 2 == 0) {
+                    homeTeamIndex = j;
+                    awayTeamIndex = 9 - j;
                 } else {
-                    match = new Match(roundDate, teams.get(9 - j), teams.get(j));
+                    homeTeamIndex = 9 - j;
+                    awayTeamIndex = j;
                 }
+                match = new Match(matchId, roundDate, i, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
                 scheduledMatches.add(match);
                 GameDBManager.getInstance().saveMatch(match);
             }

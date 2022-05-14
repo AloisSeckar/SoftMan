@@ -10,8 +10,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Match {
+
+    @Getter
+    private final int matchId;
     @Getter
     private final LocalDate matchDay;
+    @Getter
+    private final Integer leagueRound;
     @Getter
     private final Team awayTeam;
     @Getter
@@ -23,8 +28,10 @@ public class Match {
     private MatchStatus status;
     private List<Stats> stats;
 
-    public Match(LocalDate matchDay, Team awayTeam, Team homeTeam) {
+    public Match(int matchId, LocalDate matchDay, Integer leagueRound, Team awayTeam, Team homeTeam) {
+        this.matchId = matchId;
         this.matchDay = matchDay;
+        this.leagueRound = leagueRound;
         this.awayTeam = awayTeam;
         this.homeTeam = homeTeam;
         this.status = MatchStatus.SCHEDULED;
