@@ -8,7 +8,9 @@ import java.util.ArrayList;
 
 import javafx.scene.control.TextArea;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class League {
 
     @Getter
@@ -16,16 +18,24 @@ public class League {
 
     private ArrayList<Team> teams;
 
+    private ArrayList<Match> matches;
+
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
 
     public League(String name, ArrayList<Team> teams) {
+        LOG.info("League '" + name + "' is being set-up");
+
         this.leagueInfo = new LeagueInfo(name);
         this.teams = teams;
-
-        GameDBManager.getInstance().saveTeams(teams);
-
         teams.forEach(team -> standings.add(new Standing(team.getName())));
+        GameDBManager.getInstance().saveTeams(teams);
+        LOG.info("Teams prepared");
+
+        matches = scheduleMatches();
+        LOG.info("Matches scheduled");
+
+        LOG.info("League '" + name + "' is was set-up");
     }
 
     public void mockPlayLeague(TextArea target) {
@@ -78,6 +88,28 @@ public class League {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    private ArrayList<Match> scheduleMatches() {
+        var scheduledMatches = new ArrayList<Match>();
+        var roundDate = LocalDate.of(2023,4,1);
+        int rounds = teams.size() * 4;
+        for (int i = 1; i <= rounds; i++) {
+            Match match;
+            for (int j = 0; j < 5; j++) {
+                if (leagueInfo.getRound() % 2 == 0) {
+                    match = new Match(roundDate, teams.get(j), teams.get(9 - j));
+                } else {
+                    match = new Match(roundDate, teams.get(9 - j), teams.get(j));
+                }
+                scheduledMatches.add(match);
+                GameDBManager.getInstance().saveMatch(match);
+            }
+            shiftTeams();
+            roundDate = roundDate.plusDays(7);
+        }
+        return scheduledMatches;
+    }
+
     private void shiftTeams() {
         ArrayList<Team> shiftedTeams = new ArrayList<>();
         shiftedTeams.add(teams.get(0));
