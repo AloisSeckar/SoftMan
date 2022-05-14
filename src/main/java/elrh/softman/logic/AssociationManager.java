@@ -51,6 +51,14 @@ public class AssociationManager {
         ActionFrame.getInstance().updateDateValue(currentDate);
     }
 
+    public List<Match> getTodayMatches() {
+        return playerLeague.getTodayMatches(currentDate);
+    }
+
+    public List<Match> getRoundMatches(int round) {
+        return playerLeague.getRoundMatches(round);
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     private void prepareLeagues() {
         Team testTeam = MockTeamFactory.getMockTeam("REDS");

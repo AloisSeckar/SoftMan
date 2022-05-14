@@ -5,8 +5,11 @@ import elrh.softman.db.orm.LeagueInfo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import elrh.softman.db.orm.MatchInfo;
+import elrh.softman.utils.ErrorUtils;
 import javafx.scene.control.TextArea;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +22,8 @@ public class League {
 
     private ArrayList<Team> teams;
 
-    private ArrayList<Match> matches;
+    private final HashMap<Integer, Match> matches;
+    private final HashMap<Integer, ArrayList<Match>> matchesInRounds;
 
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
@@ -33,10 +37,30 @@ public class League {
         GameDBManager.getInstance().saveTeams(teams);
         LOG.info("Teams prepared");
 
-        matches = scheduleMatches();
+        matches = new HashMap<>();
+        matchesInRounds = new HashMap<>();
+        scheduleMatches();
         LOG.info("Matches scheduled");
 
         LOG.info("League '" + name + "' is was set-up");
+    }
+
+    public List<Match> getTodayMatches(LocalDate currentDate) {
+        if (currentDate != null) {
+            return matches.values().stream().filter(match -> match.getMatchInfo().getMatchDay().compareTo(currentDate) == 0).toList();
+        } else {
+            ErrorUtils.raise("Called 'getRoundMatches' with parameter NULL");
+            return null;
+        }
+    }
+
+    public List<Match> getRoundMatches(int round) {
+        if (round >= 0 && round < matchesInRounds.size()) {
+            return matchesInRounds.get(round);
+        } else {
+            ErrorUtils.raise("Called 'getRoundMatches' with parameter out-of-bounds (called " + round + ", available " + matchesInRounds.size() + ")");
+            return null;
+        }
     }
 
     public void mockPlayLeague(TextArea target) {
@@ -51,13 +75,13 @@ public class League {
     }
 
     public void mockPlayMatch(TextArea target) {
-        Match match = new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
+        var match = new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
     }
 
     private MatchInfo mockGetMatchInfo() {
-        MatchInfo ret = new MatchInfo();
+        var ret = new MatchInfo();
         ret.setMatchId(1);
         ret.setMatchDay(LocalDate.now());
         return ret;
@@ -105,15 +129,18 @@ public class League {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private ArrayList<Match> scheduleMatches() {
-        var scheduledMatches = new ArrayList<Match>();
-        var roundDate = LocalDate.of(2023,4,1);
-        int rounds = teams.size() * 4;
-        int matchIdBase = leagueInfo.getMatchId();
-        for (int i = 1; i <= rounds; i++) {
-            for (int j = 0; j < 5; j++) {
+    private void scheduleMatches() {
 
-                int matchId = matchIdBase + i * (j + 1);
+        var matchIdBase = leagueInfo.getMatchId();
+        var matchesPerRound = teams.size() / 2;
+        var rounds = teams.size() * 4;
+        var roundDate = LocalDate.of(2023,4,1);
+
+        for (int i = 1; i <= rounds; i++) {
+            matchesInRounds.put(i, new ArrayList<>(matchesPerRound));
+            for (int j = 0; j < matchesPerRound; j++) {
+
+                int matchId = matchIdBase + ((i - 1) * matchesPerRound) + (j + 1);
 
                 int homeTeamIndex;
                 int awayTeamIndex;
@@ -125,23 +152,24 @@ public class League {
                     awayTeamIndex = j;
                 }
 
-                MatchInfo info = new MatchInfo();
+                var info = new MatchInfo();
                 info.setMatchId(matchId);
                 info.setMatchDay(roundDate);
                 info.setLeagueRound(i);
 
-                Match match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
-                scheduledMatches.add(match);
+                var match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
+                LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayTeam().getName() + " @ " + match.getHomeTeam().getName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
                 GameDBManager.getInstance().saveMatch(match);
+                matches.put(matchId, match);
+                (matchesInRounds.get(i)).add(match);
             }
             shiftTeams();
             roundDate = roundDate.plusDays(7);
         }
-        return scheduledMatches;
     }
 
     private void shiftTeams() {
-        ArrayList<Team> shiftedTeams = new ArrayList<>();
+        var shiftedTeams = new ArrayList<Team>();
         shiftedTeams.add(teams.get(0));
         shiftedTeams.add(teams.get(9));
         shiftedTeams.addAll(teams.subList(1, 9));
@@ -149,7 +177,7 @@ public class League {
     }
 
     private void includeMatchIntoStandings(Match match) {
-        String homeTeamName = match.getHomeTeam().getName();
+        var homeTeamName = match.getHomeTeam().getName();
         Standing homeTeamStanding;
         int homeTeamIndex = -1;
         do {
@@ -157,7 +185,7 @@ public class League {
             homeTeamStanding = standings.get(homeTeamIndex);
         } while (!homeTeamName.equals(homeTeamStanding.getTeam()) || homeTeamIndex > 9);
 
-        String awayTeamName = match.getAwayTeam().getName();
+        var awayTeamName = match.getAwayTeam().getName();
         Standing awayTeamStanding;
         int awayTeamIndex = -1;
         do {
@@ -185,5 +213,4 @@ public class League {
             awayTeamStanding.setWins(awayTeamStanding.getWins() + 1);
         }
     }
-
 }
