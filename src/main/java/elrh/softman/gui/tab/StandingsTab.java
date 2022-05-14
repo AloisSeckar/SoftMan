@@ -59,7 +59,7 @@ public class StandingsTab extends AnchorPane {
 
     private void mockLeague() {
         try {
-            testLeague.playLeague(testTextArea);
+            testLeague.mockPlayLeague(testTextArea);
             leagueTable.refresh();
             
             InfoUtils.showMessage("Finished");
@@ -73,7 +73,7 @@ public class StandingsTab extends AnchorPane {
     private void mockRound() {
         try {
             testLeague.previewCurrentRound(testTextArea);
-            testLeague.playRound(testTextArea);
+            testLeague.mockPlayRound(testTextArea);
             leagueTable.refresh();
         } catch (Exception ex) {
             LOG.error("ROUND FAILED", ex);

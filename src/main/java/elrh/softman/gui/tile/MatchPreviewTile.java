@@ -68,7 +68,7 @@ public class MatchPreviewTile extends BorderPane {
     private void playMatch() {
         if (sim == null) {
             League testLeague = AssociationManager.getInstance().getPlayerLeague();
-            Match testMatch = testLeague.getMatch();
+            Match testMatch = testLeague.mockGetMatch();
             sim = new MatchSimulator(testMatch, MatchTab.getTarget());
         }
 
@@ -77,7 +77,7 @@ public class MatchPreviewTile extends BorderPane {
 
     private void simulateMatch() {
         League testLeague = AssociationManager.getInstance().getPlayerLeague();
-        testLeague.playMatch(MatchTab.getTarget());
+        testLeague.mockPlayMatch(MatchTab.getTarget());
     }
 
 }

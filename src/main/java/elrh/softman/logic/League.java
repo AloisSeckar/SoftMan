@@ -28,24 +28,24 @@ public class League {
         teams.forEach(team -> standings.add(new Standing(team.getName())));
     }
 
-    public void playLeague(TextArea target) {
+    public void mockPlayLeague(TextArea target) {
         for (int i = 1; i <= 18; i++) {
-            previewCurrentRound(target);
-            playRound(target);
+            mockPreviewCurrentRound(target);
+            mockPlayRound(target);
         }
     }
 
-    public Match getMatch() {
+    public Match mockGetMatch() {
         return new Match(LocalDate.now(), teams.get(0), teams.get(1));
     }
 
-    public void playMatch(TextArea target) {
+    public void mockPlayMatch(TextArea target) {
         Match match = new Match(LocalDate.now(), teams.get(0), teams.get(1));
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
     }
 
-    public void playRound(TextArea target) {
+    public void mockPlayRound(TextArea target) {
         Match match;
         for (int i = 0; i < 5; i++) {
             if (leagueInfo.getRound() % 2 == 0) {
@@ -63,7 +63,7 @@ public class League {
         leagueInfo.setRoundPlayed();
     }
 
-    public void previewCurrentRound(TextArea target) {
+    public void mockPreviewCurrentRound(TextArea target) {
         StringBuilder sb = new StringBuilder();
         sb.append("LEAGUE ROUND ").append(leagueInfo.getRound()).append("\n");
         for (int i = 0; i < 5; i++) {
