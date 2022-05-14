@@ -3,6 +3,7 @@ package elrh.softman.logic;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.db.orm.LeagueInfo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javafx.scene.control.TextArea;
@@ -35,11 +36,11 @@ public class League {
     }
 
     public Match getMatch() {
-        return new Match(teams.get(0), teams.get(1));
+        return new Match(LocalDate.now(), teams.get(0), teams.get(1));
     }
 
     public void playMatch(TextArea target) {
-        Match match = new Match(teams.get(0), teams.get(1));
+        Match match = new Match(LocalDate.now(), teams.get(0), teams.get(1));
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
     }
@@ -48,9 +49,9 @@ public class League {
         Match match;
         for (int i = 0; i < 5; i++) {
             if (leagueInfo.getRound() % 2 == 0) {
-                match = new Match(teams.get(i), teams.get(9 - i));
+                match = new Match(LocalDate.now(), teams.get(i), teams.get(9 - i));
             } else {
-                match = new Match(teams.get(9 - i), teams.get(i));
+                match = new Match(LocalDate.now(), teams.get(9 - i), teams.get(i));
             }
             match.simulate(target);
             GameDBManager.getInstance().saveMatch(match);
