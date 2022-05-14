@@ -72,7 +72,7 @@ public class StandingsTab extends AnchorPane {
     
     private void mockRound() {
         try {
-            testLeague.previewCurrentRound(testTextArea);
+            testLeague.mockPreviewCurrentRound(testTextArea);
             testLeague.mockPlayRound(testTextArea);
             leagueTable.refresh();
         } catch (Exception ex) {
