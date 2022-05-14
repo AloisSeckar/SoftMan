@@ -20,6 +20,10 @@ public class Team {
         this.teamInfo = new TeamInfo(name);
     }
 
+    public long getId() {
+        return teamInfo.getTeamId();
+    }
+
     public String getName() {
         return teamInfo.getTeamName();
     }

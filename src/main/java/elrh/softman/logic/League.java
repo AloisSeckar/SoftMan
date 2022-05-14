@@ -6,6 +6,7 @@ import elrh.softman.db.orm.LeagueInfo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import elrh.softman.db.orm.MatchInfo;
 import javafx.scene.control.TextArea;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -46,13 +47,20 @@ public class League {
     }
 
     public Match mockGetMatch() {
-        return new Match(1, LocalDate.now(), 1, teams.get(0), teams.get(1));
+        return new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
     }
 
     public void mockPlayMatch(TextArea target) {
-        Match match = new Match(1, LocalDate.now(), 1, teams.get(0), teams.get(1));
+        Match match = new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
+    }
+
+    private MatchInfo mockGetMatchInfo() {
+        MatchInfo ret = new MatchInfo();
+        ret.setMatchId(1);
+        ret.setMatchDay(LocalDate.now());
+        return ret;
     }
 
     public void mockPlayRound(TextArea target) {
@@ -104,8 +112,9 @@ public class League {
         int matchIdBase = leagueInfo.getMatchId();
         for (int i = 1; i <= rounds; i++) {
             for (int j = 0; j < 5; j++) {
-                Match match;
+
                 int matchId = matchIdBase + i * (j + 1);
+
                 int homeTeamIndex;
                 int awayTeamIndex;
                 if (i % 2 == 0) {
@@ -115,7 +124,13 @@ public class League {
                     homeTeamIndex = 9 - j;
                     awayTeamIndex = j;
                 }
-                match = new Match(matchId, roundDate, i, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
+
+                MatchInfo info = new MatchInfo();
+                info.setMatchId(matchId);
+                info.setMatchDay(roundDate);
+                info.setLeagueRound(i);
+
+                Match match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
                 scheduledMatches.add(match);
                 GameDBManager.getInstance().saveMatch(match);
             }
