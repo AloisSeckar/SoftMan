@@ -1,4 +1,4 @@
-package elrh.softman.gui.menu;
+package elrh.softman.gui.frame;
 
 import de.jensd.fx.glyphs.fontawesome.*;
 import elrh.softman.Softman;

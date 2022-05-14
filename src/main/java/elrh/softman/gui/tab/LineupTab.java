@@ -1,4 +1,4 @@
-package elrh.softman.gui.view.tab;
+package elrh.softman.gui.tab;
 
 import elrh.softman.gui.tile.DefenseTile;
 import elrh.softman.gui.tile.LineupTile;

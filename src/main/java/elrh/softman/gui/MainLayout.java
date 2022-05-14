@@ -1,7 +1,6 @@
 package elrh.softman.gui;
 
-import elrh.softman.gui.menu.MenuFrame;
-import elrh.softman.gui.view.MainView;
+import elrh.softman.gui.frame.*;
 import javafx.scene.layout.BorderPane;
 
 public class MainLayout extends BorderPane {
@@ -18,10 +17,10 @@ public class MainLayout extends BorderPane {
     private MainLayout() {
         MenuFrame menu = MenuFrame.getInstance();
         this.setTop(menu);
-
-        MainView team = MainView.getInstance();
-        this.setCenter(team);
-
+        ContentFrame content = ContentFrame.getInstance();
+        this.setCenter(content);
+        ActionFrame action = ActionFrame.getInstance();
+        this.setBottom(action);
     }
     
 }

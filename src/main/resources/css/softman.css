@@ -10,6 +10,12 @@
     -fx-font: bold 16px "Arial";
 }
 
+.date-label {
+    -fx-padding: 5 0 0 0;
+    -fx-font: bold 12px "Arial";
+}
+
+
 .close-button {
     -fx-pref-width: 30px;
     -fx-pref-height: 30px;

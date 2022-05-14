@@ -1,6 +1,6 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.gui.view.tab.MatchTab;
+import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.League;
 import elrh.softman.logic.Match;

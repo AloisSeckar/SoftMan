@@ -1,20 +1,20 @@
-package elrh.softman.gui.view;
+package elrh.softman.gui.frame;
 
-import elrh.softman.gui.view.tab.*;
+import elrh.softman.gui.tab.*;
 import javafx.scene.control.*;
 
-public class MainView extends TabPane {
+public class ContentFrame extends TabPane {
     
-    private static MainView INSTANCE;
+    private static ContentFrame INSTANCE;
     
-    public static MainView getInstance() {
+    public static ContentFrame getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new MainView();
+            INSTANCE = new ContentFrame();
         }
         return INSTANCE;
     }
     
-    private MainView() {
+    private ContentFrame() {
         Tab tab1 = new Tab("Team", TeamTab.getInstance());
         Tab tab2 = new Tab("Match" , MatchTab.getInstance());
         Tab tab3 = new Tab("Lineup", LineupTab.getInstance());

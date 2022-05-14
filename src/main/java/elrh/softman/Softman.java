@@ -49,6 +49,8 @@ public class Softman extends Application {
         Scene scene = new Scene(mainLayout, 0, 0);
         scene.getStylesheets().add(getClass().getResource("/css/softman.css").toExternalForm());
         scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
+
+        AssociationManager.getInstance().nextDay();
         
         primaryStage.setTitle("SOFTMAN 0.1");
         primaryStage.setScene(scene);

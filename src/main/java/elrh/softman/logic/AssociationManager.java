@@ -1,10 +1,16 @@
 package elrh.softman.logic;
 
 import elrh.softman.db.GameDBManager;
+import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.mock.MockTeamFactory;
+import java.time.LocalDate;
 import java.util.*;
-import lombok.*;
 
+import elrh.softman.utils.FormatUtils;
+import lombok.*;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AssociationManager {
 
     private final List<League> managedLeagues = new ArrayList<>();
@@ -16,7 +22,9 @@ public class AssociationManager {
     @Getter
     @Setter
     private Team playerTeam;
-    
+
+    @Getter
+    private LocalDate currentDate = LocalDate.of(2023, 03, 31);
     @Getter
     private int season;
 
@@ -35,6 +43,12 @@ public class AssociationManager {
     
     public void nextSeason() {
         season++;
+    }
+
+    public void nextDay() {
+        currentDate = currentDate.plusDays(1);
+        LOG.info("NEW DAY. Today is " + currentDate.format(FormatUtils.DF));
+        ActionFrame.getInstance().updateDateValue(currentDate);
     }
 
     ////////////////////////////////////////////////////////////////////////////
