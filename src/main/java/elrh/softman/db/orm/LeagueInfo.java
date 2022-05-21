@@ -28,7 +28,7 @@ public class LeagueInfo {
     public LeagueInfo(String leagueName) {
         this.leagueName = leagueName;
         this.gender = Constants.GENDER_MALE;
-        this.year = 2020;
+        this.year = Constants.START_YEAR;
         this.matchId = 1000;
     }
     

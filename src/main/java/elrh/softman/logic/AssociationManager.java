@@ -1,5 +1,6 @@
 package elrh.softman.logic;
 
+import elrh.softman.constants.Constants;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.mock.MockTeamFactory;
@@ -24,7 +25,7 @@ public class AssociationManager {
     private Team playerTeam;
 
     @Getter
-    private LocalDate currentDate = LocalDate.of(2023, 03, 31);
+    private LocalDate currentDate = LocalDate.of(Constants.START_YEAR, 03, 31);
     @Getter
     private int season;
 
@@ -93,7 +94,7 @@ public class AssociationManager {
         playerLeague = testLeague;
         playerTeam = testTeam;
         
-        season = 2021;
+        season = Constants.START_YEAR;
     }
 
 }

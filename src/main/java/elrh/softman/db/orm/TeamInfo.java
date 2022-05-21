@@ -32,7 +32,7 @@ public class TeamInfo {
         this.teamName = teamName;
         this.gender = Constants.GENDER_MALE;
         this.city = "City";
-        this.year = 2020;
+        this.year = Constants.START_YEAR;
     }
     
     @Override

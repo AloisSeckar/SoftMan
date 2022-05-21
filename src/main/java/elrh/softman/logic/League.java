@@ -1,5 +1,6 @@
 package elrh.softman.logic;
 
+import elrh.softman.constants.Constants;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.db.orm.LeagueInfo;
 
@@ -135,7 +136,7 @@ public class League {
         var matchIdBase = leagueInfo.getMatchId();
         var matchesPerRound = teams.size() / 2;
         var rounds = teams.size() * 4;
-        var roundDate = LocalDate.of(2023,4,1);
+        var roundDate = LocalDate.of(Constants.START_YEAR,4,1);
 
         Collections.shuffle(teams);
 
