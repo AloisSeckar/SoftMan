@@ -5,6 +5,7 @@ import elrh.softman.db.orm.LeagueInfo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -135,6 +136,8 @@ public class League {
         var matchesPerRound = teams.size() / 2;
         var rounds = teams.size() * 4;
         var roundDate = LocalDate.of(2023,4,1);
+
+        Collections.shuffle(teams);
 
         for (int i = 1; i <= rounds; i++) {
             matchesInRounds.put(i, new ArrayList<>(matchesPerRound));
