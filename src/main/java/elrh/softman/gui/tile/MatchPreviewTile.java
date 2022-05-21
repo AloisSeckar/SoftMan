@@ -2,11 +2,10 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.League;
-import elrh.softman.logic.Match;
 import elrh.softman.logic.MatchSimulator;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -18,8 +17,6 @@ import javafx.scene.layout.HBox;
 public class MatchPreviewTile extends BorderPane {
 
     private static final int LOGO_WIDTH = 150;
-
-    private MatchSimulator sim;
 
     public MatchPreviewTile() {
 
@@ -66,18 +63,36 @@ public class MatchPreviewTile extends BorderPane {
     }
 
     private void playMatch() {
-        if (sim == null) {
-            League testLeague = AssociationManager.getInstance().getPlayerLeague();
-            Match testMatch = testLeague.mockGetMatch();
-            sim = new MatchSimulator(testMatch, MatchTab.getTarget());
+        var sim = getMatchSimulator();
+        if (sim != null) {
+            sim.playMatch();
+        } else {
+            var alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("No match today");
+            alert.showAndWait();
         }
-
-        sim.playMatch();
     }
 
     private void simulateMatch() {
-        League testLeague = AssociationManager.getInstance().getPlayerLeague();
-        testLeague.mockPlayMatch(MatchTab.getTarget());
+        var sim = getMatchSimulator();
+        if (sim != null) {
+            sim.simulateMatch();
+        } else {
+            var alert = new Alert(Alert.AlertType.WARNING);
+            alert.setContentText("No match today");
+            alert.showAndWait();
+        }
+    }
+
+    private MatchSimulator getMatchSimulator() {
+        MatchSimulator ret = null;
+
+        var testMatch = AssociationManager.getInstance().getTodayMatchForPlayer();
+        if (testMatch != null) {
+            ret = new MatchSimulator(testMatch, MatchTab.getTarget());
+        }
+
+        return ret;
     }
 
 }

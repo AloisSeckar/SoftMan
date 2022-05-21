@@ -51,6 +51,17 @@ public class AssociationManager {
         ActionFrame.getInstance().updateDateValue(currentDate);
     }
 
+    public Match getTodayMatchForPlayer() {
+        Match playersMatch = null;
+        for (Match match : getTodayMatches()) {
+            if (match.getHomeTeam().equals(playerTeam) || match.getAwayTeam().equals(playerTeam)) {
+                playersMatch = match;
+                break;
+            }
+        }
+        return playersMatch;
+    }
+
     public List<Match> getTodayMatches() {
         return playerLeague.getTodayMatches(currentDate);
     }
