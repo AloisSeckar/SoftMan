@@ -27,6 +27,14 @@ public class Team {
     public String getName() {
         return teamInfo.getTeamName();
     }
+
+    public String getLogo() {
+        return teamInfo.getImg();
+    }
+
+    public void setLogo(String pathToImg) {
+        this.teamInfo.setImg(pathToImg);
+    }
     
     public void addPlayer(PlayerInfo player) {
         players.add(player);

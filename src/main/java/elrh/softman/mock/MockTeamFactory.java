@@ -9,6 +9,7 @@ public class MockTeamFactory {
     
     public static Team getMockTeam(String name) {
         Team team = new Team(name);
+        team.setLogo("/img/teams/" + name.toLowerCase() + ".png");
         
         Random rand = new Random();
         List<Integer> usedNumbers = new ArrayList<>();

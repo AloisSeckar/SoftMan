@@ -22,5 +22,10 @@ public class MainLayout extends BorderPane {
         ActionFrame action = ActionFrame.getInstance();
         this.setBottom(action);
     }
+
+    // TODO unify actions performed upon starting new game
+    public void setUp() {
+        ContentFrame.getInstance().setUp();
+    }
     
 }

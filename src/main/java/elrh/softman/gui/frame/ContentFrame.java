@@ -31,5 +31,8 @@ public class ContentFrame extends TabPane {
         this.getTabs().add(tab6);
         this.getTabs().add(tab7);
     }
-    
+
+    public void setUp() {
+        MatchTab.setMatch();
+    }
 }

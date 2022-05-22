@@ -2,7 +2,9 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.Match;
 import elrh.softman.logic.MatchSimulator;
+import elrh.softman.logic.Team;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -18,6 +20,9 @@ public class MatchPreviewTile extends BorderPane {
 
     private static final int LOGO_WIDTH = 150;
 
+    private final ImageView awayImage;
+    private final ImageView homeImage;
+
     public MatchPreviewTile() {
 
         super.getStyleClass().add("framed");
@@ -29,16 +34,14 @@ public class MatchPreviewTile extends BorderPane {
         super.setTop(titleLabel);
         BorderPane.setAlignment(titleLabel, Pos.CENTER);
 
-        var awayImage = new ImageView();
+        awayImage = new ImageView();
         awayImage.setFitWidth(LOGO_WIDTH);
         awayImage.setFitHeight(LOGO_WIDTH);
-        awayImage.setImage(new Image(getClass().getResourceAsStream("/img/teams/reds.png")));
         super.setLeft(awayImage);
 
-        var homeImage = new ImageView();
+        homeImage = new ImageView();
         homeImage.setFitWidth(LOGO_WIDTH);
         homeImage.setFitHeight(LOGO_WIDTH);
-        homeImage.setImage(new Image(getClass().getResourceAsStream("/img/teams/blues.png")));
         super.setRight(homeImage);
 
         var label = new Label(" @ ");
@@ -60,6 +63,13 @@ public class MatchPreviewTile extends BorderPane {
         buttonBar.getChildren().add(playButton);
         playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
 
+    }
+
+    public void setMatch(Match match) {
+        if (match != null) {
+            awayImage.setImage(new Image(getClass().getResourceAsStream(match.getAwayTeam().getLogo())));
+            homeImage.setImage(new Image(getClass().getResourceAsStream(match.getHomeTeam().getLogo())));
+        }
     }
 
     private void playMatch() {

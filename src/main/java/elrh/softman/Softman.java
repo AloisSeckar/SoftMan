@@ -50,7 +50,9 @@ public class Softman extends Application {
         scene.getStylesheets().add(getClass().getResource("/css/softman.css").toExternalForm());
         scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
 
+        // TODO unify actions performed upon starting new game
         AssociationManager.getInstance().nextDay();
+        MainLayout.getInstance().setUp();
         
         primaryStage.setTitle("SOFTMAN 0.1");
         primaryStage.setScene(scene);

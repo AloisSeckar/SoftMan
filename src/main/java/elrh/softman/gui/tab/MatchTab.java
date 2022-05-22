@@ -2,6 +2,7 @@ package elrh.softman.gui.tab;
 
 import elrh.softman.gui.tile.CalendarTile;
 import elrh.softman.gui.tile.MatchPreviewTile;
+import elrh.softman.logic.AssociationManager;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 
@@ -9,6 +10,7 @@ public class MatchTab extends AnchorPane {
 
     private static MatchTab INSTANCE;
 
+    private final MatchPreviewTile matchPreviewTile;
     private final TextArea matchOverview;
 
     public static MatchTab getInstance() {
@@ -20,7 +22,7 @@ public class MatchTab extends AnchorPane {
 
     private MatchTab() {
 
-        var matchPreviewTile = new MatchPreviewTile();
+        matchPreviewTile = new MatchPreviewTile();
         super.getChildren().add(matchPreviewTile);
         AnchorPane.setLeftAnchor(matchPreviewTile, 10d);
         AnchorPane.setTopAnchor(matchPreviewTile, 10d);
@@ -44,5 +46,8 @@ public class MatchTab extends AnchorPane {
     public static TextArea getTarget() {
         return INSTANCE.matchOverview;
     }
-    
+
+    public static void setMatch() {
+        INSTANCE.matchPreviewTile.setMatch(AssociationManager.getInstance().getTodayMatchForPlayer());
+    }
 }
