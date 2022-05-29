@@ -1,9 +1,10 @@
 package elrh.softman.gui.tile;
 
-import com.j256.ormlite.stmt.query.In;
+import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.Match;
 import elrh.softman.logic.MatchSimulator;
+import elrh.softman.logic.stats.BoxScore;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -24,6 +25,7 @@ public class ScheduleRowTile extends BorderPane {
     private final ImageView awayImage;
     private final ImageView homeImage;
 
+    private Match match;
     private MatchSimulator sim;
 
 
@@ -77,6 +79,11 @@ public class ScheduleRowTile extends BorderPane {
     }
 
     public void setMatch(Match match) {
+        this.match = match;
+        refreshMatch();
+    }
+
+    public void refreshMatch() {
         if (match != null) {
 
             sim = new MatchSimulator(match, MatchTab.getTarget());
@@ -84,7 +91,14 @@ public class ScheduleRowTile extends BorderPane {
             awayImage.setImage(new Image(getClass().getResourceAsStream(match.getAwayTeam().getLogo())));
             Tooltip.install(awayImage, new Tooltip(match.getAwayTeam().getName()));
 
-            titleLabel.setText(match.getMatchInfo().getMatchDay().toString() + " @ " + "Ballpark");
+            switch (match.getMatchInfo().getStatus()) {
+                case SCHEDULED -> titleLabel.setText(match.getMatchInfo().getMatchDay().toString() + " @ " + "Ballpark");
+                case IN_PROGRESS -> titleLabel.setText("LIVE");
+                case PLAYED -> {
+                    BoxScore score = match.getBoxScore();
+                    titleLabel.setText(score.getPoints(true) + " : " + score.getPoints(false) + " (" + score.getInnings() + "INN)");
+                }
+            }
 
             homeImage.setImage(new Image(getClass().getResourceAsStream(match.getHomeTeam().getLogo())));
             Tooltip.install(homeImage, new Tooltip(match.getHomeTeam().getName()));
@@ -97,6 +111,7 @@ public class ScheduleRowTile extends BorderPane {
     private void playMatch() {
         if (sim != null) {
             sim.playMatch();
+            IndexTab.getInstance().refreshSchedule();
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Cannot play!");
@@ -107,6 +122,7 @@ public class ScheduleRowTile extends BorderPane {
     private void simulateMatch() {
         if (sim != null) {
             sim.simulateMatch();
+            IndexTab.getInstance().refreshSchedule();
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Cannot simulate!");
