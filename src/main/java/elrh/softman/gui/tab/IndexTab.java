@@ -37,8 +37,9 @@ public class IndexTab extends VBox {
     public void setDailySchedule() {
         dailySchedule.getChildren().clear();
         var matches = AssociationManager.getInstance().getTodayMatches();
+        int i = 0;
         for (var match : matches) {
-            var row = new ScheduleRowTile();
+            var row = new ScheduleRowTile(i++ % 2 == 0);
             row.setMatch(match);
             dailySchedule.getChildren().add(row);
         }

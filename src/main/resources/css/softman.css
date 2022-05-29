@@ -92,3 +92,11 @@
     -fx-border-color: black;
     -fx-border-width: 2px;
 }
+
+.odd-row {
+    -fx-background-color: lightgreen;
+}
+
+.even-row {
+    -fx-background-color: mediumseagreen;
+}

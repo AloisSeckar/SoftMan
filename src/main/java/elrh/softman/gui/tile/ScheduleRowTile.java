@@ -1,5 +1,6 @@
 package elrh.softman.gui.tile;
 
+import com.j256.ormlite.stmt.query.In;
 import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.Match;
 import elrh.softman.logic.MatchSimulator;
@@ -26,10 +27,10 @@ public class ScheduleRowTile extends BorderPane {
     private MatchSimulator sim;
 
 
-    public ScheduleRowTile() {
+    public ScheduleRowTile(boolean oddRow) {
 
         super.setMaxWidth(600d);
-        super.getStyleClass().add("framed");
+        super.getStyleClass().add(oddRow ? "odd-row" : "even-row");
         super.setPadding(new Insets(5));
 
         var infoBox = new BorderPane();
@@ -38,6 +39,7 @@ public class ScheduleRowTile extends BorderPane {
         awayImage.setFitWidth(LOGO_SIZE);
         awayImage.setFitHeight(LOGO_SIZE);
         infoBox.setLeft(awayImage);
+        BorderPane.setAlignment(awayImage, Pos.CENTER);
 
         titleLabel = new Label("Match");
         titleLabel.getStyleClass().setAll("h4");
@@ -49,21 +51,26 @@ public class ScheduleRowTile extends BorderPane {
         homeImage.setFitWidth(LOGO_SIZE);
         homeImage.setFitHeight(LOGO_SIZE);
         infoBox.setRight(homeImage);
+        BorderPane.setAlignment(homeImage, Pos.CENTER);
 
         super.setCenter(infoBox);
 
         var buttonBar = new VBox(10);
-        buttonBar.getStyleClass().add("padding-5");
+        buttonBar.setPadding(new Insets(2,5,2,25));
         super.setRight(buttonBar);
         BorderPane.setAlignment(buttonBar, Pos.CENTER);
         BorderPane.setMargin(buttonBar, new Insets(5));
         buttonBar.setAlignment(Pos.CENTER);
 
         var simButton = new Button("Simulate game");
+        simButton.setMinWidth(120d);
+        simButton.setMaxWidth(120d);
         buttonBar.getChildren().add(simButton);
         simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
 
         var playButton = new Button("Play game");
+        playButton.setMinWidth(120d);
+        playButton.setMaxWidth(120d);
         buttonBar.getChildren().add(playButton);
         playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
 
