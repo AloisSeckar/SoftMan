@@ -3,6 +3,7 @@ package elrh.softman.logic;
 import elrh.softman.constants.Constants;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
+import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.mock.MockTeamFactory;
 import java.time.LocalDate;
 import java.util.*;
@@ -50,6 +51,7 @@ public class AssociationManager {
         currentDate = currentDate.plusDays(1);
         LOG.info("NEW DAY. Today is " + currentDate.format(FormatUtils.DF));
         ActionFrame.getInstance().updateDateValue(currentDate);
+        IndexTab.getInstance().setDailySchedule();
     }
 
     public Match getTodayMatchForPlayer() {
