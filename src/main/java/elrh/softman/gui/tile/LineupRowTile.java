@@ -17,7 +17,7 @@ public class LineupRowTile extends HBox {
     private final ComboBox<PlayerInfo> playerCB;
     private final ComboBox<Position> positionCB;
 
-    public LineupRowTile(int row, List<PlayerInfo> players, LineupPosition current) {
+    public LineupRowTile(int row) {
 
         super.setSpacing(10);
         super.setAlignment(Pos.CENTER);
@@ -25,14 +25,19 @@ public class LineupRowTile extends HBox {
         var rowLabel = new Label(StringUtils.leftPad(row + ".", 3, "0"));
         super.getChildren().add(rowLabel);
 
-        playerCB = new ComboBox<>(FXCollections.observableList(players));
+        playerCB = new ComboBox<>();
         super.getChildren().add(playerCB);
 
         positionCB = new ComboBox<>(FXCollections.observableList(Position.getAvailablePositions()));
-        if (row > 9) {
+        if (row > 8) {
             positionCB.setDisable(true);
         }
         super.getChildren().add(positionCB);
+    }
+
+    public void setUp(List<PlayerInfo> players, LineupPosition current) {
+        //playerCB.getItems().clear();
+        playerCB.setItems(FXCollections.observableList(players));
 
         if (current != null) {
             playerCB.setValue(current.getPlayer());

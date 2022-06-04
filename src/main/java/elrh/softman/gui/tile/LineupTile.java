@@ -17,18 +17,24 @@ public class LineupTile extends VBox {
 
     private final List<LineupRowTile> lineupRows = new ArrayList<>(MAX_PLAYERS);
 
-    public LineupTile(Team team) {
+    public LineupTile() {
         super.setSpacing(5);
 
-        List<PlayerInfo> players = team.getPlayers();
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            var lineupRowTile = new LineupRowTile(i + 1, players, i < 9 ? team.getBatter(i) : null);
+            var lineupRowTile = new LineupRowTile(i);
             lineupRows.add(lineupRowTile);
             super.getChildren().add(lineupRowTile);
 
             if (i == 8) {
                 super.getChildren().add(new Separator());
             }
+        }
+    }
+
+    public void fillLineup(Team team) {
+        List<PlayerInfo> players = team.getPlayers();
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            lineupRows.get(i).setUp(players, i < 9 ? team.getBatter(i) : null);
         }
     }
 

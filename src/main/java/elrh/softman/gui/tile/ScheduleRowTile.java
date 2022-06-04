@@ -1,5 +1,7 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.gui.frame.ActionFrame;
+import elrh.softman.gui.frame.ContentFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
@@ -28,6 +30,7 @@ public class ScheduleRowTile extends BorderPane {
 
     private final Button simButton;
     private final Button playButton;
+    private final Button viewButton;
 
     private Match match;
     private MatchSimulator sim;
@@ -79,6 +82,12 @@ public class ScheduleRowTile extends BorderPane {
         playButton.setMaxWidth(120d);
         buttonBar.getChildren().add(playButton);
         playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
+
+        viewButton = new Button("View detail");
+        viewButton.setMinWidth(120d);
+        viewButton.setMaxWidth(120d);
+        buttonBar.getChildren().add(viewButton);
+        viewButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> viewMatch());
 
     }
 
@@ -141,6 +150,11 @@ public class ScheduleRowTile extends BorderPane {
             alert.setContentText("Cannot simulate!");
             alert.showAndWait();
         }
+    }
+
+    private void viewMatch() {
+        MatchTab.getInstance().setMatch(match);
+        ContentFrame.getInstance().switchTo("Match");
     }
 
 }

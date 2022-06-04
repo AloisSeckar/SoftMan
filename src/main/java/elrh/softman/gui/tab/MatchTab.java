@@ -2,8 +2,7 @@ package elrh.softman.gui.tab;
 
 import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.gui.tile.MatchHeaderTile;
-import elrh.softman.logic.AssociationManager;
-import elrh.softman.mock.MockTeamFactory;
+import elrh.softman.logic.Match;
 import elrh.softman.utils.FormatUtils;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
@@ -28,11 +27,11 @@ public class MatchTab extends BorderPane {
 
     private MatchTab() {
 
-        awayLineup = new LineupTile(MockTeamFactory.getMockTeam("T1"));
+        awayLineup = new LineupTile();
         awayLineup.setPadding(FormatUtils.PADDING_10);
         super.setLeft(awayLineup);
 
-        homeLineup = new LineupTile(MockTeamFactory.getMockTeam("T2"));
+        homeLineup = new LineupTile();
         homeLineup.setPadding(FormatUtils.PADDING_10);
         super.setRight(homeLineup);
 
@@ -50,7 +49,9 @@ public class MatchTab extends BorderPane {
         return INSTANCE.matchOverview;
     }
 
-    public static void setMatch() {
-        INSTANCE.matchHeaderTile.setMatch(AssociationManager.getInstance().getTodayMatchForPlayer());
+    public void setMatch(Match match) {
+        matchHeaderTile.setMatch(match);
+        awayLineup.fillLineup(match.getAwayTeam());
+        homeLineup.fillLineup(match.getHomeTeam());
     }
 }

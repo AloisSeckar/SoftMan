@@ -31,7 +31,8 @@ public class LineupTab extends AnchorPane {
         var playerTeam = AssociationManager.getInstance().getPlayerTeam();
         playerTeam.randomizeLineup();
 
-        lineupTile = new LineupTile(playerTeam);
+        lineupTile = new LineupTile();
+        lineupTile.fillLineup(playerTeam);
         super.getChildren().add(lineupTile);
         AnchorPane.setLeftAnchor(lineupTile, 10d);
         AnchorPane.setTopAnchor(lineupTile, 10d);
