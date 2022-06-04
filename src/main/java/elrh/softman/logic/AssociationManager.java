@@ -28,7 +28,9 @@ public class AssociationManager {
     private Team playerTeam;
 
     @Getter
-    private LocalDate currentDate = LocalDate.of(Constants.START_YEAR, 03, 31);
+    private LocalDate viewDate = LocalDate.of(Constants.START_YEAR, 3, 31);
+    @Getter
+    private LocalDate currentDate = LocalDate.of(Constants.START_YEAR, 3, 31);
     @Getter
     private int season;
 
@@ -49,16 +51,31 @@ public class AssociationManager {
         season++;
     }
 
+    public void prevViewDay() {
+        viewDate = viewDate.minusDays(1);
+    }
+
+    public void nextViewDay() {
+        viewDate = viewDate.plusDays(1);
+    }
+
+    public void adjustViewDay() {
+        viewDate = currentDate;
+    }
+
     public void nextDay() {
         if (isDayFinished() || confirmDayFinished()) {
-            getTodayMatches().stream().forEach(match -> {
+            getTodayMatches().forEach(match -> {
                 if (!match.isFinished()) {
                     match.simulate(new TextArea());
                 }
             });
+
             IndexTab.getInstance().refreshSchedule();
             currentDate = currentDate.plusDays(1);
+            adjustViewDay();
             LOG.info("NEW DAY. Today is " + currentDate.format(FormatUtils.DF));
+
             ActionFrame.getInstance().updateDateValue(currentDate);
             IndexTab.getInstance().setDailySchedule();
         }
@@ -76,7 +93,7 @@ public class AssociationManager {
     }
 
     public List<Match> getTodayMatches() {
-        return playerLeague.getTodayMatches(currentDate);
+        return playerLeague.getTodayMatches(viewDate);
     }
 
     public List<Match> getRoundMatches(int round) {

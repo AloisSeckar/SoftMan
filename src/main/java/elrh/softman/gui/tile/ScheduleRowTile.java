@@ -2,6 +2,7 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.gui.tab.MatchTab;
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Match;
 import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.stats.BoxScore;
@@ -89,6 +90,12 @@ public class ScheduleRowTile extends BorderPane {
     public void refreshMatch() {
         if (match != null) {
 
+            var matchDate = match.getMatchInfo().getMatchDay();
+            var currentDate = AssociationManager.getInstance().getCurrentDate();
+            boolean disableControls = matchDate.compareTo(currentDate) != 0;
+            simButton.setDisable(disableControls);
+            playButton.setDisable(disableControls);
+
             sim = new MatchSimulator(match, MatchTab.getTarget());
 
             awayImage.setImage(new Image(getClass().getResourceAsStream(match.getAwayTeam().getLogo())));
@@ -111,6 +118,7 @@ public class ScheduleRowTile extends BorderPane {
         } else {
             sim = null;
         }
+
     }
 
     private void playMatch() {

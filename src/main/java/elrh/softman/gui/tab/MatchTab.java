@@ -1,6 +1,5 @@
 package elrh.softman.gui.tab;
 
-import elrh.softman.gui.tile.CalendarTile;
 import elrh.softman.gui.tile.MatchPreviewTile;
 import elrh.softman.logic.AssociationManager;
 import javafx.scene.control.TextArea;
@@ -34,12 +33,6 @@ public class MatchTab extends AnchorPane {
         super.getChildren().add(matchOverview);
         AnchorPane.setRightAnchor(matchOverview, 10d);
         AnchorPane.setTopAnchor(matchOverview, 10d);
-
-
-        var calendar = new CalendarTile();
-        super.getChildren().add(calendar);
-        AnchorPane.setLeftAnchor(calendar, 10d);
-        AnchorPane.setBottomAnchor(calendar, 10d);
         
     }
 
