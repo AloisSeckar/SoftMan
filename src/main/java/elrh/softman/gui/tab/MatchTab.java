@@ -1,15 +1,22 @@
 package elrh.softman.gui.tab;
 
-import elrh.softman.gui.tile.MatchPreviewTile;
+import elrh.softman.gui.tile.LineupTile;
+import elrh.softman.gui.tile.MatchHeaderTile;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.mock.MockTeamFactory;
+import elrh.softman.utils.FormatUtils;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
-public class MatchTab extends AnchorPane {
+public class MatchTab extends BorderPane {
 
     private static MatchTab INSTANCE;
 
-    private final MatchPreviewTile matchPreviewTile;
+
+    private final LineupTile awayLineup;
+    private final LineupTile homeLineup;
+
+    private final MatchHeaderTile matchHeaderTile;
     private final TextArea matchOverview;
 
     public static MatchTab getInstance() {
@@ -21,18 +28,21 @@ public class MatchTab extends AnchorPane {
 
     private MatchTab() {
 
-        matchPreviewTile = new MatchPreviewTile();
-        super.getChildren().add(matchPreviewTile);
-        AnchorPane.setLeftAnchor(matchPreviewTile, 10d);
-        AnchorPane.setTopAnchor(matchPreviewTile, 10d);
+        awayLineup = new LineupTile(MockTeamFactory.getMockTeam("T1"));
+        awayLineup.setPadding(FormatUtils.PADDING_10);
+        super.setLeft(awayLineup);
+
+        homeLineup = new LineupTile(MockTeamFactory.getMockTeam("T2"));
+        homeLineup.setPadding(FormatUtils.PADDING_10);
+        super.setRight(homeLineup);
+
+        matchHeaderTile = new MatchHeaderTile();
+        super.setTop(matchHeaderTile);
 
         matchOverview = new TextArea();
-        matchOverview.getStyleClass().setAll("output-window");
-        matchOverview.setPrefWidth(500);
-        matchOverview.setPrefRowCount(40);
-        super.getChildren().add(matchOverview);
-        AnchorPane.setRightAnchor(matchOverview, 10d);
-        AnchorPane.setTopAnchor(matchOverview, 10d);
+        matchOverview.getStyleClass().add("output-window");
+        matchOverview.setPadding(FormatUtils.PADDING_10);
+        super.setCenter(matchOverview);
         
     }
 
@@ -41,6 +51,6 @@ public class MatchTab extends AnchorPane {
     }
 
     public static void setMatch() {
-        INSTANCE.matchPreviewTile.setMatch(AssociationManager.getInstance().getTodayMatchForPlayer());
+        INSTANCE.matchHeaderTile.setMatch(AssociationManager.getInstance().getTodayMatchForPlayer());
     }
 }

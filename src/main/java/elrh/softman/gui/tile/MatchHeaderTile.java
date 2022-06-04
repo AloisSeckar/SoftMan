@@ -4,6 +4,7 @@ import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Match;
 import elrh.softman.logic.MatchSimulator;
+import elrh.softman.utils.FormatUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -15,37 +16,32 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-public class MatchPreviewTile extends BorderPane {
+public class MatchHeaderTile extends BorderPane {
 
-    private static final int LOGO_SIZE = 150;
+    private static final int LOGO_SIZE = 100;
 
+    private final Label titleLabel;
     private final ImageView awayImage;
     private final ImageView homeImage;
 
-    public MatchPreviewTile() {
+    public MatchHeaderTile() {
 
         super.getStyleClass().add("framed");
-        super.setPadding(new Insets(5));
-
-        var titleLabel = new Label("Upcomming match");
-        titleLabel.getStyleClass().setAll("h3");
-        titleLabel.getStyleClass().add("padding-5");
-        super.setTop(titleLabel);
-        BorderPane.setAlignment(titleLabel, Pos.CENTER);
+        super.setPadding(FormatUtils.PADDING_5);
 
         awayImage = new ImageView();
         awayImage.setFitWidth(LOGO_SIZE);
         awayImage.setFitHeight(LOGO_SIZE);
         super.setLeft(awayImage);
 
+        titleLabel = new Label(" @ ");
+        titleLabel.getStyleClass().setAll("h3");
+        super.setCenter(titleLabel);
+
         homeImage = new ImageView();
         homeImage.setFitWidth(LOGO_SIZE);
         homeImage.setFitHeight(LOGO_SIZE);
         super.setRight(homeImage);
-
-        var label = new Label(" @ ");
-        label.getStyleClass().setAll("h3");
-        super.setCenter(label);
 
         var buttonBar = new HBox(10);
         buttonBar.getStyleClass().add("padding-5");
@@ -67,6 +63,7 @@ public class MatchPreviewTile extends BorderPane {
     public void setMatch(Match match) {
         if (match != null) {
             awayImage.setImage(new Image(getClass().getResourceAsStream(match.getAwayTeam().getLogo())));
+            titleLabel.setText(match.getAwayTeam().getName() + " vs. " + match.getHomeTeam().getName());
             homeImage.setImage(new Image(getClass().getResourceAsStream(match.getHomeTeam().getLogo())));
         }
     }

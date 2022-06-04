@@ -38,6 +38,8 @@
 
 .output-window {
     -fx-font: 14px "Courier New";
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
 }
 
 .table-view {
