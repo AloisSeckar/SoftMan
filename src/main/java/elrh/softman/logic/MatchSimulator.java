@@ -59,8 +59,7 @@ public class MatchSimulator {
 
         if (!continueInning()) {
             boxScore.printBoxScore(target);
-            target.appendText("\n\nGAME OVER\n\n");
-            match.getMatchInfo().setStatus(MatchStatus.PLAYED);
+            wrapUpMatch();
         }
     }
 
@@ -80,9 +79,9 @@ public class MatchSimulator {
             }
         }
 
-        target.appendText("\n\nGAME OVER\n\n");
-        match.getMatchInfo().setStatus(MatchStatus.PLAYED);
+        wrapUpMatch();
     }
+
     public void simulateInning() {
         while (outs < 3) {
             simulatePlay();
@@ -211,6 +210,12 @@ public class MatchSimulator {
         }
         
         return ret;
+    }
+
+    private void wrapUpMatch() {
+        target.appendText("\n\nGAME OVER\n\n");
+        match.getMatchInfo().setStatus(MatchStatus.PLAYED);
+        AssociationManager.getInstance().getPlayerLeague().saveMatch(match);
     }
 
 }

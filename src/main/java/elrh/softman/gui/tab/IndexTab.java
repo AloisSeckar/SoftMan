@@ -1,17 +1,21 @@
 package elrh.softman.gui.tab;
 
+import elrh.softman.gui.table.LeagueStadingsTable;
 import elrh.softman.gui.tile.ScheduleRowTile;
 import elrh.softman.logic.AssociationManager;
 import java.util.ArrayList;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
-public class IndexTab extends VBox {
+public class IndexTab extends BorderPane {
 
     private static IndexTab INSTANCE;
 
     private final VBox dailySchedule;
     private final ArrayList<ScheduleRowTile> dailyScheduleRows = new ArrayList<>();
+    private final LeagueStadingsTable leagueTable;
 
     public static IndexTab getInstance() {
         if (INSTANCE == null) {
@@ -22,13 +26,11 @@ public class IndexTab extends VBox {
 
     private IndexTab() {
 
-        var titleLabel = new Label("Daily schedule");
-        titleLabel.getStyleClass().setAll("h3");
-        titleLabel.getStyleClass().add("padding-5");
-        super.getChildren().add(titleLabel);
-
         dailySchedule = new VBox();
-        super.getChildren().add(dailySchedule);
+        super.setLeft(dailySchedule);
+
+        leagueTable = new LeagueStadingsTable(AssociationManager.getInstance().getPlayerLeague().getStandings());
+        super.setRight(leagueTable);
 
     }
 
@@ -49,5 +51,6 @@ public class IndexTab extends VBox {
         for (var row : dailyScheduleRows) {
             row.refreshMatch();
         }
+        leagueTable.refresh();
     }
 }

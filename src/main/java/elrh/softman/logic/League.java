@@ -65,6 +65,12 @@ public class League {
         }
     }
 
+    public void saveMatch(Match match) {
+        GameDBManager.getInstance().saveMatch(match);
+        includeMatchIntoStandings(match);
+        LOG.info("Match " + match + " saved and included into league standings");
+    }
+
     public void mockPlayLeague(TextArea target) {
         for (int i = 1; i <= 18; i++) {
             mockPreviewCurrentRound(target);
