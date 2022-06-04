@@ -27,11 +27,11 @@ public class MatchTab extends BorderPane {
 
     private MatchTab() {
 
-        awayLineup = new LineupTile();
+        awayLineup = new LineupTile(true);
         awayLineup.setPadding(FormatUtils.PADDING_10);
         super.setLeft(awayLineup);
 
-        homeLineup = new LineupTile();
+        homeLineup = new LineupTile(true);
         homeLineup.setPadding(FormatUtils.PADDING_10);
         super.setRight(homeLineup);
 

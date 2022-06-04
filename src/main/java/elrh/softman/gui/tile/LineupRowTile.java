@@ -17,7 +17,10 @@ public class LineupRowTile extends HBox {
     private final ComboBox<PlayerInfo> playerCB;
     private final ComboBox<Position> positionCB;
 
+    private final int row;
+
     public LineupRowTile(int row) {
+        this.row = row;
 
         super.setSpacing(10);
         super.setAlignment(Pos.CENTER);
@@ -36,13 +39,19 @@ public class LineupRowTile extends HBox {
     }
 
     public void setUp(List<PlayerInfo> players, LineupPosition current) {
-        //playerCB.getItems().clear();
         playerCB.setItems(FXCollections.observableList(players));
 
         if (current != null) {
             playerCB.setValue(current.getPlayer());
             positionCB.setValue(current.getPosition());
         }
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        playerCB.setDisable(readOnly);
+        playerCB.setStyle("-fx-opacity: 1");
+        positionCB.setDisable(readOnly || row > 8);
+        positionCB.setStyle("-fx-opacity: 1");
     }
 
     public LineupPosition getCurrentSelection() {

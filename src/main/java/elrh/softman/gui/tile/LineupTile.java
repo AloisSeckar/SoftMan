@@ -17,7 +17,7 @@ public class LineupTile extends VBox {
 
     private final List<LineupRowTile> lineupRows = new ArrayList<>(MAX_PLAYERS);
 
-    public LineupTile() {
+    public LineupTile(boolean readOnly) {
         super.setSpacing(5);
 
         for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -29,6 +29,8 @@ public class LineupTile extends VBox {
                 super.getChildren().add(new Separator());
             }
         }
+
+        setReadOnly(readOnly);
     }
 
     public void fillLineup(Team team) {
@@ -36,6 +38,10 @@ public class LineupTile extends VBox {
         for (int i = 0; i < MAX_PLAYERS; i++) {
             lineupRows.get(i).setUp(players, i < 9 ? team.getBatter(i) : null);
         }
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        lineupRows.forEach(row -> row.setReadOnly(readOnly));
     }
 
     public String checkLineup() {
