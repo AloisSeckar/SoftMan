@@ -58,7 +58,6 @@ public class MatchSimulator {
         }
 
         if (!continueInning()) {
-            boxScore.printBoxScore(target);
             wrapUpMatch();
         }
     }
@@ -213,6 +212,7 @@ public class MatchSimulator {
     }
 
     private void wrapUpMatch() {
+        boxScore.printBoxScore(target);
         target.appendText("\n\nGAME OVER\n\n");
         match.getMatchInfo().setStatus(MatchStatus.PLAYED);
         AssociationManager.getInstance().getPlayerLeague().saveMatch(match);

@@ -5,10 +5,12 @@ import elrh.softman.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.mock.MockTeamFactory;
+import elrh.softman.utils.FormatUtils;
 import java.time.LocalDate;
 import java.util.*;
-
-import elrh.softman.utils.FormatUtils;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextArea;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,10 +50,18 @@ public class AssociationManager {
     }
 
     public void nextDay() {
-        currentDate = currentDate.plusDays(1);
-        LOG.info("NEW DAY. Today is " + currentDate.format(FormatUtils.DF));
-        ActionFrame.getInstance().updateDateValue(currentDate);
-        IndexTab.getInstance().setDailySchedule();
+        if (isDayFinished() || confirmDayFinished()) {
+            getTodayMatches().stream().forEach(match -> {
+                if (!match.isFinished()) {
+                    match.simulate(new TextArea());
+                }
+            });
+            IndexTab.getInstance().refreshSchedule();
+            currentDate = currentDate.plusDays(1);
+            LOG.info("NEW DAY. Today is " + currentDate.format(FormatUtils.DF));
+            ActionFrame.getInstance().updateDateValue(currentDate);
+            IndexTab.getInstance().setDailySchedule();
+        }
     }
 
     public Match getTodayMatchForPlayer() {
@@ -73,7 +83,18 @@ public class AssociationManager {
         return playerLeague.getRoundMatches(round);
     }
 
+    public boolean isDayFinished() {
+        return getTodayMatches().stream().allMatch(Match::isFinished);
+    }
+
     ////////////////////////////////////////////////////////////////////////////
+
+    private boolean confirmDayFinished() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Simulate the rest of the day?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+        alert.showAndWait();
+        return alert.getResult() == ButtonType.YES;
+    }
+
     private void prepareLeagues() {
         Team testTeam = MockTeamFactory.getMockTeam("REDS");
 

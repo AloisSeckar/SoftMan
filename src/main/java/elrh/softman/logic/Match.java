@@ -58,10 +58,10 @@ public class Match {
     public void simulate(TextArea target) {
         MatchSimulator sim = new MatchSimulator(this, target);
         sim.simulateMatch();
-        
-        boxScore.printBoxScore(target);
+    }
 
-        this.getMatchInfo().setStatus(MatchStatus.PLAYED);
+    public boolean isFinished() {
+        return matchInfo.getStatus() == MatchStatus.PLAYED;
     }
     
 }
