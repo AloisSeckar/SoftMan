@@ -11,6 +11,8 @@ public class MatchSimulator {
     private static final Random random = new Random();
 
     private final TextArea target;
+    private final Match match;
+
     private final BoxScore boxScore;
     private final Team awayTeam;
     private final Team homeTeam;
@@ -24,6 +26,7 @@ public class MatchSimulator {
 
     public MatchSimulator(Match match, TextArea target) {
         this.target = target;
+        this.match = match;
         awayTeam = match.getAwayTeam();
         homeTeam = match.getHomeTeam();
         boxScore = match.getBoxScore();
@@ -33,6 +36,7 @@ public class MatchSimulator {
         if (header) {
             if (top && playNextInning()) {
                 if (inning == 1) {
+                    match.getMatchInfo().setStatus(MatchStatus.IN_PROGRESS);
                     target.appendText("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() + "\n");
                 }
                 target.appendText("\n\nINNING " + inning + "\n");
@@ -56,11 +60,13 @@ public class MatchSimulator {
         if (!continueInning()) {
             boxScore.printBoxScore(target);
             target.appendText("\n\nGAME OVER\n\n");
+            match.getMatchInfo().setStatus(MatchStatus.PLAYED);
         }
     }
 
 
     public void simulateMatch() {
+        match.getMatchInfo().setStatus(MatchStatus.IN_PROGRESS);
 
         while (playNextInning()) {
             target.appendText("\n\nINNING " + inning + "\n");
@@ -75,6 +81,7 @@ public class MatchSimulator {
         }
 
         target.appendText("\n\nGAME OVER\n\n");
+        match.getMatchInfo().setStatus(MatchStatus.PLAYED);
     }
     public void simulateInning() {
         while (outs < 3) {

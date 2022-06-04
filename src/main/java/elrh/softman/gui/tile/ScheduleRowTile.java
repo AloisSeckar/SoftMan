@@ -25,6 +25,9 @@ public class ScheduleRowTile extends BorderPane {
     private final ImageView awayImage;
     private final ImageView homeImage;
 
+    private final Button simButton;
+    private final Button playButton;
+
     private Match match;
     private MatchSimulator sim;
 
@@ -64,13 +67,13 @@ public class ScheduleRowTile extends BorderPane {
         BorderPane.setMargin(buttonBar, new Insets(5));
         buttonBar.setAlignment(Pos.CENTER);
 
-        var simButton = new Button("Simulate game");
+        simButton = new Button("Simulate game");
         simButton.setMinWidth(120d);
         simButton.setMaxWidth(120d);
         buttonBar.getChildren().add(simButton);
         simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
 
-        var playButton = new Button("Play game");
+        playButton = new Button("Play game");
         playButton.setMinWidth(120d);
         playButton.setMaxWidth(120d);
         buttonBar.getChildren().add(playButton);
@@ -96,7 +99,9 @@ public class ScheduleRowTile extends BorderPane {
                 case IN_PROGRESS -> titleLabel.setText("LIVE");
                 case PLAYED -> {
                     BoxScore score = match.getBoxScore();
-                    titleLabel.setText(score.getPoints(true) + " : " + score.getPoints(false) + " (" + score.getInnings() + "INN)");
+                    titleLabel.setText(score.getPoints(true) + " : " + score.getPoints(false) + " (" + score.getInnings() + " INN)");
+                    simButton.setDisable(true);
+                    playButton.setDisable(true);
                 }
             }
 
