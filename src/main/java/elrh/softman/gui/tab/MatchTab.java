@@ -53,5 +53,6 @@ public class MatchTab extends BorderPane {
         matchHeaderTile.setMatch(match);
         awayLineup.fillLineup(match.getAwayTeam());
         homeLineup.fillLineup(match.getHomeTeam());
+        match.printPlayByPlay(matchOverview);
     }
 }

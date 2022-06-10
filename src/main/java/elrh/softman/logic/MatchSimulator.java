@@ -1,5 +1,6 @@
 package elrh.softman.logic;
 
+import elrh.softman.db.orm.MatchPlayByPlay;
 import elrh.softman.db.orm.PlayerAttributes;
 import elrh.softman.db.orm.PlayerInfo;
 import elrh.softman.logic.stats.BoxScore;
@@ -37,12 +38,12 @@ public class MatchSimulator {
             if (top && playNextInning()) {
                 if (inning == 1) {
                     match.getMatchInfo().setStatus(MatchStatus.IN_PROGRESS);
-                    target.appendText("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() + "\n");
+                    appendText("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() + "\n");
                 }
-                target.appendText("\n\nINNING " + inning + "\n");
-                target.appendText("\n\nTOP\n");
+                appendText("\n\nINNING " + inning + "\n");
+                appendText("\n\nTOP\n");
             } else if (continueInning()) {
-                target.appendText("\n\nBOTTOM\n");
+                appendText("\n\nBOTTOM\n");
             }
             header = false;
         }
@@ -67,13 +68,13 @@ public class MatchSimulator {
         match.getMatchInfo().setStatus(MatchStatus.IN_PROGRESS);
 
         while (playNextInning()) {
-            target.appendText("\n\nINNING " + inning + "\n");
+            appendText("\n\nINNING " + inning + "\n");
 
-            target.appendText("\n\nTOP\n");
+            appendText("\n\nTOP\n");
             simulateInning();
 
             if (continueInning()) {
-                target.appendText("\n\nBOTTOM\n");
+                appendText("\n\nBOTTOM\n");
                 simulateInning();
             }
         }
@@ -93,23 +94,23 @@ public class MatchSimulator {
         PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
         PlayerAttributes pitcherAttr = pitcher.getAttributes();
 
-        target.appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
+        appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
 
         LineupPosition batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
         if (batter != null) {
             PlayerInfo batterInfo = batter.getPlayer();
             PlayerAttributes batterAttr = batterInfo.getAttributes();
 
-            target.appendText("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")\n");
+            appendText("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")\n");
 
             int pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
             int hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);
 
-            target.appendText(pitchQuality + " vs. " + hitQuality + "\n");
+            appendText(pitchQuality + " vs. " + hitQuality + "\n");
 
             if (hitQuality >= pitchQuality) {
                 if (hitQuality - pitchQuality > 25) {
-                    target.appendText(batter + " SCORED\n");
+                    appendText(batter + " SCORED\n");
                     boxScore.addHit(top);
                     boxScore.addPoint(inning, top);
                 } else {
@@ -121,26 +122,26 @@ public class MatchSimulator {
                         int fieldingQuality = fielder.getAttributes().getFieldingSkill()+ random.nextInt(100);
                         if (hitQuality >= fieldingQuality) {
                             if (random.nextBoolean()) {
-                                target.appendText(batter + " reached after a hit\n");
+                                appendText(batter + " reached after a hit\n");
                                 boxScore.addHit(top);
                             } else {
-                                target.appendText(batter + " reached otherwise\n");
+                                appendText(batter + " reached otherwise\n");
                             }
                         } else {
-                            target.appendText(batter + " is OUT\n");
+                            appendText(batter + " is OUT\n");
                             outs++;
                         }
                     } else {
-                        target.appendText(batter + " reached after a hit\n");
+                        appendText(batter + " reached after a hit\n");
                         boxScore.addHit(top);
                     }
                 }
             } else {
-                target.appendText(batter + " is OUT\n");
+                appendText(batter + " is OUT\n");
                 outs++;
             }
         } else {
-            target.appendText("Position not filled => OUT\n");
+            appendText("Position not filled => OUT\n");
             outs++;
         }
 
@@ -167,8 +168,8 @@ public class MatchSimulator {
     }
 
     private void getScore() {
-        target.appendText("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true) + "\n");
-        target.appendText(homeTeam.getName() + ": " + boxScore.getPoints(false) + "\n");
+        appendText("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true) + "\n");
+        appendText(homeTeam.getName() + ": " + boxScore.getPoints(false) + "\n");
     }
 
     private boolean playNextInning() {
@@ -213,9 +214,14 @@ public class MatchSimulator {
 
     private void wrapUpMatch() {
         boxScore.printBoxScore(target);
-        target.appendText("\n\nGAME OVER\n\n");
+        appendText("\n\nGAME OVER\n\n");
         match.getMatchInfo().setStatus(MatchStatus.PLAYED);
         AssociationManager.getInstance().getPlayerLeague().saveMatch(match);
+    }
+    
+    private void appendText(String text) {
+        target.appendText(text);
+        match.getPlayByPlay().add(new MatchPlayByPlay(match.getMatchInfo().getMatchId(), match.getPlayByPlay().size() + 1, text));
     }
 
 }

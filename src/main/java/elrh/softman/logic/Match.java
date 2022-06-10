@@ -1,13 +1,13 @@
 package elrh.softman.logic;
 
 import elrh.softman.db.orm.MatchInfo;
+import elrh.softman.db.orm.MatchPlayByPlay;
 import elrh.softman.logic.stats.*;
 import elrh.softman.utils.ErrorUtils;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.control.TextArea;
 import lombok.Getter;
-
-import java.time.LocalDate;
-import java.util.List;
 
 public class Match {
 
@@ -20,6 +20,8 @@ public class Match {
     private final Team homeTeam;
     @Getter
     private final BoxScore boxScore = new BoxScore();
+    @Getter
+    private List<MatchPlayByPlay> playByPlay = new ArrayList<>();
     
     private List<Stats> stats;
 
@@ -58,6 +60,10 @@ public class Match {
     public void simulate(TextArea target) {
         MatchSimulator sim = new MatchSimulator(this, target);
         sim.simulateMatch();
+    }
+
+    public void printPlayByPlay(TextArea target) {
+        playByPlay.forEach(pbp -> target.appendText(pbp.getPlay()));
     }
 
     public boolean isFinished() {
