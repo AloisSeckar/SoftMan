@@ -168,15 +168,15 @@ public class MatchSimulator {
     }
 
     private void getScore() {
-        appendText("\n\n" + awayTeam.getName() + ": " + boxScore.getPoints(true) + "\n");
-        appendText(homeTeam.getName() + ": " + boxScore.getPoints(false) + "\n");
+        appendText("\n\n" + awayTeam.getName() + ": " + boxScore.getTotalPoints(true) + "\n");
+        appendText(homeTeam.getName() + ": " + boxScore.getTotalPoints(false) + "\n");
     }
 
     private boolean playNextInning() {
         boolean ret = true;
         
-        int awayPoints = boxScore.getPoints(true);
-        int homePoints = boxScore.getPoints(false);
+        int awayPoints = boxScore.getTotalPoints(true);
+        int homePoints = boxScore.getTotalPoints(false);
         
         if (inning >= 4 && (awayPoints - homePoints >= 15 || homePoints - awayPoints >= 15)) {
             ret = false;
@@ -194,8 +194,8 @@ public class MatchSimulator {
     private boolean continueInning() {
         boolean ret = true;
         
-        int awayPoints = boxScore.getPoints(true);
-        int homePoints = boxScore.getPoints(false);
+        int awayPoints = boxScore.getTotalPoints(true);
+        int homePoints = boxScore.getTotalPoints(false);
         
         if (!top) {
             if (inning >= 3 && homePoints - awayPoints >= 15) {

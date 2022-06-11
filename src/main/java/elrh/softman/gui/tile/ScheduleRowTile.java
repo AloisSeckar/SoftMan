@@ -1,6 +1,5 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.frame.ContentFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.gui.tab.MatchTab;
@@ -115,7 +114,7 @@ public class ScheduleRowTile extends BorderPane {
                 case IN_PROGRESS -> titleLabel.setText("LIVE");
                 case PLAYED -> {
                     BoxScore score = match.getBoxScore();
-                    titleLabel.setText(score.getPoints(true) + " : " + score.getPoints(false) + " (" + score.getInnings() + " INN)");
+                    titleLabel.setText(score.getTotalPoints(true) + " : " + score.getTotalPoints(false) + " (" + score.getInnings() + " INN)");
                     simButton.setDisable(true);
                     playButton.setDisable(true);
                 }

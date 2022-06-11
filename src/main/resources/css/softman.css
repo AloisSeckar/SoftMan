@@ -102,3 +102,21 @@
 .even-row {
     -fx-background-color: mediumseagreen;
 }
+
+.box-score {
+    -fx-font-size: 15;
+    -fx-padding: 5px;
+    -fx-min-width: 30px;
+    -fx-pref-width: 30px;
+    -fx-max-width: 30px;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-alignment: center;
+}
+
+.box-score-team {
+    -fx-min-width: 150px;
+    -fx-pref-width: 150px;
+    -fx-max-width: 150px;
+    -fx-alignment: center-left;
+}

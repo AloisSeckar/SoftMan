@@ -52,8 +52,19 @@ public class BoxScore {
     public int getInnings() {
         return innings;
     }
+
+    public int getPointsInInning(int inning, boolean away) {
+        if (inning > 0 && inning < this.innings) {
+            if (away) {
+                return awayPoints[inning];
+            } else {
+                return homePoints[inning];
+            }
+        }
+        return 0;
+    }
     
-    public int getPoints(boolean away) {
+    public int getTotalPoints(boolean away) {
         if (away) {
             return sumPoints(awayPoints);
         } else {

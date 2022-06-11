@@ -206,8 +206,8 @@ public class League {
         homeTeamStanding.setGames(homeTeamStanding.getGames() + 1);
         awayTeamStanding.setGames(awayTeamStanding.getGames() + 1);
 
-        int homeRuns = match.getBoxScore().getPoints(false);
-        int awayRuns = match.getBoxScore().getPoints(true);
+        int homeRuns = match.getBoxScore().getTotalPoints(false);
+        int awayRuns = match.getBoxScore().getTotalPoints(true);
 
         homeTeamStanding.setRunsFor(homeTeamStanding.getRunsFor() + homeRuns);
         homeTeamStanding.setRunsAgainst(homeTeamStanding.getRunsAgainst() + awayRuns);

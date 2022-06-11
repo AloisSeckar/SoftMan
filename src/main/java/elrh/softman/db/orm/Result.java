@@ -46,8 +46,8 @@ public class Result {
         
         BoxScore boxScore = source.getBoxScore();
         innings = boxScore.getInnings();
-        awayRuns = boxScore.getPoints(true);
-        homeRuns = boxScore.getPoints(false);
+        awayRuns = boxScore.getTotalPoints(true);
+        homeRuns = boxScore.getTotalPoints(false);
         awayHits = boxScore.getHits(true);
         homeHits = boxScore.getHits(false);
         awayErrors = boxScore.getErrors(true);
