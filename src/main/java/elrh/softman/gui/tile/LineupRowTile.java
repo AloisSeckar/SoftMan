@@ -25,7 +25,7 @@ public class LineupRowTile extends HBox {
         super.setSpacing(10);
         super.setAlignment(Pos.CENTER);
 
-        var rowLabel = new Label(StringUtils.leftPad(row + ".", 3, "0"));
+        var rowLabel = new Label(StringUtils.leftPad((row + 1) + ".", 3, "0"));
         super.getChildren().add(rowLabel);
 
         playerCB = new ComboBox<>();

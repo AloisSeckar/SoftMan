@@ -60,7 +60,7 @@ public class BoxScoreTile extends VBox {
             awayPoints.getChildren().clear();
             homePoints.getChildren().clear();
             int totalInnings = boxScore.getInnings();
-            for (int i = 1; i < totalInnings; i++) {
+            for (int i = 1; i <= totalInnings; i++) {
                 var inningLabel = new Label(String.valueOf(i));
                 inningLabel.getStyleClass().add("box-score");
                 innings.getChildren().add(inningLabel);
