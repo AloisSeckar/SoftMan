@@ -104,6 +104,11 @@ public class AssociationManager {
         return getTodayMatches().stream().allMatch(Match::isFinished);
     }
 
+    public boolean isTodayMatch(Match match) {
+        var matchDate = match.getMatchInfo().getMatchDay();
+        return matchDate.compareTo(getCurrentDate()) == 0;
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private boolean confirmDayFinished() {

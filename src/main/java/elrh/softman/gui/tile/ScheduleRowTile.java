@@ -29,7 +29,6 @@ public class ScheduleRowTile extends BorderPane {
 
     private final Button simButton;
     private final Button playButton;
-    private final Button viewButton;
 
     private Match match;
     private MatchSimulator sim;
@@ -82,7 +81,7 @@ public class ScheduleRowTile extends BorderPane {
         buttonBar.getChildren().add(playButton);
         playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
 
-        viewButton = new Button("View detail");
+        Button viewButton = new Button("View detail");
         viewButton.setMinWidth(120d);
         viewButton.setMaxWidth(120d);
         buttonBar.getChildren().add(viewButton);
@@ -97,12 +96,9 @@ public class ScheduleRowTile extends BorderPane {
 
     public void refreshMatch() {
         if (match != null) {
-
-            var matchDate = match.getMatchInfo().getMatchDay();
-            var currentDate = AssociationManager.getInstance().getCurrentDate();
-            boolean disableControls = matchDate.compareTo(currentDate) != 0;
-            simButton.setDisable(disableControls);
-            playButton.setDisable(disableControls);
+            boolean todayMatch = AssociationManager.getInstance().isTodayMatch(match);
+            simButton.setDisable(!todayMatch);
+            playButton.setDisable(!todayMatch);
 
             sim = new MatchSimulator(match, MatchTab.getTarget());
 

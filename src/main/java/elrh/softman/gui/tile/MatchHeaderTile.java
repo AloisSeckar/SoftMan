@@ -43,21 +43,6 @@ public class MatchHeaderTile extends BorderPane {
         homeImage.setFitHeight(LOGO_SIZE);
         super.setRight(homeImage);
 
-        var buttonBar = new HBox(10);
-        buttonBar.getStyleClass().add("padding-5");
-        super.setBottom(buttonBar);
-        BorderPane.setAlignment(buttonBar, Pos.CENTER);
-        BorderPane.setMargin(buttonBar, new Insets(5));
-        buttonBar.setAlignment(Pos.CENTER);
-
-        var simButton = new Button("Simulate game");
-        buttonBar.getChildren().add(simButton);
-        simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
-
-        var playButton = new Button("Play game");
-        buttonBar.getChildren().add(playButton);
-        playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
-
     }
 
     public void setMatch(Match match) {
@@ -66,39 +51,6 @@ public class MatchHeaderTile extends BorderPane {
             titleLabel.setText(match.getAwayTeam().getName() + " vs. " + match.getHomeTeam().getName());
             homeImage.setImage(new Image(getClass().getResourceAsStream(match.getHomeTeam().getLogo())));
         }
-    }
-
-    private void playMatch() {
-        var sim = getMatchSimulator();
-        if (sim != null) {
-            sim.playMatch();
-        } else {
-            var alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("No match today");
-            alert.showAndWait();
-        }
-    }
-
-    private void simulateMatch() {
-        var sim = getMatchSimulator();
-        if (sim != null) {
-            sim.simulateMatch();
-        } else {
-            var alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("No match today");
-            alert.showAndWait();
-        }
-    }
-
-    private MatchSimulator getMatchSimulator() {
-        MatchSimulator ret = null;
-
-        var testMatch = AssociationManager.getInstance().getTodayMatchForPlayer();
-        if (testMatch != null) {
-            ret = new MatchSimulator(testMatch, MatchTab.getTarget());
-        }
-
-        return ret;
     }
 
 }
