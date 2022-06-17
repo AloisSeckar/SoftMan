@@ -108,7 +108,7 @@ public class MatchTab extends BorderPane {
     private void playMatch() {
         var sim = getMatchSimulator();
         if (sim != null) {
-            sim.playMatch();
+            sim.simulatePlay();
             refreshMatch();
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);

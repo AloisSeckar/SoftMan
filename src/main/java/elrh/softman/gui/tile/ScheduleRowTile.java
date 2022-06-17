@@ -107,8 +107,8 @@ public class ScheduleRowTile extends BorderPane {
 
             switch (match.getMatchInfo().getStatus()) {
                 case SCHEDULED -> titleLabel.setText(match.getMatchInfo().getMatchDay().toString() + " @ " + "Ballpark");
-                case IN_PROGRESS -> titleLabel.setText("LIVE");
-                case PLAYED -> {
+                case ACTIVE -> titleLabel.setText("LIVE");
+                case FINISHED -> {
                     BoxScore score = match.getBoxScore();
                     titleLabel.setText(score.getTotalPoints(true) + " : " + score.getTotalPoints(false) + " (" + score.getInnings() + " INN)");
                     simButton.setDisable(true);
@@ -127,7 +127,7 @@ public class ScheduleRowTile extends BorderPane {
 
     private void playMatch() {
         if (sim != null) {
-            sim.playMatch();
+            sim.simulatePlay();
             IndexTab.getInstance().refreshSchedule();
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);

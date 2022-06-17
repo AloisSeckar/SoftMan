@@ -66,8 +66,16 @@ public class Match {
         playByPlay.forEach(pbp -> target.appendText(pbp.getPlay()));
     }
 
+    public boolean isScheduled() {
+        return matchInfo.getStatus() == MatchStatus.SCHEDULED;
+    }
+
+    public boolean isActive() {
+        return matchInfo.getStatus() == MatchStatus.ACTIVE;
+    }
+
     public boolean isFinished() {
-        return matchInfo.getStatus() == MatchStatus.PLAYED;
+        return matchInfo.getStatus() == MatchStatus.FINISHED;
     }
     
 }
