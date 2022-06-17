@@ -1,5 +1,6 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.constants.Constants;
 import elrh.softman.logic.Match;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -59,15 +60,31 @@ public class BoxScoreTile extends VBox {
             innings.getChildren().clear();
             awayPoints.getChildren().clear();
             homePoints.getChildren().clear();
-            int totalInnings = boxScore.getInnings();
-            for (int i = 1; i <= totalInnings; i++) {
+            int inningsPlayed = boxScore.getInnings();
+            for (int i = 1; i <= Math.max(inningsPlayed, Constants.INNINGS); i++) {
+                String awayScoreValue;
+                String homeScoreValue;
+                if (i > inningsPlayed) {
+                    awayScoreValue = "X";
+                    homeScoreValue = "X";
+                } else {
+                    awayScoreValue = String.valueOf(boxScore.getPointsInInning(i, true));
+                    if (i == inningsPlayed && !match.homeTeamFinishedBatting()) {
+                        homeScoreValue = "X";
+                    } else {
+                        homeScoreValue = String.valueOf(boxScore.getPointsInInning(i, false));
+                    }
+                }
+
                 var inningLabel = new Label(String.valueOf(i));
                 inningLabel.getStyleClass().add("box-score");
                 innings.getChildren().add(inningLabel);
-                var awayScore = new Label(String.valueOf(boxScore.getPointsInInning(i, true)));
+
+                var awayScore = new Label(awayScoreValue);
                 awayScore.getStyleClass().add("box-score");
                 awayPoints.getChildren().add(awayScore);
-                var homeScore = new Label(String.valueOf(boxScore.getPointsInInning(i, false)));
+
+                var homeScore = new Label(homeScoreValue);
                 homeScore.getStyleClass().add("box-score");
                 homePoints.getChildren().add(homeScore);
             }

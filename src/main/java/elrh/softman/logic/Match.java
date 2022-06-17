@@ -77,5 +77,9 @@ public class Match {
     public boolean isFinished() {
         return matchInfo.getStatus() == MatchStatus.FINISHED;
     }
+
+    public boolean homeTeamFinishedBatting() {
+        return isFinished() && !matchInfo.isHomeTeamFinishedBatting();
+    }
     
 }

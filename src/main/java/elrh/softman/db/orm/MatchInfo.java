@@ -30,6 +30,7 @@ public class MatchInfo {
     private long homeTeamId;
 
     private MatchStatus status;
+    private boolean homeTeamFinishedBatting;
 
     public void setMatchDay(LocalDate matchDayLocal) {
         if (matchDayLocal != null) {

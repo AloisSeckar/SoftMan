@@ -3,8 +3,10 @@ package elrh.softman.logic.stats;
 import elrh.softman.constants.Constants;
 import java.util.Arrays;
 import javafx.scene.control.TextArea;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+@Slf4j
 public class BoxScore {
 
     private int innings = Constants.INNINGS;
@@ -17,12 +19,16 @@ public class BoxScore {
     private int homeHits;
     private int homeErrors;
 
+    public void trimIfNeeded(int inning) {
+        if (inning < innings) {
+            resizeArrays(inning);
+        }
+    }
+
     public void addPoint(int inning, boolean away) {
         if (inning > 0) {
             if (inning > innings) {
-                innings = inning;
-                awayPoints = Arrays.copyOf(awayPoints, innings);
-                homePoints = Arrays.copyOf(homePoints, innings);
+                resizeArrays(inning);
             }
 
             if (away) {
@@ -54,11 +60,11 @@ public class BoxScore {
     }
 
     public int getPointsInInning(int inning, boolean away) {
-        if (inning > 0 && inning < this.innings) {
+        if (inning > 0 && inning <= this.innings) {
             if (away) {
-                return awayPoints[inning];
+                return awayPoints[inning - 1];
             } else {
-                return homePoints[inning];
+                return homePoints[inning - 1];
             }
         }
         return 0;
@@ -136,6 +142,12 @@ public class BoxScore {
 
     private String pad(int number) {
         return StringUtils.leftPad(String.valueOf(number), 2, ' ');
+    }
+
+    private void resizeArrays(int inning) {
+        innings = inning;
+        awayPoints = Arrays.copyOf(awayPoints, innings);
+        homePoints = Arrays.copyOf(homePoints, innings);
     }
 
 }

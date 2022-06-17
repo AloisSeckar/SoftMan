@@ -152,8 +152,9 @@ public class MatchSimulator {
     }
 
     private void wrapUpMatch() {
-        boxScore.printBoxScore(target);
+        boxScore.trimIfNeeded(inning);
         appendText("\n\nGAME OVER\n\n");
+        match.getMatchInfo().setHomeTeamFinishedBatting(top);
         match.getMatchInfo().setStatus(MatchStatus.FINISHED);
         AssociationManager.getInstance().getPlayerLeague().saveMatch(match);
     }
@@ -176,6 +177,12 @@ public class MatchSimulator {
                     ret = false;
                 } else if (inning >= 8 && (Math.abs(homePoints - awayPoints) > 0)) {
                     ret = false;
+                }
+
+                if (!ret) {
+                    // revert values for correct box score (new inning didn't actually start)
+                    inning--;
+                    top = false;
                 }
             }
         } else {
