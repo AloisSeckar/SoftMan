@@ -11,6 +11,8 @@ public class Constants {
     public static final String GAME_DB = "jdbc:sqlite:sav\\game-$id$.db";
     
     public static final int INNINGS = 7;
+
+    public static final int LINEUP_SIZE = 17;
     
     public static final String GENDER_MALE = "m";
     public static final String GENDER_FEMALE = "f";

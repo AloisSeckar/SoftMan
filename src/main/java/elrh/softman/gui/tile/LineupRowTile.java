@@ -55,7 +55,7 @@ public class LineupRowTile extends HBox {
     }
 
     public LineupPosition getCurrentSelection() {
-        return new LineupPosition(playerCB.getValue(), positionCB.getValue());
+        return new LineupPosition(row + 1, playerCB.getValue(), positionCB.getValue());
     }
 
     public boolean isFilled() {

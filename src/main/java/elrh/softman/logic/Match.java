@@ -7,26 +7,23 @@ import elrh.softman.utils.ErrorUtils;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.TextArea;
-import lombok.Getter;
+import lombok.Data;
 
+@Data
 public class Match {
 
-    @Getter
     private final MatchInfo matchInfo;
 
-    @Getter
     private final Team awayTeam;
-    @Getter
+
     private final Team homeTeam;
-    @Getter
+
     private final BoxScore boxScore = new BoxScore();
-    @Getter
+
     private List<MatchPlayByPlay> playByPlay = new ArrayList<>();
-    
-    private List<Stats> stats;
 
     public Match(MatchInfo matchInfo, Team awayTeam, Team homeTeam) {
-        
+
         if (matchInfo != null) {
             this.matchInfo = matchInfo;
             matchInfo.setStatus(MatchStatus.SCHEDULED);
@@ -51,10 +48,6 @@ public class Match {
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'homeTeam'");
         }
 
-    }
-
-    public void setStats(List<Stats> stats) {
-        this.stats = stats;
     }
     
     public void simulate(TextArea target) {

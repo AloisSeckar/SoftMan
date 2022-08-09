@@ -12,7 +12,8 @@ public class Team {
     
     @Getter
     private final List<PlayerInfo> players = new ArrayList<>();
-    
+
+    // TODO this should be changed to "default lineup for (next) game"
     private final LineupPosition[] battingOrder = new LineupPosition[10];
     private final PlayerInfo[] substitutes = new PlayerInfo[8];
 
@@ -70,7 +71,7 @@ public class Team {
     }
     
     public void fillPosition(PlayerInfo player, Position position, int order) {
-        LineupPosition newPosition = new LineupPosition(player, position);
+        LineupPosition newPosition = new LineupPosition(order, player, position);
         battingOrder[order] = newPosition;
     }
     
