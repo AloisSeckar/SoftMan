@@ -8,6 +8,7 @@ import elrh.softman.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Stream;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
@@ -35,6 +36,9 @@ public class AssociationManager {
     @Setter
     private Team playerTeam;
 
+    private final List<Club> activeClubs = new ArrayList<>();
+    private final List<Club> archivedClubs = new ArrayList<>();
+
     private static AssociationManager INSTANCE;
 
     private AssociationManager() {
@@ -46,6 +50,27 @@ public class AssociationManager {
             INSTANCE = new AssociationManager();
         }
         return INSTANCE;
+    }
+
+    public List<Club> getClubs(boolean active) {
+        if (active) {
+            return activeClubs;
+        } else {
+            return Stream.concat(activeClubs.stream(), archivedClubs.stream()).toList();
+        }
+    }
+
+    public Club getClubById(int clubID) {
+        // TODO waiting for changing array to map
+        return null;
+    }
+
+    public void registerClub(Club newClub) {
+        activeClubs.add(newClub);
+    }
+
+    public void retireClub(int clubID) {
+        // TODO waiting for changing array to map
     }
 
     public List<League> getLeagues(int year) {
