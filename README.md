@@ -6,4 +6,4 @@
  
 # Status
  
- Check implementation info and status at [this page](/blob/master/DesignDocument.md)
+ Check implementation info and status at [this page](DesignDocument.md)
