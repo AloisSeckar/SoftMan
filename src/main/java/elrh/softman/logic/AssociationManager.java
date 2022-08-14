@@ -17,7 +17,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssociationManager {
 
-    private final List<League> managedLeagues = new ArrayList<>();
+    @Getter
+    private int year;
+    @Getter
+    private LocalDate currentDate = LocalDate.of(Constants.START_YEAR, 3, 31);
+    @Getter
+    private LocalDate viewDate = LocalDate.of(Constants.START_YEAR, 3, 31);
+
+    private final List<League> activeLeagues = new ArrayList<>();
+    private final List<League> archivedLeagues = new ArrayList<>();
 
     @Getter
     @Setter
@@ -26,13 +34,6 @@ public class AssociationManager {
     @Getter
     @Setter
     private Team playerTeam;
-
-    @Getter
-    private LocalDate viewDate = LocalDate.of(Constants.START_YEAR, 3, 31);
-    @Getter
-    private LocalDate currentDate = LocalDate.of(Constants.START_YEAR, 3, 31);
-    @Getter
-    private int season;
 
     private static AssociationManager INSTANCE;
 
@@ -46,9 +47,26 @@ public class AssociationManager {
         }
         return INSTANCE;
     }
+
+    public List<League> getLeagues(int year) {
+        if (this.year == this.year) {
+            return activeLeagues;
+        } else {
+            return archivedLeagues.stream().filter(l -> l.getYear() == year).toList();
+        }
+    }
+
+    public void createNewLeague() {
+        // TODO waiting for "league levels"
+        activeLeagues.add(new League("Empty league", new ArrayList()));
+    }
     
     public void nextSeason() {
-        season++;
+
+        archivedLeagues.addAll(activeLeagues);
+        activeLeagues.clear();
+
+        year++;
     }
 
     public void prevViewDay() {
@@ -135,11 +153,11 @@ public class AssociationManager {
         League testLeague = new League("Test league", teams);
         GameDBManager.getInstance().saveLeague(testLeague);
 
-        managedLeagues.add(testLeague);
+        activeLeagues.add(testLeague);
         playerLeague = testLeague;
         playerTeam = testTeam;
         
-        season = Constants.START_YEAR;
+        year = Constants.START_YEAR;
     }
 
 }

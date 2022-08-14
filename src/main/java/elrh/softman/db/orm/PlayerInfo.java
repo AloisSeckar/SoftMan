@@ -55,7 +55,7 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     }
     
     public int getAge() {
-        return AssociationManager.getInstance().getSeason() - birth;
+        return AssociationManager.getInstance().getYear() - birth;
     }
     
     public PlayerAttributes getAttributes() {

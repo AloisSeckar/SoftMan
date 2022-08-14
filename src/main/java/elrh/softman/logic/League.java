@@ -135,6 +135,10 @@ public class League {
          */
     }
 
+    public int getYear() {
+        return leagueInfo.getYear();
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private void scheduleMatches() {
