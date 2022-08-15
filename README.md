@@ -6,4 +6,4 @@
  
 # Status
  
- Check implementation info and status at [wiki page](wiki)
+ Check implementation info and status at [wiki page](https://github.com/AloisSeckar/SoftMan/wiki)
