@@ -40,7 +40,7 @@ public class ContentFrame extends TabPane {
         IndexTab.getInstance().setDailySchedule();
 
         var testMatches = AssociationManager.getInstance().getTodayMatchesForPlayer();
-        var match = Utils.getFirstItem(testMatches);
+        var match = Utils.getFirstItem(testMatches.values());
         MatchTab.getInstance().setMatch(match);
     }
 

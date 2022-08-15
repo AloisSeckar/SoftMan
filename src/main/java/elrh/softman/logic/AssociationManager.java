@@ -117,7 +117,7 @@ public class AssociationManager {
 
     public void nextDay() {
         if (isDayFinished() || confirmDayFinished()) {
-            getTodayMatches().forEach(match -> {
+            getTodayMatches().values().forEach(match -> {
                 if (!match.isFinished()) {
                     match.simulate(new TextArea());
                 }
@@ -133,30 +133,38 @@ public class AssociationManager {
         }
     }
 
-    public List<Match> getTodayMatchesForPlayer() {
-        var playersMatches = new ArrayList<Match>();
-        for (Match match : getTodayMatches()) {
+    public HashMap<Long, Match> getTodayMatchesForPlayer() {
+        var playersMatches = new HashMap<Long, Match>();
+        for (var entry : getTodayMatches().entrySet()) {
+            Long leagueId = entry.getKey();
+            Match match = entry.getValue();
             if (match.getHomeTeam().equals(playerTeam) || match.getAwayTeam().equals(playerTeam)) {
-                playersMatches.add(match);
+                playersMatches.put(leagueId, match);
             }
         }
         return playersMatches;
     }
 
-    public List<Match> getTodayMatches() {
-        var ret = new ArrayList<Match>();
-        getLeagues(year).forEach(league -> ret.addAll(league.getTodayMatches(viewDate)));
+    public  HashMap<Long, Match> getTodayMatches() {
+        var ret = new HashMap<Long, Match>();
+        getLeagues(year).forEach(league -> {
+            Long leagueId = league.getLeagueInfo().getLeagueId();
+            league.getTodayMatches(viewDate).forEach(match -> ret.put(leagueId, match));
+        });
         return ret;
     }
 
-    public List<Match> getRoundMatches(int round) {
+    public List<Match> getRoundMatches(int leagueId, int round) {
         var ret = new ArrayList<Match>();
-        getLeagues(year).forEach(league -> ret.addAll(league.getRoundMatches(round)));
+        var league = managedLeagues.get(leagueId);
+        if (league != null) {
+            ret.addAll(league.getRoundMatches(round));
+        }
         return ret;
     }
 
     public boolean isDayFinished() {
-        return getTodayMatches().stream().allMatch(Match::isFinished);
+        return getTodayMatches().values().stream().allMatch(Match::isFinished);
     }
 
     public boolean isTodayMatch(Match match) {

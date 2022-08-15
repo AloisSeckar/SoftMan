@@ -56,7 +56,7 @@ public class CalendarTile extends VBox {
         var matches = AssociationManager.getInstance().getTodayMatches();
         if (matches.size() > 0) {
             int i = 0;
-            for (var match : matches) {
+            for (var match : matches.values()) {
                 var row = new ScheduleRowTile(i++ % 2 == 0);
                 row.setMatch(match);
                 dailySchedule.getChildren().add(row);

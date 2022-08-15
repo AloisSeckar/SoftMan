@@ -139,7 +139,7 @@ public class MatchTab extends BorderPane {
         MatchSimulator ret = null;
 
         var testMatches = AssociationManager.getInstance().getTodayMatchesForPlayer();
-        var match = Utils.getFirstItem(testMatches);
+        var match = Utils.getFirstItem(testMatches.values());
         if (match != null) {
             ret = new MatchSimulator(match, MatchTab.getTarget());
         }
