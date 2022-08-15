@@ -1,32 +1,35 @@
 package elrh.softman.logic;
 
+import elrh.softman.db.orm.ClubInfo;
 import elrh.softman.db.orm.PlayerInfo;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
-@RequiredArgsConstructor
 public class Club {
 
     @Getter
-    private final int clubID;
+    private final ClubInfo clubInfo;
 
-    @Getter
-    @Setter
-    private String name;
-    @Getter
-    @Setter
-    private String city;
-    @Getter
-    @Setter
-    private String stadium;
+    private HashMap<Long, PlayerInfo> players = new HashMap<>();
+    private HashMap<Long, Team> teams = new HashMap<>();
 
-    @Getter
-    private List<PlayerInfo> players = new ArrayList<>();
-    @Getter
-    private List<Team> teams = new ArrayList<>();
+    public Club(String name, String city, String stadium) {
+        clubInfo = new ClubInfo();
+        clubInfo.setName(name);
+        clubInfo.setCity(city);
+        clubInfo.setStadium(stadium);
+    }
 
+    public long getClubId() {
+        return clubInfo.getClubId();
+    }
 
+    public List<PlayerInfo> getPlayers() {
+        return players.values().stream().toList();
+    }
+
+    public List<Team> getTeams() {
+        return teams.values().stream().toList();
+    }
 }

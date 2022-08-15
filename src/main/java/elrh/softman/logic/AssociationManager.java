@@ -36,8 +36,8 @@ public class AssociationManager {
     @Setter
     private Team playerTeam;
 
-    private final Map<Integer, Club> activeClubs = new HashMap<>();
-    private final Map<Integer, Club> archivedClubs = new HashMap<>();
+    private final HashMap<Long, Club> activeClubs = new HashMap<>();
+    private final HashMap<Long, Club> archivedClubs = new HashMap<>();
 
     private static AssociationManager INSTANCE;
 
@@ -60,28 +60,28 @@ public class AssociationManager {
         }
     }
 
-    public Club getClubById(int clubID) {
-        if (activeClubs.containsKey(clubID)) {
-            return activeClubs.get(clubID);
+    public Club getClubById(int clubId) {
+        if (activeClubs.containsKey(clubId)) {
+            return activeClubs.get(clubId);
         } else {
-            return archivedClubs.get(clubID);
+            return archivedClubs.get(clubId);
         }
     }
 
     public void registerClub(Club newClub) {
-        int clubID = newClub.getClubID();
-        activeClubs.put(newClub.getClubID(), newClub);
-        LOG.info("Club " + clubID + " was registered");
+        long clubId = newClub.getClubId();
+        activeClubs.put(clubId, newClub);
+        LOG.info("Club " + clubId + " was registered");
     }
 
-    public void retireClub(int clubID) {
-        Club retiredClub = activeClubs.get(clubID);
+    public void retireClub(long clubId) {
+        Club retiredClub = activeClubs.get(clubId);
         if (retiredClub != null) {
-            archivedClubs.put(clubID, retiredClub);
-            activeClubs.remove(clubID);
-            LOG.info("Club " + clubID + " was retired");
+            archivedClubs.put(clubId, retiredClub);
+            activeClubs.remove(clubId);
+            LOG.info("Club " + clubId + " was retired");
         } else {
-            LOG.warn("Club " + clubID + " cannot be retired - ID not found");
+            LOG.warn("Club " + clubId + " cannot be retired - ID not found");
         }
     }
 

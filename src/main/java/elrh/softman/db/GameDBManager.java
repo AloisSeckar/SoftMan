@@ -20,6 +20,7 @@ public class GameDBManager {
     
     private Dao<Result, Long> matchDao;
     private Dao<LeagueInfo, Long> leagueDao;
+    private Dao<ClubInfo, Long> clubDao;
     private Dao<TeamInfo, Long> teamDao;
     private Dao<PlayerInfo, Long> playerDao;
 
@@ -67,6 +68,15 @@ public class GameDBManager {
             LOG.error("GameDBManager.saveLeague", ex);
         }
     }
+
+    public void saveClub(Club club) {
+        try {
+            clubDao.create(club.getClubInfo());
+            LOG.info("CLUB SAVED");
+        } catch (Exception ex) {
+            LOG.error("GameDBManager.saveClub", ex);
+        }
+    }
     
     public void saveMatch(Match match) {
         try {
@@ -105,22 +115,25 @@ public class GameDBManager {
     private void setUpDatabase() throws SQLException {
         // TODO remove this to allow re-loading
         TableUtils.dropTable(conn, LeagueInfo.class, true);
+        TableUtils.dropTable(conn, ClubInfo.class, true);
         TableUtils.dropTable(conn, PlayerInfo.class, true);
         TableUtils.dropTable(conn, PlayerAttributes.class, true);
         TableUtils.dropTable(conn, TeamInfo.class, true);
         TableUtils.dropTable(conn, Result.class, true);
         // TODO remove this to allow re-loading
-        
+
         TableUtils.createTableIfNotExists(conn, LeagueInfo.class);
+        TableUtils.createTableIfNotExists(conn, ClubInfo.class);
         TableUtils.createTableIfNotExists(conn, PlayerInfo.class);
         TableUtils.createTableIfNotExists(conn, PlayerAttributes.class);
         TableUtils.createTableIfNotExists(conn, TeamInfo.class);
         TableUtils.createTableIfNotExists(conn, Result.class);
-        
-        matchDao = DaoManager.createDao(conn, Result.class);
+
         leagueDao = DaoManager.createDao(conn, LeagueInfo.class);
+        clubDao = DaoManager.createDao(conn, ClubInfo.class);
         playerDao = DaoManager.createDao(conn, PlayerInfo.class);
         teamDao = DaoManager.createDao(conn, TeamInfo.class);
+        matchDao = DaoManager.createDao(conn, Result.class);
     }
 
 }

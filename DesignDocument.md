@@ -49,7 +49,6 @@ Top level entity embracing all the softball "world" inside the game.
 * TODO cover rest of methods
 
 #### TODOs
-* &#x1F534; Change lists to ID maps for faster searching
 * &#x1F534; Allow filtering of club and player list
 * &#x1F534; Extract logical subdomains into separate "managers" (e.g. for clubs or date handling)
 * &#x1F534; Remove "playerLeague" and "playerTeam" because the concept doesn't make sense in multi-league system
@@ -60,20 +59,18 @@ Top level entity embracing all the softball "world" inside the game.
 Local organizational unit 
 
 #### Attributes
-* &#x1F7E2; name
-* &#x1F7E2; city
-* &#x1F7E2; stadium
-* &#x1F7E1; players - list of all registered players // data type needs to change
-* &#x1F7E2; teams - list of teams participating in competitions
+* &#x1F7E2; clubInfo - basic info about the club (ID, name, city, stadium)
+* &#x1F7E1; players - hashmap of all registered players // data type needs to change
+* &#x1F7E2; teams - hashmap of teams participating in competitions
 
 #### Methods
-* &#x1F534; Get basic info
+* &#x1F7E2; getClubId - get value of clubId (database table ID)
+* &#x1F7E2; getClubInfo
 * &#x1F7E2; getPlayers
 * &#x1F7E2; getTeams
 * TODO cover rest of methods
 
 #### TODOs
-* &#x1F534; Change lists to ID maps for faster searching
 * &#x1F534; Change playerList data type from "PlayerInfo" to "Player" (after introducing type)
 * &#x1F534; Expand "stadium" from simple name to class with more attributes
 
