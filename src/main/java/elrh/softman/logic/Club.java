@@ -1,12 +1,13 @@
 package elrh.softman.logic;
 
+import elrh.softman.db.GameDBManager;
 import elrh.softman.db.orm.ClubInfo;
 import elrh.softman.db.orm.PlayerInfo;
 import java.util.HashMap;
 import java.util.List;
 import lombok.Getter;
 
-public class Club {
+public class Club implements IDatabaseEntity {
 
     @Getter
     private final ClubInfo clubInfo;
@@ -21,11 +22,17 @@ public class Club {
         clubInfo.setStadium(stadium);
     }
 
-    public long getClubId() {
+    @Override
+    public long getId() {
         return clubInfo.getClubId();
     }
 
-    public List<PlayerInfo> getPlayers() {
+    @Override
+    public void persist() {
+        GameDBManager.getInstance().saveClub(this);
+    }
+
+   public List<PlayerInfo> getPlayers() {
         return players.values().stream().toList();
     }
 

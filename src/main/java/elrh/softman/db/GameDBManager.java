@@ -88,6 +88,15 @@ public class GameDBManager {
         }
     }
 
+    public void savePlayer(Player player) {
+        try {
+            playerDao.create(player.getPlayerInfo());
+            LOG.info("PLAYER SAVED");
+        } catch (Exception ex) {
+            LOG.error("GameDBManager.savePlayer", ex);
+        }
+    }
+
     public void savePlayers(List<PlayerInfo> players) {
         try {
             for (PlayerInfo player : players) {

@@ -63,7 +63,7 @@ public class AssociationManager {
     }
 
     public void registerClub(Club newClub) {
-        long clubId = newClub.getClubId();
+        long clubId = newClub.getId();
         registeredClubs.put(clubId, newClub);
         LOG.info("Club " + clubId + " was registered");
     }

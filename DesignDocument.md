@@ -14,10 +14,19 @@ This file is tracking down core concepts + implementation progress
 
 # Logical Structure
 
-### &#x1F7E1; AssociationManager
-Top level entity embracing all the softball "world" inside the game.
+### &#x1F7E2; IDatabaseEntity
+* interface for common DB-related operations
+* implementation indicates target logical class contains data that are being persisted into DB
+* such class always contains at least one "XyzInfo" attribute - an object that holds the actual DB data
 
-#### Notes
+#### Interface methods
+* getId - adapter to access database object ID (generated long)
+* persist - wrapper around DB-saving operations
+
+
+
+### &#x1F7E1; AssociationManager
+* top level entity embracing all the softball "world" inside the game.
 * implemented as singleton to be referenced throughout the whole app
 
 #### Attributes
@@ -54,7 +63,8 @@ Top level entity embracing all the softball "world" inside the game.
 
 
 ### &#x1F7E1; Club
-Local organizational unit 
+* local organizational unit 
+* implements IDatabaseEntity
 
 #### Attributes
 * &#x1F7E2; clubInfo - basic info about the club (ID, name, city, stadium)
@@ -75,7 +85,8 @@ Local organizational unit
 
 
 ### &#x1F7E1; Player
-The actual player 
+* the actual player 
+* implements IDatabaseEntity
 
 #### Attributes
 * &#x1F7E2; Name
