@@ -18,4 +18,10 @@ public class Player implements IDatabaseEntity {
     public void persist() {
         GameDBManager.getInstance().savePlayer(this);
     }
+
+    public boolean isActive() {
+        // TODO  impl
+        return true;
+    }
+
 }

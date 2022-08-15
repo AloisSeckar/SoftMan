@@ -9,7 +9,6 @@ import elrh.softman.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
 import java.time.LocalDate;
 import java.util.*;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
@@ -51,15 +50,25 @@ public class AssociationManager {
         return INSTANCE;
     }
 
+    public List<League> getLeagues(int year) {
+        return managedLeagues.values().stream().filter(l -> l.getYear() == year).toList();
+    }
+
+    public void createNewLeague(String name, LeagueLevelEnum level, ArrayList<Team> teams) {
+        League newLeague = new League(name, level, teams);
+        GameDBManager.getInstance().saveLeague(newLeague);
+        managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
+    }
+
     public List<Club> getClubs(boolean active) {
         if (active) {
-            return registeredClubs.values().stream().filter(c -> c.isActive()).toList();
+            return registeredClubs.values().stream().filter(Club::isActive).toList();
         } else {
             return registeredClubs.values().stream().toList();
         }
     }
 
-    public Club getClubById(int clubId) {
+    public Club getClubById(long clubId) {
         return registeredClubs.get(clubId);
     }
 
@@ -69,24 +78,22 @@ public class AssociationManager {
         LOG.info("Club " + clubId + " was registered");
     }
 
-    public void retireClub(long clubId) {
-        Club retiredClub = registeredClubs.get(clubId);
-        if (retiredClub != null) {
-            // TODO change state to "inactive"
-            LOG.info("Club " + clubId + " was retired");
+    public List<Player> getPlayers(boolean active) {
+        if (active) {
+            return registeredPlayers.values().stream().filter(Player::isActive).toList();
         } else {
-            LOG.warn("Club " + clubId + " cannot be retired - ID not found");
+            return registeredPlayers.values().stream().toList();
         }
     }
 
-    public List<League> getLeagues(int year) {
-        return managedLeagues.values().stream().filter(l -> l.getYear() == year).toList();
+    public Player getPlayerById(long playerId) {
+        return registeredPlayers.get(playerId);
     }
 
-    public void createNewLeague(String name, LeagueLevelEnum level, ArrayList<Team> teams) {
-        League newLeague = new League(name, level, teams);
-        GameDBManager.getInstance().saveLeague(newLeague);
-        managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
+    public void registerPlayer(Player newPlayer) {
+        long PlayerId = newPlayer.getId();
+        registeredPlayers.put(PlayerId, newPlayer);
+        LOG.info("Player " + PlayerId + " was registered");
     }
     
     public void nextSeason() {
