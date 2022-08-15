@@ -2,6 +2,7 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.constants.Constants;
 import elrh.softman.db.orm.PlayerInfo;
+import elrh.softman.logic.enums.GenderEnum;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.GaugeBuilder;
 import javafx.geometry.Insets;
@@ -107,7 +108,7 @@ public class PlayerInfoTile extends VBox {
             nameLabel.setText(player.getName());
             ageLabel.setText(player.getAge() + " yrs");
 
-            if (Constants.GENDER_FEMALE.equals(player.getGender())) {
+            if (GenderEnum.F.equals(player.getGender())) {
                 imgView.setImage(new Image(getClass().getResourceAsStream("/img/player-f.png")));
             } else {
                 imgView.setImage(new Image(getClass().getResourceAsStream("/img/player-m.png")));

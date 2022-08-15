@@ -14,7 +14,4 @@ public class Constants {
 
     public static final int LINEUP_SIZE = 17;
     
-    public static final String GENDER_MALE = "m";
-    public static final String GENDER_FEMALE = "f";
-    
 }

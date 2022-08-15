@@ -4,6 +4,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.constants.Constants;
 import java.util.Objects;
+
+import elrh.softman.logic.enums.GenderEnum;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_teams")
@@ -17,7 +19,7 @@ public class TeamInfo {
     private String teamName;
     
     @DatabaseField(canBeNull = false)
-    private String gender;
+    private GenderEnum gender;
     
     @DatabaseField(canBeNull = false)
     private String city;
@@ -30,7 +32,7 @@ public class TeamInfo {
 
     public TeamInfo(String teamName) {
         this.teamName = teamName;
-        this.gender = Constants.GENDER_MALE;
+        this.gender = GenderEnum.M;
         this.city = "City";
         this.year = Constants.START_YEAR;
     }

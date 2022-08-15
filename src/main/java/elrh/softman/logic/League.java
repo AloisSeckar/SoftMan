@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import elrh.softman.db.orm.MatchInfo;
+import elrh.softman.logic.enums.LeagueLevelEnum;
 import elrh.softman.utils.ErrorUtils;
 import javafx.scene.control.TextArea;
 import lombok.Getter;

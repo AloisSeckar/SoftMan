@@ -2,8 +2,8 @@ package elrh.softman.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.constants.Constants;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.enums.GenderEnum;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_players")
@@ -17,7 +17,7 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     private String name;
     
     @DatabaseField(canBeNull = false)
-    private String gender;
+    private GenderEnum gender;
     
     @DatabaseField(canBeNull = false)
     private int birth;
@@ -30,7 +30,7 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     
     public PlayerInfo(String player, int number) {
         this.name = player;
-        this.gender = Constants.GENDER_MALE;
+        this.gender = GenderEnum.M;
         this.birth = 2000;
         this.number = number;
         this.attributes = new PlayerAttributes();

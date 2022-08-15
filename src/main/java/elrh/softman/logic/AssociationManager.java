@@ -4,11 +4,12 @@ import elrh.softman.constants.Constants;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
+import elrh.softman.logic.enums.LeagueLevelEnum;
 import elrh.softman.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Stream;
+
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;

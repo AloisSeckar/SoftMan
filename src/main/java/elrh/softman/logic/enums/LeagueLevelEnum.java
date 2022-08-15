@@ -1,4 +1,4 @@
-package elrh.softman.logic;
+package elrh.softman.logic.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -3,7 +3,7 @@ package elrh.softman.db.orm;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.constants.Constants;
-import elrh.softman.logic.LeagueLevelEnum;
+import elrh.softman.logic.enums.LeagueLevelEnum;
 import java.util.Objects;
 import lombok.*;
 
