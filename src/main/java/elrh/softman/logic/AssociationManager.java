@@ -25,8 +25,9 @@ public class AssociationManager {
     @Getter
     private LocalDate viewDate = LocalDate.of(Constants.START_YEAR, 3, 31);
 
-    private final List<League> activeLeagues = new ArrayList<>();
-    private final List<League> archivedLeagues = new ArrayList<>();
+    private final HashMap<Long, League> managedLeagues = new HashMap<>();
+    private final HashMap<Long, Club> registeredClubs = new HashMap<>();
+    private final HashMap<Long, Player> registeredPlayers = new HashMap<>();
 
     @Getter
     @Setter
@@ -35,9 +36,6 @@ public class AssociationManager {
     @Getter
     @Setter
     private Team playerTeam;
-
-    private final HashMap<Long, Club> activeClubs = new HashMap<>();
-    private final HashMap<Long, Club> archivedClubs = new HashMap<>();
 
     private static AssociationManager INSTANCE;
 
@@ -54,31 +52,26 @@ public class AssociationManager {
 
     public List<Club> getClubs(boolean active) {
         if (active) {
-            return activeClubs.values().stream().toList();
+            return registeredClubs.values().stream().filter(c -> c.isActive()).toList();
         } else {
-            return Stream.concat(activeClubs.values().stream(), archivedClubs.values().stream()).toList();
+            return registeredClubs.values().stream().toList();
         }
     }
 
     public Club getClubById(int clubId) {
-        if (activeClubs.containsKey(clubId)) {
-            return activeClubs.get(clubId);
-        } else {
-            return archivedClubs.get(clubId);
-        }
+        return registeredClubs.get(clubId);
     }
 
     public void registerClub(Club newClub) {
         long clubId = newClub.getClubId();
-        activeClubs.put(clubId, newClub);
+        registeredClubs.put(clubId, newClub);
         LOG.info("Club " + clubId + " was registered");
     }
 
     public void retireClub(long clubId) {
-        Club retiredClub = activeClubs.get(clubId);
+        Club retiredClub = registeredClubs.get(clubId);
         if (retiredClub != null) {
-            archivedClubs.put(clubId, retiredClub);
-            activeClubs.remove(clubId);
+            // TODO change state to "inactive"
             LOG.info("Club " + clubId + " was retired");
         } else {
             LOG.warn("Club " + clubId + " cannot be retired - ID not found");
@@ -86,22 +79,19 @@ public class AssociationManager {
     }
 
     public List<League> getLeagues(int year) {
-        if (this.year == this.year) {
-            return activeLeagues;
-        } else {
-            return archivedLeagues.stream().filter(l -> l.getYear() == year).toList();
-        }
+        return managedLeagues.values().stream().filter(l -> l.getYear() == year).toList();
     }
 
     public void createNewLeague() {
         // TODO waiting for "league levels"
-        activeLeagues.add(new League("Empty league", new ArrayList()));
+        League newLeague = new League("Empty league", new ArrayList());
+        GameDBManager.getInstance().saveLeague(newLeague);
+        managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
     }
     
     public void nextSeason() {
 
-        archivedLeagues.addAll(activeLeagues);
-        activeLeagues.clear();
+        // TODO expire all club/player registrations
 
         year++;
     }
@@ -190,7 +180,7 @@ public class AssociationManager {
         League testLeague = new League("Test league", teams);
         GameDBManager.getInstance().saveLeague(testLeague);
 
-        activeLeagues.add(testLeague);
+        managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);
         playerLeague = testLeague;
         playerTeam = testTeam;
         

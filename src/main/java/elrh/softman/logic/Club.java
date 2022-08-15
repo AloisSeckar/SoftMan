@@ -32,4 +32,9 @@ public class Club {
     public List<Team> getTeams() {
         return teams.values().stream().toList();
     }
+
+    public boolean isActive() {
+        // TODO  impl
+        return true;
+    }
 }

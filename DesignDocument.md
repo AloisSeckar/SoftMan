@@ -24,27 +24,25 @@ Top level entity embracing all the softball "world" inside the game.
 * &#x1F7E2; year - season, that is currently being played (initially Constants.START_YEAR)
 * &#x1F7E2; currentDate - in-game date
 * &#x1F7E2; viewDate - GUI browser date (user may navigate both to past and future)
-* &#x1F7E2; activeLeagues - list of current (this year) leagues
-* &#x1F7E2; archivedLeagues - list of past years leagues
+* &#x1F7E2; managedLeagues - hash map of leagues managed throughout the association history
+* &#x1F7E2; registeredClubs - hash map of all clubs ever registed in association
+* &#x1F7E2; registeredPlayers - hash map of all players ever registered in association
 * &#x1F534; playerClub - shortcut to club controlled by human player
 * &#x1F7E2; playerLeague - shortcut to league being played by player's team
 * &#x1F7E2; playerTeam - shortcut to team controlled by player
-* &#x1F7E2; activeClubs - hash map of current (registered for this year) clubs
-* &#x1F7E2; archivedClubs - hash map of non-active (not registered for this year) clubs
-* &#x1F534; List of registered players
 
 #### Methods
-* &#x1F7E2; getClubs - get list of clubs (active only or all)
-* &#x1F7E2; getClubById - find club by ID
-* &#x1F535; registerClub - register new club (as active)
-* &#x1F535; retireClub - remove club from active list and put into retired
+* &#x1F535; getLeagues - get list of leagues for given year
+* &#x1F7E1; createNewLeague - register new league into current year // full impl waiting for "league levels"
+* &#x1F535; getClubs - get list of clubs (active only or all)
+* &#x1F535; getClubById - find club by ID
+* &#x1F7E1; registerClub - register new club // full impl waiting for "active" flags
+* &#x1F7E1; retireClub - set "inactive" flag to given club // full impl waiting for "active" flags
 * &#x1F534; Renew club registration for next year (club ID, year) // possible duplicate with "registerClub"
 * &#x1F534; Get list of players
 * &#x1F534; Register new player (player info)
 * &#x1F534; Renew player registration for next year (player ID, year)
-* &#x1F535; getLeagues - get list of leagues for given year
-* &#x1F7E1; createNewLeague - register new league into current year (league level) // full impl waiting for "league levels"
-* &#x1F535; nextSeason - archive all leagues at the end of year + advance to next year
+* &#x1F7E1; nextSeason - expire all active registrations + advance to next year // full impl waiting for "active" flags
 * &#x1F534; Register team into league (league ID, team ID)
 * TODO cover rest of methods
 
@@ -68,6 +66,7 @@ Local organizational unit
 * &#x1F7E2; getClubInfo
 * &#x1F7E2; getPlayers
 * &#x1F7E2; getTeams
+* &#x1F7E1; isActive - club has valid registration for current year // TODO impl
 * TODO cover rest of methods
 
 #### TODOs
