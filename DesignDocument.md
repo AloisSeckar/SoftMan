@@ -29,16 +29,16 @@ Top level entity embracing all the softball "world" inside the game.
 * &#x1F534; playerClub - shortcut to club controlled by human player
 * &#x1F7E2; playerLeague - shortcut to league being played by player's team
 * &#x1F7E2; playerTeam - shortcut to team controlled by player
-* &#x1F7E2; activeClubs - list of current (this year registered) clubs
-* &#x1F7E2; archivedClubs - list of past clubs
+* &#x1F7E2; activeClubs - hash map of current (registered for this year) clubs
+* &#x1F7E2; archivedClubs - hash map of non-active (not registered for this year) clubs
 * &#x1F534; List of registered players
 
 #### Methods
 * &#x1F7E2; getClubs - get list of clubs (active only or all)
-* &#x1F7E1; getClubById - find club by ID // waiting for changing lists to maps
+* &#x1F7E2; getClubById - find club by ID
 * &#x1F535; registerClub - register new club (as active)
-* &#x1F535; retireClub - remove club from active list
-* &#x1F534; Renew club registration for next year (club ID, year)
+* &#x1F535; retireClub - remove club from active list and put into retired
+* &#x1F534; Renew club registration for next year (club ID, year) // possible duplicate with "registerClub"
 * &#x1F534; Get list of players
 * &#x1F534; Register new player (player info)
 * &#x1F534; Renew player registration for next year (player ID, year)
