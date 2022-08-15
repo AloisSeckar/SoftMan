@@ -30,10 +30,10 @@ public class League {
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
 
-    public League(String name, ArrayList<Team> teams) {
+    public League(String name, LeagueLevelEnum level, ArrayList<Team> teams) {
         LOG.info("League '" + name + "' is being set-up");
 
-        this.leagueInfo = new LeagueInfo(name);
+        this.leagueInfo = new LeagueInfo(name, level);
         this.teams = teams;
         teams.forEach(team -> standings.add(new Standing(team.getName())));
         GameDBManager.getInstance().saveTeams(teams);

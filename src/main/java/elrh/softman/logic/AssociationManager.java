@@ -82,9 +82,8 @@ public class AssociationManager {
         return managedLeagues.values().stream().filter(l -> l.getYear() == year).toList();
     }
 
-    public void createNewLeague() {
-        // TODO waiting for "league levels"
-        League newLeague = new League("Empty league", new ArrayList());
+    public void createNewLeague(String name, LeagueLevelEnum level, ArrayList<Team> teams) {
+        League newLeague = new League(name, level, teams);
         GameDBManager.getInstance().saveLeague(newLeague);
         managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
     }
@@ -177,7 +176,7 @@ public class AssociationManager {
         teams.add(MockTeamFactory.getMockTeam("BROWNS"));
         teams.add(MockTeamFactory.getMockTeam("GOLDS"));
 
-        League testLeague = new League("Test league", teams);
+        League testLeague = new League("Test league", LeagueLevelEnum.MSEN, teams);
         GameDBManager.getInstance().saveLeague(testLeague);
 
         managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);

@@ -3,6 +3,7 @@ package elrh.softman.db.orm;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.constants.Constants;
+import elrh.softman.logic.LeagueLevelEnum;
 import java.util.Objects;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class LeagueInfo {
     private String leagueName;
     
     @DatabaseField(canBeNull = false)
-    private String gender;
+    private LeagueLevelEnum level;
     
     @DatabaseField(canBeNull = false)
     private int year;
@@ -25,9 +26,9 @@ public class LeagueInfo {
     @DatabaseField(canBeNull = false)
     private int matchId;
     
-    public LeagueInfo(String leagueName) {
+    public LeagueInfo(String leagueName, LeagueLevelEnum level) {
         this.leagueName = leagueName;
-        this.gender = Constants.GENDER_MALE;
+        this.level = level;
         this.year = Constants.START_YEAR;
         this.matchId = 1000;
     }
