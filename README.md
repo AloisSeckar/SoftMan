@@ -6,4 +6,4 @@
  
 # Status
  
- Check implementation info and status at [this page](DesignDocument.md)
+ Check implementation info and status at [wiki page](wiki)
