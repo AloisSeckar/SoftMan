@@ -7,6 +7,7 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Match;
 import elrh.softman.logic.MatchSimulator;
 import elrh.softman.utils.FormatUtils;
+import elrh.softman.utils.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
@@ -137,9 +138,10 @@ public class MatchTab extends BorderPane {
     private MatchSimulator getMatchSimulator() {
         MatchSimulator ret = null;
 
-        var testMatch = AssociationManager.getInstance().getTodayMatchForPlayer();
-        if (testMatch != null) {
-            ret = new MatchSimulator(testMatch, MatchTab.getTarget());
+        var testMatches = AssociationManager.getInstance().getTodayMatchesForPlayer();
+        var match = Utils.getFirstItem(testMatches);
+        if (match != null) {
+            ret = new MatchSimulator(match, MatchTab.getTarget());
         }
 
         return ret;

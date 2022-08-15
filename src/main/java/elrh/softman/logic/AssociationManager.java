@@ -133,23 +133,26 @@ public class AssociationManager {
         }
     }
 
-    public Match getTodayMatchForPlayer() {
-        Match playersMatch = null;
+    public List<Match> getTodayMatchesForPlayer() {
+        var playersMatches = new ArrayList<Match>();
         for (Match match : getTodayMatches()) {
             if (match.getHomeTeam().equals(playerTeam) || match.getAwayTeam().equals(playerTeam)) {
-                playersMatch = match;
-                break;
+                playersMatches.add(match);
             }
         }
-        return playersMatch;
+        return playersMatches;
     }
 
     public List<Match> getTodayMatches() {
-        return playerLeague.getTodayMatches(viewDate);
+        var ret = new ArrayList<Match>();
+        getLeagues(year).forEach(league -> ret.addAll(league.getTodayMatches(viewDate)));
+        return ret;
     }
 
     public List<Match> getRoundMatches(int round) {
-        return playerLeague.getRoundMatches(round);
+        var ret = new ArrayList<Match>();
+        getLeagues(year).forEach(league -> ret.addAll(league.getRoundMatches(round)));
+        return ret;
     }
 
     public boolean isDayFinished() {

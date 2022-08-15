@@ -2,6 +2,7 @@ package elrh.softman.gui.frame;
 
 import elrh.softman.gui.tab.*;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.utils.Utils;
 import javafx.scene.control.*;
 
 public class ContentFrame extends TabPane {
@@ -37,7 +38,10 @@ public class ContentFrame extends TabPane {
 
     public void setUp() {
         IndexTab.getInstance().setDailySchedule();
-        MatchTab.getInstance().setMatch(AssociationManager.getInstance().getTodayMatchForPlayer());
+
+        var testMatches = AssociationManager.getInstance().getTodayMatchesForPlayer();
+        var match = Utils.getFirstItem(testMatches);
+        MatchTab.getInstance().setMatch(match);
     }
 
     public void switchTo(String tab) {
