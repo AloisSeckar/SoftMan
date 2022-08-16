@@ -31,10 +31,16 @@ public class AssociationManager {
 
     @Getter
     @Setter
+    private Club playerClub;
+
+    @Getter
+    @Setter
+    @Deprecated
     private League playerLeague;
 
     @Getter
     @Setter
+    @Deprecated
     private Team playerTeam;
 
     private static AssociationManager INSTANCE;
@@ -201,6 +207,11 @@ public class AssociationManager {
         managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);
         playerLeague = testLeague;
         playerTeam = testTeam;
+
+        Club testPlayerClub = new Club("REDS", "Unknown", "The Field");
+        testPlayerClub.persist();
+        registerClub(testPlayerClub);
+        playerClub = testPlayerClub;
         
         year = Constants.START_YEAR;
     }
