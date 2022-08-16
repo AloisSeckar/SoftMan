@@ -48,7 +48,7 @@ public class CalendarTile extends VBox {
     }
 
     public void setDailySchedule() {
-        var viewDate = AssociationManager.getInstance().getViewDate();
+        var viewDate = AssociationManager.getInstance().getClock().getViewDate();
         titleLabel.setText(viewDate.format(FormatUtils.DF));
 
         dailySchedule.getChildren().clear();
@@ -74,17 +74,17 @@ public class CalendarTile extends VBox {
     }
 
     private void adjustDay() {
-        AssociationManager.getInstance().adjustViewDay();
+        AssociationManager.getInstance().getClock().adjustViewDay();
         setDailySchedule();
     }
 
     private void prevDay() {
-        AssociationManager.getInstance().prevViewDay();
+        AssociationManager.getInstance().getClock().prevViewDay();
         setDailySchedule();
     }
 
     private void nextDay() {
-        AssociationManager.getInstance().nextViewDay();
+        AssociationManager.getInstance().getClock().nextViewDay();
         setDailySchedule();
     }
 

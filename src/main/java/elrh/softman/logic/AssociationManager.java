@@ -1,13 +1,11 @@
 package elrh.softman.logic;
 
-import elrh.softman.constants.Constants;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.logic.enums.LeagueLevelEnum;
 import elrh.softman.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
-import java.time.LocalDate;
 import java.util.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -19,11 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AssociationManager {
 
     @Getter
-    private int year;
-    @Getter
-    private LocalDate currentDate = LocalDate.of(Constants.START_YEAR, 3, 31);
-    @Getter
-    private LocalDate viewDate = LocalDate.of(Constants.START_YEAR, 3, 31);
+    private final ClockManager clock = new ClockManager();
 
     private final HashMap<Long, League> managedLeagues = new HashMap<>();
     private final HashMap<Long, Club> registeredClubs = new HashMap<>();
@@ -104,40 +98,13 @@ public class AssociationManager {
     
     public void nextSeason() {
 
+        // TODO (confirm and) finish all matches to be played
         // TODO expire all club/player registrations
 
-        year++;
+        clock.nextYear();
     }
 
-    public void prevViewDay() {
-        viewDate = viewDate.minusDays(1);
-    }
 
-    public void nextViewDay() {
-        viewDate = viewDate.plusDays(1);
-    }
-
-    public void adjustViewDay() {
-        viewDate = currentDate;
-    }
-
-    public void nextDay() {
-        if (isDayFinished() || confirmDayFinished()) {
-            getTodayMatches().values().forEach(match -> {
-                if (!match.isFinished()) {
-                    match.simulate(new TextArea());
-                }
-            });
-
-            IndexTab.getInstance().refreshSchedule();
-            currentDate = currentDate.plusDays(1);
-            adjustViewDay();
-            LOG.info("NEW DAY. Today is " + currentDate.format(FormatUtils.DF));
-
-            ActionFrame.getInstance().updateDateValue(currentDate);
-            IndexTab.getInstance().setDailySchedule();
-        }
-    }
 
     public HashMap<Long, Match> getTodayMatchesForPlayer() {
         var playersMatches = new HashMap<Long, Match>();
@@ -153,9 +120,9 @@ public class AssociationManager {
 
     public  HashMap<Long, Match> getTodayMatches() {
         var ret = new HashMap<Long, Match>();
-        getLeagues(year).forEach(league -> {
+        getLeagues(clock.getYear()).forEach(league -> {
             Long leagueId = league.getLeagueInfo().getLeagueId();
-            league.getTodayMatches(viewDate).forEach(match -> ret.put(leagueId, match));
+            league.getTodayMatches(clock.getViewDate()).forEach(match -> ret.put(leagueId, match));
         });
         return ret;
     }
@@ -169,16 +136,34 @@ public class AssociationManager {
         return ret;
     }
 
-    public boolean isDayFinished() {
-        return getTodayMatches().values().stream().allMatch(Match::isFinished);
+    public void nextDay() {
+        if (isDayFinished() || confirmDayFinished()) {
+            getTodayMatches().values().forEach(match -> {
+                if (!match.isFinished()) {
+                    match.simulate(new TextArea());
+                }
+            });
+
+            IndexTab.getInstance().refreshSchedule();
+            clock.plusDays(1);
+            clock.adjustViewDay();
+            LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
+
+            ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
+            IndexTab.getInstance().setDailySchedule();
+        }
     }
 
     public boolean isTodayMatch(Match match) {
         var matchDate = match.getMatchInfo().getMatchDay();
-        return matchDate.compareTo(getCurrentDate()) == 0;
+        return matchDate.compareTo(clock.getCurrentDate()) == 0;
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    private boolean isDayFinished() {
+        return getTodayMatches().values().stream().allMatch(Match::isFinished);
+    }
 
     private boolean confirmDayFinished() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Simulate the rest of the day?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
@@ -212,8 +197,6 @@ public class AssociationManager {
         testPlayerClub.persist();
         registerClub(testPlayerClub);
         playerClub = testPlayerClub;
-        
-        year = Constants.START_YEAR;
     }
 
 }
