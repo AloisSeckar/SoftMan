@@ -20,4 +20,7 @@ public class ClubInfo {
     @DatabaseField(canBeNull = false)
     private String stadium;
 
+    @DatabaseField(canBeNull = false)
+    private int registered;
+
 }

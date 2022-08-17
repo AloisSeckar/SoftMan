@@ -72,10 +72,17 @@ public class AssociationManager {
         return registeredClubs.get(clubId);
     }
 
-    public void registerClub(Club newClub) {
-        long clubId = newClub.getId();
-        registeredClubs.put(clubId, newClub);
-        LOG.info("Club " + clubId + " was registered");
+    public void registerClub(Club club) {
+        long clubId = club.getId();
+        int year = clock.getYear();
+        Club existingClub = registeredClubs.get(clubId);
+        if (existingClub != null) {
+            existingClub.register(year);
+        } else {
+            club.register(year);
+            registeredClubs.put(clubId, club);
+        }
+        LOG.info("Club " + clubId + " was registered for " + year + " season");
     }
 
     public List<Player> getPlayers(boolean active) {
@@ -90,21 +97,18 @@ public class AssociationManager {
         return registeredPlayers.get(playerId);
     }
 
-    public void registerPlayer(Player newPlayer) {
-        long PlayerId = newPlayer.getId();
-        registeredPlayers.put(PlayerId, newPlayer);
-        LOG.info("Player " + PlayerId + " was registered");
+    public void registerPlayer(Player player) {
+        long playerId = player.getId();
+        int year = clock.getYear();
+        Player existingPlayer = registeredPlayers.get(playerId);
+        if (existingPlayer != null) {
+            existingPlayer.register(year);
+        } else {
+            player.register(year);
+            registeredPlayers.put(playerId, player);
+        }
+        LOG.info("player " + playerId + " was registered for " + year + " season");
     }
-    
-    public void nextSeason() {
-
-        // TODO (confirm and) finish all matches to be played
-        // TODO expire all club/player registrations
-
-        clock.nextYear();
-    }
-
-
 
     public HashMap<Long, Match> getTodayMatchesForPlayer() {
         var playersMatches = new HashMap<Long, Match>();

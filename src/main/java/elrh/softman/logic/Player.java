@@ -20,8 +20,12 @@ public class Player implements IDatabaseEntity {
     }
 
     public boolean isActive() {
-        // TODO  impl
-        return true;
+        return getPlayerInfo().getRegistered() == AssociationManager.getInstance().getClock().getYear();
+    }
+
+    public void register(int year) {
+        getPlayerInfo().setRegistered(year);
+        persist();
     }
 
 }

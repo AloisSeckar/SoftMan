@@ -41,7 +41,12 @@ public class Club implements IDatabaseEntity {
     }
 
     public boolean isActive() {
-        // TODO  impl
-        return true;
+        return getClubInfo().getRegistered() == AssociationManager.getInstance().getClock().getYear();
     }
+
+    public void register(int year) {
+        getClubInfo().setRegistered(year);
+        persist();
+    }
+
 }

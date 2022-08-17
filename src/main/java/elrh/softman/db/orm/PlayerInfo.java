@@ -21,6 +21,9 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     
     @DatabaseField(canBeNull = false)
     private int birth;
+
+    @DatabaseField(canBeNull = false)
+    private int registered;
     
     @DatabaseField(canBeNull = false)
     private int number;
