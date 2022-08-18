@@ -1,13 +1,11 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.ClubInfo;
-import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.interfaces.IDatabaseEntity;
 import java.util.HashMap;
 import java.util.List;
-
-import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.interfaces.IDatabaseEntity;
 import lombok.Getter;
 
 public class Club implements IDatabaseEntity {
@@ -15,7 +13,7 @@ public class Club implements IDatabaseEntity {
     @Getter
     private final ClubInfo clubInfo;
 
-    private HashMap<Long, PlayerInfo> players = new HashMap<>();
+    private HashMap<Long, Player> players = new HashMap<>();
     private HashMap<Long, Team> teams = new HashMap<>();
 
     public Club(String name, String city, String stadium) {
@@ -35,7 +33,7 @@ public class Club implements IDatabaseEntity {
         GameDBManager.getInstance().saveClub(this);
     }
 
-   public List<PlayerInfo> getPlayers() {
+   public List<Player> getPlayers() {
         return players.values().stream().toList();
     }
 
