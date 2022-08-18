@@ -1,13 +1,13 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.db.orm.PlayerInfo;
-import elrh.softman.logic.LineupPosition;
-import elrh.softman.logic.Position;
+import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.enums.Position;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import elrh.softman.logic.Team;
+import elrh.softman.logic.core.Team;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 

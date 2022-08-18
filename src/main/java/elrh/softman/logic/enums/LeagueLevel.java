@@ -1,10 +1,9 @@
 package elrh.softman.logic.enums;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum LeagueLevelEnum {
+public enum LeagueLevel {
 
     MSEN,
     MU18,

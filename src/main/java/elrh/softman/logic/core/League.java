@@ -1,4 +1,4 @@
-package elrh.softman.logic;
+package elrh.softman.logic.core;
 
 import elrh.softman.constants.Constants;
 import elrh.softman.db.GameDBManager;
@@ -11,7 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import elrh.softman.db.orm.MatchInfo;
-import elrh.softman.logic.enums.LeagueLevelEnum;
+import elrh.softman.logic.core.stats.Standing;
+import elrh.softman.logic.enums.LeagueLevel;
 import elrh.softman.utils.ErrorUtils;
 import javafx.scene.control.TextArea;
 import lombok.Getter;
@@ -31,7 +32,7 @@ public class League {
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
 
-    public League(String name, LeagueLevelEnum level, ArrayList<Team> teams) {
+    public League(String name, LeagueLevel level, ArrayList<Team> teams) {
         LOG.info("League '" + name + "' is being set-up");
 
         this.leagueInfo = new LeagueInfo(name, level);

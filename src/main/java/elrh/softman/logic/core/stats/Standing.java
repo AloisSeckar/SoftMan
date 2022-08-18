@@ -1,4 +1,4 @@
-package elrh.softman.logic;
+package elrh.softman.logic.core.stats;
 
 import lombok.*;
 

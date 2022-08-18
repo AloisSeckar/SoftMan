@@ -9,7 +9,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
-import elrh.softman.logic.MatchStatus;
+import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.utils.ErrorUtils;
 import lombok.*;
 

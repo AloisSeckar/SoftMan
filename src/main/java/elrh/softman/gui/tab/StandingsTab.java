@@ -2,7 +2,7 @@ package elrh.softman.gui.tab;
 
 import elrh.softman.gui.table.LeagueStadingsTable;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.League;
+import elrh.softman.logic.core.League;
 import elrh.softman.utils.InfoUtils;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;

@@ -5,9 +5,11 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import elrh.softman.constants.Constants;
 import elrh.softman.db.orm.*;
-import elrh.softman.logic.*;
+
 import java.sql.SQLException;
 import java.util.List;
+
+import elrh.softman.logic.core.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 

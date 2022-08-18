@@ -2,7 +2,7 @@ package elrh.softman.gui.tab;
 
 import elrh.softman.gui.table.TeamPlayersTable;
 import elrh.softman.gui.tile.PlayerInfoTile;
-import elrh.softman.logic.*;
+import elrh.softman.logic.AssociationManager;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 

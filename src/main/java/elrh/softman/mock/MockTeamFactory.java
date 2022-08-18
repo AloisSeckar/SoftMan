@@ -2,7 +2,8 @@ package elrh.softman.mock;
 
 import elrh.softman.db.orm.PlayerInfo;
 import elrh.softman.db.SourcesDBManager;
-import elrh.softman.logic.*;
+import elrh.softman.logic.core.Team;
+
 import java.util.*;
 
 public class MockTeamFactory {

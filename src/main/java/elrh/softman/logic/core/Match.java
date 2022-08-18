@@ -1,8 +1,10 @@
-package elrh.softman.logic;
+package elrh.softman.logic.core;
 
 import elrh.softman.db.orm.MatchInfo;
 import elrh.softman.db.orm.MatchPlayByPlay;
-import elrh.softman.logic.stats.*;
+import elrh.softman.logic.MatchSimulator;
+import elrh.softman.logic.enums.MatchStatus;
+import elrh.softman.logic.core.stats.*;
 import elrh.softman.utils.ErrorUtils;
 import java.util.ArrayList;
 import java.util.List;

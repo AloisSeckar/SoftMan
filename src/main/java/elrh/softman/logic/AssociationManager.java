@@ -3,7 +3,9 @@ package elrh.softman.logic;
 import elrh.softman.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
-import elrh.softman.logic.enums.LeagueLevelEnum;
+import elrh.softman.logic.core.*;
+import elrh.softman.logic.enums.LeagueLevel;
+import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
 import java.util.*;
@@ -54,7 +56,7 @@ public class AssociationManager {
         return managedLeagues.values().stream().filter(l -> l.getYear() == year).toList();
     }
 
-    public void createNewLeague(String name, LeagueLevelEnum level, ArrayList<Team> teams) {
+    public void createNewLeague(String name, LeagueLevel level, ArrayList<Team> teams) {
         League newLeague = new League(name, level, teams);
         GameDBManager.getInstance().saveLeague(newLeague);
         managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
@@ -190,7 +192,7 @@ public class AssociationManager {
         teams.add(MockTeamFactory.getMockTeam("BROWNS"));
         teams.add(MockTeamFactory.getMockTeam("GOLDS"));
 
-        League testLeague = new League("Test league", LeagueLevelEnum.MSEN, teams);
+        League testLeague = new League("Test league", LeagueLevel.MSEN, teams);
         GameDBManager.getInstance().saveLeague(testLeague);
 
         managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);

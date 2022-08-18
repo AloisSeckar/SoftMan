@@ -4,7 +4,7 @@ import elrh.softman.gui.tile.BoxScoreTile;
 import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.gui.tile.MatchHeaderTile;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.Match;
+import elrh.softman.logic.core.Match;
 import elrh.softman.logic.MatchSimulator;
 import elrh.softman.utils.FormatUtils;
 import elrh.softman.utils.Utils;

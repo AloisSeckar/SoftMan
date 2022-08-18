@@ -1,20 +1,11 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.gui.tab.MatchTab;
-import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.Match;
-import elrh.softman.logic.MatchSimulator;
+import elrh.softman.logic.core.Match;
 import elrh.softman.utils.FormatUtils;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 
 public class MatchHeaderTile extends BorderPane {
 

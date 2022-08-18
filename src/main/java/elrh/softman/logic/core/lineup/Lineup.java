@@ -1,8 +1,9 @@
-package elrh.softman.logic;
+package elrh.softman.logic.core.lineup;
 
 import java.util.ArrayList;
 
 import elrh.softman.constants.Constants;
+import elrh.softman.logic.core.Team;
 import lombok.Data;
 
 @Data

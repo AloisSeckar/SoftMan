@@ -3,7 +3,7 @@ package elrh.softman.gui.tab;
 import elrh.softman.gui.tile.DefenseTile;
 import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.LineupPosition;
+import elrh.softman.logic.core.lineup.LineupPosition;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;

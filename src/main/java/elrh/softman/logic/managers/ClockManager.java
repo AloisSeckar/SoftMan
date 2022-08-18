@@ -1,4 +1,4 @@
-package elrh.softman.logic;
+package elrh.softman.logic.managers;
 
 import elrh.softman.constants.Constants;
 import java.time.LocalDate;

@@ -1,4 +1,4 @@
-package elrh.softman.logic;
+package elrh.softman.logic.enums;
 
 import java.util.Arrays;
 import java.util.List;

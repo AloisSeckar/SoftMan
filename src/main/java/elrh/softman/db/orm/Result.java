@@ -2,8 +2,8 @@ package elrh.softman.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.logic.Match;
-import elrh.softman.logic.stats.BoxScore;
+import elrh.softman.logic.core.Match;
+import elrh.softman.logic.core.stats.BoxScore;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_results")

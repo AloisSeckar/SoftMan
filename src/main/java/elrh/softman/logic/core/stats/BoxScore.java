@@ -1,4 +1,4 @@
-package elrh.softman.logic.stats;
+package elrh.softman.logic.core.stats;
 
 import elrh.softman.constants.Constants;
 import java.util.Arrays;

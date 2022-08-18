@@ -1,7 +1,7 @@
 package elrh.softman.gui.table;
 
 import elrh.softman.Softman;
-import elrh.softman.logic.Standing;
+import elrh.softman.logic.core.stats.Standing;
 import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;

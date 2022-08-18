@@ -1,6 +1,6 @@
 package elrh.softman.logic.enums;
 
-public enum GenderEnum {
+public enum Gender {
 
     M,
     F

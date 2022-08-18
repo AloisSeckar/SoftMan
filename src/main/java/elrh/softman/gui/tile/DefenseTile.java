@@ -1,9 +1,9 @@
 package elrh.softman.gui.tile;
 
-import static elrh.softman.logic.Position.*;
+import static elrh.softman.logic.enums.Position.*;
 
-import elrh.softman.logic.LineupPosition;
-import elrh.softman.logic.Position;
+import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.enums.Position;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;

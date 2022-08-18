@@ -1,8 +1,11 @@
-package elrh.softman.logic;
+package elrh.softman.logic.core;
 
 import elrh.softman.db.orm.*;
-import static elrh.softman.logic.Position.*;
+import static elrh.softman.logic.enums.Position.*;
 import java.util.*;
+
+import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.enums.Position;
 import lombok.*;
 
 public class Team {
