@@ -1,8 +1,8 @@
 package elrh.softman.logic;
 
-import elrh.softman.db.orm.MatchPlayByPlay;
-import elrh.softman.db.orm.PlayerAttributes;
-import elrh.softman.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.MatchPlayByPlay;
+import elrh.softman.logic.db.orm.PlayerAttributes;
+import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.enums.MatchStatus;

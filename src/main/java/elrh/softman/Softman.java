@@ -1,6 +1,6 @@
 package elrh.softman;
 
-import elrh.softman.db.*;
+import elrh.softman.logic.db.*;
 import elrh.softman.gui.MainLayout;
 import elrh.softman.logic.AssociationManager;
 import javafx.application.Application;

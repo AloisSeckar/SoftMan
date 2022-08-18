@@ -1,45 +1,41 @@
-package elrh.softman.db.orm;
+package elrh.softman.logic.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.constants.Constants;
+import elrh.softman.utils.Constants;
+import elrh.softman.logic.enums.LeagueLevel;
 import java.util.Objects;
-
-import elrh.softman.logic.enums.Gender;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_teams")
+@DatabaseTable(tableName = "softman_leagues")
 @Data @NoArgsConstructor
-public class TeamInfo {
+public class LeagueInfo {
     
     @DatabaseField(generatedId = true)
-    private long teamId;
+    private long leagueId;
     
     @DatabaseField(canBeNull = false)
-    private String teamName;
+    private String leagueName;
     
     @DatabaseField(canBeNull = false)
-    private Gender gender;
-    
-    @DatabaseField(canBeNull = false)
-    private String city;
-    
-    @DatabaseField
-    private String img;
+    private LeagueLevel level;
     
     @DatabaseField(canBeNull = false)
     private int year;
-
-    public TeamInfo(String teamName) {
-        this.teamName = teamName;
-        this.gender = Gender.M;
-        this.city = "City";
+    
+    @DatabaseField(canBeNull = false)
+    private int matchId;
+    
+    public LeagueInfo(String leagueName, LeagueLevel level) {
+        this.leagueName = leagueName;
+        this.level = level;
         this.year = Constants.START_YEAR;
+        this.matchId = 1000;
     }
     
     @Override
     public int hashCode() {
-        return teamName != null ? teamName.hashCode() : 0;
+        return leagueName != null ? leagueName.hashCode() : 0;
     }
 
     @Override
@@ -53,8 +49,8 @@ public class TeamInfo {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final TeamInfo other = (TeamInfo) obj;
-        return (Objects.equals(this.teamName, other.teamName));
+        final LeagueInfo other = (LeagueInfo) obj;
+        return (Objects.equals(this.leagueName, other.leagueName));
     }
     
 }

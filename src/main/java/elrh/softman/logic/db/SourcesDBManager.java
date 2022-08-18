@@ -1,6 +1,6 @@
-package elrh.softman.db;
+package elrh.softman.logic.db;
 
-import elrh.softman.constants.Constants;
+import elrh.softman.utils.Constants;
 import java.sql.*;
 import lombok.extern.slf4j.Slf4j;
 

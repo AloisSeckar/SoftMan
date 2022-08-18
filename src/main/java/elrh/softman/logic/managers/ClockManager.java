@@ -1,6 +1,6 @@
 package elrh.softman.logic.managers;
 
-import elrh.softman.constants.Constants;
+import elrh.softman.utils.Constants;
 import java.time.LocalDate;
 import static java.time.temporal.TemporalAdjusters.lastDayOfYear;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.constants.Constants;
+import elrh.softman.utils.Constants;
 import elrh.softman.logic.core.Match;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;

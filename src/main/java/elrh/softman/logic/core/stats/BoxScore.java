@@ -1,6 +1,6 @@
 package elrh.softman.logic.core.stats;
 
-import elrh.softman.constants.Constants;
+import elrh.softman.utils.Constants;
 import java.util.Arrays;
 import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;

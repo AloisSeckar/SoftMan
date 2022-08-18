@@ -1,6 +1,6 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.lineup.LineupPosition;
 import elrh.softman.logic.enums.Position;
 import javafx.collections.FXCollections;

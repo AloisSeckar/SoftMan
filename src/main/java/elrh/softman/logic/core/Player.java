@@ -1,7 +1,7 @@
 package elrh.softman.logic.core;
 
-import elrh.softman.db.GameDBManager;
-import elrh.softman.db.orm.PlayerInfo;
+import elrh.softman.logic.db.GameDBManager;
+import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
 import lombok.Data;

@@ -1,10 +1,10 @@
-package elrh.softman.db;
+package elrh.softman.logic.db;
 
 import com.j256.ormlite.dao.*;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import elrh.softman.constants.Constants;
-import elrh.softman.db.orm.*;
+import elrh.softman.utils.Constants;
+import elrh.softman.logic.db.orm.*;
 
 import java.sql.SQLException;
 import java.util.List;

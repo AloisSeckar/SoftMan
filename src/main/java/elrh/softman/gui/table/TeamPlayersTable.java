@@ -1,6 +1,6 @@
 package elrh.softman.gui.table;
 
-import elrh.softman.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.PlayerInfo;
 import java.util.List;
 
 import elrh.softman.gui.tile.PlayerInfoTile;

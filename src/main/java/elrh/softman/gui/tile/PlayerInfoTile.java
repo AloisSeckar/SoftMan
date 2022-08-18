@@ -1,6 +1,6 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.enums.Gender;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.GaugeBuilder;

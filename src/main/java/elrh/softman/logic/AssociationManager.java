@@ -1,12 +1,12 @@
 package elrh.softman.logic;
 
-import elrh.softman.db.GameDBManager;
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.enums.LeagueLevel;
 import elrh.softman.logic.managers.ClockManager;
-import elrh.softman.mock.MockTeamFactory;
+import elrh.softman.utils.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
 import java.util.*;
 import javafx.scene.control.Alert;

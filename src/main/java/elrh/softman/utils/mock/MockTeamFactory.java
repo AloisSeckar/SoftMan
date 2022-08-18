@@ -1,7 +1,7 @@
-package elrh.softman.mock;
+package elrh.softman.utils.mock;
 
-import elrh.softman.db.orm.PlayerInfo;
-import elrh.softman.db.SourcesDBManager;
+import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.db.SourcesDBManager;
 import elrh.softman.logic.core.Team;
 
 import java.util.*;

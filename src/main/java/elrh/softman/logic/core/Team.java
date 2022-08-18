@@ -1,6 +1,6 @@
 package elrh.softman.logic.core;
 
-import elrh.softman.db.orm.*;
+import elrh.softman.logic.db.orm.*;
 import static elrh.softman.logic.enums.Position.*;
 import java.util.*;
 

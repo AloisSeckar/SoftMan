@@ -1,4 +1,4 @@
-package elrh.softman.constants;
+package elrh.softman.utils;
 
 public class Constants {
     

@@ -1,8 +1,8 @@
 package elrh.softman.logic.core;
 
-import elrh.softman.constants.Constants;
-import elrh.softman.db.GameDBManager;
-import elrh.softman.db.orm.LeagueInfo;
+import elrh.softman.utils.Constants;
+import elrh.softman.logic.db.GameDBManager;
+import elrh.softman.logic.db.orm.LeagueInfo;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import elrh.softman.db.orm.MatchInfo;
+import elrh.softman.logic.db.orm.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
 import elrh.softman.logic.enums.LeagueLevel;
 import elrh.softman.utils.ErrorUtils;

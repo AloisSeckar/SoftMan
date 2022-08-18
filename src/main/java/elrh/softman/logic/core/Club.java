@@ -1,8 +1,8 @@
 package elrh.softman.logic.core;
 
-import elrh.softman.db.GameDBManager;
-import elrh.softman.db.orm.ClubInfo;
-import elrh.softman.db.orm.PlayerInfo;
+import elrh.softman.logic.db.GameDBManager;
+import elrh.softman.logic.db.orm.ClubInfo;
+import elrh.softman.logic.db.orm.PlayerInfo;
 import java.util.HashMap;
 import java.util.List;
 
