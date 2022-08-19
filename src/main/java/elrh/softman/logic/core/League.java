@@ -180,10 +180,6 @@ public class League implements IDatabaseEntity {
          */
     }
 
-    public int getYear() {
-        return leagueInfo.getYear();
-    }
-
     ////////////////////////////////////////////////////////////////////////////
 
     private void shiftTeams() {

@@ -53,7 +53,7 @@ public class AssociationManager {
     }
 
     public List<League> getLeagues(int year) {
-        return managedLeagues.values().stream().filter(l -> l.getYear() == year).toList();
+        return managedLeagues.values().stream().filter(l -> l.getLeagueInfo().getYear() == year).toList();
     }
 
     public void createNewLeague(String name, LeagueLevel level) {
