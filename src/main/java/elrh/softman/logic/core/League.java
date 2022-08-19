@@ -1,52 +1,95 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.LeagueInfo;
-
+import elrh.softman.logic.db.orm.MatchInfo;
+import elrh.softman.logic.core.stats.Standing;
+import elrh.softman.logic.enums.LeagueLevel;
+import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import elrh.softman.logic.db.orm.MatchInfo;
-import elrh.softman.logic.core.stats.Standing;
-import elrh.softman.logic.enums.LeagueLevel;
-import elrh.softman.utils.ErrorUtils;
 import javafx.scene.control.TextArea;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class League {
+public class League implements IDatabaseEntity {
 
     @Getter
     private final LeagueInfo leagueInfo;
 
-    private ArrayList<Team> teams;
+    private ArrayList<Team> teams = new ArrayList<>();
 
-    private final HashMap<Integer, Match> matches;
-    private final HashMap<Integer, ArrayList<Match>> matchesInRounds;
+    private final HashMap<Integer, Match> matches = new HashMap<>();
+    private final HashMap<Integer, ArrayList<Match>> matchesInRounds = new HashMap<>();
 
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
 
-    public League(String name, LeagueLevel level, ArrayList<Team> teams) {
-        LOG.info("League '" + name + "' is being set-up");
-
+    public League(String name, LeagueLevel level) {
         this.leagueInfo = new LeagueInfo(name, level);
-        this.teams = teams;
-        teams.forEach(team -> standings.add(new Standing(team.getName())));
-        GameDBManager.getInstance().saveTeams(teams);
-        LOG.info("Teams prepared");
+    }
 
-        matches = new HashMap<>();
-        matchesInRounds = new HashMap<>();
-        scheduleMatches();
-        LOG.info("Matches scheduled");
+    @Override
+    public long getId() {
+        return leagueInfo.getLeagueId();
+    }
 
-        LOG.info("League '" + name + "' is was set-up");
+    @Override
+    public void persist() {
+        GameDBManager.getInstance().saveLeague(this);
+    }
+
+    public void registerTeam(Team team) {
+        teams.add(team);
+        standings.add(new Standing(team.getName()));
+        LOG.info("Team " + team.getId() + " registered");
+    }
+
+    public void scheduleMatches() {
+        var matchIdBase = leagueInfo.getMatchId();
+        var matchesPerRound = teams.size() / 2;
+        var rounds = teams.size() * 4;
+        var roundDate = LocalDate.of(Constants.START_YEAR,4,1);
+
+        Collections.shuffle(teams);
+
+        for (int i = 1; i <= rounds; i++) {
+            matchesInRounds.put(i, new ArrayList<>(matchesPerRound));
+            for (int j = 0; j < matchesPerRound; j++) {
+
+                int matchId = matchIdBase + ((i - 1) * matchesPerRound) + (j + 1);
+
+                int homeTeamIndex;
+                int awayTeamIndex;
+                if (i % 2 == 0) {
+                    homeTeamIndex = j;
+                    awayTeamIndex = 9 - j;
+                } else {
+                    homeTeamIndex = 9 - j;
+                    awayTeamIndex = j;
+                }
+
+                var info = new MatchInfo();
+                info.setMatchId(matchId);
+                info.setMatchDay(roundDate);
+                info.setLeagueRound(i);
+
+                var match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
+                LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayTeam().getName() + " @ " + match.getHomeTeam().getName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
+                GameDBManager.getInstance().saveMatch(match);
+                matches.put(matchId, match);
+                (matchesInRounds.get(i)).add(match);
+            }
+            shiftTeams();
+            roundDate = roundDate.plusDays(7);
+        }
+        LOG.info("League matches scheduled");
     }
 
     public List<Match> getTodayMatches(LocalDate currentDate) {
@@ -142,47 +185,6 @@ public class League {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-
-    private void scheduleMatches() {
-
-        var matchIdBase = leagueInfo.getMatchId();
-        var matchesPerRound = teams.size() / 2;
-        var rounds = teams.size() * 4;
-        var roundDate = LocalDate.of(Constants.START_YEAR,4,1);
-
-        Collections.shuffle(teams);
-
-        for (int i = 1; i <= rounds; i++) {
-            matchesInRounds.put(i, new ArrayList<>(matchesPerRound));
-            for (int j = 0; j < matchesPerRound; j++) {
-
-                int matchId = matchIdBase + ((i - 1) * matchesPerRound) + (j + 1);
-
-                int homeTeamIndex;
-                int awayTeamIndex;
-                if (i % 2 == 0) {
-                    homeTeamIndex = j;
-                    awayTeamIndex = 9 - j;
-                } else {
-                    homeTeamIndex = 9 - j;
-                    awayTeamIndex = j;
-                }
-
-                var info = new MatchInfo();
-                info.setMatchId(matchId);
-                info.setMatchDay(roundDate);
-                info.setLeagueRound(i);
-
-                var match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
-                LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayTeam().getName() + " @ " + match.getHomeTeam().getName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
-                GameDBManager.getInstance().saveMatch(match);
-                matches.put(matchId, match);
-                (matchesInRounds.get(i)).add(match);
-            }
-            shiftTeams();
-            roundDate = roundDate.plusDays(7);
-        }
-    }
 
     private void shiftTeams() {
         var shiftedTeams = new ArrayList<Team>();

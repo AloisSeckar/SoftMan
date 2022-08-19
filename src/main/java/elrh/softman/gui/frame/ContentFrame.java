@@ -41,7 +41,9 @@ public class ContentFrame extends TabPane {
 
         var testMatches = AssociationManager.getInstance().getTodayMatchesForPlayer();
         var match = Utils.getFirstItem(testMatches.values());
-        MatchTab.getInstance().setMatch(match);
+        if (match != null) {
+            MatchTab.getInstance().setMatch(match);
+        }
     }
 
     public void switchTo(String tab) {

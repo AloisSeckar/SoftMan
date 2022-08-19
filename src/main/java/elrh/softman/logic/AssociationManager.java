@@ -56,9 +56,9 @@ public class AssociationManager {
         return managedLeagues.values().stream().filter(l -> l.getYear() == year).toList();
     }
 
-    public void createNewLeague(String name, LeagueLevel level, ArrayList<Team> teams) {
-        League newLeague = new League(name, level, teams);
-        GameDBManager.getInstance().saveLeague(newLeague);
+    public void createNewLeague(String name, LeagueLevel level) {
+        League newLeague = new League(name, level);
+        newLeague.persist();
         managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
     }
 
@@ -192,8 +192,11 @@ public class AssociationManager {
         teams.add(MockTeamFactory.getMockTeam("BROWNS"));
         teams.add(MockTeamFactory.getMockTeam("GOLDS"));
 
-        League testLeague = new League("Test league", LeagueLevel.MSEN, teams);
-        GameDBManager.getInstance().saveLeague(testLeague);
+        League testLeague = new League("Test league", LeagueLevel.MSEN);
+        testLeague.persist();
+
+        teams.forEach(testLeague::registerTeam);
+        testLeague.scheduleMatches();
 
         managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);
         playerLeague = testLeague;
