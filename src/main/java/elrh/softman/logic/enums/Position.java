@@ -2,7 +2,9 @@ package elrh.softman.logic.enums;
 
 import java.util.Arrays;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public enum Position {
     
     PITCHER("P"),
@@ -18,10 +20,6 @@ public enum Position {
     OFFENSIVE_ONLY("OPO");
     
     private final String pos;
-    
-    Position(String pos) {
-        this.pos = pos;
-    }
     
     @Override
     public String toString() {

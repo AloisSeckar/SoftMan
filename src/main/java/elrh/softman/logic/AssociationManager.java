@@ -4,6 +4,7 @@ import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.logic.core.*;
+import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.LeagueLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.utils.mock.MockTeamFactory;
@@ -57,7 +58,8 @@ public class AssociationManager {
     }
 
     public void createNewLeague(String name, LeagueLevel level) {
-        League newLeague = new League(name, level);
+        LeagueInfo leagueInfo = new LeagueInfo(name, level, clock.getYear(), level.getMatchId());
+        League newLeague = new League(leagueInfo);
         newLeague.persist();
         managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
     }
@@ -192,7 +194,8 @@ public class AssociationManager {
         teams.add(MockTeamFactory.getMockTeam("BROWNS"));
         teams.add(MockTeamFactory.getMockTeam("GOLDS"));
 
-        League testLeague = new League("Test league", LeagueLevel.MSEN);
+        LeagueInfo leagueInfo = new LeagueInfo("Test league", LeagueLevel.MSEN, clock.getYear(), LeagueLevel.MSEN.getMatchId());
+        League testLeague = new League(leagueInfo);
         testLeague.persist();
 
         teams.forEach(testLeague::registerTeam);

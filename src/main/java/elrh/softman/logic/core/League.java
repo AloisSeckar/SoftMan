@@ -15,12 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import javafx.scene.control.TextArea;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+@Slf4j @RequiredArgsConstructor
 public class League implements IDatabaseEntity {
 
     @Getter
+    @NonNull
     private final LeagueInfo leagueInfo;
 
     private ArrayList<Team> teams = new ArrayList<>();
@@ -30,10 +33,6 @@ public class League implements IDatabaseEntity {
 
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
-
-    public League(String name, LeagueLevel level) {
-        this.leagueInfo = new LeagueInfo(name, level);
-    }
 
     @Override
     public long getId() {

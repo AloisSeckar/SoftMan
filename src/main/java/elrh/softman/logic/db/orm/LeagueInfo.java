@@ -2,36 +2,32 @@ package elrh.softman.logic.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.utils.Constants;
 import elrh.softman.logic.enums.LeagueLevel;
 import java.util.Objects;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_leagues")
-@Data @NoArgsConstructor
+@Data @NoArgsConstructor @RequiredArgsConstructor
 public class LeagueInfo {
     
     @DatabaseField(generatedId = true)
     private long leagueId;
     
     @DatabaseField(canBeNull = false)
+    @NonNull
     private String leagueName;
     
     @DatabaseField(canBeNull = false)
+    @NonNull
     private LeagueLevel level;
     
     @DatabaseField(canBeNull = false)
+    @NonNull
     private int year;
     
     @DatabaseField(canBeNull = false)
+    @NonNull
     private int matchId;
-    
-    public LeagueInfo(String leagueName, LeagueLevel level) {
-        this.leagueName = leagueName;
-        this.level = level;
-        this.year = Constants.START_YEAR;
-        this.matchId = 1000;
-    }
     
     @Override
     public int hashCode() {
