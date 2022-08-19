@@ -28,7 +28,7 @@ public class LineupTab extends AnchorPane {
 
     private LineupTab() {
 
-        var playerTeam = AssociationManager.getInstance().getPlayerTeam();
+        var playerTeam = AssociationManager.getInstance().getUser().getActiveTeam();
         playerTeam.randomizeLineup();
 
         lineupTile = new LineupTile(false);
@@ -55,7 +55,7 @@ public class LineupTab extends AnchorPane {
         if (StringUtils.isBlank(check)) {
             List<LineupPosition> lineup = lineupTile.getLineup();
             lineup.forEach(defenseTile::setPosition);
-            AssociationManager.getInstance().getPlayerTeam().setLineup(lineup);
+            AssociationManager.getInstance().getUser().getActiveTeam().setLineup(lineup);
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText(check);

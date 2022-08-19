@@ -1,12 +1,12 @@
 package elrh.softman.logic;
 
-import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.LeagueLevel;
 import elrh.softman.logic.managers.ClockManager;
+import elrh.softman.logic.managers.UserManager;
 import elrh.softman.utils.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
 import java.util.*;
@@ -21,24 +21,12 @@ public class AssociationManager {
 
     @Getter
     private final ClockManager clock = new ClockManager();
+    @Getter
+    private final UserManager user = new UserManager();
 
     private final HashMap<Long, League> managedLeagues = new HashMap<>();
     private final HashMap<Long, Club> registeredClubs = new HashMap<>();
     private final HashMap<Long, Player> registeredPlayers = new HashMap<>();
-
-    @Getter
-    @Setter
-    private Club playerClub;
-
-    @Getter
-    @Setter
-    @Deprecated
-    private League playerLeague;
-
-    @Getter
-    @Setter
-    @Deprecated
-    private Team playerTeam;
 
     private static AssociationManager INSTANCE;
 
@@ -114,12 +102,12 @@ public class AssociationManager {
         LOG.info("player " + playerId + " was registered for " + year + " season");
     }
 
-    public HashMap<Long, Match> getTodayMatchesForPlayer() {
+    public HashMap<Long, Match> getTodayMatchesForUser() {
         var playersMatches = new HashMap<Long, Match>();
         for (var entry : getTodayMatches().entrySet()) {
             Long leagueId = entry.getKey();
             Match match = entry.getValue();
-            if (match.getHomeTeam().equals(playerTeam) || match.getAwayTeam().equals(playerTeam)) {
+            if (user.managesTeam(match.getHomeTeam()) || user.managesTeam(match.getAwayTeam())) {
                 playersMatches.put(leagueId, match);
             }
         }
@@ -181,6 +169,7 @@ public class AssociationManager {
 
     private void prepareLeagues() {
         Team testTeam = MockTeamFactory.getMockTeam("REDS");
+        user.setActiveTeam(testTeam);
 
         ArrayList<Team> teams = new ArrayList<>();
         teams.add(testTeam);
@@ -202,13 +191,11 @@ public class AssociationManager {
         testLeague.scheduleMatches();
 
         managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);
-        playerLeague = testLeague;
-        playerTeam = testTeam;
 
         Club testPlayerClub = new Club("REDS", "Unknown", "The Field");
         testPlayerClub.persist();
         registerClub(testPlayerClub);
-        playerClub = testPlayerClub;
+        // TODO associate club with User
     }
 
 }

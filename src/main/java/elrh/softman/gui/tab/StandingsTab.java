@@ -3,6 +3,7 @@ package elrh.softman.gui.tab;
 import elrh.softman.gui.table.LeagueStadingsTable;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.League;
+import elrh.softman.utils.Constants;
 import elrh.softman.utils.InfoUtils;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -28,8 +29,9 @@ public class StandingsTab extends AnchorPane {
     }
     
     private StandingsTab() {
-        
-        testLeague = AssociationManager.getInstance().getPlayerLeague();
+
+        // TODO change dynamically according to User selection
+        testLeague = AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0);
         
         var testButton = new Button("MOCK Play league");
         testButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> mockLeague());

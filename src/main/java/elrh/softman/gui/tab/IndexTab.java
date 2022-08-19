@@ -3,6 +3,7 @@ package elrh.softman.gui.tab;
 import elrh.softman.gui.table.LeagueStadingsTable;
 import elrh.softman.gui.tile.CalendarTile;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.utils.Constants;
 import javafx.scene.layout.BorderPane;
 
 public class IndexTab extends BorderPane {
@@ -24,7 +25,8 @@ public class IndexTab extends BorderPane {
         calendarTile.getStyleClass().add("padding-5");
         super.setLeft(calendarTile);
 
-        leagueTable = new LeagueStadingsTable(AssociationManager.getInstance().getPlayerLeague().getStandings());
+        // TODO change dynamically according to User selection
+        leagueTable = new LeagueStadingsTable(AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0).getStandings());
         leagueTable.getStyleClass().add("padding-5");
         super.setRight(leagueTable);
     }

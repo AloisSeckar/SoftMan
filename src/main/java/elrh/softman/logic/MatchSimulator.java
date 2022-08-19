@@ -10,6 +10,8 @@ import elrh.softman.logic.enums.Position;
 import elrh.softman.logic.core.lineup.LineupPosition;
 import elrh.softman.logic.core.stats.BoxScore;
 import java.util.Random;
+
+import elrh.softman.utils.Constants;
 import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
 
@@ -161,7 +163,9 @@ public class MatchSimulator {
         appendText("\n\nGAME OVER\n\n");
         match.getMatchInfo().setHomeTeamFinishedBatting(top);
         match.getMatchInfo().setStatus(MatchStatus.FINISHED);
-        AssociationManager.getInstance().getPlayerLeague().saveMatch(match);
+
+        // TODO save the match into correct league
+        AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0).saveMatch(match);
     }
 
     private boolean keepPlaying() {
