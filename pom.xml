@@ -11,6 +11,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <fx.version>18</fx.version>
+        <junit.version>5.8.2</junit.version>
 
     </properties>
     
@@ -23,6 +24,10 @@
                 <configuration>
                     <mainClass>elrh.softman.Softman</mainClass>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M7</version>
             </plugin>
         </plugins>
     </build>
@@ -116,6 +121,20 @@
             <groupId>eu.hansolo</groupId>
             <artifactId>Medusa</artifactId>
             <version>16.0.0</version>
+        </dependency>
+
+        <!-- testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
         
     </dependencies>
