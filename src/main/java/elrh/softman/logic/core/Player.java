@@ -25,9 +25,8 @@ public class Player implements IDatabaseEntity {
         return getPlayerInfo().getRegistered() == AssociationManager.getInstance().getClock().getYear();
     }
 
-    public void register(int year) {
-        getPlayerInfo().setRegistered(year);
-        persist();
+    public void register() {
+        AssociationManager.getInstance().registerPlayer(this);
     }
 
 }

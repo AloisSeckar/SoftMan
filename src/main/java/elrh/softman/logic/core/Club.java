@@ -47,9 +47,17 @@ public class Club implements IDatabaseEntity {
         return getClubInfo().getRegistered() == AssociationManager.getInstance().getClock().getYear();
     }
 
-    public void register(int year) {
-        getClubInfo().setRegistered(year);
-        persist();
+    public void register() {
+        AssociationManager.getInstance().registerClub(this);
+    }
+
+    public void registerPlayer(Player player) {
+        player.register();
+
+        long playerId = player.getId();
+        if (!players.containsKey(playerId)) {
+            players.put(playerId, player);
+        }
     }
 
 }

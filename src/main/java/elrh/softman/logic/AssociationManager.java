@@ -78,9 +78,11 @@ public class AssociationManager {
         int year = clock.getYear();
         Club existingClub = registeredClubs.get(clubId);
         if (existingClub != null) {
-            existingClub.register(year);
+            existingClub.getClubInfo().setRegistered(year);
+            existingClub.persist();
         } else {
-            club.register(year);
+            club.getClubInfo().setRegistered(year);
+            club.persist();
             registeredClubs.put(clubId, club);
         }
         LOG.info("Club " + clubId + " was registered for " + year + " season");
@@ -103,9 +105,11 @@ public class AssociationManager {
         int year = clock.getYear();
         Player existingPlayer = registeredPlayers.get(playerId);
         if (existingPlayer != null) {
-            existingPlayer.register(year);
+            existingPlayer.getPlayerInfo().setRegistered(year);
+            existingPlayer.persist();
         } else {
-            player.register(year);
+            player.getPlayerInfo().setRegistered(year);
+            player.persist();
             registeredPlayers.put(playerId, player);
         }
         LOG.info("player " + playerId + " was registered for " + year + " season");
