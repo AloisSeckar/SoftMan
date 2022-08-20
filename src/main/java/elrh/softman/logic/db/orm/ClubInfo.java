@@ -23,4 +23,7 @@ public class ClubInfo {
     @DatabaseField(canBeNull = false)
     private int registered;
 
+    @DatabaseField(canBeNull = false)
+    private long money;
+
 }

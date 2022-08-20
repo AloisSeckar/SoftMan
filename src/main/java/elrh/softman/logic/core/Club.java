@@ -4,6 +4,7 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.ClubInfo;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
+import elrh.softman.utils.Constants;
 import java.util.HashMap;
 import java.util.List;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class Club implements IDatabaseEntity {
         clubInfo.setName(name);
         clubInfo.setCity(city);
         clubInfo.setStadium(stadium);
+        clubInfo.setMoney(Constants.START_FUNDS);
     }
 
     @Override
