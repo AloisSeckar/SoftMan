@@ -52,6 +52,15 @@ public class AssociationManager {
         managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
     }
 
+    public void registerTeamIntoLeague(long leagueId, Team team) {
+        League league = managedLeagues.get(leagueId);
+        if (league != null) {
+            league.registerTeam(team);
+        } else {
+            LOG.error("League " + leagueId + " not found");
+        }
+    }
+
     public List<Club> getClubs(boolean active) {
         if (active) {
             return registeredClubs.values().stream().filter(Club::isActive).toList();
