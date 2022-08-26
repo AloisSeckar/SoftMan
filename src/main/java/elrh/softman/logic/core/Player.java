@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class Player implements IDatabaseEntity {
 
-    private PlayerInfo playerInfo;
+    private PlayerInfo playerInfo = new PlayerInfo();
 
     @Override
     public long getId() {
