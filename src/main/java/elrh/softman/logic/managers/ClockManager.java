@@ -8,9 +8,13 @@ import lombok.Getter;
 public class ClockManager {
 
     @Getter
-    private LocalDate currentDate = LocalDate.of(Constants.START_YEAR, 3, 31);
+    private LocalDate currentDate = Constants.START_DATE;
     @Getter
-    private LocalDate viewDate = LocalDate.of(Constants.START_YEAR, 3, 31);
+    private LocalDate viewDate = Constants.START_DATE;
+
+    public void reset() {
+        currentDate = viewDate = Constants.START_DATE;
+    }
 
     public void prevViewDay() {
         viewDate = viewDate.minusDays(1);

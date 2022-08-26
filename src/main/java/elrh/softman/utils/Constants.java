@@ -1,11 +1,16 @@
 package elrh.softman.utils;
 
+import java.time.LocalDate;
+
 public class Constants {
     
     private Constants() {
     }
 
     public static final int START_YEAR = 2023;
+
+    // TODO change it to 01.01.
+    public static final LocalDate START_DATE = LocalDate.of(Constants.START_YEAR, 3, 31);
 
     public static final int START_FUNDS = 100000;
     

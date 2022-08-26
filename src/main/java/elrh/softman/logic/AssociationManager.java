@@ -41,6 +41,14 @@ public class AssociationManager {
         return INSTANCE;
     }
 
+    public void reset() {
+        clock.reset();
+        user.reset();
+        managedLeagues.clear();
+        registeredClubs.clear();
+        registeredPlayers.clear();
+    }
+
     public List<League> getLeagues(int year) {
         return managedLeagues.values().stream().filter(l -> l.getLeagueInfo().getYear() == year).toList();
     }

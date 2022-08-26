@@ -10,8 +10,12 @@ public class UserManager {
     @Getter @Setter
     private Team activeTeam;
 
+    public void reset() {
+        // TODO impl
+    }
+
     public boolean managesTeam(Team team) {
-        // todo impl
+        // TODO impl
         return true;
     }
 
