@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TeamTest {
 
     private static final String ELEMENT_NAME = "Test";
+    private static final int AGE_30 = Constants.START_YEAR - 30;
+    private static final int AGE_10 = Constants.START_YEAR - 10;
 
     @BeforeEach
     void setUp() {
@@ -29,21 +31,10 @@ public class TeamTest {
         Team teamFSEN = new Team(PlayerLevel.FSEN, club);
         Team teamFU12 = new Team(PlayerLevel.FU12, club);
 
-        PlayerInfo playerMSEN = PlayerFactory.getRandomPlayerInfo(1);
-        playerMSEN.setGender(PlayerGender.M);
-        playerMSEN.setBirth(Constants.START_YEAR - 30);
-
-        PlayerInfo playerMJUN = PlayerFactory.getRandomPlayerInfo(2);
-        playerMJUN.setGender(PlayerGender.M);
-        playerMJUN.setBirth(Constants.START_YEAR - 10);
-
-        PlayerInfo playerFSEN = PlayerFactory.getRandomPlayerInfo(3);
-        playerFSEN.setGender(PlayerGender.F);
-        playerFSEN.setBirth(Constants.START_YEAR - 30);
-
-        PlayerInfo playerFJUN = PlayerFactory.getRandomPlayerInfo(4);
-        playerFJUN.setGender(PlayerGender.F);
-        playerFJUN.setBirth(Constants.START_YEAR - 10);
+        PlayerInfo playerMSEN = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, AGE_30, 1);
+        PlayerInfo playerMJUN = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, AGE_10, 2);
+        PlayerInfo playerFSEN = PlayerFactory.getRandomPlayerInfo(PlayerGender.F, AGE_30, 3);
+        PlayerInfo playerFJUN = PlayerFactory.getRandomPlayerInfo(PlayerGender.F, AGE_10, 4);
 
         boolean addPlayer;
 
