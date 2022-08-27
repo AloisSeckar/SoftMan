@@ -36,7 +36,7 @@ public class AssociationManagerTest {
     void registerTeamIntoLeague() {
         manager.createNewLeague(ELEMENT_NAME, LeagueLevel.MSEN);
         long leagueId = manager.getLeagues(Constants.START_YEAR).get(0).getId();
-        manager.registerTeamIntoLeague(leagueId, new Team("Test team"));
+        manager.registerTeamIntoLeague(leagueId, new Team(LeagueLevel.MSEN, new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME)));
         // TODO test if team was actually added - requries peek method in League
     }
 

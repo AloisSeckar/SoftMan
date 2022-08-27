@@ -1,16 +1,16 @@
 package elrh.softman.utils.mock;
 
+import elrh.softman.logic.core.Club;
+import elrh.softman.logic.core.Team;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.db.SourcesDBManager;
-import elrh.softman.logic.core.Team;
-
+import elrh.softman.logic.enums.LeagueLevel;
 import java.util.*;
 
 public class MockTeamFactory {
     
-    public static Team getMockTeam(String name) {
-        Team team = new Team(name);
-        team.setLogo("/img/teams/" + name.toLowerCase() + ".png");
+    public static Team getMockTeam(LeagueLevel level, Club club) {
+        Team team = new Team(level, club);
         
         Random rand = new Random();
         List<Integer> usedNumbers = new ArrayList<>();

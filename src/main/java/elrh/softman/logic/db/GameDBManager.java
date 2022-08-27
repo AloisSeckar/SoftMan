@@ -110,6 +110,15 @@ public class GameDBManager {
         }
     }
 
+    public void saveTeam(Team team) {
+        try {
+            teamDao.create(team.getTeamInfo());
+            LOG.info("TEAM SAVED");
+        } catch (Exception ex) {
+            LOG.error("GameDBManager.saveTeam", ex);
+        }
+    }
+
     public void saveTeams(List<Team> teams) {
         try {
             for (Team team : teams) {

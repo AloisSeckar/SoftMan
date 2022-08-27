@@ -72,7 +72,7 @@ public class Softman extends Application {
         String gameId = "test";
         GameDBManager.getInstance().setConnection(gameId);
         
-        AssociationManager.getInstance();
+        AssociationManager.getInstance().prepareMockLeagues();
     }
     
     private static void tearDownGame() {

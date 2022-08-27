@@ -15,6 +15,9 @@ public class ClubInfo {
     private String name;
 
     @DatabaseField(canBeNull = false)
+    private String logo;
+
+    @DatabaseField(canBeNull = false)
     private String city;
 
     @DatabaseField(canBeNull = false)

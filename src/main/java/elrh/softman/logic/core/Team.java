@@ -1,14 +1,17 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.*;
 import static elrh.softman.logic.enums.Position.*;
 import java.util.*;
 
 import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.enums.LeagueLevel;
 import elrh.softman.logic.enums.Position;
+import elrh.softman.logic.interfaces.IDatabaseEntity;
 import lombok.*;
 
-public class Team {
+public class Team implements IDatabaseEntity {
     
     @Getter
     private final TeamInfo teamInfo;
@@ -20,24 +23,26 @@ public class Team {
     private final LineupPosition[] battingOrder = new LineupPosition[10];
     private final PlayerInfo[] substitutes = new PlayerInfo[8];
 
-    public Team(String name) {
-        this.teamInfo = new TeamInfo(name);
+    public Team(LeagueLevel level, Club club) {
+        this.teamInfo = new TeamInfo(level, club.getClubInfo());
     }
 
+    @Override
     public long getId() {
         return teamInfo.getTeamId();
     }
 
+    @Override
+    public void persist() {
+        GameDBManager.getInstance().saveTeam(this);
+    }
+
     public String getName() {
-        return teamInfo.getTeamName();
+        return teamInfo.getClubInfo().getName();
     }
 
     public String getLogo() {
-        return teamInfo.getImg();
-    }
-
-    public void setLogo(String pathToImg) {
-        this.teamInfo.setImg(pathToImg);
+        return teamInfo.getClubInfo().getLogo();
     }
     
     public void addPlayer(PlayerInfo player) {

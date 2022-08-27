@@ -2,59 +2,25 @@ package elrh.softman.logic.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.utils.Constants;
-import java.util.Objects;
-
-import elrh.softman.logic.enums.Gender;
+import elrh.softman.logic.enums.LeagueLevel;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_teams")
-@Data @NoArgsConstructor
+@Data @NoArgsConstructor @RequiredArgsConstructor
 public class TeamInfo {
     
     @DatabaseField(generatedId = true)
     private long teamId;
-    
-    @DatabaseField(canBeNull = false)
-    private String teamName;
-    
-    @DatabaseField(canBeNull = false)
-    private Gender gender;
-    
-    @DatabaseField(canBeNull = false)
-    private String city;
-    
-    @DatabaseField
-    private String img;
-    
-    @DatabaseField(canBeNull = false)
-    private int year;
 
-    public TeamInfo(String teamName) {
-        this.teamName = teamName;
-        this.gender = Gender.M;
-        this.city = "City";
-        this.year = Constants.START_YEAR;
-    }
-    
-    @Override
-    public int hashCode() {
-        return teamName != null ? teamName.hashCode() : 0;
-    }
+    @DatabaseField(canBeNull = false)
+    @NonNull
+    private LeagueLevel level;
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final TeamInfo other = (TeamInfo) obj;
-        return (Objects.equals(this.teamName, other.teamName));
-    }
+    @DatabaseField(canBeNull = false, foreign = true)
+    @NonNull
+    private ClubInfo clubInfo;
+
+    @DatabaseField(foreign = true)
+    private LeagueInfo leagueInfo;
     
 }

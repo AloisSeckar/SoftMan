@@ -31,7 +31,6 @@ public class AssociationManager {
     private static AssociationManager INSTANCE;
 
     private AssociationManager() {
-        prepareLeagues();
     }
 
     public static AssociationManager getInstance() {
@@ -47,6 +46,10 @@ public class AssociationManager {
         managedLeagues.clear();
         registeredClubs.clear();
         registeredPlayers.clear();
+    }
+
+    public void prepareMockLeagues() {
+        prepareLeagues();
     }
 
     public List<League> getLeagues(int year) {
@@ -189,20 +192,11 @@ public class AssociationManager {
     }
 
     private void prepareLeagues() {
-        Team testTeam = MockTeamFactory.getMockTeam("REDS");
-        user.setActiveTeam(testTeam);
+        ArrayList<Team> teams = createTeams(Arrays.asList("BLUES", "GREENS", "YELLOWS", "BLACKS", "WHITES", "SILVERS", "VIOLETS", "BROWNS", "GOLDS"));
 
-        ArrayList<Team> teams = new ArrayList<>();
-        teams.add(testTeam);
-        teams.add(MockTeamFactory.getMockTeam("BLUES"));
-        teams.add(MockTeamFactory.getMockTeam("GREENS"));
-        teams.add(MockTeamFactory.getMockTeam("YELLOWS"));
-        teams.add(MockTeamFactory.getMockTeam("BLACKS"));
-        teams.add(MockTeamFactory.getMockTeam("WHITES"));
-        teams.add(MockTeamFactory.getMockTeam("SILVERS"));
-        teams.add(MockTeamFactory.getMockTeam("VIOLETS"));
-        teams.add(MockTeamFactory.getMockTeam("BROWNS"));
-        teams.add(MockTeamFactory.getMockTeam("GOLDS"));
+        ArrayList<Team> playerTeams = createTeams(Arrays.asList("REDS"));
+        user.setActiveTeam(playerTeams.get(0));
+        teams.add(playerTeams.get(0));
 
         LeagueInfo leagueInfo = new LeagueInfo("Test league", LeagueLevel.MSEN, clock.getYear(), LeagueLevel.MSEN.getMatchId());
         League testLeague = new League(leagueInfo);
@@ -212,11 +206,21 @@ public class AssociationManager {
         testLeague.scheduleMatches();
 
         managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);
+    }
 
-        Club testPlayerClub = new Club("REDS", "Unknown", "The Field");
-        testPlayerClub.persist();
-        registerClub(testPlayerClub);
-        // TODO associate club with User
+    private ArrayList<Team> createTeams(List<String> teamNames) {
+        ArrayList<Team> ret = new ArrayList<>();
+        teamNames.forEach(name -> {
+
+            Club mockClub = new Club(name, "Unknown", "The Field");
+            mockClub.getClubInfo().setLogo("/img/teams/" + name.toLowerCase() + ".png");
+            mockClub.persist();
+            AssociationManager.getInstance().registerClub(mockClub);
+
+            ret.add(MockTeamFactory.getMockTeam(LeagueLevel.MSEN, mockClub));
+        });
+
+        return ret;
     }
 
 }
