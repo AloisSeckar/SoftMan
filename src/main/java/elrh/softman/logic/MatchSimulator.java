@@ -6,7 +6,7 @@ import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.enums.MatchStatus;
-import elrh.softman.logic.enums.Position;
+import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.core.lineup.LineupPosition;
 import elrh.softman.logic.core.stats.BoxScore;
 import java.util.Random;
@@ -74,7 +74,7 @@ public class MatchSimulator {
                 inningStart = false;
             }
 
-            PlayerInfo pitcher = top ? homeTeam.getFielder(Position.PITCHER) : awayTeam.getFielder(Position.PITCHER);
+            PlayerInfo pitcher = top ? homeTeam.getFielder(PlayerPosition.PITCHER) : awayTeam.getFielder(PlayerPosition.PITCHER);
             PlayerAttributes pitcherAttr = pitcher.getAttributes();
 
             appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");

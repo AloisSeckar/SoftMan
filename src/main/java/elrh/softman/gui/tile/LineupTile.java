@@ -2,7 +2,7 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.lineup.LineupPosition;
-import elrh.softman.logic.enums.Position;
+import elrh.softman.logic.enums.PlayerPosition;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +62,7 @@ public class LineupTile extends VBox {
                     return playerToCheck.getName() + " is already filled";
                 }
 
-                Position positionToCheck = rowToCheck.getPosition();
+                PlayerPosition positionToCheck = rowToCheck.getPosition();
                 if (positionToCheck != null && positionToCheck.equals(currentSelection.getPosition())) {
                     return positionToCheck.name() + " is already filled";
                 }

@@ -2,7 +2,7 @@ package elrh.softman.test;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.*;
-import elrh.softman.logic.enums.LeagueLevel;
+import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.utils.Constants;
 import java.util.List;
 import org.junit.jupiter.api.*;
@@ -24,7 +24,7 @@ public class AssociationManagerTest {
     @Test
     @DisplayName("createAndGetLeagueTest")
     void createAndGetLeagueTest() {
-        manager.createNewLeague(ELEMENT_NAME, LeagueLevel.MSEN);
+        manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);
         List<League> leagues = manager.getLeagues(Constants.START_YEAR);
         assertEquals(1, leagues.size(), "league should be registered and found");
         League testLeague = leagues.get(0);
@@ -34,9 +34,9 @@ public class AssociationManagerTest {
     @Test
     @DisplayName("registerTeamIntoLeagueTest")
     void registerTeamIntoLeague() {
-        manager.createNewLeague(ELEMENT_NAME, LeagueLevel.MSEN);
+        manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);
         long leagueId = manager.getLeagues(Constants.START_YEAR).get(0).getId();
-        manager.registerTeamIntoLeague(leagueId, new Team(LeagueLevel.MSEN, new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME)));
+        manager.registerTeamIntoLeague(leagueId, new Team(PlayerLevel.MSEN, new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME)));
         // TODO test if team was actually added - requries peek method in League
     }
 

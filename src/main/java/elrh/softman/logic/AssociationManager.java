@@ -4,7 +4,7 @@ import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.IndexTab;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.LeagueInfo;
-import elrh.softman.logic.enums.LeagueLevel;
+import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
 import elrh.softman.utils.mock.MockTeamFactory;
@@ -56,7 +56,7 @@ public class AssociationManager {
         return managedLeagues.values().stream().filter(l -> l.getLeagueInfo().getYear() == year).toList();
     }
 
-    public void createNewLeague(String name, LeagueLevel level) {
+    public void createNewLeague(String name, PlayerLevel level) {
         LeagueInfo leagueInfo = new LeagueInfo(name, level, clock.getYear(), level.getMatchId());
         League newLeague = new League(leagueInfo);
         newLeague.persist();
@@ -198,7 +198,7 @@ public class AssociationManager {
         user.setActiveTeam(playerTeams.get(0));
         teams.add(playerTeams.get(0));
 
-        LeagueInfo leagueInfo = new LeagueInfo("Test league", LeagueLevel.MSEN, clock.getYear(), LeagueLevel.MSEN.getMatchId());
+        LeagueInfo leagueInfo = new LeagueInfo("Test league", PlayerLevel.MSEN, clock.getYear(), PlayerLevel.MSEN.getMatchId());
         League testLeague = new League(leagueInfo);
         testLeague.persist();
 
@@ -217,7 +217,7 @@ public class AssociationManager {
             mockClub.persist();
             AssociationManager.getInstance().registerClub(mockClub);
 
-            ret.add(MockTeamFactory.getMockTeam(LeagueLevel.MSEN, mockClub));
+            ret.add(MockTeamFactory.getMockTeam(PlayerLevel.MSEN, mockClub));
         });
 
         return ret;

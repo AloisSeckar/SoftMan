@@ -2,12 +2,12 @@ package elrh.softman.logic.core;
 
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.*;
-import static elrh.softman.logic.enums.Position.*;
+import static elrh.softman.logic.enums.PlayerPosition.*;
 import java.util.*;
 
 import elrh.softman.logic.core.lineup.LineupPosition;
-import elrh.softman.logic.enums.LeagueLevel;
-import elrh.softman.logic.enums.Position;
+import elrh.softman.logic.enums.PlayerLevel;
+import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
 import lombok.*;
 
@@ -23,7 +23,7 @@ public class Team implements IDatabaseEntity {
     private final LineupPosition[] battingOrder = new LineupPosition[10];
     private final PlayerInfo[] substitutes = new PlayerInfo[8];
 
-    public Team(LeagueLevel level, Club club) {
+    public Team(PlayerLevel level, Club club) {
         this.teamInfo = new TeamInfo(level, club.getClubInfo());
     }
 
@@ -64,7 +64,7 @@ public class Team implements IDatabaseEntity {
         return ret;
     }
     
-    public PlayerInfo getFielder(Position position) {
+    public PlayerInfo getFielder(PlayerPosition position) {
         PlayerInfo ret = null;
         
         for (int i = 0; i < 10; i++) {
@@ -78,7 +78,7 @@ public class Team implements IDatabaseEntity {
         return ret;
     }
     
-    public void fillPosition(PlayerInfo player, Position position, int order) {
+    public void fillPosition(PlayerInfo player, PlayerPosition position, int order) {
         LineupPosition newPosition = new LineupPosition(order, player, position);
         battingOrder[order] = newPosition;
     }
@@ -99,7 +99,7 @@ public class Team implements IDatabaseEntity {
         
         List<PlayerInfo> availablePlayers = new ArrayList<>(players);
 
-        var availablePositions = new ArrayList<Position>();
+        var availablePositions = new ArrayList<PlayerPosition>();
         availablePositions.addAll(Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD));
         if (useDP) {
             availablePositions.add(DESIGNATED_PLAYER);
@@ -108,7 +108,7 @@ public class Team implements IDatabaseEntity {
         int lineup = useDP ? 10 : 9;
         for (int i = 0; i < lineup; i++) {
             PlayerInfo player = availablePlayers.remove(rand.nextInt(availablePlayers.size()));
-            Position position = availablePositions.remove(rand.nextInt(availablePositions.size()));
+            PlayerPosition position = availablePositions.remove(rand.nextInt(availablePositions.size()));
             fillPosition(player, position, i);
         }
         availablePlayers.forEach(this::addSubtitute);
@@ -119,7 +119,7 @@ public class Team implements IDatabaseEntity {
             int ord = 0;
             for (LineupPosition row : lineup) {
                 PlayerInfo player = row.getPlayer();
-                Position position = row.getPosition();
+                PlayerPosition position = row.getPosition();
                 if (position != null) {
                     fillPosition(player, position, ord++);
                 } else {

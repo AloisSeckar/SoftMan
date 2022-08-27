@@ -1,9 +1,9 @@
 package elrh.softman.gui.tile;
 
-import static elrh.softman.logic.enums.Position.*;
+import static elrh.softman.logic.enums.PlayerPosition.*;
 
 import elrh.softman.logic.core.lineup.LineupPosition;
-import elrh.softman.logic.enums.Position;
+import elrh.softman.logic.enums.PlayerPosition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -70,7 +70,7 @@ public class DefenseTile extends VBox {
         }
     }
 
-    private static Label createLabel(Position pos) {
+    private static Label createLabel(PlayerPosition pos) {
         Label ret = new Label(pos.toString());
         ret.setPrefWidth(200);
         ret.setPrefWidth(200);

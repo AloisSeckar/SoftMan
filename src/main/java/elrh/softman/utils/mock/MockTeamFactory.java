@@ -4,12 +4,12 @@ import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.db.SourcesDBManager;
-import elrh.softman.logic.enums.LeagueLevel;
+import elrh.softman.logic.enums.PlayerLevel;
 import java.util.*;
 
 public class MockTeamFactory {
     
-    public static Team getMockTeam(LeagueLevel level, Club club) {
+    public static Team getMockTeam(PlayerLevel level, Club club) {
         Team team = new Team(level, club);
         
         Random rand = new Random();

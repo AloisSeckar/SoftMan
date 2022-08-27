@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum LeagueLevel {
+public enum PlayerLevel {
 
     MSEN(1000),
     MU18(3000),

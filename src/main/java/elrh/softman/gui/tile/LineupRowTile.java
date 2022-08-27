@@ -2,7 +2,7 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.lineup.LineupPosition;
-import elrh.softman.logic.enums.Position;
+import elrh.softman.logic.enums.PlayerPosition;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -15,7 +15,7 @@ import java.util.List;
 public class LineupRowTile extends HBox {
 
     private final ComboBox<PlayerInfo> playerCB;
-    private final ComboBox<Position> positionCB;
+    private final ComboBox<PlayerPosition> positionCB;
 
     private final int row;
 
@@ -31,7 +31,7 @@ public class LineupRowTile extends HBox {
         playerCB = new ComboBox<>();
         super.getChildren().add(playerCB);
 
-        positionCB = new ComboBox<>(FXCollections.observableList(Position.getAvailablePositions()));
+        positionCB = new ComboBox<>(FXCollections.observableList(PlayerPosition.getAvailablePositions()));
         if (row > 8) {
             positionCB.setDisable(true);
         }

@@ -2,7 +2,7 @@ package elrh.softman.logic.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.logic.enums.LeagueLevel;
+import elrh.softman.logic.enums.PlayerLevel;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_teams")
@@ -14,7 +14,7 @@ public class TeamInfo {
 
     @DatabaseField(canBeNull = false)
     @NonNull
-    private LeagueLevel level;
+    private PlayerLevel level;
 
     @DatabaseField(canBeNull = false, foreign = true)
     @NonNull

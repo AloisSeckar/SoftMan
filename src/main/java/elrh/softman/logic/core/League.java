@@ -6,7 +6,6 @@ import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.db.orm.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
-import elrh.softman.logic.enums.LeagueLevel;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;

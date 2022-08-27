@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum Position {
+public enum PlayerPosition {
     
     PITCHER("P"),
     CATCHER("C"),
@@ -26,7 +26,7 @@ public enum Position {
         return pos;
     }
 
-    public static List<Position> getAvailablePositions() {
+    public static List<PlayerPosition> getAvailablePositions() {
         // TODO allow playing with DP/FLEX
         return Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD);
     }
