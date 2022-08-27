@@ -6,6 +6,7 @@ import static elrh.softman.logic.enums.PlayerPosition.*;
 import java.util.*;
 
 import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
@@ -45,10 +46,28 @@ public class Team implements IDatabaseEntity {
         return teamInfo.getClubInfo().getLogo();
     }
     
-    public void addPlayer(PlayerInfo player) {
-        players.add(player);
+    public boolean addPlayer(PlayerInfo player) {
+        if (eligibleByGender(player.getGender()) && eligibleByAge(player.getAge())) {
+            players.add(player);
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
+    private boolean eligibleByAge(int age) {
+        int ageLimit = teamInfo.getLevel().getAgeLimit();
+        if (ageLimit > 0) {
+            return age <= ageLimit;
+        } else {
+            return age >= 16;
+        }
+    }
+
+    private boolean eligibleByGender(PlayerGender gender) {
+        return gender == teamInfo.getLevel().getGender();
+    }
+
     public LineupPosition getBatter(int order) {
         return battingOrder[order];
     }

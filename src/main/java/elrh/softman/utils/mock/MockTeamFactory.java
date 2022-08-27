@@ -2,9 +2,8 @@ package elrh.softman.utils.mock;
 
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
-import elrh.softman.logic.db.orm.PlayerInfo;
-import elrh.softman.logic.db.SourcesDBManager;
 import elrh.softman.logic.enums.PlayerLevel;
+import elrh.softman.utils.factory.PlayerFactory;
 import java.util.*;
 
 public class MockTeamFactory {
@@ -20,17 +19,12 @@ public class MockTeamFactory {
                 number = rand.nextInt(99) + 1;
             } while (usedNumbers.contains(number));
             usedNumbers.add(number);
-            team.addPlayer(new PlayerInfo(getRandomPlayerName(), number));
+            team.addPlayer(PlayerFactory.getRandomPlayerInfo(number));
         }
         
         team.randomizeLineup();
         
         return team;     
-    }
-    
-    ////////////////////////////////////////////////////////////////////////////
-    private static String getRandomPlayerName() {
-        return SourcesDBManager.getInstance().getRandomFirstName() + " " + SourcesDBManager.getInstance().getRandomLastName();
     }
     
 }
