@@ -23,12 +23,12 @@ public class SourcesDBManager {
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    public String getRandomFirstName() {
-        return getRandomName("softman_firstnames");
+    public String getRandomFirstName(String gender) {
+        return getRandomName(gender, "softman_firstnames");
     }
 
     public String getRandomLastName() {
-        return getRandomName("softman_lastnames");
+        return getRandomName("x", "softman_lastnames");
     }
     
     public void closeConnection() {
@@ -59,15 +59,13 @@ public class SourcesDBManager {
         return newConnection;
     }
 
-    private String getRandomName(String table) {
+    private String getRandomName(String gender, String table) {
         String ret = "Player";
 
         try (Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery("SELECT name FROM " + table + " ORDER BY RANDOM() LIMIT 1;")) {
-
+                ResultSet rs = stmt.executeQuery("SELECT name FROM " + table + " WHERE gender = '" + gender + "' ORDER BY RANDOM() LIMIT 1;")) {
             rs.next();
             ret = rs.getString("name");
-
         } catch (SQLException ex) {
             LOG.error("SourcesDBManager.getRandomName", ex);
         }
