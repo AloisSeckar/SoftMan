@@ -25,6 +25,7 @@ public class League implements IDatabaseEntity {
     @NonNull
     private final LeagueInfo leagueInfo;
 
+    @Getter
     private ArrayList<Team> teams = new ArrayList<>();
 
     private final HashMap<Integer, Match> matches = new HashMap<>();
@@ -67,9 +68,9 @@ public class League implements IDatabaseEntity {
                 int awayTeamIndex;
                 if (i % 2 == 0) {
                     homeTeamIndex = j;
-                    awayTeamIndex = 9 - j;
+                    awayTeamIndex = (teams.size() - 1) - j;
                 } else {
-                    homeTeamIndex = 9 - j;
+                    homeTeamIndex = (teams.size() - 1) - j;
                     awayTeamIndex = j;
                 }
 
@@ -183,8 +184,8 @@ public class League implements IDatabaseEntity {
     private void shiftTeams() {
         var shiftedTeams = new ArrayList<Team>();
         shiftedTeams.add(teams.get(0));
-        shiftedTeams.add(teams.get(9));
-        shiftedTeams.addAll(teams.subList(1, 9));
+        shiftedTeams.add(teams.get((teams.size() - 1)));
+        shiftedTeams.addAll(teams.subList(1, (teams.size() - 1)));
         teams = shiftedTeams;
     }
 

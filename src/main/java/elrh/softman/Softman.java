@@ -3,6 +3,7 @@ package elrh.softman;
 import elrh.softman.logic.db.*;
 import elrh.softman.gui.MainLayout;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.utils.factory.AssociationFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.*;
@@ -72,7 +73,8 @@ public class Softman extends Application {
         String gameId = "test";
         GameDBManager.getInstance().setConnection(gameId);
         
-        AssociationManager.getInstance().prepareMockLeagues();
+        AssociationManager.getInstance();
+        AssociationFactory.populateAssociation();
     }
     
     private static void tearDownGame() {

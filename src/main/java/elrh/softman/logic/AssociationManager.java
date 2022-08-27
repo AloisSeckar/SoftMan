@@ -7,7 +7,6 @@ import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
-import elrh.softman.utils.mock.MockTeamFactory;
 import elrh.softman.utils.FormatUtils;
 import java.util.*;
 import javafx.scene.control.Alert;
@@ -46,10 +45,6 @@ public class AssociationManager {
         managedLeagues.clear();
         registeredClubs.clear();
         registeredPlayers.clear();
-    }
-
-    public void prepareMockLeagues() {
-        prepareLeagues();
     }
 
     public List<League> getLeagues(int year) {
@@ -189,38 +184,6 @@ public class AssociationManager {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Simulate the rest of the day?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
         alert.showAndWait();
         return alert.getResult() == ButtonType.YES;
-    }
-
-    private void prepareLeagues() {
-        ArrayList<Team> teams = createTeams(Arrays.asList("BLUES", "GREENS", "YELLOWS", "BLACKS", "WHITES", "SILVERS", "VIOLETS", "BROWNS", "GOLDS"));
-
-        ArrayList<Team> playerTeams = createTeams(Arrays.asList("REDS"));
-        user.setActiveTeam(playerTeams.get(0));
-        teams.add(playerTeams.get(0));
-
-        LeagueInfo leagueInfo = new LeagueInfo("Test league", PlayerLevel.MSEN, clock.getYear(), PlayerLevel.MSEN.getMatchId());
-        League testLeague = new League(leagueInfo);
-        testLeague.persist();
-
-        teams.forEach(testLeague::registerTeam);
-        testLeague.scheduleMatches();
-
-        managedLeagues.put(testLeague.getLeagueInfo().getLeagueId(), testLeague);
-    }
-
-    private ArrayList<Team> createTeams(List<String> teamNames) {
-        ArrayList<Team> ret = new ArrayList<>();
-        teamNames.forEach(name -> {
-
-            Club mockClub = new Club(name, "Unknown", "The Field");
-            mockClub.getClubInfo().setLogo("/img/teams/" + name.toLowerCase() + ".png");
-            mockClub.persist();
-            AssociationManager.getInstance().registerClub(mockClub);
-
-            ret.add(MockTeamFactory.getMockTeam(PlayerLevel.MSEN, mockClub));
-        });
-
-        return ret;
     }
 
 }

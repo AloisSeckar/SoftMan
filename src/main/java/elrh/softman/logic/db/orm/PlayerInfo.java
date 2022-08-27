@@ -38,6 +38,15 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
         this.number = number;
         this.attributes = new PlayerAttributes();
     }
+    public PlayerInfo(String player, PlayerGender gender, int birth, int number) {
+        // TODO fix constructors
+        this.name = player;
+        this.gender = gender;
+        this.birth = birth;
+        this.number = number;
+        this.attributes = new PlayerAttributes();
+    }
+
 
     @Override
     public String toString() {
