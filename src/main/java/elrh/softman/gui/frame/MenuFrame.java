@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class MenuFrame extends AnchorPane {
 
@@ -66,9 +67,18 @@ public class MenuFrame extends AnchorPane {
         super.getChildren().add(titleLabel);
         AnchorPane.setLeftAnchor(titleLabel, 5d);
         AnchorPane.setTopAnchor(titleLabel, 5d);
+
+        var minimizeButton = new Button("", new FontAwesomeIconView(FontAwesomeIcon.WINDOW_MINIMIZE));
+        minimizeButton.getStyleClass().setAll("action-button", "minimize-button");
+        minimizeButton.setOnAction(e -> {
+            ((Stage)((Button) e.getSource()).getScene().getWindow()).setIconified(true);
+        });
+        super.getChildren().add(minimizeButton);
+        AnchorPane.setRightAnchor(minimizeButton, 30d);
+        AnchorPane.setTopAnchor(minimizeButton, 0d);
         
         var closeButton = new Button("", new FontAwesomeIconView(FontAwesomeIcon.CLOSE));
-        closeButton.getStyleClass().setAll("close-button");
+        closeButton.getStyleClass().setAll("action-button", "close-button");
         closeButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Softman.closeIfConfirmed());
         super.getChildren().add(closeButton);
         AnchorPane.setRightAnchor(closeButton, 0d);
