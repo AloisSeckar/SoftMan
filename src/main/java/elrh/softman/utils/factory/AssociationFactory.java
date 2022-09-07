@@ -49,12 +49,12 @@ public class AssociationFactory {
         leagueWomenTeams.forEach(leagueWomen::registerTeam);
         leagueWomen.scheduleMatches();
 
-        League leagueJuniorBoys = manager.getLeagues(year).get(1);
+        League leagueJuniorBoys = manager.getLeagues(year).get(2);
         ArrayList<Team> leagueJuniorBoysTeams = createTeams(PlayerLevel.MU18, Arrays.asList(CLUB01, CLUB02, CLUB04, CLUB05, CLUB06, CLUB08));
         leagueJuniorBoysTeams.forEach(leagueJuniorBoys::registerTeam);
         leagueJuniorBoys.scheduleMatches();
 
-        League leagueJuniorGirls = manager.getLeagues(year).get(1);
+        League leagueJuniorGirls = manager.getLeagues(year).get(3);
         ArrayList<Team> leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB03, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
         leagueJuniorGirlsTeams.forEach(leagueJuniorGirls::registerTeam);
         leagueJuniorGirls.scheduleMatches();

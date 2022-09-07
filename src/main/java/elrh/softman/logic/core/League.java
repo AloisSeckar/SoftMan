@@ -47,13 +47,15 @@ public class League implements IDatabaseEntity {
     public void registerTeam(Team team) {
         teams.add(team);
         standings.add(new Standing(team.getName()));
+        team.getTeamInfo().setLeagueInfo(this.leagueInfo);
+        team.persist();
         LOG.info("Team " + team.getId() + " registered");
     }
 
     public void scheduleMatches() {
         var matchIdBase = leagueInfo.getMatchId();
         var matchesPerRound = teams.size() / 2;
-        var rounds = teams.size() * 4;
+        var rounds = (teams.size() - 1) * 4;
         var roundDate = LocalDate.of(Constants.START_YEAR,4,1);
 
         Collections.shuffle(teams);
