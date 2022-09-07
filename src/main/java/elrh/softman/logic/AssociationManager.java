@@ -124,25 +124,27 @@ public class AssociationManager {
     public HashMap<Long, Match> getTodayMatchesForUser() {
         var playersMatches = new HashMap<Long, Match>();
         for (var entry : getTodayMatches().entrySet()) {
-            Long leagueId = entry.getKey();
-            Match match = entry.getValue();
-            if (user.managesTeam(match.getHomeTeam()) || user.managesTeam(match.getAwayTeam())) {
-                playersMatches.put(leagueId, match);
-            }
+            var leagueId = entry.getKey();
+            entry.getValue().forEach(match -> {
+                if (user.managesTeam(match.getHomeTeam()) || user.managesTeam(match.getAwayTeam())) {
+                    playersMatches.put(leagueId, match);
+                }
+            });
         }
         return playersMatches;
     }
 
-    public  HashMap<Long, Match> getTodayMatches() {
-        var ret = new HashMap<Long, Match>();
+    public  HashMap<Long, List<Match>> getTodayMatches() {
+        var ret = new HashMap<Long, List<Match>>();
         getLeagues(clock.getYear()).forEach(league -> {
-            Long leagueId = league.getLeagueInfo().getLeagueId();
-            league.getTodayMatches(clock.getViewDate()).forEach(match -> ret.put(leagueId, match));
+            var leagueId = league.getLeagueInfo().getLeagueId();
+            var leagueMatches = new ArrayList<>(league.getTodayMatches(clock.getViewDate()));
+            ret.put(leagueId, leagueMatches);
         });
         return ret;
     }
 
-    public List<Match> getRoundMatches(int leagueId, int round) {
+    public List<Match> getRoundMatches(long leagueId, int round) {
         var ret = new ArrayList<Match>();
         var league = managedLeagues.get(leagueId);
         if (league != null) {
@@ -153,11 +155,11 @@ public class AssociationManager {
 
     public void nextDay() {
         if (isDayFinished() || confirmDayFinished()) {
-            getTodayMatches().values().forEach(match -> {
+            getTodayMatches().values().forEach(matches -> matches.forEach(match -> {
                 if (!match.isFinished()) {
                     match.simulate(new TextArea());
                 }
-            });
+            }));
 
             IndexTab.getInstance().refreshSchedule();
             clock.plusDays(1);
@@ -177,7 +179,20 @@ public class AssociationManager {
     ////////////////////////////////////////////////////////////////////////////
 
     private boolean isDayFinished() {
-        return getTodayMatches().values().stream().allMatch(Match::isFinished);
+        boolean finished = true;
+        var todayMatches = getTodayMatches();
+        for (var matches : todayMatches.values()) {
+            for (var match : matches) {
+                finished = match.isFinished();
+                if (!finished) {
+                    break;
+                }
+            }
+            if (!finished) {
+                break;
+            }
+        }
+        return finished;
     }
 
     private boolean confirmDayFinished() {

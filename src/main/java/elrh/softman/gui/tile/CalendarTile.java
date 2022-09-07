@@ -17,6 +17,8 @@ public class CalendarTile extends VBox {
     private final VBox dailySchedule;
     private final ArrayList<ScheduleRowTile> dailyScheduleRows = new ArrayList<>();
 
+    private int rows = 0;
+
     public CalendarTile() {
 
         var topRow = new HBox();
@@ -55,13 +57,20 @@ public class CalendarTile extends VBox {
         dailyScheduleRows.clear();
         var matches = AssociationManager.getInstance().getTodayMatches();
         if (matches.size() > 0) {
-            int i = 0;
-            for (var match : matches.values()) {
-                var row = new ScheduleRowTile(i++ % 2 == 0);
-                row.setMatch(match);
-                dailySchedule.getChildren().add(row);
-                dailyScheduleRows.add(row);
-            }
+            rows = 0;
+            matches.forEach((leagueId, leagueMatches) -> {
+                dailySchedule.getChildren().add(new Label(String.valueOf(leagueId)));
+                if (leagueMatches.size() > 0) {
+                    for (var match : leagueMatches) {
+                        var row = new ScheduleRowTile(rows++ % 2 == 0);
+                        row.setMatch(match);
+                        dailySchedule.getChildren().add(row);
+                        dailyScheduleRows.add(row);
+                    }
+                } else {
+                    dailySchedule.getChildren().add(new Label("No matches scheduled today"));
+                }
+            });
         } else {
             dailySchedule.getChildren().add(new Label("No matches scheduled today"));
         }
