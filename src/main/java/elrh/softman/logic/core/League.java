@@ -1,5 +1,6 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.Result;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
 import elrh.softman.logic.db.GameDBManager;
@@ -45,12 +46,17 @@ public class League implements IDatabaseEntity {
         GameDBManager.getInstance().saveLeague(this);
     }
 
-    public void registerTeam(Team team) {
-        teams.add(team);
-        standings.add(new Standing(team.getName()));
-        team.getTeamInfo().setLeagueInfo(this.leagueInfo);
-        team.persist();
-        LOG.info("Team " + team.getId() + " registered");
+    public Result registerTeam(Team team) {
+        try {
+            teams.add(team);
+            standings.add(new Standing(team.getName()));
+            team.getTeamInfo().setLeagueInfo(this.leagueInfo);
+            team.persist();
+            LOG.info("Team " + team.getId() + " registered");
+            return new Result(true, null);
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("League.registerTeam", ex);
+        }
     }
 
     public void scheduleMatches() {

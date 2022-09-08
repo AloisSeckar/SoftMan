@@ -7,6 +7,7 @@ import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
+import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.FormatUtils;
 import java.util.*;
 import javafx.scene.control.Alert;
@@ -51,19 +52,29 @@ public class AssociationManager {
         return managedLeagues.values().stream().filter(l -> l.getLeagueInfo().getYear() == year).toList();
     }
 
-    public void createNewLeague(String name, PlayerLevel level) {
-        LeagueInfo leagueInfo = new LeagueInfo(name, level, clock.getYear(), level.getMatchId());
-        League newLeague = new League(leagueInfo);
-        newLeague.persist();
-        managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
+    public Result createNewLeague(String name, PlayerLevel level) {
+        try {
+            LeagueInfo leagueInfo = new LeagueInfo(name, level, clock.getYear(), level.getMatchId());
+            League newLeague = new League(leagueInfo);
+            newLeague.persist();
+            managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
+            LOG.info("New league ID " + newLeague + " created");
+            return new Result(true, null);
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("AssociationManager.createNewLeague", ex);
+        }
     }
 
-    public void registerTeamIntoLeague(long leagueId, Team team) {
-        League league = managedLeagues.get(leagueId);
-        if (league != null) {
-            league.registerTeam(team);
-        } else {
-            LOG.error("League " + leagueId + " not found");
+    public Result registerTeamIntoLeague(long leagueId, Team team) {
+        try {
+            League league = managedLeagues.get(leagueId);
+            if (league != null) {
+                return league.registerTeam(team);
+            } else {
+                return new Result(false, "League " + leagueId + " not found");
+            }
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("AssociationManager.registerTeamIntoLeague", ex);
         }
     }
 
@@ -79,19 +90,24 @@ public class AssociationManager {
         return registeredClubs.get(clubId);
     }
 
-    public void registerClub(Club club) {
-        long clubId = club.getId();
-        int year = clock.getYear();
-        Club existingClub = registeredClubs.get(clubId);
-        if (existingClub != null) {
-            existingClub.getClubInfo().setRegistered(year);
-            existingClub.persist();
-        } else {
-            club.getClubInfo().setRegistered(year);
-            club.persist();
-            registeredClubs.put(clubId, club);
+    public Result registerClub(Club club) {
+        try {
+            long clubId = club.getId();
+            int year = clock.getYear();
+            Club existingClub = registeredClubs.get(clubId);
+            if (existingClub != null) {
+                existingClub.getClubInfo().setRegistered(year);
+                existingClub.persist();
+            } else {
+                club.getClubInfo().setRegistered(year);
+                club.persist();
+                registeredClubs.put(clubId, club);
+            }
+            LOG.info("Club " + clubId + " was registered for " + year + " season");
+            return new Result(true, null);
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("AssociationManager.registerClub", ex);
         }
-        LOG.info("Club " + clubId + " was registered for " + year + " season");
     }
 
     public List<Player> getPlayers(boolean active) {
@@ -106,19 +122,24 @@ public class AssociationManager {
         return registeredPlayers.get(playerId);
     }
 
-    public void registerPlayer(Player player) {
-        long playerId = player.getId();
-        int year = clock.getYear();
-        Player existingPlayer = registeredPlayers.get(playerId);
-        if (existingPlayer != null) {
-            existingPlayer.getPlayerInfo().setRegistered(year);
-            existingPlayer.persist();
-        } else {
-            player.getPlayerInfo().setRegistered(year);
-            player.persist();
-            registeredPlayers.put(playerId, player);
+    public Result registerPlayer(Player player) {
+        try {
+            long playerId = player.getId();
+            int year = clock.getYear();
+            Player existingPlayer = registeredPlayers.get(playerId);
+            if (existingPlayer != null) {
+                existingPlayer.getPlayerInfo().setRegistered(year);
+                existingPlayer.persist();
+            } else {
+                player.getPlayerInfo().setRegistered(year);
+                player.persist();
+                registeredPlayers.put(playerId, player);
+            }
+            LOG.info("player " + playerId + " was registered for " + year + " season");
+            return new Result(true, null);
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("AssociationManager.registerPlayer", ex);
         }
-        LOG.info("player " + playerId + " was registered for " + year + " season");
     }
 
     public HashMap<Long, Match> getTodayMatchesForUser() {
@@ -153,21 +174,28 @@ public class AssociationManager {
         return ret;
     }
 
-    public void nextDay() {
-        if (isDayFinished() || confirmDayFinished()) {
-            getTodayMatches().values().forEach(matches -> matches.forEach(match -> {
-                if (!match.isFinished()) {
-                    match.simulate(new TextArea());
-                }
-            }));
+    public Result nextDay() {
+        try {
+            if (isDayFinished() || confirmDayFinished()) {
+                getTodayMatches().values().forEach(matches -> matches.forEach(match -> {
+                    if (!match.isFinished()) {
+                        match.simulate(new TextArea());
+                    }
+                }));
 
-            IndexTab.getInstance().refreshSchedule();
-            clock.plusDays(1);
-            clock.adjustViewDay();
-            LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
+                IndexTab.getInstance().refreshSchedule();
+                clock.plusDays(1);
+                clock.adjustViewDay();
+                LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
 
-            ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
-            IndexTab.getInstance().setDailySchedule();
+                ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
+                IndexTab.getInstance().setDailySchedule();
+                return new Result(true, null);
+            } else {
+                return new Result(false, "Day not completed yet");
+            }
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("AssociationManager.registerPlayer", ex);
         }
     }
 
