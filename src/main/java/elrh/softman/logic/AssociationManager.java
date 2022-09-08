@@ -138,7 +138,7 @@ public class AssociationManager {
         var ret = new HashMap<Long, List<Match>>();
         getLeagues(clock.getYear()).forEach(league -> {
             var leagueId = league.getLeagueInfo().getLeagueId();
-            var leagueMatches = new ArrayList<>(league.getTodayMatches(clock.getViewDate()));
+            var leagueMatches = new ArrayList<>(league.getMatchesForDay(clock.getViewDate()));
             ret.put(leagueId, leagueMatches);
         });
         return ret;
@@ -148,7 +148,7 @@ public class AssociationManager {
         var ret = new ArrayList<Match>();
         var league = managedLeagues.get(leagueId);
         if (league != null) {
-            ret.addAll(league.getRoundMatches(round));
+            ret.addAll(league.getMatchesForRound(round));
         }
         return ret;
     }

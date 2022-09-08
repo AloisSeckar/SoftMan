@@ -24,7 +24,7 @@ public class MatchInfo {
     @Setter(AccessLevel.NONE)
     private Date matchDay;
 
-    private Integer leagueRound;
+    private int leagueRound;
 
     private long awayTeamId;
     private long homeTeamId;

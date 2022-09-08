@@ -29,7 +29,6 @@ public class League implements IDatabaseEntity {
     private ArrayList<Team> teams = new ArrayList<>();
 
     private final HashMap<Integer, Match> matches = new HashMap<>();
-    private final HashMap<Integer, ArrayList<Match>> matchesInRounds = new HashMap<>();
 
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
@@ -54,14 +53,13 @@ public class League implements IDatabaseEntity {
 
     public void scheduleMatches() {
         var matchIdBase = leagueInfo.getMatchId();
-        var matchesPerRound = teams.size() / 2;
+        var matchesPerRound = getTotalRounds();
         var rounds = (teams.size() - 1) * 4;
         var roundDate = LocalDate.of(Constants.START_YEAR,4,1);
 
         Collections.shuffle(teams);
 
         for (int i = 1; i <= rounds; i++) {
-            matchesInRounds.put(i, new ArrayList<>(matchesPerRound));
             for (int j = 0; j < matchesPerRound; j++) {
 
                 int matchId = matchIdBase + ((i - 1) * matchesPerRound) + (j + 1);
@@ -85,7 +83,6 @@ public class League implements IDatabaseEntity {
                 LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayTeam().getName() + " @ " + match.getHomeTeam().getName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
                 GameDBManager.getInstance().saveMatch(match);
                 matches.put(matchId, match);
-                (matchesInRounds.get(i)).add(match);
             }
             shiftTeams();
             roundDate = roundDate.plusDays(7);
@@ -93,20 +90,20 @@ public class League implements IDatabaseEntity {
         LOG.info("League matches scheduled");
     }
 
-    public List<Match> getTodayMatches(LocalDate currentDate) {
+    public List<Match> getMatchesForDay(LocalDate currentDate) {
         if (currentDate != null) {
             return matches.values().stream().filter(match -> match.getMatchInfo().getMatchDay().compareTo(currentDate) == 0).toList();
         } else {
-            ErrorUtils.raise("Called 'getRoundMatches' with parameter NULL");
+            ErrorUtils.raise("Called 'getMatchesForDay' with parameter NULL");
             return null;
         }
     }
 
-    public List<Match> getRoundMatches(int round) {
-        if (round >= 0 && round < matchesInRounds.size()) {
-            return matchesInRounds.get(round);
+    public List<Match> getMatchesForRound(int round) {
+        if (round >= 0 && round <= getTotalRounds()) {
+            return matches.values().stream().filter(match -> match.getMatchInfo().getLeagueRound() == round).toList();
         } else {
-            ErrorUtils.raise("Called 'getRoundMatches' with parameter out-of-bounds (called " + round + ", available " + matchesInRounds.size() + ")");
+            ErrorUtils.raise("Called 'getRoundMatches' with parameter out-of-bounds (called " + round + ", available " + getTotalRounds() + ")");
             return null;
         }
     }
@@ -182,6 +179,10 @@ public class League implements IDatabaseEntity {
     }
 
     ////////////////////////////////////////////////////////////////////////////
+
+    private int getTotalRounds() {
+        return teams.size() / 2;
+    }
 
     private void shiftTeams() {
         var shiftedTeams = new ArrayList<Team>();
