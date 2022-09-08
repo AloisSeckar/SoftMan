@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @RequiredArgsConstructor
 public class League implements IDatabaseEntity {
 
+    public static final LocalDate LEAGUE_START = LocalDate.of(Constants.START_YEAR,4,1);
+
     @Getter
     @NonNull
     private final LeagueInfo leagueInfo;
@@ -55,7 +57,7 @@ public class League implements IDatabaseEntity {
         var matchIdBase = leagueInfo.getMatchId();
         var matchesPerRound = getTotalRounds();
         var rounds = (teams.size() - 1) * 4;
-        var roundDate = LocalDate.of(Constants.START_YEAR,4,1);
+        var roundDate = LEAGUE_START;
 
         Collections.shuffle(teams);
 
