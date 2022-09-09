@@ -1,15 +1,18 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.Result;
 import elrh.softman.logic.db.GameDBManager;
-import elrh.softman.logic.db.orm.*;
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import java.util.*;
-
 import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.TeamInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
+import elrh.softman.utils.Constants;
+import elrh.softman.utils.ErrorUtils;
 import lombok.*;
 
 public class Team implements IDatabaseEntity {
@@ -46,12 +49,16 @@ public class Team implements IDatabaseEntity {
         return teamInfo.getClubInfo().getLogo();
     }
     
-    public boolean addPlayer(PlayerInfo player) {
-        if (eligibleByGender(player.getGender()) && eligibleByAge(player.getAge())) {
-            players.add(player);
-            return true;
-        } else {
-            return false;
+    public Result addPlayer(PlayerInfo player) {
+        try {
+            if (eligibleByGender(player.getGender()) && eligibleByAge(player.getAge())) {
+                players.add(player);
+                return Constants.RESULT_OK;
+            } else {
+                return new Result(false, "Player is not eligible");
+            }
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("League.saveMatch", ex);
         }
     }
 

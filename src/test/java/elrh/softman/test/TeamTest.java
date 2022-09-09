@@ -1,6 +1,7 @@
 package elrh.softman.test;
 
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.enums.PlayerGender;
@@ -36,43 +37,41 @@ public class TeamTest {
         PlayerInfo playerFSEN = PlayerFactory.getRandomPlayerInfo(PlayerGender.F, AGE_30, 3);
         PlayerInfo playerFJUN = PlayerFactory.getRandomPlayerInfo(PlayerGender.F, AGE_10, 4);
 
-        boolean addPlayer;
+        Result result = teamMSEN.addPlayer(playerMSEN);
+        assertTrue(result.ok(), "Senior M player should be added into senior M team");
+        result = teamMSEN.addPlayer(playerMJUN);
+        assertFalse(result.ok(), "Junior M player shouldn't be added into senior M team");
+        result = teamMSEN.addPlayer(playerFSEN);
+        assertFalse(result.ok(), "Senior F player shouldn't be added into senior M team");
+        result = teamMSEN.addPlayer(playerFJUN);
+        assertFalse(result.ok(), "Junior F player shouldn't be added into senior M team");
 
-        addPlayer = teamMSEN.addPlayer(playerMSEN);
-        assertTrue(addPlayer, "Senior M player shall be added into senior M team");
-        addPlayer = teamMSEN.addPlayer(playerMJUN);
-        assertFalse(addPlayer, "Junior M player shall not be added into senior M team");
-        addPlayer = teamMSEN.addPlayer(playerFSEN);
-        assertFalse(addPlayer, "Senior F player shall not be added into senior M team");
-        addPlayer = teamMSEN.addPlayer(playerFJUN);
-        assertFalse(addPlayer, "Junior F player shall not be added into senior M team");
+        result = teamMU12.addPlayer(playerMSEN);
+        assertFalse(result.ok(), "Senior M player shouldn't be added into junior M team");
+        result = teamMU12.addPlayer(playerMJUN);
+        assertTrue(result.ok(), "Junior M player should be added into junior M team");
+        result = teamMU12.addPlayer(playerFSEN);
+        assertFalse(result.ok(), "Senior F player shouldn't be added into junior M team");
+        result = teamMU12.addPlayer(playerFJUN);
+        assertFalse(result.ok(), "Junior F player shouldn't be added into junior M team");
 
-        addPlayer = teamMU12.addPlayer(playerMSEN);
-        assertFalse(addPlayer, "Senior M player shall not be added into junior M team");
-        addPlayer = teamMU12.addPlayer(playerMJUN);
-        assertTrue(addPlayer, "Junior M player shall be added into junior M team");
-        addPlayer = teamMU12.addPlayer(playerFSEN);
-        assertFalse(addPlayer, "Senior F player shall not be added into junior M team");
-        addPlayer = teamMU12.addPlayer(playerFJUN);
-        assertFalse(addPlayer, "Junior F player shall not be added into junior M team");
+        result = teamFSEN.addPlayer(playerMSEN);
+        assertFalse(result.ok(), "Senior M player shouldn't be added into senior F team");
+        result = teamFSEN.addPlayer(playerMJUN);
+        assertFalse(result.ok(), "Junior M player shouldn't be added into senior F team");
+        result = teamFSEN.addPlayer(playerFSEN);
+        assertTrue(result.ok(), "Senior F player should be added into senior F team");
+        result = teamFSEN.addPlayer(playerFJUN);
+        assertFalse(result.ok(), "Junior F player shouldn't be added into senior F team");
 
-        addPlayer = teamFSEN.addPlayer(playerMSEN);
-        assertFalse(addPlayer, "Senior M player shall not be added into senior F team");
-        addPlayer = teamFSEN.addPlayer(playerMJUN);
-        assertFalse(addPlayer, "Junior M player shall not be added into senior F team");
-        addPlayer = teamFSEN.addPlayer(playerFSEN);
-        assertTrue(addPlayer, "Senior F player shall be added into senior F team");
-        addPlayer = teamFSEN.addPlayer(playerFJUN);
-        assertFalse(addPlayer, "Junior F player shall not be added into senior F team");
-
-        addPlayer = teamFU12.addPlayer(playerMSEN);
-        assertFalse(addPlayer, "Senior M player shall not be added into junior F team");
-        addPlayer = teamFU12.addPlayer(playerMJUN);
-        assertFalse(addPlayer, "Junior M player shall not be added into junior F team");
-        addPlayer = teamFU12.addPlayer(playerFSEN);
-        assertFalse(addPlayer, "Senior F player shall not be added into junior F team");
-        addPlayer = teamFU12.addPlayer(playerFJUN);
-        assertTrue(addPlayer, "Junior F player shall be added into junior F team");
+        result = teamFU12.addPlayer(playerMSEN);
+        assertFalse(result.ok(), "Senior M player shouldn't be added into junior F team");
+        result = teamFU12.addPlayer(playerMJUN);
+        assertFalse(result.ok(), "Junior M player shouldn't be added into junior F team");
+        result = teamFU12.addPlayer(playerFSEN);
+        assertFalse(result.ok(), "Senior F player shouldn't be added into junior F team");
+        result = teamFU12.addPlayer(playerFJUN);
+        assertTrue(result.ok(), "Junior F player should be added into junior F team");
     }
 
 }

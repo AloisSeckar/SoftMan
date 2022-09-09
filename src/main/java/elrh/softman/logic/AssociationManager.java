@@ -7,6 +7,7 @@ import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
+import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.FormatUtils;
 import java.util.*;
@@ -59,7 +60,7 @@ public class AssociationManager {
             newLeague.persist();
             managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
             LOG.info("New league ID " + newLeague + " created");
-            return new Result(true, null);
+            return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.createNewLeague", ex);
         }
@@ -104,7 +105,7 @@ public class AssociationManager {
                 registeredClubs.put(clubId, club);
             }
             LOG.info("Club " + clubId + " was registered for " + year + " season");
-            return new Result(true, null);
+            return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerClub", ex);
         }
@@ -136,7 +137,7 @@ public class AssociationManager {
                 registeredPlayers.put(playerId, player);
             }
             LOG.info("player " + playerId + " was registered for " + year + " season");
-            return new Result(true, null);
+            return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerPlayer", ex);
         }
@@ -190,7 +191,7 @@ public class AssociationManager {
 
                 ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
                 IndexTab.getInstance().setDailySchedule();
-                return new Result(true, null);
+                return Constants.RESULT_OK;
             } else {
                 return new Result(false, "Day not completed yet");
             }

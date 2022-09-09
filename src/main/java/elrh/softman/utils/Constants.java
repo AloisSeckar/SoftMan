@@ -1,11 +1,15 @@
 package elrh.softman.utils;
 
+import elrh.softman.logic.Result;
+
 import java.time.LocalDate;
 
 public class Constants {
     
     private Constants() {
     }
+
+    public static final Result RESULT_OK = new Result(true, null);
 
     public static final int START_YEAR = 2023;
 

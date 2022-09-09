@@ -53,49 +53,54 @@ public class League implements IDatabaseEntity {
             team.getTeamInfo().setLeagueInfo(this.leagueInfo);
             team.persist();
             LOG.info("Team " + team.getId() + " registered");
-            return new Result(true, null);
+            return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("League.registerTeam", ex);
         }
     }
 
-    public void scheduleMatches() {
-        var matchIdBase = leagueInfo.getMatchId();
-        var matchesPerRound = getTotalRounds();
-        var rounds = (teams.size() - 1) * 4;
-        var roundDate = LEAGUE_START;
+    public Result scheduleMatches() {
+        try {
+            var matchIdBase = leagueInfo.getMatchId();
+            var matchesPerRound = getTotalRounds();
+            var rounds = (teams.size() - 1) * 4;
+            var roundDate = LEAGUE_START;
 
-        Collections.shuffle(teams);
+            Collections.shuffle(teams);
 
-        for (int i = 1; i <= rounds; i++) {
-            for (int j = 0; j < matchesPerRound; j++) {
+            for (int i = 1; i <= rounds; i++) {
+                for (int j = 0; j < matchesPerRound; j++) {
 
-                int matchId = matchIdBase + ((i - 1) * matchesPerRound) + (j + 1);
+                    int matchId = matchIdBase + ((i - 1) * matchesPerRound) + (j + 1);
 
-                int homeTeamIndex;
-                int awayTeamIndex;
-                if (i % 2 == 0) {
-                    homeTeamIndex = j;
-                    awayTeamIndex = (teams.size() - 1) - j;
-                } else {
-                    homeTeamIndex = (teams.size() - 1) - j;
-                    awayTeamIndex = j;
+                    int homeTeamIndex;
+                    int awayTeamIndex;
+                    if (i % 2 == 0) {
+                        homeTeamIndex = j;
+                        awayTeamIndex = (teams.size() - 1) - j;
+                    } else {
+                        homeTeamIndex = (teams.size() - 1) - j;
+                        awayTeamIndex = j;
+                    }
+
+                    var info = new MatchInfo();
+                    info.setMatchId(matchId);
+                    info.setMatchDay(roundDate);
+                    info.setLeagueRound(i);
+
+                    var match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
+                    LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayTeam().getName() + " @ " + match.getHomeTeam().getName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
+                    GameDBManager.getInstance().saveMatch(match);
+                    matches.put(matchId, match);
                 }
-
-                var info = new MatchInfo();
-                info.setMatchId(matchId);
-                info.setMatchDay(roundDate);
-                info.setLeagueRound(i);
-
-                var match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
-                LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayTeam().getName() + " @ " + match.getHomeTeam().getName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
-                GameDBManager.getInstance().saveMatch(match);
-                matches.put(matchId, match);
+                shiftTeams();
+                roundDate = roundDate.plusDays(7);
             }
-            shiftTeams();
-            roundDate = roundDate.plusDays(7);
+            LOG.info("League matches scheduled");
+            return Constants.RESULT_OK;
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("League.scheduleMatches", ex);
         }
-        LOG.info("League matches scheduled");
     }
 
     public List<Match> getMatchesForDay(LocalDate currentDate) {
@@ -116,10 +121,15 @@ public class League implements IDatabaseEntity {
         }
     }
 
-    public void saveMatch(Match match) {
-        GameDBManager.getInstance().saveMatch(match);
-        includeMatchIntoStandings(match);
-        LOG.info("Match " + match + " saved and included into league standings");
+    public Result saveMatch(Match match) {
+        try {
+            GameDBManager.getInstance().saveMatch(match);
+            includeMatchIntoStandings(match);
+            LOG.info("Match " + match + " saved and included into league standings");
+            return Constants.RESULT_OK;
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("League.saveMatch", ex);
+        }
     }
 
     public void mockPlayLeague(TextArea target) {
@@ -130,16 +140,19 @@ public class League implements IDatabaseEntity {
     }
 
     public Match mockGetMatch() {
+        // TODO REMOVE
         return new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
     }
 
     public void mockPlayMatch(TextArea target) {
+        // TODO REMOVE
         var match = new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
     }
 
     private MatchInfo mockGetMatchInfo() {
+        // TODO REMOVE
         var ret = new MatchInfo();
         ret.setMatchId(1);
         ret.setMatchDay(LocalDate.now());

@@ -1,5 +1,6 @@
 package elrh.softman.test;
 
+import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.League;
 import elrh.softman.logic.core.Team;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LeagueTest {
 
@@ -18,6 +20,7 @@ public class LeagueTest {
     private static final Club CLUB = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
 
     private League league;
+    private Result result;
 
     @BeforeEach
     void setUp() {
@@ -30,7 +33,8 @@ public class LeagueTest {
     void registerTeamTest() {
         assertEquals(0, league.getTeams().size(), "initially there should be no teams registered");
         Team teamMSEN = new Team(PlayerLevel.MSEN, CLUB);
-        league.registerTeam(teamMSEN);
+        result = league.registerTeam(teamMSEN);
+        assertTrue(result.ok(), "registering team into league should be successful");
         assertEquals(1, league.getTeams().size(), "the team should have been registered into league");
     }
 
@@ -45,7 +49,8 @@ public class LeagueTest {
         league.registerTeam(team2);
         league.registerTeam(team3);
         league.registerTeam(team4);
-        league.scheduleMatches();
+        result = league.scheduleMatches();
+        assertTrue(result.ok(), "scheduling matches should be successful");
         assertEquals(2, league.getMatchesForRound(1).size(), "there should be 2 matches in 1st round");
         assertEquals(2, league.getMatchesForDay(League.LEAGUE_START).size(), "there should be 2 matches at 1st day");
     }
