@@ -16,6 +16,10 @@ public class TeamInfo {
     @NonNull
     private PlayerLevel level;
 
+    @DatabaseField(canBeNull = false)
+    @NonNull
+    private String name;
+
     @DatabaseField(canBeNull = false, foreign = true)
     @NonNull
     private ClubInfo clubInfo;

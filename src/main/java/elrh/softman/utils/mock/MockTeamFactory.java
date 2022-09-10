@@ -9,7 +9,7 @@ import java.util.*;
 public class MockTeamFactory {
     
     public static Team getMockTeam(PlayerLevel level, Club club) {
-        Team team = new Team(level, club);
+        Team team = new Team(level, "MOCK", club);
 
         Random rand = new Random();
         List<Integer> usedNumbers = new ArrayList<>();

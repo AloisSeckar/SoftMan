@@ -15,7 +15,15 @@ public class ErrorUtils {
     }
 
     public static Result handleException(String source, Throwable ex) {
-        LOG.error(source, ex);
+        if (!(ex instanceof ReportedException)) {
+            LOG.error(source, ex);
+        }
         return new Result(false, ExceptionUtils.getRootCauseMessage(ex));
     }
+
+    public static class ReportedException extends Exception {
+        public ReportedException(String message) {
+            super(message);
+        }
+    };
 }

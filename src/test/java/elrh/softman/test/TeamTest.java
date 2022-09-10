@@ -27,10 +27,10 @@ public class TeamTest {
     @DisplayName("addingPlayersTest")
     void addingPlayersTest() {
         Club club = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
-        Team teamMSEN = new Team(PlayerLevel.MSEN, club);
-        Team teamMU12 = new Team(PlayerLevel.MU12, club);
-        Team teamFSEN = new Team(PlayerLevel.FSEN, club);
-        Team teamFU12 = new Team(PlayerLevel.FU12, club);
+        Team teamMSEN = new Team(PlayerLevel.MSEN, ELEMENT_NAME, club);
+        Team teamMU12 = new Team(PlayerLevel.MU12, ELEMENT_NAME, club);
+        Team teamFSEN = new Team(PlayerLevel.FSEN, ELEMENT_NAME, club);
+        Team teamFU12 = new Team(PlayerLevel.FU12, ELEMENT_NAME, club);
 
         PlayerInfo playerMSEN = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, AGE_30, 1);
         PlayerInfo playerMJUN = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, AGE_10, 2);

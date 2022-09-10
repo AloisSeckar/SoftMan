@@ -27,8 +27,8 @@ public class Team implements IDatabaseEntity {
     private final LineupPosition[] battingOrder = new LineupPosition[10];
     private final PlayerInfo[] substitutes = new PlayerInfo[8];
 
-    public Team(PlayerLevel level, Club club) {
-        this.teamInfo = new TeamInfo(level, club.getClubInfo());
+    public Team(PlayerLevel level, String name, Club club) {
+        this.teamInfo = new TeamInfo(level, name, club.getClubInfo());
     }
 
     @Override

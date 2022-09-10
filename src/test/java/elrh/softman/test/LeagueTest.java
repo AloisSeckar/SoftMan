@@ -32,7 +32,7 @@ public class LeagueTest {
     @DisplayName("registerTeamTest")
     void registerTeamTest() {
         assertEquals(0, league.getTeams().size(), "initially there should be no teams registered");
-        Team teamMSEN = new Team(PlayerLevel.MSEN, CLUB);
+        Team teamMSEN = new Team(PlayerLevel.MSEN, ELEMENT_NAME, CLUB);
         result = league.registerTeam(teamMSEN);
         assertTrue(result.ok(), "registering team into league should be successful");
         assertEquals(1, league.getTeams().size(), "the team should have been registered into league");
@@ -41,10 +41,10 @@ public class LeagueTest {
     @Test
     @DisplayName("scheduleMatchesTest")
     void scheduleMatchesTest() {
-        Team team1 = new Team(PlayerLevel.MSEN, CLUB);
-        Team team2 = new Team(PlayerLevel.MSEN, CLUB);
-        Team team3 = new Team(PlayerLevel.MSEN, CLUB);
-        Team team4 = new Team(PlayerLevel.MSEN, CLUB);
+        Team team1 = new Team(PlayerLevel.MSEN, ELEMENT_NAME, CLUB);
+        Team team2 = new Team(PlayerLevel.MSEN, ELEMENT_NAME, CLUB);
+        Team team3 = new Team(PlayerLevel.MSEN, ELEMENT_NAME, CLUB);
+        Team team4 = new Team(PlayerLevel.MSEN, ELEMENT_NAME, CLUB);
         league.registerTeam(team1);
         league.registerTeam(team2);
         league.registerTeam(team3);
