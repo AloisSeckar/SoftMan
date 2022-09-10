@@ -3,10 +3,16 @@ package elrh.softman.gui.tab;
 import elrh.softman.gui.table.TeamPlayersTable;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.core.Club;
+import elrh.softman.logic.core.Team;
+import elrh.softman.logic.interfaces.IFocusListener;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
-public class TeamTab extends AnchorPane {
+public class TeamTab extends AnchorPane implements IFocusListener {
+
+    private final Label nameLabel;
+    private final TeamPlayersTable playersTable;
 
     private static TeamTab INSTANCE;
     
@@ -18,16 +24,14 @@ public class TeamTab extends AnchorPane {
     }
     
     private TeamTab() {
-        
-        var playerTeam = AssociationManager.getInstance().getState().getActiveClub().getTeams().get(0);
 
-        var teamLabel = new Label(playerTeam.getName());
-        teamLabel.getStyleClass().setAll("h3");
-        super.getChildren().add(teamLabel);
-        AnchorPane.setLeftAnchor(teamLabel, 10d);
-        AnchorPane.setTopAnchor(teamLabel, 10d);
+        nameLabel = new Label();
+        nameLabel.getStyleClass().setAll("h3");
+        super.getChildren().add(nameLabel);
+        AnchorPane.setLeftAnchor(nameLabel, 10d);
+        AnchorPane.setTopAnchor(nameLabel, 10d);
 
-        var playersTable = new TeamPlayersTable(playerTeam.getPlayers());
+        playersTable = new TeamPlayersTable();
         super.getChildren().add(playersTable);
         AnchorPane.setLeftAnchor(playersTable, 10d);
         AnchorPane.setTopAnchor(playersTable, 40d);
@@ -37,7 +41,27 @@ public class TeamTab extends AnchorPane {
         AnchorPane.setRightAnchor(playerInfo, 10d);
         AnchorPane.setTopAnchor(playerInfo, 10d);
         playersTable.setPlayerInfo(playerInfo);
+
+        AssociationManager.getInstance().getState().registerFocusListener(this);
+
+        // TODO remove this mock init
+        reload(AssociationManager.getInstance().getState().getActiveClub().getTeams().get(0));
         
+    }
+
+    @Override
+    public void focusedClubChanged(Club newlyFocusedClub) {
+        // no action needed
+    }
+
+    @Override
+    public void focusedTeamChanged(Team newlyFocusedTeam) {
+        reload(newlyFocusedTeam);
+    }
+
+    private void reload(Team dispalayedTeam) {
+        nameLabel.setText(dispalayedTeam.getName());
+        playersTable.reload(dispalayedTeam.getPlayers());
     }
     
 }

@@ -1,6 +1,8 @@
 package elrh.softman.gui.table;
 
 import elrh.softman.logic.db.orm.PlayerInfo;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import elrh.softman.gui.tile.PlayerInfoTile;
@@ -15,13 +17,12 @@ public class TeamPlayersTable extends Pane {
     private static final double COLUMN_WIDTH = 100d;
 
     private final TableView<PlayerInfo> table;
-    private final ObservableList<PlayerInfo> data;
+    private ObservableList<PlayerInfo> data;
 
     private PlayerInfoTile playerInfo;
 
-    public TeamPlayersTable(List<PlayerInfo> players) {
-        data = FXCollections.observableList(players);
-        FXCollections.sort(data);
+    public TeamPlayersTable() {
+        data = FXCollections.observableList(new ArrayList<>());
 
         table = new TableView<>();
         table.setItems(data);
@@ -134,7 +135,9 @@ public class TeamPlayersTable extends Pane {
         super.getChildren().add(table);
     }
 
-    public void refresh() {
+    public void reload(List<PlayerInfo> players) {
+        data.clear();
+        data.addAll(players);
         FXCollections.sort(data);
         table.refresh();
     }

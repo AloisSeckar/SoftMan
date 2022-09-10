@@ -1,17 +1,34 @@
 package elrh.softman.logic.managers;
 
 import elrh.softman.logic.core.*;
-import lombok.Data;
+import elrh.softman.logic.interfaces.IFocusListener;
+import java.util.HashSet;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
 public class StateManager {
 
     // TODO keep some user's info as well
 
+    @Getter @Setter
     private Club activeClub; // = user's club
 
+    @Getter
     private Club focusedClub; // = currently displayed in UI
+    @Getter
     private Team focusedTeam; // = currently displayed in UI
+
+    private final HashSet<IFocusListener> focusListeners = new HashSet<>();
+
+    public void setFocusedClub(Club focusedClub) {
+        this.focusedClub = focusedClub;
+        focusListeners.forEach(l -> l.focusedClubChanged(focusedClub));
+    }
+
+    public void setFocusedTeam(Team focusedTeam) {
+        this.focusedTeam = focusedTeam;
+        focusListeners.forEach(l -> l.focusedTeamChanged(focusedTeam));
+    }
 
     public void reset() {
         activeClub = null;
@@ -26,4 +43,9 @@ public class StateManager {
             return false;
         }
     }
+
+    public void registerFocusListener(IFocusListener listener) {
+        focusListeners.add(listener);
+    }
+
 }
