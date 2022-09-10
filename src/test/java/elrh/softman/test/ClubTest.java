@@ -5,17 +5,12 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.enums.PlayerLevel;
-import org.junit.jupiter.api.*;
-
+import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import java.util.List;
-
+import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class ClubTest extends AbstractDBTest {
-
-    private static final String ELEMENT_NAME = "Test";
 
     private AssociationManager manager;
     private Club club;

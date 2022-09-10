@@ -5,16 +5,14 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
+import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
-import java.util.List;
-
 import elrh.softman.utils.factory.PlayerFactory;
+import java.util.List;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AssociationManagerTest extends AbstractDBTest {
-
-    private static final String ELEMENT_NAME = "Test";
 
     private AssociationManager manager;
     private Result result;

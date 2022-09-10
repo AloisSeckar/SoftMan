@@ -6,14 +6,13 @@ import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
+import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.PlayerFactory;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TeamTest extends AbstractDBTest {
-
-    private static final String ELEMENT_NAME = "Test";
     private static final int AGE_30 = Constants.START_YEAR - 30;
     private static final int AGE_10 = Constants.START_YEAR - 10;
 
