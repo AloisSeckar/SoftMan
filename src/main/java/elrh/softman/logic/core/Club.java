@@ -10,6 +10,7 @@ import elrh.softman.utils.Constants;
 import java.util.HashMap;
 import java.util.List;
 import elrh.softman.utils.ErrorUtils;
+import elrh.softman.utils.mock.MockTeamFactory;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +28,11 @@ public class Club implements IDatabaseEntity {
         clubInfo.setStadium(stadium);
         clubInfo.setMoney(Constants.START_FUNDS);
         clubInfo.setLogo("softman.jpg");
+    }
+
+    @Override
+    public String toString() {
+        return clubInfo.getName();
     }
 
     @Override
@@ -53,7 +59,10 @@ public class Club implements IDatabaseEntity {
             var squad = getSquadCode(existingTeams);
             var name = this.clubInfo.getName() + " " + level.getCode() + " " + squad;
 
-            var newTeam = new Team(level, name, this);
+            // TODO get rid of mock
+            var newTeam = MockTeamFactory.getMockTeam(level, this);
+            newTeam.getTeamInfo().setName(name);
+
             newTeam.persist();
             this.teams.put(newTeam.getId(), newTeam);
 

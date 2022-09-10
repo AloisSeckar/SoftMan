@@ -2,6 +2,7 @@ package elrh.softman.gui;
 
 import elrh.softman.gui.frame.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 public class MainLayout extends BorderPane {
     
@@ -15,12 +16,9 @@ public class MainLayout extends BorderPane {
     }
     
     private MainLayout() {
-        MenuFrame menu = MenuFrame.getInstance();
-        this.setTop(menu);
-        ContentFrame content = ContentFrame.getInstance();
-        this.setCenter(content);
-        ActionFrame action = ActionFrame.getInstance();
-        this.setBottom(action);
+        this.setTop(new VBox(MenuFrame.getInstance(), FocusFrame.getInstance()));
+        this.setCenter(ContentFrame.getInstance());
+        this.setBottom(ActionFrame.getInstance());
     }
 
     // TODO unify actions performed upon starting new game

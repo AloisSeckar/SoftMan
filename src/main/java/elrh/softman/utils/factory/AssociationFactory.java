@@ -3,7 +3,6 @@ package elrh.softman.utils.factory;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.enums.PlayerLevel;
-import elrh.softman.utils.mock.MockTeamFactory;
 import java.util.*;
 
 public class AssociationFactory {
@@ -60,11 +59,17 @@ public class AssociationFactory {
         leagueJuniorGirls.scheduleMatches();
 
         manager.getState().setActiveClub(CLUB01);
+        manager.getState().setFocusedClub(CLUB01);
+        manager.getState().setFocusedTeam(CLUB01.getTeams().get(0));
     }
 
     private static ArrayList<Team> createTeams(PlayerLevel level, List<Club> participants) {
         ArrayList<Team> ret = new ArrayList<>();
-        participants.forEach(club -> ret.add(MockTeamFactory.getMockTeam(level, club)));
+        participants.forEach(club -> {
+            club.formTeam(level);
+            var newTeam = club.getTeams().get(club.getTeams().size() - 1);
+            ret.add(newTeam);
+        });
         return ret;
     }
 

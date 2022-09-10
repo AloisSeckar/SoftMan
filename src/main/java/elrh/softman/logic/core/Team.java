@@ -32,6 +32,11 @@ public class Team implements IDatabaseEntity {
     }
 
     @Override
+    public String toString() {
+        return getName();
+    }
+
+    @Override
     public long getId() {
         return teamInfo.getTeamId();
     }
@@ -42,7 +47,7 @@ public class Team implements IDatabaseEntity {
     }
 
     public String getName() {
-        return teamInfo.getClubInfo().getName();
+        return teamInfo.getName();
     }
 
     public String getLogo() {
