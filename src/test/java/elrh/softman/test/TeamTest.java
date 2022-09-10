@@ -11,7 +11,7 @@ import elrh.softman.utils.factory.PlayerFactory;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TeamTest {
+public class TeamTest extends AbstractDBTest {
 
     private static final String ELEMENT_NAME = "Test";
     private static final int AGE_30 = Constants.START_YEAR - 30;

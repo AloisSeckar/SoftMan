@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LeagueTest {
+public class LeagueTest extends AbstractDBTest {
 
     private static final String ELEMENT_NAME = "Test";
 

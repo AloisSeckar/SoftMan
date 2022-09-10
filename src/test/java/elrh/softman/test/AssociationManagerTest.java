@@ -3,13 +3,16 @@ package elrh.softman.test;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
+import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.utils.Constants;
 import java.util.List;
+
+import elrh.softman.utils.factory.PlayerFactory;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AssociationManagerTest {
+public class AssociationManagerTest extends AbstractDBTest {
 
     private static final String ELEMENT_NAME = "Test";
 
@@ -78,10 +81,13 @@ public class AssociationManagerTest {
     @Test
     @DisplayName("registerAndGetPlayerTest")
     void registerAndGetPlayerTest() {
+        // TODO use some player factory method...
         Player newPlayer1 = new Player();
+        newPlayer1.setPlayerInfo(PlayerFactory.getRandomPlayerInfo(PlayerGender.M, 2000, 1));
         newPlayer1.getPlayerInfo().setPlayerId(1);
         newPlayer1.getPlayerInfo().setName(ELEMENT_NAME);
         Player newPlayer2 = new Player();
+        newPlayer2.setPlayerInfo(PlayerFactory.getRandomPlayerInfo(PlayerGender.M, 2000, 2));
         newPlayer2.getPlayerInfo().setPlayerId(2);
         newPlayer2.getPlayerInfo().setName(ELEMENT_NAME);
 

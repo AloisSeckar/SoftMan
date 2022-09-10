@@ -9,7 +9,6 @@ import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
 import java.util.HashMap;
 import java.util.List;
-
 import elrh.softman.utils.ErrorUtils;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +18,7 @@ public class Club implements IDatabaseEntity {
 
     @Getter
     private final ClubInfo clubInfo;
-    private HashMap<Long, Team> teams = new HashMap<>();
+    private final HashMap<Long, Team> teams = new HashMap<>();
 
     public Club(String name, String city, String stadium) {
         clubInfo = new ClubInfo();
@@ -27,6 +26,7 @@ public class Club implements IDatabaseEntity {
         clubInfo.setCity(city);
         clubInfo.setStadium(stadium);
         clubInfo.setMoney(Constants.START_FUNDS);
+        clubInfo.setLogo("softman.jpg");
     }
 
     @Override
