@@ -59,7 +59,7 @@ public class AssociationFactory {
         leagueJuniorGirlsTeams.forEach(leagueJuniorGirls::registerTeam);
         leagueJuniorGirls.scheduleMatches();
 
-        manager.getUser().setActiveTeam(leagueMen.getTeams().get(0));
+        manager.getState().setActiveClub(CLUB01);
     }
 
     private static ArrayList<Team> createTeams(PlayerLevel level, List<Club> participants) {

@@ -19,7 +19,7 @@ public class TeamTab extends AnchorPane {
     
     private TeamTab() {
         
-        var playerTeam = AssociationManager.getInstance().getUser().getActiveTeam();
+        var playerTeam = AssociationManager.getInstance().getState().getActiveClub().getTeams().get(0);
 
         var teamLabel = new Label(playerTeam.getName());
         teamLabel.getStyleClass().setAll("h3");

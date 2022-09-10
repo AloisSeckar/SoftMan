@@ -6,7 +6,7 @@ import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
-import elrh.softman.logic.managers.UserManager;
+import elrh.softman.logic.managers.StateManager;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.FormatUtils;
@@ -23,7 +23,7 @@ public class AssociationManager {
     @Getter
     private final ClockManager clock = new ClockManager();
     @Getter
-    private final UserManager user = new UserManager();
+    private final StateManager state = new StateManager();
 
     private final HashMap<Long, League> managedLeagues = new HashMap<>();
     private final HashMap<Long, Club> registeredClubs = new HashMap<>();
@@ -43,7 +43,7 @@ public class AssociationManager {
 
     public void reset() {
         clock.reset();
-        user.reset();
+        state.reset();
         managedLeagues.clear();
         registeredClubs.clear();
         registeredPlayers.clear();
@@ -148,7 +148,7 @@ public class AssociationManager {
         for (var entry : getTodayMatches().entrySet()) {
             var leagueId = entry.getKey();
             entry.getValue().forEach(match -> {
-                if (user.managesTeam(match.getHomeTeam()) || user.managesTeam(match.getAwayTeam())) {
+                if (state.userManagesTeam(match.getHomeTeam()) || state.userManagesTeam(match.getAwayTeam())) {
                     playersMatches.put(leagueId, match);
                 }
             });
