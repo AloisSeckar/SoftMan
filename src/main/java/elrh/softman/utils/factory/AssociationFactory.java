@@ -58,6 +58,8 @@ public class AssociationFactory {
         leagueJuniorGirlsTeams.forEach(leagueJuniorGirls::registerTeam);
         leagueJuniorGirls.scheduleMatches();
 
+        CLUB01.formTeam(PlayerLevel.MSEN); // to test a team not participating in any league
+
         manager.getState().setActiveClub(CLUB01);
         manager.getState().setFocusedClub(CLUB01);
         manager.getState().setFocusedTeam(CLUB01.getTeams().get(0));

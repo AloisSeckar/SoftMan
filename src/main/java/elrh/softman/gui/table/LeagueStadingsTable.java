@@ -128,12 +128,13 @@ public class LeagueStadingsTable extends VBox {
     }
 
     public void setLeague(League league) {
-        if (league == null) {
-            ErrorUtils.raise("League shouln't be null");
-        }
-        nameLabel.setText(league.getName());
         data.clear();
-        data.addAll(league.getStandings());
+        if (league != null) {
+            nameLabel.setText(league.getName());
+            data.addAll(league.getStandings());
+        } else {
+            nameLabel.setText("Not participating in any league");
+        }
         refresh();
     }
 
