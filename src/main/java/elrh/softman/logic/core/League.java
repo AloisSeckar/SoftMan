@@ -47,7 +47,7 @@ public class League implements IDatabaseEntity {
     }
 
     public String getName() {
-        return leagueInfo.getLeagueName();
+        return leagueInfo.getLeagueName() + " " + leagueInfo.getYear();
     }
 
     public Result registerTeam(Team team) {
