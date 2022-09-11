@@ -46,6 +46,10 @@ public class League implements IDatabaseEntity {
         GameDBManager.getInstance().saveLeague(this);
     }
 
+    public String getName() {
+        return leagueInfo.getLeagueName();
+    }
+
     public Result registerTeam(Team team) {
         try {
             teams.add(team);

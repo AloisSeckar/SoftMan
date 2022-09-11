@@ -53,7 +53,8 @@ public class StandingsTab extends AnchorPane {
         AnchorPane.setLeftAnchor(testTextArea, 5d);
         AnchorPane.setTopAnchor(testTextArea, 85d);
         
-        leagueTable = new LeagueStadingsTable(testLeague.getStandings());
+        leagueTable = new LeagueStadingsTable();
+        leagueTable.setLeague(testLeague); // TODO get rid of this mock
         super.getChildren().add(leagueTable);
         AnchorPane.setRightAnchor(leagueTable, 5d);
         AnchorPane.setTopAnchor(leagueTable, 85d);

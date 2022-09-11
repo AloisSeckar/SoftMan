@@ -54,7 +54,7 @@ public class AssociationFactory {
         leagueJuniorBoys.scheduleMatches();
 
         League leagueJuniorGirls = manager.getLeagues(year).get(3);
-        ArrayList<Team> leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB03, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
+        ArrayList<Team> leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB01, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
         leagueJuniorGirlsTeams.forEach(leagueJuniorGirls::registerTeam);
         leagueJuniorGirls.scheduleMatches();
 

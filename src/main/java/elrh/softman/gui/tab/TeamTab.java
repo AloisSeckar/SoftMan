@@ -42,10 +42,9 @@ public class TeamTab extends AnchorPane implements IFocusListener {
         AnchorPane.setTopAnchor(playerInfo, 10d);
         playersTable.setPlayerInfo(playerInfo);
 
-        AssociationManager.getInstance().getState().registerFocusListener(this);
+        reload(AssociationManager.getInstance().getState().getFocusedTeam());
 
-        // TODO remove this mock init
-        reload(AssociationManager.getInstance().getState().getActiveClub().getTeams().get(0));
+        AssociationManager.getInstance().getState().registerFocusListener(this);
         
     }
 

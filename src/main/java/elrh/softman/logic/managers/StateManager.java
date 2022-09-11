@@ -17,6 +17,8 @@ public class StateManager {
     private Club focusedClub; // = currently displayed in UI
     @Getter
     private Team focusedTeam; // = currently displayed in UI
+    @Getter
+    private League focusedLeague; // = useful reference in certain UI elements
 
     private final HashSet<IFocusListener> focusListeners = new HashSet<>();
 
@@ -27,6 +29,7 @@ public class StateManager {
 
     public void setFocusedTeam(Team focusedTeam) {
         this.focusedTeam = focusedTeam;
+        this.focusedLeague = focusedTeam.getLeague();
         focusListeners.forEach(l -> l.focusedTeamChanged(focusedTeam));
     }
 

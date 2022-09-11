@@ -1,7 +1,7 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.gui.frame.ContentFrame;
-import elrh.softman.gui.tab.IndexTab;
+import elrh.softman.gui.tab.ClubTab;
 import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Match;
@@ -128,7 +128,7 @@ public class ScheduleRowTile extends BorderPane {
     private void playMatch() {
         if (sim != null) {
             sim.simulatePlay();
-            IndexTab.getInstance().refreshSchedule();
+            ClubTab.getInstance().refreshSchedule();
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Cannot play!");
@@ -139,7 +139,7 @@ public class ScheduleRowTile extends BorderPane {
     private void simulateMatch() {
         if (sim != null) {
             sim.simulateMatch();
-            IndexTab.getInstance().refreshSchedule();
+            ClubTab.getInstance().refreshSchedule();
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText("Cannot simulate!");

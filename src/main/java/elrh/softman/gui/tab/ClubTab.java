@@ -6,32 +6,32 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.interfaces.IFocusListener;
-import elrh.softman.utils.Constants;
 import javafx.scene.layout.BorderPane;
 
-public class IndexTab extends BorderPane implements IFocusListener {
+public class ClubTab extends BorderPane implements IFocusListener {
 
-    private static IndexTab INSTANCE;
+    private static ClubTab INSTANCE;
 
     private final CalendarTile calendarTile;
     private final LeagueStadingsTable leagueTable;
 
-    public static IndexTab getInstance() {
+    public static ClubTab getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new IndexTab();
+            INSTANCE = new ClubTab();
         }
         return INSTANCE;
     }
 
-    private IndexTab() {
+    private ClubTab() {
         calendarTile = new CalendarTile();
         calendarTile.getStyleClass().add("padding-5");
         super.setLeft(calendarTile);
 
-        // TODO change dynamically according to User selection
-        leagueTable = new LeagueStadingsTable(AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0).getStandings());
+        leagueTable = new LeagueStadingsTable();
         leagueTable.getStyleClass().add("padding-5");
         super.setRight(leagueTable);
+
+        leagueTable.setLeague(AssociationManager.getInstance().getState().getFocusedLeague());
 
         AssociationManager.getInstance().getState().registerFocusListener(this);
 
@@ -44,7 +44,7 @@ public class IndexTab extends BorderPane implements IFocusListener {
 
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
-        // TODO adjustments after team changed
+        leagueTable.setLeague(AssociationManager.getInstance().getState().getFocusedLeague());
     }
 
     public void setDailySchedule() {

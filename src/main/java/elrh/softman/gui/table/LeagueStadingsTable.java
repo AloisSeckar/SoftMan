@@ -1,24 +1,30 @@
 package elrh.softman.gui.table;
 
 import elrh.softman.Softman;
+import elrh.softman.logic.core.League;
 import elrh.softman.logic.core.stats.Standing;
-import java.util.List;
+import elrh.softman.utils.ErrorUtils;
+import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.collections.*;
 
-public class LeagueStadingsTable extends Pane {
+public class LeagueStadingsTable extends VBox {
 
     private static final double WIDTH = 80d;
 
+    private final Label nameLabel;
     private final TableView<Standing> table;
     private final ObservableList<Standing> data;
 
-    public LeagueStadingsTable(List<Standing> standings) {
-        data = FXCollections.observableList(standings);
-        FXCollections.sort(data);
+    public LeagueStadingsTable() {
+        data = FXCollections.observableList(new ArrayList<>());
+
+        nameLabel = new Label();
+        nameLabel.getStyleClass().setAll("h3");
+        super.getChildren().add(nameLabel);
 
         table = new TableView<>();
         table.setItems(data);
@@ -119,6 +125,16 @@ public class LeagueStadingsTable extends Pane {
 
         super.prefWidthProperty().bind(Softman.getPrimaryStage().widthProperty().multiply(0.5));
         super.getChildren().add(table);
+    }
+
+    public void setLeague(League league) {
+        if (league == null) {
+            ErrorUtils.raise("League shouln't be null");
+        }
+        nameLabel.setText(league.getName());
+        data.clear();
+        data.addAll(league.getStandings());
+        refresh();
     }
 
     public void refresh() {

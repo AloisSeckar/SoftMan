@@ -1,7 +1,7 @@
 package elrh.softman.logic;
 
 import elrh.softman.gui.frame.ActionFrame;
-import elrh.softman.gui.tab.IndexTab;
+import elrh.softman.gui.tab.ClubTab;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
@@ -51,6 +51,10 @@ public class AssociationManager {
 
     public List<League> getLeagues(int year) {
         return managedLeagues.values().stream().filter(l -> l.getLeagueInfo().getYear() == year).toList();
+    }
+
+    public League getLeagueById(long leagueId) {
+        return managedLeagues.get(leagueId);
     }
 
     public Result createNewLeague(String name, PlayerLevel level) {
@@ -184,13 +188,13 @@ public class AssociationManager {
                     }
                 }));
 
-                IndexTab.getInstance().refreshSchedule();
+                ClubTab.getInstance().refreshSchedule();
                 clock.plusDays(1);
                 clock.adjustViewDay();
                 LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
 
                 ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
-                IndexTab.getInstance().setDailySchedule();
+                ClubTab.getInstance().setDailySchedule();
                 return Constants.RESULT_OK;
             } else {
                 return new Result(false, "Day not completed yet");

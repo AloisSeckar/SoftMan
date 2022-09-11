@@ -1,5 +1,6 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.db.GameDBManager;
 import static elrh.softman.logic.enums.PlayerPosition.*;
@@ -52,6 +53,14 @@ public class Team implements IDatabaseEntity {
 
     public String getLogo() {
         return teamInfo.getClubInfo().getLogo();
+    }
+
+    public League getLeague() {
+        if (teamInfo.getLeagueInfo() != null) {
+            return AssociationManager.getInstance().getLeagueById(teamInfo.getLeagueInfo().getLeagueId());
+        } else {
+            return null;
+        }
     }
     
     public Result addPlayer(PlayerInfo player) {

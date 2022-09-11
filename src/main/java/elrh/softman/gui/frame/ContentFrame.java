@@ -17,7 +17,7 @@ public class ContentFrame extends TabPane {
     }
     
     private ContentFrame() {
-        Tab tab1 = new Tab("Index" , IndexTab.getInstance());
+        Tab tab1 = new Tab("Club" , ClubTab.getInstance());
         Tab tab2 = new Tab("Match" , MatchTab.getInstance());
         Tab tab3 = new Tab("Team", TeamTab.getInstance());
         Tab tab4 = new Tab("Lineup", LineupTab.getInstance());
@@ -37,7 +37,7 @@ public class ContentFrame extends TabPane {
     }
 
     public void setUp() {
-        IndexTab.getInstance().setDailySchedule();
+        ClubTab.getInstance().setDailySchedule();
 
         var testMatches = AssociationManager.getInstance().getTodayMatchesForUser();
         var match = Utils.getFirstItem(testMatches.values());
