@@ -55,7 +55,7 @@ public class Team implements IDatabaseEntity {
         return teamInfo.getClubInfo().getLogo();
     }
 
-    public League getLeague() {
+    public League getCurrentLeague() {
         if (teamInfo.getLeagueInfo() != null) {
             return AssociationManager.getInstance().getLeagueById(teamInfo.getLeagueInfo().getLeagueId());
         } else {
