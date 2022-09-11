@@ -55,7 +55,7 @@ public class CalendarTile extends VBox {
 
         dailySchedule.getChildren().clear();
         dailyScheduleRows.clear();
-        var matches = AssociationManager.getInstance().getTodayMatches();
+        var matches = AssociationManager.getInstance().getDailyMatches();
         if (matches.size() > 0) {
             rows = 0;
             matches.forEach((leagueId, leagueMatches) -> {

@@ -39,10 +39,13 @@ public class AssociationManagerTest extends AbstractDBTest {
     void registerTeamIntoLeague() {
         result = manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);
         assertTrue(result.ok(), "creating league should be successful");
-        long leagueId = manager.getLeagues(Constants.START_YEAR).get(0).getId();
-        result = manager.registerTeamIntoLeague(leagueId, new Team(PlayerLevel.MSEN, ELEMENT_NAME, new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME)));
+        var league = manager.getLeagues(Constants.START_YEAR).get(0);
+        var leagueId = league.getId();
+        result = manager.registerTeamIntoLeague(leagueId, new Team(PlayerLevel.MSEN, "TestTeam", new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME)));
         assertTrue(result.ok(), "registering team into league should be successful");
-        // TODO test if team was actually added - requries peek method in League
+        var team = league.getTeams().get(0);
+        assertNotNull(team, "a team should be presented in the league");
+        assertEquals("TestTeam", team.getName(), "correct team should be presented in the league");
     }
 
     @Test
@@ -110,6 +113,16 @@ public class AssociationManagerTest extends AbstractDBTest {
         assertTrue(result.ok(), "registering player 1 for next year should be successful");
         assertEquals(1, manager.getPlayers(true).size(), "only 1 player should be active after re-registration");
         assertEquals(2, manager.getPlayers(false).size(), "there still should be exactly 2 players managed");
+    }
+
+    @Test
+    @DisplayName("getMatchesTest")
+    void getMatchesTest() {
+        // TODO test following methods
+        //  getDailyMatches
+        //  getDailyMatchesForUser
+        //  getDailyMatchesForLeague
+        //  getRoundMatchesForLeague
     }
 
 }

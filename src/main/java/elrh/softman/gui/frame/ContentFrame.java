@@ -39,8 +39,8 @@ public class ContentFrame extends TabPane {
     public void setUp() {
         ClubTab.getInstance().setDailySchedule();
 
-        var testMatches = AssociationManager.getInstance().getTodayMatchesForUser();
-        var match = Utils.getFirstItem(testMatches.values());
+        var testMatches = AssociationManager.getInstance().getDailyMatchesForUser();
+        var match = Utils.getFirstItem(testMatches);
         if (match != null) {
             MatchTab.getInstance().setMatch(match);
         }
