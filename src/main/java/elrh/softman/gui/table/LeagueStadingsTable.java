@@ -3,7 +3,6 @@ package elrh.softman.gui.table;
 import elrh.softman.Softman;
 import elrh.softman.logic.core.League;
 import elrh.softman.logic.core.stats.Standing;
-import elrh.softman.utils.ErrorUtils;
 import java.util.ArrayList;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
@@ -27,6 +26,10 @@ public class LeagueStadingsTable extends VBox {
         super.getChildren().add(nameLabel);
 
         table = new TableView<>();
+        table.setMinWidth(770d);
+        table.setMaxWidth(770d);
+        table.setMinHeight(270d);
+        table.setMaxHeight(270d);
         table.setItems(data);
 
         TableColumn<Standing, String> numberCol = new TableColumn<>("#");

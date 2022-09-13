@@ -28,9 +28,11 @@ public class StateManager {
     }
 
     public void setFocusedTeam(Team focusedTeam) {
-        this.focusedTeam = focusedTeam;
-        this.focusedLeague = focusedTeam.getCurrentLeague();
-        focusListeners.forEach(l -> l.focusedTeamChanged(focusedTeam));
+        if (focusedTeam != null) {
+            this.focusedTeam = focusedTeam;
+            this.focusedLeague = focusedTeam.getCurrentLeague();
+            focusListeners.forEach(l -> l.focusedTeamChanged(focusedTeam));
+        }
     }
 
     public void reset() {

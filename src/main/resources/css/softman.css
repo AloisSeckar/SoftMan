@@ -128,3 +128,8 @@
     -fx-max-width: 150px;
     -fx-alignment: center-left;
 }
+
+.club-info {
+    -fx-padding: 10px;
+    -fx-background-color: cornsilk;
+}
