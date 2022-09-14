@@ -9,6 +9,8 @@ import elrh.softman.utils.factory.PlayerFactory;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 
 public class LineupTest {
 
@@ -35,9 +37,11 @@ public class LineupTest {
         assertEquals(1, retrieved.getPlayer().getNumber(), "player should be #1");
         assertEquals(PlayerPosition.PITCHER, retrieved.getPosition(), "position should be P");
         result = lineup.initPositionPlayer(0, playerRecord2);
-        assertFalse(result.ok(), "init player 2 shouldn't be possible");
+        assertFalse(result.ok(), "init player 2 shouldn't be successful - out of bounds");
+        assertThat(result.message(), containsString("out of bounds"));
         result = lineup.initPositionPlayer(100, playerRecord2);
-        assertFalse(result.ok(), "init player 2 shouldn't be possible");
+        assertFalse(result.ok(), "init player 2 shouldn't be successful - out of bounds");
+        assertThat(result.message(), containsString("out of bounds"));
     }
 
     @Test
@@ -50,8 +54,10 @@ public class LineupTest {
         assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
         result = lineup.initSubstitute(0, playerRecord1);
         assertFalse(result.ok(), "init sub 2 shouldn't be successful - out of bounds");
+        assertThat(result.message(), containsString("out of bounds"));
         result = lineup.initSubstitute(100, playerRecord1);
         assertFalse(result.ok(), "init sub 2 shouldn't be successful - out of bounds");
+        assertThat(result.message(), containsString("out of bounds"));
     }
 
     @Test
@@ -64,7 +70,14 @@ public class LineupTest {
         assertEquals(2, retrieved.getPlayer().getNumber(), "player should be #2");
         assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
         result = lineup.substitutePlayer(2, playerRecord1);
-        assertFalse(result.ok(), "substitution 2 shouldn't be successful");
+        assertFalse(result.ok(), "substitution 2 shouldn't be successful - not initialized");
+        assertThat(result.message(), containsString("not initialized"));
+        result = lineup.substitutePlayer(0, playerRecord1);
+        assertFalse(result.ok(), "substitution 2 shouldn't be successful - out of bounds");
+        assertThat(result.message(), containsString("out of bounds"));
+        result = lineup.substitutePlayer(100, playerRecord1);
+        assertFalse(result.ok(), "substitution 2 shouldn't be successful - out of bounds");
+        assertThat(result.message(), containsString("out of bounds"));
     }
 
     @Test

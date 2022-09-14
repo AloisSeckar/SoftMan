@@ -12,6 +12,7 @@
 
         <fx.version>18</fx.version>
         <junit.version>5.8.2</junit.version>
+        <hamcrest.version>2.2</hamcrest.version>
 
     </properties>
     
@@ -144,6 +145,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>${hamcrest.version}</version>
             <scope>test</scope>
         </dependency>
         
