@@ -1,7 +1,7 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.logic.db.orm.PlayerInfo;
-import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,7 +45,7 @@ public class LineupTile extends VBox {
     }
 
     public String checkLineup() {
-        List<LineupPosition> checkedLineup = new ArrayList<>(MAX_PLAYERS);
+        List<PlayerRecord> checkedLineup = new ArrayList<>(MAX_PLAYERS);
         for (int i = 0; i < MAX_PLAYERS; i++) {
 
             var currentSelection = lineupRows.get(i).getCurrentSelection();
@@ -74,8 +74,8 @@ public class LineupTile extends VBox {
         return null;
     }
 
-    public List<LineupPosition> getLineup() {
-        List<LineupPosition> ret = new ArrayList<>();
+    public List<PlayerRecord> getLineup() {
+        List<PlayerRecord> ret = new ArrayList<>();
         lineupRows.stream().filter(LineupRowTile::isFilled).forEach(row -> ret.add(row.getCurrentSelection()));
         return Collections.unmodifiableList(ret);
     }

@@ -5,7 +5,7 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.db.GameDBManager;
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import java.util.*;
-import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.db.orm.TeamInfo;
 import elrh.softman.logic.enums.PlayerGender;
@@ -25,7 +25,7 @@ public class Team implements IDatabaseEntity {
     private final List<PlayerInfo> players = new ArrayList<>();
 
     // TODO this should be changed to "default lineup for (next) game"
-    private final LineupPosition[] battingOrder = new LineupPosition[10];
+    private final PlayerRecord[] battingOrder = new PlayerRecord[10];
     private final PlayerInfo[] substitutes = new PlayerInfo[8];
 
     public Team(PlayerLevel level, String name, Club club) {
@@ -89,14 +89,14 @@ public class Team implements IDatabaseEntity {
         return gender == teamInfo.getLevel().getGender();
     }
 
-    public LineupPosition getBatter(int order) {
+    public PlayerRecord getBatter(int order) {
         return battingOrder[order];
     }
     
     public PlayerInfo getFielder(int order) {
         PlayerInfo ret = null;
         
-        LineupPosition pos = battingOrder[order];
+        PlayerRecord pos = battingOrder[order];
         if (pos != null) {
             ret = pos.getPlayer();
         }
@@ -108,7 +108,7 @@ public class Team implements IDatabaseEntity {
         PlayerInfo ret = null;
         
         for (int i = 0; i < 10; i++) {
-            LineupPosition pos = battingOrder[i];
+            PlayerRecord pos = battingOrder[i];
             if (pos != null && pos.getPosition() == position) {
                 ret = pos.getPlayer();
                 break;
@@ -119,7 +119,7 @@ public class Team implements IDatabaseEntity {
     }
     
     public void fillPosition(PlayerInfo player, PlayerPosition position, int order) {
-        LineupPosition newPosition = new LineupPosition(order, player, position);
+        PlayerRecord newPosition = new PlayerRecord(order, player, position);
         battingOrder[order] = newPosition;
     }
     
@@ -154,10 +154,10 @@ public class Team implements IDatabaseEntity {
         availablePlayers.forEach(this::addSubtitute);
     }
 
-    public void setLineup(List<LineupPosition> lineup) {
+    public void setLineup(List<PlayerRecord> lineup) {
         if (lineup != null) {
             int ord = 0;
-            for (LineupPosition row : lineup) {
+            for (PlayerRecord row : lineup) {
                 PlayerInfo player = row.getPlayer();
                 PlayerPosition position = row.getPosition();
                 if (position != null) {

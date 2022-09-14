@@ -1,7 +1,7 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.logic.db.orm.PlayerInfo;
-import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -38,7 +38,7 @@ public class LineupRowTile extends HBox {
         super.getChildren().add(positionCB);
     }
 
-    public void setUp(List<PlayerInfo> players, LineupPosition current) {
+    public void setUp(List<PlayerInfo> players, PlayerRecord current) {
         playerCB.setItems(FXCollections.observableList(players));
 
         if (current != null) {
@@ -54,8 +54,8 @@ public class LineupRowTile extends HBox {
         positionCB.setStyle("-fx-opacity: 1");
     }
 
-    public LineupPosition getCurrentSelection() {
-        return new LineupPosition(row + 1, playerCB.getValue(), positionCB.getValue());
+    public PlayerRecord getCurrentSelection() {
+        return new PlayerRecord(row + 1, playerCB.getValue(), positionCB.getValue());
     }
 
     public boolean isFilled() {

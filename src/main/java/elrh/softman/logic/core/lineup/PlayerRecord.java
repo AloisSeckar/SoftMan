@@ -6,9 +6,9 @@ import elrh.softman.logic.core.stats.Stats;
 import lombok.Data;
 
 @Data
-public class LineupPosition {
+public class PlayerRecord {
 
-    private final int order;
+    private final int order; // TODO remove - not needed anymore
     private final PlayerInfo player;
     private final PlayerPosition position;
     private final Stats stats = new Stats();

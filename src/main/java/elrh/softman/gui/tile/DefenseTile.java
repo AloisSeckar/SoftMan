@@ -2,7 +2,7 @@ package elrh.softman.gui.tile;
 
 import static elrh.softman.logic.enums.PlayerPosition.*;
 
-import elrh.softman.logic.core.lineup.LineupPosition;
+import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -54,7 +54,7 @@ public class DefenseTile extends VBox {
         super.getChildren().add(row6);
     }
 
-    public void setPosition(LineupPosition position) {
+    public void setPosition(PlayerRecord position) {
         String text = position.getPlayer().toString();
         switch (position.getPosition()) {
             case PITCHER -> posP.setText(text);
