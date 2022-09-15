@@ -5,6 +5,7 @@ import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
+import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.interfaces.IFocusListener;
 import javafx.scene.control.Alert;
@@ -67,9 +68,14 @@ public class LineupTab extends AnchorPane implements IFocusListener {
     private void saveLineup() {
         String check = lineupTile.checkLineup();
         if (StringUtils.isBlank(check)) {
-            List<PlayerRecord> lineup = lineupTile.getLineup();
-            lineup.forEach(defenseTile::setPosition);
+            Lineup lineup = lineupTile.getLineup();
             AssociationManager.getInstance().getState().getActiveClub().getTeams().get(0).setLineup(lineup);
+            for (int i = 1; i <= Lineup.POSITION_PLAYERS; i++) {
+                var current = lineup.getCurrentPositionPlayer(i);
+                if (current != null) {
+                    defenseTile.setPosition(current);
+                }
+            }
         } else {
             var alert = new Alert(Alert.AlertType.WARNING);
             alert.setContentText(check);

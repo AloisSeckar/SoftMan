@@ -2,6 +2,7 @@ package elrh.softman.logic.core;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
+import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.db.GameDBManager;
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import java.util.*;
@@ -24,12 +25,11 @@ public class Team implements IDatabaseEntity {
     @Getter
     private final List<PlayerInfo> players = new ArrayList<>();
 
-    // TODO this should be changed to "default lineup for (next) game"
-    private final PlayerRecord[] battingOrder = new PlayerRecord[10];
-    private final PlayerInfo[] substitutes = new PlayerInfo[8];
+    private Lineup defaultLineup;
 
     public Team(PlayerLevel level, String name, Club club) {
         this.teamInfo = new TeamInfo(level, name, club.getClubInfo());
+        defaultLineup = new Lineup(getId(), getName());
     }
 
     @Override
@@ -90,13 +90,13 @@ public class Team implements IDatabaseEntity {
     }
 
     public PlayerRecord getBatter(int order) {
-        return battingOrder[order];
+        return defaultLineup.getCurrentPositionPlayer(order);
     }
     
     public PlayerInfo getFielder(int order) {
         PlayerInfo ret = null;
         
-        PlayerRecord pos = battingOrder[order];
+        var pos = getBatter(order);
         if (pos != null) {
             ret = pos.getPlayer();
         }
@@ -106,9 +106,10 @@ public class Team implements IDatabaseEntity {
     
     public PlayerInfo getFielder(PlayerPosition position) {
         PlayerInfo ret = null;
-        
+
+        // TODO create a method to ask Lineup directly
         for (int i = 0; i < 10; i++) {
-            PlayerRecord pos = battingOrder[i];
+            var pos = getBatter(i);
             if (pos != null && pos.getPosition() == position) {
                 ret = pos.getPlayer();
                 break;
@@ -117,27 +118,12 @@ public class Team implements IDatabaseEntity {
         
         return ret;
     }
-    
-    public void fillPosition(PlayerInfo player, PlayerPosition position, int order) {
-        PlayerRecord newPosition = new PlayerRecord(order, player, position);
-        battingOrder[order] = newPosition;
-    }
-    
-    public void addSubtitute(PlayerInfo player) {
-        int maxSubstitutes = battingOrder[9] == null ? 8 : 7;
-        for (int i = 0; i < maxSubstitutes; i++) {
-            if (substitutes[i] == null) {
-                substitutes[i] = player;
-                break;
-            }
-        }
-    }
 
     public void randomizeLineup() {
-        Random rand = new Random();
-        boolean useDP = rand.nextBoolean();
+        var rand = new Random();
+        var useDP = rand.nextBoolean();
         
-        List<PlayerInfo> availablePlayers = new ArrayList<>(players);
+        var availablePlayers = new ArrayList<>(players);
 
         var availablePositions = new ArrayList<PlayerPosition>();
         availablePositions.addAll(Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD));
@@ -145,27 +131,24 @@ public class Team implements IDatabaseEntity {
             availablePositions.add(DESIGNATED_PLAYER);
         }
         
-        int lineup = useDP ? 10 : 9;
-        for (int i = 0; i < lineup; i++) {
-            PlayerInfo player = availablePlayers.remove(rand.nextInt(availablePlayers.size()));
-            PlayerPosition position = availablePositions.remove(rand.nextInt(availablePositions.size()));
-            fillPosition(player, position, i);
+        int maxBatters = useDP ? Lineup.POSITION_PLAYERS : Lineup.POSITION_PLAYERS - 1;
+        for (int i = 1; i <= maxBatters; i++) {
+            var player = availablePlayers.remove(rand.nextInt(availablePlayers.size()));
+            var position = availablePositions.remove(rand.nextInt(availablePositions.size()));
+            defaultLineup.initPositionPlayer(i, new PlayerRecord(player, position));
         }
-        availablePlayers.forEach(this::addSubtitute);
+
+        for (int i = 1; i <= Lineup.SUBSTITUTES || i < availablePlayers.size(); i++) {
+            var player = availablePlayers.remove(rand.nextInt(availablePlayers.size()));
+            defaultLineup.initSubstitute(i, new PlayerRecord(player, null));
+        }
     }
 
-    public void setLineup(List<PlayerRecord> lineup) {
+    public void setLineup(Lineup lineup) {
         if (lineup != null) {
-            int ord = 0;
-            for (PlayerRecord row : lineup) {
-                PlayerInfo player = row.getPlayer();
-                PlayerPosition position = row.getPosition();
-                if (position != null) {
-                    fillPosition(player, position, ord++);
-                } else {
-                    addSubtitute(player);
-                }
-            }
+            this.defaultLineup = lineup;
+        } else {
+            ErrorUtils.raise("Default team lineup can't be NULL");
         }
     }
 }

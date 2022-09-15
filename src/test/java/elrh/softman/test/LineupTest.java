@@ -17,8 +17,8 @@ public class LineupTest {
     private final PlayerInfo player1 = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, 2022, 1);
     private final PlayerInfo player2 = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, 2022, 2);
 
-    private final PlayerRecord playerRecord1 = new PlayerRecord(1, player1, PlayerPosition.PITCHER);
-    private final PlayerRecord playerRecord2 = new PlayerRecord(2, player2, PlayerPosition.CATCHER);
+    private final PlayerRecord playerRecord1 = new PlayerRecord(player1, PlayerPosition.PITCHER);
+    private final PlayerRecord playerRecord2 = new PlayerRecord(player2, PlayerPosition.CATCHER);
 
     private Lineup lineup;
     private Result result;

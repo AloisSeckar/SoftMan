@@ -3,20 +3,21 @@ package elrh.softman.gui.tile;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
 
 public class LineupRowTile extends HBox {
 
     private final ComboBox<PlayerInfo> playerCB;
     private final ComboBox<PlayerPosition> positionCB;
 
+    @Getter
     private final int row;
 
     public LineupRowTile(int row) {
@@ -55,7 +56,7 @@ public class LineupRowTile extends HBox {
     }
 
     public PlayerRecord getCurrentSelection() {
-        return new PlayerRecord(row + 1, playerCB.getValue(), positionCB.getValue());
+        return new PlayerRecord(playerCB.getValue(), positionCB.getValue());
     }
 
     public boolean isFilled() {

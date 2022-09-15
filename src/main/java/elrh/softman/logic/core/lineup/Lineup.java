@@ -7,11 +7,12 @@ import java.util.*;
 import lombok.*;
 
 // TODO better validations (player may not be in lineup twice, all positions must be set, etc.)
+// TODO method for retrieving current player at given position in defense
 
 public class Lineup {
 
-    private static final int POSITION_PLAYERS = 10;
-    private static final int SUBSTITUTES = 7;
+    public static final int POSITION_PLAYERS = 10;
+    public static final int SUBSTITUTES = 7;
 
     @Getter
     private final long teamId;
@@ -22,7 +23,7 @@ public class Lineup {
     private final List<PlayerRecord>[] positionPlayers = new ArrayList[POSITION_PLAYERS];
 
     @Getter
-    private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES];
+    private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
 
     public Lineup(long teamId, String teamName) {
         this.teamId = teamId;
@@ -43,6 +44,7 @@ public class Lineup {
             return new Result(false, "Batting order " + batOrder + " out of bounds (1 - " + POSITION_PLAYERS + ")");
         }
     }
+
     public Result initSubstitute(int subOrder, PlayerRecord player) {
         if (subOrder > 0 && subOrder <= SUBSTITUTES) {
             substitutes[subOrder - 1] = player;
@@ -69,10 +71,11 @@ public class Lineup {
     public PlayerRecord getCurrentPositionPlayer(int batOrder) {
         if (batOrder > 0 && batOrder <= POSITION_PLAYERS) {
             var lineupSpot = positionPlayers[batOrder - 1];
-            return lineupSpot.get(lineupSpot.size() - 1);
-        } else {
-            return null;
+            if (lineupSpot != null && lineupSpot.size() > 0) {
+                return lineupSpot.get(lineupSpot.size() - 1);
+            }
         }
+        return null;
     }
 
     public boolean useDP() {

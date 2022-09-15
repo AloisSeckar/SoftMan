@@ -1,21 +1,22 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.core.Team;
 import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import elrh.softman.logic.core.Team;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 
 public class LineupTile extends VBox {
 
-    private static final int MAX_PLAYERS = 17;
+    private static final int MAX_PLAYERS = Lineup.POSITION_PLAYERS + Lineup.SUBSTITUTES;
 
     private final List<LineupRowTile> lineupRows = new ArrayList<>(MAX_PLAYERS);
+
+    private Team team;
 
     public LineupTile(boolean readOnly) {
         super.setSpacing(5);
@@ -34,9 +35,10 @@ public class LineupTile extends VBox {
     }
 
     public void fillLineup(Team team) {
+        this.team = team;
         List<PlayerInfo> players = team.getPlayers();
         for (int i = 0; i < MAX_PLAYERS; i++) {
-            lineupRows.get(i).setUp(players, i < 9 ? team.getBatter(i) : null);
+            lineupRows.get(i).setUp(players, i < 9 ? team.getBatter(i + 1) : null);
         }
     }
 
@@ -45,7 +47,7 @@ public class LineupTile extends VBox {
     }
 
     public String checkLineup() {
-        List<PlayerRecord> checkedLineup = new ArrayList<>(MAX_PLAYERS);
+        var checkedLineup = new ArrayList<PlayerRecord>(MAX_PLAYERS);
         for (int i = 0; i < MAX_PLAYERS; i++) {
 
             var currentSelection = lineupRows.get(i).getCurrentSelection();
@@ -74,10 +76,12 @@ public class LineupTile extends VBox {
         return null;
     }
 
-    public List<PlayerRecord> getLineup() {
-        List<PlayerRecord> ret = new ArrayList<>();
-        lineupRows.stream().filter(LineupRowTile::isFilled).forEach(row -> ret.add(row.getCurrentSelection()));
-        return Collections.unmodifiableList(ret);
+    public Lineup getLineup() {
+        var ret = new Lineup(team.getId(), team.getName());
+
+        lineupRows.stream().filter(LineupRowTile::isFilled).forEach(row -> ret.initPositionPlayer(row.getRow(), row.getCurrentSelection()));
+
+        return ret;
     }
 
 }
