@@ -66,8 +66,17 @@ public class Lineup {
         }
     }
 
+    public PlayerRecord getCurrentPositionPlayer(int batOrder) {
+        if (batOrder > 0 && batOrder <= POSITION_PLAYERS) {
+            var lineupSpot = positionPlayers[batOrder - 1];
+            return lineupSpot.get(lineupSpot.size() - 1);
+        } else {
+            return null;
+        }
+    }
+
     public boolean useDP() {
         return Utils.listNotEmpty(positionPlayers[POSITION_PLAYERS - 1]);
-    };
+    }
 
 }

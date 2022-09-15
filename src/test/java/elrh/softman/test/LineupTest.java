@@ -33,12 +33,15 @@ public class LineupTest {
     void initPositionPlayerTest() {
         result = lineup.initPositionPlayer(1, playerRecord1);
         assertTrue(result.ok(), "init player 1 should be successful");
-        PlayerRecord retrieved = lineup.getPositionPlayers()[0].get(0);
+
+        var retrieved = lineup.getPositionPlayers()[0].get(0);
         assertEquals(1, retrieved.getPlayer().getNumber(), "player should be #1");
         assertEquals(PlayerPosition.PITCHER, retrieved.getPosition(), "position should be P");
+
         result = lineup.initPositionPlayer(0, playerRecord2);
         assertFalse(result.ok(), "init player 2 shouldn't be successful - out of bounds");
         assertThat(result.message(), containsString("out of bounds"));
+
         result = lineup.initPositionPlayer(100, playerRecord2);
         assertFalse(result.ok(), "init player 2 shouldn't be successful - out of bounds");
         assertThat(result.message(), containsString("out of bounds"));
@@ -49,12 +52,15 @@ public class LineupTest {
     void initSubstituteTest() {
         result = lineup.initSubstitute(1, playerRecord2);
         assertTrue(result.ok(), "init sub 1 should be successful");
-        PlayerRecord retrieved = lineup.getSubstitutes()[0];
+
+        var retrieved = lineup.getSubstitutes()[0];
         assertEquals(2, retrieved.getPlayer().getNumber(), "sub 1 should be #2");
         assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
+
         result = lineup.initSubstitute(0, playerRecord1);
         assertFalse(result.ok(), "init sub 2 shouldn't be successful - out of bounds");
         assertThat(result.message(), containsString("out of bounds"));
+
         result = lineup.initSubstitute(100, playerRecord1);
         assertFalse(result.ok(), "init sub 2 shouldn't be successful - out of bounds");
         assertThat(result.message(), containsString("out of bounds"));
@@ -66,18 +72,41 @@ public class LineupTest {
         result = lineup.initPositionPlayer(1, playerRecord1);
         result = lineup.substitutePlayer(1, playerRecord2);
         assertTrue(result.ok(), "substitution 1 should be successful");
-        PlayerRecord retrieved = lineup.getPositionPlayers()[0].get(1);
+
+        var retrieved = lineup.getPositionPlayers()[0].get(1);
         assertEquals(2, retrieved.getPlayer().getNumber(), "player should be #2");
         assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
+
         result = lineup.substitutePlayer(2, playerRecord1);
         assertFalse(result.ok(), "substitution 2 shouldn't be successful - not initialized");
         assertThat(result.message(), containsString("not initialized"));
+
         result = lineup.substitutePlayer(0, playerRecord1);
         assertFalse(result.ok(), "substitution 2 shouldn't be successful - out of bounds");
         assertThat(result.message(), containsString("out of bounds"));
+
         result = lineup.substitutePlayer(100, playerRecord1);
         assertFalse(result.ok(), "substitution 2 shouldn't be successful - out of bounds");
         assertThat(result.message(), containsString("out of bounds"));
+    }
+
+    @Test
+    @DisplayName("getCurrentPositionPlayerTest")
+    void getCurrentPositionPlayerTest() {
+        var retrieved = lineup.getCurrentPositionPlayer(1);
+        assertNull(retrieved, "no player should be set as default");
+
+        lineup.initPositionPlayer(1, playerRecord1);
+        retrieved = lineup.getCurrentPositionPlayer(1);
+        assertNotNull(retrieved, "player should be set");
+        assertEquals(1, retrieved.getPlayer().getNumber(), "player should be #1");
+        assertEquals(PlayerPosition.PITCHER, retrieved.getPosition(), "position should be P");
+
+        result = lineup.substitutePlayer(1, playerRecord2);
+        retrieved = lineup.getCurrentPositionPlayer(1);
+        assertNotNull(retrieved, "player should be set");
+        assertEquals(2, retrieved.getPlayer().getNumber(), "player should be #2");
+        assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
     }
 
     @Test
