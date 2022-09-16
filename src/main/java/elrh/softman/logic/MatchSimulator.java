@@ -1,13 +1,10 @@
 package elrh.softman.logic;
 
+import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.db.orm.MatchPlayByPlay;
-import elrh.softman.logic.db.orm.PlayerAttributes;
-import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.Match;
-import elrh.softman.logic.core.Team;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.logic.enums.PlayerPosition;
-import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.core.stats.BoxScore;
 import java.util.Random;
 
@@ -24,8 +21,8 @@ public class MatchSimulator {
     private final Match match;
 
     private final BoxScore boxScore;
-    private final Team awayTeam;
-    private final Team homeTeam;
+    private final Lineup awayLineup;
+    private final Lineup homeLineup;
     
     private boolean inningStart = true;
     private int inning = 1;
@@ -37,8 +34,8 @@ public class MatchSimulator {
     public MatchSimulator(Match match, TextArea target) {
         this.target = target;
         this.match = match;
-        awayTeam = match.getAwayTeam();
-        homeTeam = match.getHomeTeam();
+        awayLineup = match.getAwayLineup();
+        homeLineup = match.getHomeLineup();
         boxScore = match.getBoxScore();
     }
 
@@ -74,15 +71,15 @@ public class MatchSimulator {
                 inningStart = false;
             }
 
-            PlayerInfo pitcher = top ? homeTeam.getFielder(PlayerPosition.PITCHER) : awayTeam.getFielder(PlayerPosition.PITCHER);
-            PlayerAttributes pitcherAttr = pitcher.getAttributes();
+            var pitcher = top ? homeLineup.getCurrentPositionPlayer(PlayerPosition.PITCHER): awayLineup.getCurrentPositionPlayer(PlayerPosition.PITCHER);
+            var pitcherAttr = pitcher.getPlayer().getAttributes();
 
             appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
 
-            PlayerRecord batter = top ? awayTeam.getBatter(awayBatter) : homeTeam.getBatter(homeBatter);
+            var batter = top ? awayLineup.getCurrentBatter(awayBatter) : homeLineup.getCurrentBatter(homeBatter);
             if (batter != null) {
-                PlayerInfo batterInfo = batter.getPlayer();
-                PlayerAttributes batterAttr = batterInfo.getAttributes();
+                var batterInfo = batter.getPlayer();
+                var batterAttr = batterInfo.getAttributes();
 
                 appendText("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")\n");
 
@@ -99,10 +96,10 @@ public class MatchSimulator {
                     } else {
 
                         int randomLocation = random.nextInt(9);
-                        PlayerInfo fielder = top ? homeTeam.getFielder(randomLocation) : awayTeam.getFielder(randomLocation);
+                        var fielder = top ? homeLineup.getCurrentBatter(randomLocation) : awayLineup.getCurrentBatter(randomLocation);
 
                         if (fielder != null) {
-                            int fieldingQuality = fielder.getAttributes().getFieldingSkill() + random.nextInt(100);
+                            int fieldingQuality = fielder.getPlayer().getAttributes().getFieldingSkill() + random.nextInt(100);
                             if (hitQuality >= fieldingQuality) {
                                 if (random.nextBoolean()) {
                                     appendText(batter + " reached after a hit\n");
@@ -142,7 +139,7 @@ public class MatchSimulator {
 
             if (outs == 3) {
                 getScore();
-                swapTeams();
+                swapLineups();
             }
 
             if (!keepPlaying()) {
@@ -155,7 +152,7 @@ public class MatchSimulator {
     ///////
     private void setUpMatch() {
         match.getMatchInfo().setStatus(MatchStatus.ACTIVE);
-        appendText("\n\nGAME BETWEEN " + awayTeam.getName() + " AND " + homeTeam.getName() + "\n");
+        appendText("\n\nGAME BETWEEN " + awayLineup.getTeamName() + " AND " + homeLineup.getTeamName() + "\n");
     }
 
     private void wrapUpMatch() {
@@ -176,7 +173,7 @@ public class MatchSimulator {
 
         if (top) {
             // match can end only before next inning
-            // after that away team will always finnish their batting
+            // after that away Lineup will always finnish their batting
             if (inningStart) {
                 if (inning >= 4 && (Math.abs(awayPoints - homePoints) >= 15)) {
                     ret = false;
@@ -195,7 +192,7 @@ public class MatchSimulator {
                 }
             }
         } else {
-            // match can end anytime hometeam gets in the lead or triggers mercy rule
+            // match can end anytime homeLineup gets in the lead or triggers mercy rule
             if (inning >= 3 && homePoints - awayPoints >= 15) {
                 ret = false;
             } else if (inning >= 4 && homePoints - awayPoints >= 10) {
@@ -209,7 +206,7 @@ public class MatchSimulator {
 
         return ret;
     }
-    private void swapTeams() {
+    private void swapLineups() {
         outs = 0;
         top = !top;
         if (top) {
@@ -219,8 +216,8 @@ public class MatchSimulator {
     }
 
     private void getScore() {
-        appendText("\n\n" + awayTeam.getName() + ": " + boxScore.getTotalPoints(true) + "\n");
-        appendText(homeTeam.getName() + ": " + boxScore.getTotalPoints(false) + "\n");
+        appendText("\n\n" + awayLineup.getTeamName() + ": " + boxScore.getTotalPoints(true) + "\n");
+        appendText(homeLineup.getTeamName() + ": " + boxScore.getTotalPoints(false) + "\n");
     }
     
     private void appendText(String text) {

@@ -94,8 +94,9 @@ public class MatchTab extends BorderPane {
     public void setMatch(Match match) {
         this.match = match;
         matchHeaderTile.setMatch(match);
-        awayLineup.fillLineup(match.getAwayTeam());
-        homeLineup.fillLineup(match.getHomeTeam());
+        // TODO temporary broken due to data model changes
+        //awayLineup.fillLineup(match.getAwayLineup());
+        //homeLineup.fillLineup(match.getHomeLineup());
         boxScore.loadBoxScore(match);
         match.printPlayByPlay(matchOverview);
 

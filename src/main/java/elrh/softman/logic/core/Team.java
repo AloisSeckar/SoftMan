@@ -25,11 +25,12 @@ public class Team implements IDatabaseEntity {
     @Getter
     private final List<PlayerInfo> players = new ArrayList<>();
 
+    @Getter
     private Lineup defaultLineup;
 
     public Team(PlayerLevel level, String name, Club club) {
         this.teamInfo = new TeamInfo(level, name, club.getClubInfo());
-        defaultLineup = new Lineup(getId(), getName());
+        defaultLineup = new Lineup(getId(), getName(), getLogo());
     }
 
     @Override
@@ -90,7 +91,7 @@ public class Team implements IDatabaseEntity {
     }
 
     public PlayerRecord getBatter(int order) {
-        return defaultLineup.getCurrentPositionPlayer(order);
+        return defaultLineup.getCurrentBatter(order);
     }
     
     public PlayerInfo getFielder(int order) {

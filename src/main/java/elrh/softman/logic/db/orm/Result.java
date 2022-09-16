@@ -3,7 +3,7 @@ package elrh.softman.logic.db.orm;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.logic.core.Match;
-import elrh.softman.logic.core.stats.BoxScore;
+import elrh.softman.logic.db.GameDBManager;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_results")
@@ -41,10 +41,10 @@ public class Result {
     private int homeErrors;
     
     public Result(Match source) {
-        awayTeam = source.getAwayTeam().getTeamInfo();
-        homeTeam = source.getHomeTeam().getTeamInfo();
+        awayTeam = GameDBManager.getInstance().getTeam(source.getAwayLineup().getTeamId());
+        homeTeam = GameDBManager.getInstance().getTeam(source.getHomeLineup().getTeamId());
         
-        BoxScore boxScore = source.getBoxScore();
+        var boxScore = source.getBoxScore();
         innings = boxScore.getInnings();
         awayRuns = boxScore.getTotalPoints(true);
         homeRuns = boxScore.getTotalPoints(false);

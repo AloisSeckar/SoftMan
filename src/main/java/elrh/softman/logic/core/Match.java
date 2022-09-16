@@ -1,5 +1,6 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.db.orm.MatchInfo;
 import elrh.softman.logic.db.orm.MatchPlayByPlay;
 import elrh.softman.logic.MatchSimulator;
@@ -16,15 +17,15 @@ public class Match {
 
     private final MatchInfo matchInfo;
 
-    private final Team awayTeam;
+    private final Lineup awayLineup;
 
-    private final Team homeTeam;
+    private final Lineup homeLineup;
 
     private final BoxScore boxScore = new BoxScore();
 
     private List<MatchPlayByPlay> playByPlay = new ArrayList<>();
 
-    public Match(MatchInfo matchInfo, Team awayTeam, Team homeTeam) {
+    public Match(MatchInfo matchInfo, Lineup awayLineup, Lineup homeLineup) {
 
         if (matchInfo != null) {
             this.matchInfo = matchInfo;
@@ -34,20 +35,20 @@ public class Match {
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'matchInfo'");
         }
         
-        if (awayTeam != null) {
-            this.awayTeam = awayTeam;
-            this.matchInfo.setAwayTeamId(awayTeam.getId());
+        if (awayLineup != null) {
+            this.awayLineup = awayLineup;
+            this.matchInfo.setAwayTeamId(awayLineup.getTeamId());
         } else {
-            this.awayTeam = null;
-            ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'awayTeam'");
+            this.awayLineup = null;
+            ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'awayLineup'");
         }
         
-        if (homeTeam != null) {
-            this.homeTeam = homeTeam;
-            this.matchInfo.setHomeTeamId(homeTeam.getId());
+        if (homeLineup != null) {
+            this.homeLineup = homeLineup;
+            this.matchInfo.setHomeTeamId(homeLineup.getTeamId());
         } else {
-            this.homeTeam = null;
-            ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'homeTeam'");
+            this.homeLineup = null;
+            ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'homeLineup'");
         }
 
     }

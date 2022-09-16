@@ -77,7 +77,7 @@ public class LineupTile extends VBox {
     }
 
     public Lineup getLineup() {
-        var ret = new Lineup(team.getId(), team.getName());
+        var ret = new Lineup(team.getId(), team.getName(), team.getLogo());
 
         lineupRows.stream().filter(LineupRowTile::isFilled).forEach(row -> ret.initPositionPlayer(row.getRow(), row.getCurrentSelection()));
 

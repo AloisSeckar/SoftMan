@@ -92,8 +92,8 @@ public class League implements IDatabaseEntity {
                     info.setMatchDay(roundDate);
                     info.setLeagueRound(i);
 
-                    var match = new Match(info, teams.get(homeTeamIndex), teams.get(awayTeamIndex));
-                    LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayTeam().getName() + " @ " + match.getHomeTeam().getName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
+                    var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
+                    LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayLineup().getTeamName() + " @ " + match.getHomeLineup().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
                     GameDBManager.getInstance().saveMatch(match);
                     matches.put(matchId, match);
                 }
@@ -145,12 +145,12 @@ public class League implements IDatabaseEntity {
 
     public Match mockGetMatch() {
         // TODO REMOVE
-        return new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
+        return new Match(mockGetMatchInfo(), teams.get(0).getDefaultLineup(), teams.get(1).getDefaultLineup());
     }
 
     public void mockPlayMatch(TextArea target) {
         // TODO REMOVE
-        var match = new Match(mockGetMatchInfo(), teams.get(0), teams.get(1));
+        var match = new Match(mockGetMatchInfo(), teams.get(0).getDefaultLineup(), teams.get(1).getDefaultLineup());
         match.simulate(target);
         GameDBManager.getInstance().saveMatch(match);
     }
@@ -218,7 +218,7 @@ public class League implements IDatabaseEntity {
     }
 
     private void includeMatchIntoStandings(Match match) {
-        var homeTeamName = match.getHomeTeam().getName();
+        var homeTeamName = match.getHomeLineup().getTeamName();
         Standing homeTeamStanding;
         int homeTeamIndex = -1;
         do {
@@ -226,7 +226,7 @@ public class League implements IDatabaseEntity {
             homeTeamStanding = standings.get(homeTeamIndex);
         } while (!homeTeamName.equals(homeTeamStanding.getTeam()) || homeTeamIndex > 9);
 
-        var awayTeamName = match.getAwayTeam().getName();
+        var awayTeamName = match.getAwayLineup().getTeamName();
         Standing awayTeamStanding;
         int awayTeamIndex = -1;
         do {

@@ -25,7 +25,7 @@ public class LineupTest {
 
     @BeforeEach
     void setUp() {
-        lineup = new Lineup(1, ELEMENT_NAME);
+        lineup = new Lineup(1, ELEMENT_NAME, ELEMENT_NAME);
     }
 
     @Test
@@ -91,22 +91,44 @@ public class LineupTest {
     }
 
     @Test
-    @DisplayName("getCurrentPositionPlayerTest")
-    void getCurrentPositionPlayerTest() {
-        var retrieved = lineup.getCurrentPositionPlayer(1);
-        assertNull(retrieved, "no player should be set as default");
+    @DisplayName("getCurrentBatterTest")
+    void getCurrentBatterTest() {
+        var retrieved = lineup.getCurrentBatter(1);
+        assertNull(retrieved, "no batter[1] should be set yet");
 
         lineup.initPositionPlayer(1, playerRecord1);
-        retrieved = lineup.getCurrentPositionPlayer(1);
-        assertNotNull(retrieved, "player should be set");
+        retrieved = lineup.getCurrentBatter(1);
+        assertNotNull(retrieved, "batter[1] should be set now");
         assertEquals(1, retrieved.getPlayer().getNumber(), "player should be #1");
         assertEquals(PlayerPosition.PITCHER, retrieved.getPosition(), "position should be P");
 
         result = lineup.substitutePlayer(1, playerRecord2);
-        retrieved = lineup.getCurrentPositionPlayer(1);
-        assertNotNull(retrieved, "player should be set");
+        retrieved = lineup.getCurrentBatter(1);
+        assertNotNull(retrieved, "batter[1] should be set now");
         assertEquals(2, retrieved.getPlayer().getNumber(), "player should be #2");
         assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
+    }
+
+    @Test
+    @DisplayName("getCurrentPositionPlayerTest")
+    void getCurrentPositionPlayerTest() {
+        var retrieved = lineup.getCurrentPositionPlayer(PlayerPosition.PITCHER);
+        assertNull(retrieved, "no pitcher should be set yet");
+
+        lineup.initPositionPlayer(1, playerRecord1);
+        retrieved = lineup.getCurrentPositionPlayer(PlayerPosition.PITCHER);
+        assertNotNull(retrieved, "pitcher should be set now");
+        assertEquals(1, retrieved.getPlayer().getNumber(), "player should be #1");
+        assertEquals(PlayerPosition.PITCHER, retrieved.getPosition(), "position should be P");
+
+        result = lineup.substitutePlayer(1, playerRecord2);
+        retrieved = lineup.getCurrentPositionPlayer(PlayerPosition.CATCHER);
+        assertNotNull(retrieved, "catcher should be set now");
+        assertEquals(2, retrieved.getPlayer().getNumber(), "player should be #2");
+        assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
+
+        retrieved = lineup.getCurrentPositionPlayer(PlayerPosition.PITCHER);
+        assertNull(retrieved, "no pitcher should be set now");
     }
 
     @Test

@@ -1,6 +1,7 @@
 package elrh.softman.logic.core.lineup;
 
 import elrh.softman.logic.Result;
+import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.Utils;
 import java.util.*;
@@ -18,6 +19,8 @@ public class Lineup {
     private final long teamId;
     @Getter
     private final String teamName;
+    @Getter
+    private final String teamLogo;
 
     @Getter
     private final List<PlayerRecord>[] positionPlayers = new ArrayList[POSITION_PLAYERS];
@@ -25,9 +28,10 @@ public class Lineup {
     @Getter
     private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
 
-    public Lineup(long teamId, String teamName) {
+    public Lineup(long teamId, String teamName, String teamLogo) {
         this.teamId = teamId;
         this.teamName = teamName;
+        this.teamLogo = teamLogo;
 
         for (int i = 0; i < 9; i++) {
             positionPlayers[i] = new ArrayList<>();
@@ -68,14 +72,31 @@ public class Lineup {
         }
     }
 
-    public PlayerRecord getCurrentPositionPlayer(int batOrder) {
+    public PlayerRecord getCurrentBatter(int batOrder) {
         if (batOrder > 0 && batOrder <= POSITION_PLAYERS) {
             var lineupSpot = positionPlayers[batOrder - 1];
-            if (lineupSpot != null && lineupSpot.size() > 0) {
+            if (Utils.listNotEmpty(lineupSpot)) {
                 return lineupSpot.get(lineupSpot.size() - 1);
             }
         }
         return null;
+    }
+
+    public PlayerRecord getCurrentPositionPlayer(PlayerPosition position) {
+        PlayerRecord ret = null;
+        if (position != null) {
+            for (int i = 0; i < POSITION_PLAYERS; i++) {
+                var lineupSpot = positionPlayers[i];
+                if (Utils.listNotEmpty(lineupSpot)) {
+                    var player = lineupSpot.get(lineupSpot.size() - 1);
+                    if (position == player.getPosition()) {
+                        ret = player;
+                        break;
+                    }
+                }
+            }
+        }
+        return ret;
     }
 
     public boolean useDP() {

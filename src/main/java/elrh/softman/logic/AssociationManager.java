@@ -162,9 +162,10 @@ public class AssociationManager {
         for (var entry : getDailyMatches().entrySet()) {
             var leagueId = entry.getKey();
             entry.getValue().forEach(match -> {
-                if (state.userManagesTeam(match.getHomeTeam()) || state.userManagesTeam(match.getAwayTeam())) {
-                    ret.add(match);
-                }
+                // TODO temporary broken due to data model changes
+                //if (state.userManagesTeam(match.getHomeLineup()) || state.userManagesTeam(match.getAwayLineup())) {
+                //    ret.add(match);
+                //}
             });
         }
         return ret;

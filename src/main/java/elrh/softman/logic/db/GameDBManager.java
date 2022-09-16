@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import elrh.softman.logic.core.*;
+import elrh.softman.utils.ErrorUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -128,6 +129,15 @@ public class GameDBManager {
             LOG.info("TEAMS SAVED");
         } catch (Exception ex) {
             LOG.error("GameDBManager.saveTeams", ex);
+        }
+    }
+
+    public TeamInfo getTeam(long teamId) {
+        try {
+            return teamDao.queryForId(teamId);
+        } catch (Exception ex) {
+            ErrorUtils.handleException("getTeam", ex);
+            return null;
         }
     }
 
