@@ -30,6 +30,7 @@ public class Team implements IDatabaseEntity {
 
     public Team(PlayerLevel level, String name, Club club) {
         this.teamInfo = new TeamInfo(level, name, club.getClubInfo());
+        persist();
         defaultLineup = new Lineup(getId(), getName(), getLogo());
     }
 

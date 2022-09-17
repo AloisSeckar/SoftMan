@@ -10,6 +10,8 @@ import elrh.softman.logic.db.orm.TeamInfo;
 import elrh.softman.logic.enums.PlayerPosition;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import elrh.softman.utils.ErrorUtils;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 
@@ -41,13 +43,21 @@ public class LineupTile extends VBox {
     }
 
     public void fillLineup(Lineup lineup) {
-        this.team = GameDBManager.getInstance().getTeam(lineup.getTeamId());
-        // TODO get to player list more directly and correctly
-        var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
-        var players = club.getTeams().get(0).getPlayers();
-        // TODO get to player list more directly and correctly
-        for (int i = 0; i < POSITION_PLAYERS; i++) {
-            positionPlayersRows[i].setUp(players, i < 9 ? lineup.getCurrentBatter(i + 1) : null);
+        if (lineup != null) {
+            this.team = GameDBManager.getInstance().getTeam(lineup.getTeamId());
+            if (team != null) {
+                // TODO get to player list more directly and correctly
+                var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
+                var players = club.getTeams().get(0).getPlayers();
+                // TODO get to player list more directly and correctly
+                for (int i = 0; i < POSITION_PLAYERS; i++) {
+                    positionPlayersRows[i].setUp(players, i < 9 ? lineup.getCurrentBatter(i + 1) : null);
+                }
+            } else {
+                ErrorUtils.raise("Team " + lineup.getTeamId() + " not found");
+            }
+        } else {
+            ErrorUtils.raise("Illega passing of NULL Lineup object");
         }
     }
 

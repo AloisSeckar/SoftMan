@@ -65,6 +65,7 @@ public class Club implements IDatabaseEntity {
             // TODO get rid of mock
             var newTeam = MockTeamFactory.getMockTeam(level, this);
             newTeam.getTeamInfo().setName(name);
+            newTeam.getTeamInfo().setClubInfo(getClubInfo());
 
             newTeam.persist();
             this.teams.put(newTeam.getId(), newTeam);
