@@ -1,5 +1,7 @@
 package elrh.softman.utils;
 
+import javafx.scene.control.Label;
+
 import java.util.List;
 
 public class Utils {
@@ -14,6 +16,14 @@ public class Utils {
             ret = list.get(0);
         }
         return ret;
+    }
+
+    // TODO why GUI content overflows?
+    public static Label createPadding(double width) {
+        var paddingLabel = new Label("");
+        paddingLabel.setMaxWidth(width);
+        paddingLabel.setMinWidth(width);
+        return paddingLabel;
     }
 
 }

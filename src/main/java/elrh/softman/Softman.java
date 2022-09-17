@@ -59,7 +59,10 @@ public class Softman extends Application {
         primaryStage.setScene(scene);
         primaryStage.setFullScreenExitHint("");
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        primaryStage.setFullScreen(true);
+
+        // TODO switch to full screen before going live!
+        // primaryStage.setFullScreen(true);
+        primaryStage.setMaximized(true);
 
         primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
             if (KeyCode.ESCAPE == event.getCode()) {

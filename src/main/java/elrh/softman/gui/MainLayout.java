@@ -1,6 +1,7 @@
 package elrh.softman.gui;
 
 import elrh.softman.gui.frame.*;
+import elrh.softman.utils.Utils;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
@@ -18,6 +19,7 @@ public class MainLayout extends BorderPane {
     private MainLayout() {
         this.setTop(new VBox(MenuFrame.getInstance(), FocusFrame.getInstance()));
         this.setCenter(ContentFrame.getInstance());
+        this.setRight(Utils.createPadding(15d));
         this.setBottom(ActionFrame.getInstance());
     }
 

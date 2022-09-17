@@ -1,6 +1,7 @@
 package elrh.softman.gui.frame;
 
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
@@ -33,6 +34,8 @@ public class FocusFrame extends HBox {
         final var focusedTeamCB = new ComboBox<>(FXCollections.observableList(state.getFocusedClub().getTeams()));
         focusedTeamCB.setValue(state.getFocusedTeam());
         this.getChildren().add(focusedTeamCB);
+
+        this.getChildren().add(Utils.createPadding(15d));
 
         focusedClubCB.valueProperty().addListener((ov, oldValue, newValue) -> {
             AssociationManager.getInstance().getUser().setFocusedClub(newValue);

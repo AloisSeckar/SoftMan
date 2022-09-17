@@ -60,6 +60,10 @@ public class MenuFrame extends AnchorPane {
         
         super.getChildren().add(menu);
         AnchorPane.setLeftAnchor(menu, 0d);
+        AnchorPane.setTopAnchor(menu, 0d);
+
+        // TODO return this custom view control  before going live!
+        /*
         AnchorPane.setTopAnchor(menu, 30d);
         
         var titleLabel = new Label("SOFTMAN 0.1");
@@ -83,6 +87,7 @@ public class MenuFrame extends AnchorPane {
         super.getChildren().add(closeButton);
         AnchorPane.setRightAnchor(closeButton, 0d);
         AnchorPane.setTopAnchor(closeButton, 0d);
+         */
     }
     
 }
