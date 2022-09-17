@@ -65,7 +65,11 @@ public class GameDBManager {
     
     public void saveLeague(League league) {
         try {
-            leagueDao.create(league.getLeagueInfo());
+            if (league.getId() > 0) {
+                leagueDao.update(league.getLeagueInfo());
+            } else {
+                leagueDao.create(league.getLeagueInfo());
+            }
             LOG.info("LEAGUE SAVED");
         } catch (Exception ex) {
             LOG.error("GameDBManager.saveLeague", ex);
@@ -74,7 +78,11 @@ public class GameDBManager {
 
     public void saveClub(Club club) {
         try {
-            clubDao.create(club.getClubInfo());
+            if (club.getId() > 0) {
+                clubDao.update(club.getClubInfo());
+            } else {
+                clubDao.create(club.getClubInfo());
+            }
             LOG.info("CLUB SAVED");
         } catch (Exception ex) {
             LOG.error("GameDBManager.saveClub", ex);
@@ -93,7 +101,11 @@ public class GameDBManager {
 
     public void savePlayer(Player player) {
         try {
-            playerDao.create(player.getPlayerInfo());
+            if (player.getId() > 0) {
+                playerDao.update(player.getPlayerInfo());
+            } else {
+                playerDao.create(player.getPlayerInfo());
+            }
             LOG.info("PLAYER SAVED");
         } catch (Exception ex) {
             LOG.error("GameDBManager.savePlayer", ex);
@@ -102,10 +114,14 @@ public class GameDBManager {
 
     public void savePlayers(List<PlayerInfo> players) {
         try {
-            for (PlayerInfo player : players) {
-                playerDao.create(player);
+            for (var player : players) {
+                if (player.getPlayerId() > 0) {
+                    playerDao.update(player);
+                } else {
+                    playerDao.create(player);
+                }
             }
-            LOG.info("PLAYERS SAVED");
+            LOG.info("ALL PLAYERS SAVED");
         } catch (Exception ex) {
             LOG.error("GameDBManager.savePlayers", ex);
         }
@@ -113,7 +129,11 @@ public class GameDBManager {
 
     public void saveTeam(Team team) {
         try {
-            teamDao.create(team.getTeamInfo());
+            if (team.getId() > 0) {
+                teamDao.update(team.getTeamInfo());
+            } else {
+                teamDao.create(team.getTeamInfo());
+            }
             LOG.info("TEAM SAVED");
         } catch (Exception ex) {
             LOG.error("GameDBManager.saveTeam", ex);
@@ -123,7 +143,7 @@ public class GameDBManager {
     public void saveTeams(List<Team> teams) {
         try {
             for (Team team : teams) {
-                teamDao.create(team.getTeamInfo());
+                saveTeam(team);
                 savePlayers(team.getPlayers());
             }
             LOG.info("TEAMS SAVED");
