@@ -34,7 +34,7 @@ public class ClubInfoTile extends VBox {
             stadiumLabel.setText(club.getClubInfo().getStadium());
             moneyLabel.setText("$ " + club.getClubInfo().getMoney());
             registeredLabel.setText(club.isActive() ? "Active" : "Inactive");
-            ownerLabel.setText(AssociationManager.getInstance().getState().getActiveClub() == club ? "Player" : "PC");
+            ownerLabel.setText(AssociationManager.getInstance().getUser().getActiveClub() == club ? "Player" : "PC");
 
             Image defaultImg = new Image(getClass().getResourceAsStream(club.getClubInfo().getLogo()));
             logoView.setImage(defaultImg);

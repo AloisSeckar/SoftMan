@@ -22,7 +22,7 @@ public class FocusFrame extends HBox {
         super.setAlignment(Pos.CENTER_RIGHT);
 
         var manager = AssociationManager.getInstance();
-        var state = manager.getState();
+        var state = manager.getUser();
 
         this.getChildren().add(new Label("Focused club: "));
         final var focusedClubCB = new ComboBox<>(FXCollections.observableList(manager.getClubs(true)));
@@ -35,13 +35,13 @@ public class FocusFrame extends HBox {
         this.getChildren().add(focusedTeamCB);
 
         focusedClubCB.valueProperty().addListener((ov, oldValue, newValue) -> {
-            AssociationManager.getInstance().getState().setFocusedClub(newValue);
+            AssociationManager.getInstance().getUser().setFocusedClub(newValue);
             focusedTeamCB.setItems(FXCollections.observableList(newValue.getTeams()));
             focusedTeamCB.setValue(newValue.getTeams().get(0));
         });
 
         focusedTeamCB.valueProperty().addListener((ov, oldValue, newValue) -> {
-            AssociationManager.getInstance().getState().setFocusedTeam(newValue);
+            AssociationManager.getInstance().getUser().setFocusedTeam(newValue);
         });
 
     }

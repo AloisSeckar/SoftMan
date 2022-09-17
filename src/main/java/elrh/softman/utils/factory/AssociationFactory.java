@@ -60,9 +60,9 @@ public class AssociationFactory {
 
         CLUB01.formTeam(PlayerLevel.MSEN); // to test a team not participating in any league
 
-        manager.getState().setActiveClub(CLUB01);
-        manager.getState().setFocusedClub(CLUB01);
-        manager.getState().setFocusedTeam(CLUB01.getTeams().get(0));
+        manager.getUser().setActiveClub(CLUB01);
+        manager.getUser().setFocusedClub(CLUB01);
+        manager.getUser().setFocusedTeam(CLUB01.getTeams().get(0));
     }
 
     private static ArrayList<Team> createTeams(PlayerLevel level, List<Club> participants) {

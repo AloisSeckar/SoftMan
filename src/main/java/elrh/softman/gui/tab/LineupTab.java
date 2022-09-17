@@ -29,7 +29,7 @@ public class LineupTab extends AnchorPane implements IFocusListener {
 
     private LineupTab() {
 
-        var playerTeam = AssociationManager.getInstance().getState().getActiveClub().getTeams().get(0);
+        var playerTeam = AssociationManager.getInstance().getUser().getActiveClub().getTeams().get(0);
         playerTeam.randomizeLineup();
 
         lineupTile = new LineupTile(false);
@@ -49,7 +49,7 @@ public class LineupTab extends AnchorPane implements IFocusListener {
         AnchorPane.setRightAnchor(defenseTile, 10d);
         AnchorPane.setTopAnchor(defenseTile, 10d);
 
-        AssociationManager.getInstance().getState().registerFocusListener(this);
+        AssociationManager.getInstance().getUser().registerFocusListener(this);
 
     }
 
@@ -67,7 +67,7 @@ public class LineupTab extends AnchorPane implements IFocusListener {
         String check = lineupTile.checkLineup();
         if (StringUtils.isBlank(check)) {
             Lineup lineup = lineupTile.getLineup();
-            AssociationManager.getInstance().getState().getActiveClub().getTeams().get(0).setLineup(lineup);
+            AssociationManager.getInstance().getUser().getActiveClub().getTeams().get(0).setLineup(lineup);
             for (int i = 1; i <= Lineup.POSITION_PLAYERS; i++) {
                 var current = lineup.getCurrentBatter(i);
                 if (current != null) {

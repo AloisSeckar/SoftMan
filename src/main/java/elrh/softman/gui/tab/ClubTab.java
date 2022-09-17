@@ -51,10 +51,10 @@ public class ClubTab extends GridPane implements IFocusListener {
         calendarTile.setAlignment(Pos.CENTER_RIGHT);
         super.add(calendarTile, 1, 1);
 
-        infoTile.reload(AssociationManager.getInstance().getState().getFocusedClub());
-        leagueTable.setLeague(AssociationManager.getInstance().getState().getFocusedLeague());
+        infoTile.reload(AssociationManager.getInstance().getUser().getFocusedClub());
+        leagueTable.setLeague(AssociationManager.getInstance().getUser().getFocusedLeague());
 
-        AssociationManager.getInstance().getState().registerFocusListener(this);
+        AssociationManager.getInstance().getUser().registerFocusListener(this);
 
     }
 
@@ -65,7 +65,7 @@ public class ClubTab extends GridPane implements IFocusListener {
 
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
-        leagueTable.setLeague(AssociationManager.getInstance().getState().getFocusedLeague());
+        leagueTable.setLeague(AssociationManager.getInstance().getUser().getFocusedLeague());
     }
 
     public void setDailySchedule() {

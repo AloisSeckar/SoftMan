@@ -6,7 +6,7 @@ import java.util.HashSet;
 import lombok.Getter;
 import lombok.Setter;
 
-public class StateManager {
+public class UserManager {
 
     // TODO keep some user's info as well
 
