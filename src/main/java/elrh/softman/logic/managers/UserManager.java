@@ -1,7 +1,7 @@
 package elrh.softman.logic.managers;
 
 import elrh.softman.logic.core.*;
-import elrh.softman.logic.interfaces.IFocusListener;
+import elrh.softman.logic.interfaces.*;
 import java.util.HashSet;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,26 +20,35 @@ public class UserManager {
     @Getter
     private League focusedLeague; // = useful reference in certain UI elements
 
-    private final HashSet<IFocusListener> focusListeners = new HashSet<>();
+    private final HashSet<IFocusedClubListener> focusedClubListeners = new HashSet<>();
+    private final HashSet<IFocusedTeamListener> focusedTeamListeners = new HashSet<>();
 
-    public void registerFocusListener(IFocusListener listener) {
-        focusListeners.add(listener);
+    public void registerFocusedClubListener(IFocusedClubListener listener) {
+        focusedClubListeners.add(listener);
     }
 
-    public void clearFocusListeners() {
-        focusListeners.clear();
+    public void clearFocusedClubListeners() {
+        focusedClubListeners.clear();
+    }
+
+    public void registerFocusedTeamListener(IFocusedTeamListener listener) {
+        focusedTeamListeners.add(listener);
+    }
+
+    public void clearFocusedTeamListeners() {
+        focusedTeamListeners.clear();
     }
 
     public void setFocusedClub(Club focusedClub) {
         this.focusedClub = focusedClub;
-        focusListeners.forEach(l -> l.focusedClubChanged(focusedClub));
+        focusedClubListeners.forEach(l -> l.focusedClubChanged(focusedClub));
     }
 
     public void setFocusedTeam(Team focusedTeam) {
         if (focusedTeam != null) {
             this.focusedTeam = focusedTeam;
             this.focusedLeague = focusedTeam.getCurrentLeague();
-            focusListeners.forEach(l -> l.focusedTeamChanged(focusedTeam));
+            focusedTeamListeners.forEach(l -> l.focusedTeamChanged(focusedTeam));
         }
     }
 
@@ -47,10 +56,8 @@ public class UserManager {
         activeClub = null;
         focusedClub = null;
         focusedTeam = null;
-        focusListeners.forEach(l -> {
-            l.focusedClubChanged(null);
-            l.focusedTeamChanged(null);
-        });
+        focusedClubListeners.forEach(l -> l.focusedClubChanged(null));
+        focusedTeamListeners.forEach(l -> l.focusedTeamChanged(null));
     }
 
     public boolean userManagesTeam(long teamId) {

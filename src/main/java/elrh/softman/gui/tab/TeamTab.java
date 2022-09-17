@@ -3,13 +3,12 @@ package elrh.softman.gui.tab;
 import elrh.softman.gui.table.TeamPlayersTable;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
-import elrh.softman.logic.interfaces.IFocusListener;
+import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
-public class TeamTab extends AnchorPane implements IFocusListener {
+public class TeamTab extends AnchorPane implements IFocusedTeamListener {
 
     private final Label nameLabel;
     private final TeamPlayersTable playersTable;
@@ -44,13 +43,7 @@ public class TeamTab extends AnchorPane implements IFocusListener {
 
         reload(AssociationManager.getInstance().getUser().getFocusedTeam());
 
-        AssociationManager.getInstance().getUser().registerFocusListener(this);
-        
-    }
-
-    @Override
-    public void focusedClubChanged(Club newlyFocusedClub) {
-        // no action needed
+        AssociationManager.getInstance().getUser().registerFocusedTeamListener(this);
     }
 
     @Override

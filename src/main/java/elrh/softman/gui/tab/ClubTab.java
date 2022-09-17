@@ -6,12 +6,13 @@ import elrh.softman.gui.tile.ClubInfoTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
-import elrh.softman.logic.interfaces.IFocusListener;
+import elrh.softman.logic.interfaces.IFocusedClubListener;
+import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import javafx.geometry.Pos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 
-public class ClubTab extends GridPane implements IFocusListener {
+public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedTeamListener {
 
     private static ClubTab INSTANCE;
 
@@ -54,7 +55,8 @@ public class ClubTab extends GridPane implements IFocusListener {
         infoTile.reload(AssociationManager.getInstance().getUser().getFocusedClub());
         leagueTable.setLeague(AssociationManager.getInstance().getUser().getFocusedLeague());
 
-        AssociationManager.getInstance().getUser().registerFocusListener(this);
+        AssociationManager.getInstance().getUser().registerFocusedClubListener(this);
+        AssociationManager.getInstance().getUser().registerFocusedTeamListener(this);
 
     }
 

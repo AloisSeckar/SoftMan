@@ -3,17 +3,16 @@ package elrh.softman.gui.tab;
 import elrh.softman.gui.tile.DefenseTile;
 import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.core.lineup.Lineup;
-import elrh.softman.logic.interfaces.IFocusListener;
+import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import org.apache.commons.lang3.StringUtils;
 
-public class LineupTab extends AnchorPane implements IFocusListener {
+public class LineupTab extends AnchorPane implements IFocusedTeamListener {
 
     private final LineupTile lineupTile;
 
@@ -49,13 +48,7 @@ public class LineupTab extends AnchorPane implements IFocusListener {
         AnchorPane.setRightAnchor(defenseTile, 10d);
         AnchorPane.setTopAnchor(defenseTile, 10d);
 
-        AssociationManager.getInstance().getUser().registerFocusListener(this);
-
-    }
-
-    @Override
-    public void focusedClubChanged(Club newlyFocusedClub) {
-        // TODO adjustments after club changed
+        AssociationManager.getInstance().getUser().registerFocusedTeamListener(this);
     }
 
     @Override
