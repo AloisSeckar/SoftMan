@@ -40,8 +40,8 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener {
         var saveButton = new Button("Save lineup");
         saveButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> saveLineup());
         super.getChildren().add(saveButton);
-        AnchorPane.setLeftAnchor(saveButton, 10d);
-        AnchorPane.setTopAnchor(saveButton, 525d);
+        AnchorPane.setLeftAnchor(saveButton, 50d);
+        AnchorPane.setTopAnchor(saveButton, 585d);
 
         defenseTile = new DefenseTile();
         super.getChildren().add(defenseTile);

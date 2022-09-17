@@ -27,7 +27,7 @@ public enum PlayerPosition {
     }
 
     public static List<PlayerPosition> getAvailablePositions() {
-        // TODO allow playing with DP/FLEX
-        return Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD);
+        // TODO include PH/PR for in-game subs
+        return Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD, DESIGNATED_PLAYER);
     }
 }

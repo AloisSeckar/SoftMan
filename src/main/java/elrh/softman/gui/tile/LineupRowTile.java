@@ -19,24 +19,27 @@ public class LineupRowTile extends HBox {
 
     @Getter
     private final int row;
+    private final boolean selectPosition;
 
-    public LineupRowTile(int row) {
+    public LineupRowTile(int row, boolean selectPosition) {
         this.row = row;
+        this.selectPosition = selectPosition;
 
         super.setSpacing(10);
         super.setAlignment(Pos.CENTER);
 
-        var rowLabel = new Label(StringUtils.leftPad((row + 1) + ".", 3, "0"));
+        var rowLabel = new Label(StringUtils.leftPad(row + ".", 3, "0"));
         super.getChildren().add(rowLabel);
 
         playerCB = new ComboBox<>();
         super.getChildren().add(playerCB);
 
-        positionCB = new ComboBox<>(FXCollections.observableList(PlayerPosition.getAvailablePositions()));
-        if (row > 8) {
-            positionCB.setDisable(true);
+        if (selectPosition) {
+            positionCB = new ComboBox<>(FXCollections.observableList(PlayerPosition.getAvailablePositions()));
+            super.getChildren().add(positionCB);
+        } else {
+            positionCB = new ComboBox<>();
         }
-        super.getChildren().add(positionCB);
     }
 
     public void setUp(List<PlayerInfo> players, PlayerRecord current) {
@@ -44,14 +47,16 @@ public class LineupRowTile extends HBox {
 
         if (current != null) {
             playerCB.setValue(current.getPlayer());
-            positionCB.setValue(current.getPosition());
+            if (selectPosition) {
+                positionCB.setValue(current.getPosition());
+            }
         }
     }
 
     public void setReadOnly(boolean readOnly) {
         playerCB.setDisable(readOnly);
         playerCB.setStyle("-fx-opacity: 1");
-        positionCB.setDisable(readOnly || row > 8);
+        positionCB.setDisable(readOnly);
         positionCB.setStyle("-fx-opacity: 1");
     }
 
@@ -60,7 +65,7 @@ public class LineupRowTile extends HBox {
     }
 
     public boolean isFilled() {
-        return playerCB.getValue() != null && positionCB.getValue() != null;
+        return playerCB.getValue() != null && (positionCB.getValue() != null || !selectPosition);
     }
 
 }

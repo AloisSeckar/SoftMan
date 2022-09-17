@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import elrh.softman.utils.ErrorUtils;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 
@@ -25,19 +27,25 @@ public class LineupTile extends VBox {
     public LineupTile(boolean readOnly) {
         super.setSpacing(5);
 
+        super.getChildren().add(new Label("POSITION PLAYERS"));
+
         for (int i = 0; i < POSITION_PLAYERS; i++) {
-            var lineupRowTile = new LineupRowTile(i);
+            var lineupRowTile = new LineupRowTile(i + 1, true);
             positionPlayersRows[i] = lineupRowTile;
             super.getChildren().add(lineupRowTile);
         }
 
         super.getChildren().add(new Separator());
+        super.getChildren().add(new Label("SUBSTITUTES"));
 
         for (int i = 0; i < SUBSTITUTES; i++) {
-            var lineupRowTile = new LineupRowTile(i);
+            var lineupRowTile = new LineupRowTile(i + 1, false);
             substitutesRows[i] = lineupRowTile;
             super.getChildren().add(lineupRowTile);
+            lineupRowTile.setAlignment(Pos.CENTER_LEFT);
         }
+
+        super.getChildren().add(new Separator());
 
         setReadOnly(readOnly);
     }
@@ -51,7 +59,10 @@ public class LineupTile extends VBox {
                 var players = club.getTeams().get(0).getPlayers();
                 // TODO get to player list more directly and correctly
                 for (int i = 0; i < POSITION_PLAYERS; i++) {
-                    positionPlayersRows[i].setUp(players, i < 9 ? lineup.getCurrentBatter(i + 1) : null);
+                    positionPlayersRows[i].setUp(players, lineup.getCurrentBatter(i + 1));
+                }
+                for (int i = 0; i < SUBSTITUTES; i++) {
+                    substitutesRows[i].setUp(players, lineup.getSubstitutes()[i]);
                 }
             } else {
                 ErrorUtils.raise("Team " + lineup.getTeamId() + " not found");
