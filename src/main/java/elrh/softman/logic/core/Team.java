@@ -141,8 +141,10 @@ public class Team implements IDatabaseEntity {
         }
 
         for (int i = 1; i <= Lineup.SUBSTITUTES || i < availablePlayers.size(); i++) {
-            var player = availablePlayers.remove(rand.nextInt(availablePlayers.size()));
-            defaultLineup.initSubstitute(i, new PlayerRecord(player, null));
+            if (i < Lineup.SUBSTITUTES || !useDP) {
+                var player = availablePlayers.remove(rand.nextInt(availablePlayers.size()));
+                defaultLineup.initSubstitute(i, new PlayerRecord(player, null));
+            }
         }
     }
 

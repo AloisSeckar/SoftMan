@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import elrh.softman.utils.ErrorUtils;
+import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
@@ -30,7 +31,7 @@ public class LineupTile extends VBox {
         super.getChildren().add(new Label("POSITION PLAYERS"));
 
         for (int i = 0; i < POSITION_PLAYERS; i++) {
-            var lineupRowTile = new LineupRowTile(i + 1, true);
+            var lineupRowTile = new LineupRowTile(this, i + 1, true);
             positionPlayersRows[i] = lineupRowTile;
             super.getChildren().add(lineupRowTile);
         }
@@ -39,7 +40,7 @@ public class LineupTile extends VBox {
         super.getChildren().add(new Label("SUBSTITUTES"));
 
         for (int i = 0; i < SUBSTITUTES; i++) {
-            var lineupRowTile = new LineupRowTile(i + 1, false);
+            var lineupRowTile = new LineupRowTile(this, i + 1, false);
             substitutesRows[i] = lineupRowTile;
             super.getChildren().add(lineupRowTile);
             lineupRowTile.setAlignment(Pos.CENTER_LEFT);
@@ -57,12 +58,14 @@ public class LineupTile extends VBox {
                 // TODO get to player list more directly and correctly
                 var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
                 var players = club.getTeams().get(0).getPlayers();
+                var playerList = FXCollections.observableArrayList(players);
+                playerList.add(0, null);
                 // TODO get to player list more directly and correctly
                 for (int i = 0; i < POSITION_PLAYERS; i++) {
-                    positionPlayersRows[i].setUp(players, lineup.getCurrentBatter(i + 1));
+                    positionPlayersRows[i].setUp(playerList, lineup.getCurrentBatter(i + 1));
                 }
                 for (int i = 0; i < SUBSTITUTES; i++) {
-                    substitutesRows[i].setUp(players, lineup.getSubstitutes()[i]);
+                    substitutesRows[i].setUp(playerList, lineup.getSubstitutes()[i]);
                 }
             } else {
                 ErrorUtils.raise("Team " + lineup.getTeamId() + " not found");
@@ -116,4 +119,12 @@ public class LineupTile extends VBox {
         return ret;
     }
 
+    public void handleFlexChange(PlayerInfo newValue) {
+        if (newValue != null) {
+            substitutesRows[SUBSTITUTES - 1].clear();
+            substitutesRows[SUBSTITUTES - 1].setReadOnly(true);
+        } else {
+            substitutesRows[SUBSTITUTES - 1].setReadOnly(false);
+        }
+    }
 }

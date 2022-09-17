@@ -1,10 +1,11 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
-import java.util.List;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -21,7 +22,7 @@ public class LineupRowTile extends HBox {
     private final int row;
     private final boolean selectPosition;
 
-    public LineupRowTile(int row, boolean selectPosition) {
+    public LineupRowTile(LineupTile parent, int row, boolean selectPosition) {
         this.row = row;
         this.selectPosition = selectPosition;
 
@@ -35,15 +36,24 @@ public class LineupRowTile extends HBox {
         super.getChildren().add(playerCB);
 
         if (selectPosition) {
-            positionCB = new ComboBox<>(FXCollections.observableList(PlayerPosition.getAvailablePositions(row < 10, false)));
+            positionCB = new ComboBox<>(FXCollections.observableList(PlayerPosition.getAvailablePositions(row < Lineup.POSITION_PLAYERS, false)));
             super.getChildren().add(positionCB);
         } else {
             positionCB = new ComboBox<>();
         }
+
+        playerCB.valueProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                positionCB.setValue(null);
+            }
+            if (row >= Lineup.POSITION_PLAYERS) {
+                parent.handleFlexChange(newValue);
+            }
+        });
     }
 
-    public void setUp(List<PlayerInfo> players, PlayerRecord current) {
-        playerCB.setItems(FXCollections.observableList(players));
+    public void setUp(ObservableList<PlayerInfo> players, PlayerRecord current) {
+        playerCB.setItems(players);
 
         if (current != null) {
             playerCB.setValue(current.getPlayer());
@@ -51,6 +61,11 @@ public class LineupRowTile extends HBox {
                 positionCB.setValue(current.getPosition());
             }
         }
+    }
+
+    public void clear() {
+        playerCB.setValue(null);
+        positionCB.setValue(null);
     }
 
     public void setReadOnly(boolean readOnly) {
