@@ -48,6 +48,9 @@ public class Club implements IDatabaseEntity {
     public List<Team> getTeams() {
         return teams.values().stream().toList();
     }
+    public List<Long> getTeamIds() {
+        return teams.values().stream().map(Team::getId).toList();
+    }
 
     public boolean isActive() {
         return getClubInfo().getRegistered() == AssociationManager.getInstance().getClock().getYear();

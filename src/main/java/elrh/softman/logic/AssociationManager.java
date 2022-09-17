@@ -160,12 +160,10 @@ public class AssociationManager {
     public List<Match> getDailyMatchesForUser() {
         var ret = new ArrayList<Match>();
         for (var entry : getDailyMatches().entrySet()) {
-            var leagueId = entry.getKey();
             entry.getValue().forEach(match -> {
-                // TODO temporary broken due to data model changes
-                //if (state.userManagesTeam(match.getHomeLineup()) || state.userManagesTeam(match.getAwayLineup())) {
-                //    ret.add(match);
-                //}
+                if (state.userManagesTeam(match.getHomeLineup().getTeamId()) || state.userManagesTeam(match.getAwayLineup().getTeamId())) {
+                    ret.add(match);
+                }
             });
         }
         return ret;

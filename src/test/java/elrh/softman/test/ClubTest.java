@@ -52,4 +52,17 @@ public class ClubTest extends AbstractDBTest {
         assertTrue(teams.get(1).getTeamInfo().getName().endsWith("B"), "2nd team's name should end with 'B'");
         assertTrue(teams.get(2).getTeamInfo().getName().contains("U18"), "3rd team's name should contain 'U18'");
     }
+
+    @Test
+    @DisplayName("getTeamsTest")
+    void getTeamsTest() {
+        club.formTeam(PlayerLevel.MSEN);
+        club.formTeam(PlayerLevel.MSEN);
+
+        assertEquals(2, club.getTeams().size(), "there should be 2 teams in club");
+
+        var teamIds = club.getTeamIds();
+        assertTrue(teamIds.contains(2L), "there should be team with ID 2");
+        assertFalse(teamIds.contains(3L), "there shouldn't be team with ID 3");
+    }
 }

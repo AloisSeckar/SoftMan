@@ -41,9 +41,9 @@ public class StateManager {
         focusedTeam = null;
     }
 
-    public boolean userManagesTeam(Team team) {
+    public boolean userManagesTeam(long teamId) {
         if (activeClub != null) {
-            return activeClub.getTeams().contains(team);
+            return activeClub.getTeamIds().contains(teamId);
         } else {
             return false;
         }
