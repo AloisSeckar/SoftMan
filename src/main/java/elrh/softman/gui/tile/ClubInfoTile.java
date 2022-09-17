@@ -38,6 +38,15 @@ public class ClubInfoTile extends VBox {
 
             Image defaultImg = new Image(getClass().getResourceAsStream(club.getClubInfo().getLogo()));
             logoView.setImage(defaultImg);
+        } else {
+            nameLabel.setText("No club selected");
+            stadiumLabel.setText("");
+            moneyLabel.setText("");
+            registeredLabel.setText("");
+            ownerLabel.setText("");
+
+            Image defaultImg = new Image(getClass().getResourceAsStream("/img/ball.png"));
+            logoView.setImage(defaultImg);
         }
     }
 

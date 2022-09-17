@@ -59,8 +59,13 @@ public class TeamTab extends AnchorPane implements IFocusListener {
     }
 
     private void reload(Team dispalayedTeam) {
-        nameLabel.setText(dispalayedTeam.getName());
-        playersTable.reload(dispalayedTeam.getPlayers());
+        if (dispalayedTeam != null) {
+            nameLabel.setText(dispalayedTeam.getName());
+            playersTable.reload(dispalayedTeam.getPlayers());
+        } else {
+            nameLabel.setText("No team selected");
+            playersTable.reload(null);
+        }
     }
     
 }

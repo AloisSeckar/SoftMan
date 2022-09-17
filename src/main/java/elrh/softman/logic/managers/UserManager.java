@@ -22,6 +22,14 @@ public class UserManager {
 
     private final HashSet<IFocusListener> focusListeners = new HashSet<>();
 
+    public void registerFocusListener(IFocusListener listener) {
+        focusListeners.add(listener);
+    }
+
+    public void clearFocusListeners() {
+        focusListeners.clear();
+    }
+
     public void setFocusedClub(Club focusedClub) {
         this.focusedClub = focusedClub;
         focusListeners.forEach(l -> l.focusedClubChanged(focusedClub));
@@ -39,6 +47,10 @@ public class UserManager {
         activeClub = null;
         focusedClub = null;
         focusedTeam = null;
+        focusListeners.forEach(l -> {
+            l.focusedClubChanged(null);
+            l.focusedTeamChanged(null);
+        });
     }
 
     public boolean userManagesTeam(long teamId) {
@@ -47,10 +59,6 @@ public class UserManager {
         } else {
             return false;
         }
-    }
-
-    public void registerFocusListener(IFocusListener listener) {
-        focusListeners.add(listener);
     }
 
 }

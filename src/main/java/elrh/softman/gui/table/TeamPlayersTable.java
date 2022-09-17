@@ -17,7 +17,7 @@ public class TeamPlayersTable extends Pane {
     private static final double COLUMN_WIDTH = 100d;
 
     private final TableView<PlayerInfo> table;
-    private ObservableList<PlayerInfo> data;
+    private final ObservableList<PlayerInfo> data;
 
     private PlayerInfoTile playerInfo;
 
@@ -137,7 +137,9 @@ public class TeamPlayersTable extends Pane {
 
     public void reload(List<PlayerInfo> players) {
         data.clear();
-        data.addAll(players);
+        if (players != null) {
+            data.addAll(players);
+        }
         FXCollections.sort(data);
         table.refresh();
     }
