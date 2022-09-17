@@ -35,7 +35,7 @@ public class LineupRowTile extends HBox {
         super.getChildren().add(playerCB);
 
         if (selectPosition) {
-            positionCB = new ComboBox<>(FXCollections.observableList(PlayerPosition.getAvailablePositions()));
+            positionCB = new ComboBox<>(FXCollections.observableList(PlayerPosition.getAvailablePositions(row < 10, false)));
             super.getChildren().add(positionCB);
         } else {
             positionCB = new ComboBox<>();

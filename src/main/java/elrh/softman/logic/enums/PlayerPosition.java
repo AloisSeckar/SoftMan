@@ -1,6 +1,6 @@
 package elrh.softman.logic.enums;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,9 @@ public enum PlayerPosition {
     CENTER_FIELD("CF"),
     RIGHT_FIELD("RF"),
     DESIGNATED_PLAYER("DP"),
-    OFFENSIVE_ONLY("OPO");
+    OFFENSIVE_ONLY("OPO"),
+    PINCH_HITTER("PH"),
+    PINCH_RUNNER("PR");
     
     private final String pos;
     
@@ -26,8 +28,29 @@ public enum PlayerPosition {
         return pos;
     }
 
-    public static List<PlayerPosition> getAvailablePositions() {
-        // TODO include PH/PR for in-game subs
-        return Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD, DESIGNATED_PLAYER);
+    public static List<PlayerPosition> getAvailablePositions(boolean includeDP, boolean includeInGame) {
+        var ret = new ArrayList<PlayerPosition>();
+
+        ret.add(PITCHER);
+        ret.add(CATCHER);
+        ret.add(FIRST_BASE);
+        ret.add(SECOND_BASE);
+        ret.add(THIRD_BASE);
+        ret.add(SHORT_STOP);
+        ret.add(LEFT_FIELD);
+        ret.add(CENTER_FIELD);
+        ret.add(RIGHT_FIELD);
+
+        if (includeDP) {
+            ret.add(DESIGNATED_PLAYER);
+        }
+
+        if (includeInGame) {
+            ret.add(OFFENSIVE_ONLY);
+            ret.add(PINCH_HITTER);
+            ret.add(PINCH_RUNNER);
+        }
+
+        return ret;
     }
 }
