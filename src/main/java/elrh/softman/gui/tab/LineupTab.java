@@ -33,7 +33,7 @@ public class LineupTab extends AnchorPane implements IFocusListener {
         playerTeam.randomizeLineup();
 
         lineupTile = new LineupTile(false);
-        lineupTile.fillLineup(playerTeam);
+        lineupTile.fillLineup(playerTeam.getDefaultLineup());
         super.getChildren().add(lineupTile);
         AnchorPane.setLeftAnchor(lineupTile, 10d);
         AnchorPane.setTopAnchor(lineupTile, 10d);

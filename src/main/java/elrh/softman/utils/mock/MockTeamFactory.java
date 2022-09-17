@@ -13,7 +13,7 @@ public class MockTeamFactory {
 
         Random rand = new Random();
         List<Integer> usedNumbers = new ArrayList<>();
-        for (int i = 0; i < 17; i++) {
+        for (int i = 0; i < 20; i++) {
             int number;
             do {
                 number = rand.nextInt(99) + 1;
@@ -21,7 +21,7 @@ public class MockTeamFactory {
             usedNumbers.add(number);
             team.addPlayer(PlayerFactory.getRandomPlayerInfo(level.getGender(), getRandomBirth(level), number));
         }
-        
+
         team.randomizeLineup();
         
         return team;     

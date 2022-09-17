@@ -13,7 +13,7 @@ import lombok.*;
 public class Lineup {
 
     public static final int POSITION_PLAYERS = 10;
-    public static final int SUBSTITUTES = 7;
+    public static final int SUBSTITUTES = 8;
 
     @Getter
     private final long teamId;
@@ -33,7 +33,7 @@ public class Lineup {
         this.teamName = teamName;
         this.teamLogo = teamLogo;
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < POSITION_PLAYERS; i++) {
             positionPlayers[i] = new ArrayList<>();
         }
     }

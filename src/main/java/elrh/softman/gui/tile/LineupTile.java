@@ -1,56 +1,66 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.lineup.Lineup;
+import static elrh.softman.logic.core.lineup.Lineup.*;
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.PlayerInfo;
-import elrh.softman.logic.core.Team;
 import elrh.softman.logic.core.lineup.PlayerRecord;
+import elrh.softman.logic.db.orm.TeamInfo;
 import elrh.softman.logic.enums.PlayerPosition;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
 
 public class LineupTile extends VBox {
 
-    private static final int MAX_PLAYERS = Lineup.POSITION_PLAYERS + Lineup.SUBSTITUTES;
+    private final LineupRowTile[] positionPlayersRows = new LineupRowTile[POSITION_PLAYERS];
+    private final LineupRowTile[] substitutesRows = new LineupRowTile[SUBSTITUTES];
 
-    private final List<LineupRowTile> lineupRows = new ArrayList<>(MAX_PLAYERS);
-
-    private Team team;
+    private TeamInfo team;
 
     public LineupTile(boolean readOnly) {
         super.setSpacing(5);
 
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        for (int i = 0; i < POSITION_PLAYERS; i++) {
             var lineupRowTile = new LineupRowTile(i);
-            lineupRows.add(lineupRowTile);
+            positionPlayersRows[i] = lineupRowTile;
             super.getChildren().add(lineupRowTile);
+        }
 
-            if (i == 8) {
-                super.getChildren().add(new Separator());
-            }
+        super.getChildren().add(new Separator());
+
+        for (int i = 0; i < SUBSTITUTES; i++) {
+            var lineupRowTile = new LineupRowTile(i);
+            substitutesRows[i] = lineupRowTile;
+            super.getChildren().add(lineupRowTile);
         }
 
         setReadOnly(readOnly);
     }
 
-    public void fillLineup(Team team) {
-        this.team = team;
-        List<PlayerInfo> players = team.getPlayers();
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            lineupRows.get(i).setUp(players, i < 9 ? team.getBatter(i + 1) : null);
+    public void fillLineup(Lineup lineup) {
+        this.team = GameDBManager.getInstance().getTeam(lineup.getTeamId());
+        // TODO get to player list more directly and correctly
+        var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
+        var players = club.getTeams().get(0).getPlayers();
+        // TODO get to player list more directly and correctly
+        for (int i = 0; i < POSITION_PLAYERS; i++) {
+            positionPlayersRows[i].setUp(players, i < 9 ? lineup.getCurrentBatter(i + 1) : null);
         }
     }
 
     public void setReadOnly(boolean readOnly) {
-        lineupRows.forEach(row -> row.setReadOnly(readOnly));
+        Arrays.stream(positionPlayersRows).forEach(row -> row.setReadOnly(readOnly));
+        Arrays.stream(substitutesRows).forEach(row -> row.setReadOnly(readOnly));
     }
 
     public String checkLineup() {
-        var checkedLineup = new ArrayList<PlayerRecord>(MAX_PLAYERS);
-        for (int i = 0; i < MAX_PLAYERS; i++) {
+        var checkedLineup = new ArrayList<PlayerRecord>(POSITION_PLAYERS);
+        for (int i = 0; i < POSITION_PLAYERS; i++) {
 
-            var currentSelection = lineupRows.get(i).getCurrentSelection();
+            var currentSelection = positionPlayersRows[i].getCurrentSelection();
 
             if (i < 9) {
                 if (currentSelection.getPlayer() == null || currentSelection.getPosition() == null) {
@@ -77,9 +87,10 @@ public class LineupTile extends VBox {
     }
 
     public Lineup getLineup() {
-        var ret = new Lineup(team.getId(), team.getName(), team.getLogo());
+        var ret = new Lineup(team.getTeamId(), team.getName(), team.getClubInfo().getLogo());
 
-        lineupRows.stream().filter(LineupRowTile::isFilled).forEach(row -> ret.initPositionPlayer(row.getRow(), row.getCurrentSelection()));
+        Arrays.stream(positionPlayersRows).filter(LineupRowTile::isFilled).forEach(row -> ret.initPositionPlayer(row.getRow(), row.getCurrentSelection()));
+        Arrays.stream(substitutesRows).filter(LineupRowTile::isFilled).forEach(row -> ret.initSubstitute(row.getRow(), row.getCurrentSelection()));
 
         return ret;
     }
