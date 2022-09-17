@@ -136,7 +136,9 @@ public class TeamPlayersTable extends Pane {
     }
 
     public void reload(List<PlayerInfo> players) {
-        data.clear();
+        if (data.size() > 0) {
+            data.clear();
+        }
         if (players != null) {
             data.addAll(players);
         }

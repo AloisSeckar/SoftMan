@@ -131,7 +131,9 @@ public class LeagueStadingsTable extends VBox {
     }
 
     public void setLeague(League league) {
-        data.clear();
+        if (data.size() > 0) {
+            data.clear();
+        }
         if (league != null) {
             nameLabel.setText(league.getName());
             data.addAll(league.getStandings());
