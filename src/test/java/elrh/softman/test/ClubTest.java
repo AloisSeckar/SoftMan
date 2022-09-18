@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class) // order must be preserved to compare team DB ids
 public class ClubTest extends AbstractDBTest {
 
     private AssociationManager manager;
@@ -23,6 +24,7 @@ public class ClubTest extends AbstractDBTest {
     }
 
     @Test
+    @Order(1)
     @DisplayName("isActiveTest")
     void isActiveTest() {
         assertFalse(club.isActive(), "initially club shouldn't be active");
@@ -33,6 +35,7 @@ public class ClubTest extends AbstractDBTest {
     }
 
     @Test
+    @Order(2)
     @DisplayName("formTeamTest")
     void formTeamTest() {
         assertEquals(0, club.getTeams().size(), "initially there should be 0 teams in club");
@@ -54,6 +57,7 @@ public class ClubTest extends AbstractDBTest {
     }
 
     @Test
+    @Order(3)
     @DisplayName("getTeamsTest")
     void getTeamsTest() {
         club.formTeam(PlayerLevel.MSEN);
@@ -62,7 +66,16 @@ public class ClubTest extends AbstractDBTest {
         assertEquals(2, club.getTeams().size(), "there should be 2 teams in club");
 
         var teamIds = club.getTeamIds();
-        assertTrue(teamIds.contains(2L), "there should be team with ID 2");
-        assertFalse(teamIds.contains(3L), "there shouldn't be team with ID 3");
+        assertTrue(teamIds.contains(5L), "there should be team with ID 2");
+        assertFalse(teamIds.contains(6L), "there shouldn't be team with ID 3");
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("getTeamByIdTest")
+    void getTeamByIdTest() {
+        assertNull(club.getTeamById(6), "there should be no team with ID 6 yet");
+        club.formTeam(PlayerLevel.MSEN);
+        assertNotNull(club.getTeamById(6), "there should bet team with ID 6 now");
     }
 }

@@ -27,12 +27,7 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener {
     }
 
     private LineupTab() {
-
-        var playerTeam = AssociationManager.getInstance().getUser().getActiveClub().getTeams().get(0);
-        playerTeam.randomizeLineup();
-
         lineupTile = new LineupTile(false);
-        lineupTile.fillLineup(playerTeam.getDefaultLineup());
         super.getChildren().add(lineupTile);
         AnchorPane.setLeftAnchor(lineupTile, 10d);
         AnchorPane.setTopAnchor(lineupTile, 10d);
@@ -49,11 +44,14 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener {
         AnchorPane.setTopAnchor(defenseTile, 10d);
 
         AssociationManager.getInstance().getUser().registerFocusedTeamListener(this);
+
+        focusedTeamChanged(AssociationManager.getInstance().getUser().getFocusedTeam());
     }
 
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
-        // TODO adjustments after team changed
+        lineupTile.fillLineup(newlyFocusedTeam.getDefaultLineup());
+        saveLineup();
     }
 
     private void saveLineup() {

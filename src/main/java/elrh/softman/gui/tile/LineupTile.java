@@ -57,7 +57,7 @@ public class LineupTile extends VBox {
             if (team != null) {
                 // TODO get to player list more directly and correctly
                 var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
-                var players = club.getTeams().get(0).getPlayers();
+                var players = club.getTeamById(team.getTeamId()).getPlayers();
                 var playerList = FXCollections.observableArrayList(players);
                 playerList.add(0, null);
                 // TODO get to player list more directly and correctly
