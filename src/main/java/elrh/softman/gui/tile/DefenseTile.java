@@ -23,9 +23,8 @@ public class DefenseTile extends VBox {
     private final Label posDP = createLabel(DESIGNATED_PLAYER);
 
     public DefenseTile() {
-        super.setPrefWidth(650);
-        super.setPrefHeight(480);
         super.getStyleClass().add("framed");
+        super.getStyleClass().add("field");
         super.setAlignment(Pos.CENTER);
 
         HBox row1 = new HBox(posCF);
@@ -72,11 +71,9 @@ public class DefenseTile extends VBox {
 
     private static Label createLabel(PlayerPosition pos) {
         Label ret = new Label(pos.toString());
-        ret.setPrefWidth(200);
-        ret.setPrefWidth(200);
-        ret.setPrefWidth(200);
         ret.setAlignment(Pos.CENTER);
         ret.getStyleClass().add("framed");
+        ret.getStyleClass().add("field-position");
         ret.getStyleClass().add("padding-5");
         return ret;
     }
