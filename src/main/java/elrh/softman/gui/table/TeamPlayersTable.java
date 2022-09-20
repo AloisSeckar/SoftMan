@@ -137,6 +137,7 @@ public class TeamPlayersTable extends Pane {
 
     public void reload(List<PlayerInfo> players) {
         if (data.size() > 0) {
+            // TODO hidden bug when changing focus on other team => needs to be solved eventually
             data.clear();
         }
         if (players != null) {

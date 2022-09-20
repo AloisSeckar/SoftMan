@@ -18,6 +18,9 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     
     @DatabaseField(canBeNull = false)
     private PlayerGender gender;
+
+    @DatabaseField(canBeNull = false)
+    private String img;
     
     @DatabaseField(canBeNull = false)
     private int birth;
@@ -30,18 +33,18 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     
     @DatabaseField(canBeNull = false, foreign = true)
     private PlayerAttributes attributes;
-    
-    public PlayerInfo(String player, int number) {
-        this.name = player;
-        this.gender = PlayerGender.M;
-        this.birth = 2000;
-        this.number = number;
-        this.attributes = new PlayerAttributes();
-    }
-    public PlayerInfo(String player, PlayerGender gender, int birth, int number) {
-        // TODO fix constructors
-        this.name = player;
+
+    public PlayerInfo(String name, PlayerGender gender, int birth, int number) {
+        this.name = name;
         this.gender = gender;
+
+        // TODO default img should be different and stored in "faces" directory
+        if (gender == PlayerGender.M) {
+            this.img = "player-m.png";
+        } else {
+            this.img = "player-f.png";
+        }
+
         this.birth = birth;
         this.number = number;
         this.attributes = new PlayerAttributes();

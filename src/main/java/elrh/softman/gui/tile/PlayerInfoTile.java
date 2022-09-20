@@ -1,7 +1,6 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.logic.db.orm.PlayerInfo;
-import elrh.softman.logic.enums.PlayerGender;
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.GaugeBuilder;
 import javafx.geometry.Insets;
@@ -42,7 +41,7 @@ public class PlayerInfoTile extends VBox {
         imgView.getStyleClass().add("player-img");
         super.getChildren().add(imgView);
 
-        Image defaultImg = new Image(getClass().getResourceAsStream("/img/player-f.png"));
+        Image defaultImg = new Image(getClass().getResourceAsStream("/img/ball.png"));
         imgView.setImage(defaultImg);
 
         ageLabel = new Label();
@@ -107,11 +106,7 @@ public class PlayerInfoTile extends VBox {
             nameLabel.setText(player.getName());
             ageLabel.setText(player.getAge() + " yrs");
 
-            if (PlayerGender.F.equals(player.getGender())) {
-                imgView.setImage(new Image(getClass().getResourceAsStream("/img/player-f.png")));
-            } else {
-                imgView.setImage(new Image(getClass().getResourceAsStream("/img/player-m.png")));
-            }
+            imgView.setImage(new Image(getClass().getResourceAsStream("/img/" + player.getImg())));
 
             overallGauge.setValue(player.getAttributes().getTotal());
             battingGauge.setValue(player.getAttributes().getBattingSkill());
