@@ -7,11 +7,12 @@ import elrh.softman.logic.db.orm.ClubInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
-import java.util.HashMap;
-import java.util.List;
 import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.mock.MockTeamFactory;
-import lombok.Getter;
+import java.util.HashMap;
+import java.util.List;
+import javafx.scene.paint.Color;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,6 +20,10 @@ public class Club implements IDatabaseEntity {
 
     @Getter
     private final ClubInfo clubInfo;
+
+    @Getter @Setter
+    private Color color; // TODO how to persist and represent in DB?
+
     private final HashMap<Long, Team> teams = new HashMap<>();
 
     public Club(String name, String city, String stadium) {

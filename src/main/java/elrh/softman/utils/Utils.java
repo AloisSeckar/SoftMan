@@ -1,6 +1,12 @@
 package elrh.softman.utils;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 
@@ -24,6 +30,10 @@ public class Utils {
         paddingLabel.setMaxWidth(width);
         paddingLabel.setMinWidth(width);
         return paddingLabel;
+    }
+
+    public static void setBackgroundColor(Region region, Color color) {
+        region.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
 }

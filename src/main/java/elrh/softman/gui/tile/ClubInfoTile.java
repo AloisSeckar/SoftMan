@@ -2,10 +2,13 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
+import elrh.softman.utils.Utils;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class ClubInfoTile extends VBox {
 
@@ -18,6 +21,7 @@ public class ClubInfoTile extends VBox {
 
     public ClubInfoTile() {
         super.getStyleClass().add("club-info");
+        super.getStyleClass().add("framed");
 
         nameLabel.getStyleClass().setAll("h3");
 
@@ -25,7 +29,15 @@ public class ClubInfoTile extends VBox {
         logoView.setFitHeight(100);
         logoView.getStyleClass().add("framed");
 
-        super.getChildren().addAll(nameLabel, logoView, stadiumLabel, moneyLabel, registeredLabel, ownerLabel);
+        var box = new VBox();
+        box.getStyleClass().add("framed");
+        box.setAlignment(Pos.CENTER);
+        box.setMinWidth(300);
+        box.setMaxWidth(300);
+        Utils.setBackgroundColor(box, Color.CORNSILK);
+        box.getChildren().addAll(nameLabel, logoView, stadiumLabel, moneyLabel, registeredLabel, ownerLabel);
+
+        super.getChildren().add(box);
     }
 
     public void reload(Club club) {
@@ -38,6 +50,8 @@ public class ClubInfoTile extends VBox {
 
             Image defaultImg = new Image(getClass().getResourceAsStream(club.getClubInfo().getLogo()));
             logoView.setImage(defaultImg);
+
+            Utils.setBackgroundColor(ClubInfoTile.this, club.getColor());
         } else {
             nameLabel.setText("No club selected");
             stadiumLabel.setText("");
@@ -47,6 +61,8 @@ public class ClubInfoTile extends VBox {
 
             Image defaultImg = new Image(getClass().getResourceAsStream("/img/ball.png"));
             logoView.setImage(defaultImg);
+
+            Utils.setBackgroundColor(ClubInfoTile.this, Color.GRAY);
         }
     }
 

@@ -1,14 +1,21 @@
 package elrh.softman.gui.tab;
 
 import elrh.softman.gui.table.TeamPlayersTable;
+import elrh.softman.gui.tile.ClubInfoTile;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
+import elrh.softman.logic.interfaces.IFocusedClubListener;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
+import elrh.softman.utils.Utils;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
-public class TeamTab extends AnchorPane implements IFocusedTeamListener {
+import java.util.Optional;
+
+public class TeamTab extends AnchorPane implements IFocusedTeamListener, IFocusedClubListener {
 
     private final Label nameLabel;
     private final TeamPlayersTable playersTable;
@@ -41,9 +48,13 @@ public class TeamTab extends AnchorPane implements IFocusedTeamListener {
         AnchorPane.setTopAnchor(playerInfo, 10d);
         playersTable.setPlayerInfo(playerInfo);
 
-        reload(AssociationManager.getInstance().getUser().getFocusedTeam());
+        var user = AssociationManager.getInstance().getUser();
 
-        AssociationManager.getInstance().getUser().registerFocusedTeamListener(this);
+        focusedClubChanged(user.getFocusedClub());
+        focusedTeamChanged(user.getFocusedTeam());
+
+        user.registerFocusedClubListener(this);
+        user.registerFocusedTeamListener(this);
     }
 
     @Override
@@ -60,5 +71,13 @@ public class TeamTab extends AnchorPane implements IFocusedTeamListener {
             playersTable.reload(null);
         }
     }
-    
+
+    @Override
+    public void focusedClubChanged(Club newlyFocusedClub) {
+        if (newlyFocusedClub != null) {
+            Utils.setBackgroundColor(TeamTab.this, newlyFocusedClub.getColor());
+        } else {
+            Utils.setBackgroundColor(TeamTab.this, Color.GRAY);
+        }
+    }
 }
