@@ -15,7 +15,7 @@ public class PlayerFactory {
 
     public static PlayerInfo getRandomPlayerInfo(PlayerGender gender, int birth, int number) {
         PlayerInfo player =  new PlayerInfo(getRandomPlayerName(gender.toString()), gender, birth, number);
-        player.setImg(getRandomPlayerImg(gender.toString()));
+        setRandomPlayerImg(player);
         return player;
     }
 
@@ -23,9 +23,17 @@ public class PlayerFactory {
         return SourcesDBManager.getInstance().getRandomFirstName(gender) + " " + SourcesDBManager.getInstance().getRandomLastName();
     }
 
-    private static String getRandomPlayerImg(String gender) {
-        int face = new Random().nextInt(0, AVAILABLE_FACES) + 1;
-        return "faces/" + gender + StringUtils.leftPad(String.valueOf(face), 5, "0") + ".jpg";
+    private static void setRandomPlayerImg(PlayerInfo player) {
+        if (player.getAge() > 18) {
+            int face = new Random().nextInt(0, AVAILABLE_FACES) + 1;
+            player.setImg("faces/" + player.getGender().toString() + StringUtils.leftPad(String.valueOf(face), 5, "0") + ".jpg");
+        } else {
+            if (player.getGender() == PlayerGender.F) {
+                player.setImg("vecteezy/avatar-girl.jpg");
+            } else {
+                player.setImg("vecteezy/avatar-boy.jpg");
+            }
+        }
     }
 
 }
