@@ -2,16 +2,18 @@ package elrh.softman.gui.table;
 
 import elrh.softman.logic.db.orm.PlayerInfo;
 
+import elrh.softman.gui.tile.PlayerInfoTile;
+import elrh.softman.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
-
-import elrh.softman.gui.tile.PlayerInfoTile;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.collections.*;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TeamPlayersTable extends Pane {
 
     private static final double COLUMN_WIDTH = 100d;
@@ -126,7 +128,7 @@ public class TeamPlayersTable extends Pane {
         var selectedItems = selectionModel.getSelectedItems();
         selectedItems.addListener(
                 (ListChangeListener<PlayerInfo>) change -> {
-                    if (playerInfo != null) {
+                    if (playerInfo != null && Utils.listNotEmpty(change.getList())) {
                         playerInfo.reload(change.getList().get(0));
                     }
                 }
@@ -136,15 +138,15 @@ public class TeamPlayersTable extends Pane {
     }
 
     public void reload(List<PlayerInfo> players) {
-        if (data.size() > 0) {
-            // TODO hidden bug when changing focus on other team => needs to be solved eventually
-            data.clear();
-        }
+        data.clear();
         if (players != null) {
             data.addAll(players);
         }
         FXCollections.sort(data);
         table.refresh();
+        if (Utils.listNotEmpty(data)) {
+            table.getSelectionModel().select(0);
+        }
     }
 
     public void setPlayerInfo(PlayerInfoTile playerDetail) {

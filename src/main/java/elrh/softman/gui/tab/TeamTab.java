@@ -1,7 +1,6 @@
 package elrh.softman.gui.tab;
 
 import elrh.softman.gui.table.TeamPlayersTable;
-import elrh.softman.gui.tile.ClubInfoTile;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
@@ -12,8 +11,6 @@ import elrh.softman.utils.Utils;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
-import java.util.Optional;
 
 public class TeamTab extends AnchorPane implements IFocusedTeamListener, IFocusedClubListener {
 
