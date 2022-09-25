@@ -21,6 +21,9 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener, IFocu
     private final LineupTile lineupTile;
 
     private final DefenseTile defenseTile;
+
+    private final Button saveButton;
+
     private static LineupTab INSTANCE;
 
     public static LineupTab getInstance() {
@@ -36,7 +39,7 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener, IFocu
         AnchorPane.setLeftAnchor(lineupTile, 10d);
         AnchorPane.setTopAnchor(lineupTile, 10d);
 
-        var saveButton = new Button("Save lineup");
+        saveButton = new Button("Save lineup");
         saveButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> saveLineup());
         super.getChildren().add(saveButton);
         AnchorPane.setLeftAnchor(saveButton, 50d);
@@ -69,6 +72,10 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener, IFocu
     public void focusedTeamChanged(Team newlyFocusedTeam) {
         lineupTile.fillLineup(newlyFocusedTeam.getDefaultLineup());
         saveLineup();
+
+        var readOnly = !AssociationManager.getInstance().getUser().userManagesTeam(newlyFocusedTeam.getId());
+        lineupTile.setReadOnly(readOnly);
+        saveButton.setDisable(readOnly);
     }
 
     private void saveLineup() {
