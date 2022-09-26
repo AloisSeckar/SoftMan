@@ -1,18 +1,22 @@
-package elrh.softman.utils.mock;
+package elrh.softman.utils.factory;
 
-import elrh.softman.logic.core.*;
+import elrh.softman.logic.core.Club;
+import elrh.softman.logic.core.Team;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.utils.Constants;
-import elrh.softman.utils.factory.PlayerFactory;
-import java.util.*;
 
-public class MockTeamFactory {
-    
-    public static Team getMockTeam(PlayerLevel level, Club club) {
-        Team team = new Team(level, "MOCK", club);
+import java.util.ArrayList;
+import java.util.Random;
 
-        Random rand = new Random();
-        List<Integer> usedNumbers = new ArrayList<>();
+public class TeamFactory {
+
+    public static Team getTeam(PlayerLevel level, String name, Club club) {
+
+        var team = new Team(level, name, club);
+        team.persist();
+
+        var rand = new Random();
+        var usedNumbers = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             int number;
             do {
@@ -23,8 +27,8 @@ public class MockTeamFactory {
         }
 
         team.randomizeLineup();
-        
-        return team;     
+
+        return team;
     }
 
     private static int getRandomBirth(PlayerLevel level) {

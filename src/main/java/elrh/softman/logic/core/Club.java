@@ -8,7 +8,8 @@ import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
-import elrh.softman.utils.mock.MockTeamFactory;
+import elrh.softman.utils.factory.TeamFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import javafx.scene.paint.Color;
@@ -71,12 +72,7 @@ public class Club implements IDatabaseEntity {
             var squad = getSquadCode(existingTeams);
             var name = this.clubInfo.getName() + " " + level.getCode() + " " + squad;
 
-            // TODO get rid of mock
-            var newTeam = MockTeamFactory.getMockTeam(level, this);
-            newTeam.getTeamInfo().setName(name);
-            newTeam.getTeamInfo().setClubInfo(getClubInfo());
-
-            newTeam.persist();
+            var newTeam = TeamFactory.getTeam(level, name, this);
             this.teams.put(newTeam.getId(), newTeam);
 
             LOG.info("New team " + newTeam.getId() + "('" + name + "') was formed");
