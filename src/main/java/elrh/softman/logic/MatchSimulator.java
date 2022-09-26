@@ -9,8 +9,10 @@ import elrh.softman.logic.core.stats.BoxScore;
 import java.util.Random;
 
 import elrh.softman.utils.Constants;
+import elrh.softman.utils.Utils;
 import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 public class MatchSimulator {
@@ -91,6 +93,11 @@ public class MatchSimulator {
                 if (hitQuality >= pitchQuality) {
                     if (hitQuality - pitchQuality > 25) {
                         appendText(batter + " SCORED\n");
+                        batter.getStats().incPA();
+                        batter.getStats().incAB();
+                        batter.getStats().incH();
+                        batter.getStats().incR();
+                        batter.getStats().incRBI();
                         boxScore.addHit(top);
                         boxScore.addPoint(inning, top);
                     } else {
@@ -103,21 +110,37 @@ public class MatchSimulator {
                             if (hitQuality >= fieldingQuality) {
                                 if (random.nextBoolean()) {
                                     appendText(batter + " reached after a hit\n");
+                                    batter.getStats().incPA();
+                                    batter.getStats().incAB();
+                                    batter.getStats().incH();
                                     boxScore.addHit(top);
                                 } else {
+                                    batter.getStats().incPA();
+                                    batter.getStats().incAB();
                                     appendText(batter + " reached otherwise\n");
                                 }
                             } else {
                                 appendText(batter + " is OUT\n");
+                                batter.getStats().incPA();
+                                batter.getStats().incAB();
+                                pitcher.getStats().incIP();
+                                fielder.getStats().incO();
                                 outs++;
                             }
                         } else {
                             appendText(batter + " reached after a hit\n");
+                            batter.getStats().incPA();
+                            batter.getStats().incAB();
+                            batter.getStats().incH();
                             boxScore.addHit(top);
                         }
                     }
                 } else {
                     appendText(batter + " is OUT\n");
+                    batter.getStats().incPA();
+                    batter.getStats().incAB();
+                    pitcher.getStats().incIP();
+                    pitcher.getStats().incO();
                     outs++;
                 }
             } else {
@@ -160,6 +183,10 @@ public class MatchSimulator {
         appendText("\n\nGAME OVER\n\n");
         match.getMatchInfo().setHomeTeamFinishedBatting(top);
         match.getMatchInfo().setStatus(MatchStatus.FINISHED);
+
+        appendText("\n\nSTATS\n");
+        printStats(awayLineup);
+        printStats(homeLineup);
 
         // TODO save the match into correct league
         AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0).saveMatch(match);
@@ -218,6 +245,31 @@ public class MatchSimulator {
     private void getScore() {
         appendText("\n\n" + awayLineup.getTeamName() + ": " + boxScore.getTotalPoints(true) + "\n");
         appendText(homeLineup.getTeamName() + ": " + boxScore.getTotalPoints(false) + "\n");
+    }
+
+    private void printStats(Lineup lineup) {
+        appendText("\n\n" + lineup.getTeamName() + "\n");
+        appendText("PLAYER                         | PA | AB |  H |  R | RBI |   AVG |  O |  IP | \n");
+
+        for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
+            var players = lineup.getPositionPlayers()[i];
+            if (Utils.listNotEmpty(players)) {
+                players.forEach(playerRecord -> {
+                    var nameWithPos = playerRecord.getPlayer().getName() + ", " + playerRecord.getPosition().toString();
+                    appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
+                    var stats = playerRecord.getStats();
+                    appendText(StringUtils.leftPad(String.valueOf(stats.getPA()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(stats.getAB()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(stats.getH()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(stats.getR()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(stats.getRBI()), 3) + " | ");
+                    appendText(stats.getAVG() + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(stats.getO()), 2) + " | ");
+                    appendText(stats.getIP() + " | \n");
+                });
+            }
+        }
+
     }
     
     private void appendText(String text) {

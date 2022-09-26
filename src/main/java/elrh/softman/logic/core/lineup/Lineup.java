@@ -23,7 +23,7 @@ public class Lineup {
     private final String teamLogo;
 
     @Getter
-    private final List<PlayerRecord>[] positionPlayers = new ArrayList[POSITION_PLAYERS];
+    private final ArrayList<PlayerRecord>[] positionPlayers = new ArrayList[POSITION_PLAYERS];
 
     @Getter
     private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
