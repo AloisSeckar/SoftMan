@@ -132,6 +132,20 @@ public class LineupTest {
     }
 
     @Test
+    @DisplayName("getCurrentFieldersTest")
+    void getCurrentFieldersTest() {
+        lineup.initPositionPlayer(1, playerRecord1);
+        lineup.initPositionPlayer(2, playerRecord2);
+
+        var fielders = lineup.getCurrentFielders();
+        assertNotNull(fielders[0], "pitcher should be set");
+        assertEquals(1, fielders[0].getPlayer().getNumber(), "pitcher should be #1");
+        assertNotNull(fielders[1], "catcher should be set");
+        assertEquals(2, fielders[1].getPlayer().getNumber(), "catcher should be #2");
+        assertNull(fielders[2], "first base shouldn't be set");
+    }
+
+    @Test
     @DisplayName("useDPTest")
     void useDPTest() {
         assertFalse(lineup.useDP(), "DP shouldn't be set");

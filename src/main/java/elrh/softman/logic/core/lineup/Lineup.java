@@ -99,6 +99,20 @@ public class Lineup {
         return ret;
     }
 
+    public PlayerRecord[] getCurrentFielders() {
+        var ret = new PlayerRecord[9];
+        ret[0] = getCurrentPositionPlayer(PlayerPosition.PITCHER);
+        ret[1] = getCurrentPositionPlayer(PlayerPosition.CATCHER);
+        ret[2] = getCurrentPositionPlayer(PlayerPosition.FIRST_BASE);
+        ret[3] = getCurrentPositionPlayer(PlayerPosition.SECOND_BASE);
+        ret[4] = getCurrentPositionPlayer(PlayerPosition.THIRD_BASE);
+        ret[5] = getCurrentPositionPlayer(PlayerPosition.SHORT_STOP);
+        ret[6] = getCurrentPositionPlayer(PlayerPosition.LEFT_FIELD);
+        ret[7] = getCurrentPositionPlayer(PlayerPosition.CENTER_FIELD);
+        ret[8] = getCurrentPositionPlayer(PlayerPosition.RIGHT_FIELD);
+        return ret;
+    }
+
     public boolean useDP() {
         return Utils.listNotEmpty(positionPlayers[POSITION_PLAYERS - 1]);
     }
