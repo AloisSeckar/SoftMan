@@ -5,11 +5,11 @@ import elrh.softman.logic.db.orm.MatchPlayByPlay;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.logic.enums.PlayerPosition;
+import static elrh.softman.logic.enums.StatsType.*;
 import elrh.softman.logic.core.stats.BoxScore;
-import java.util.Random;
-
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.Utils;
+import java.util.Random;
 import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -93,11 +93,11 @@ public class MatchSimulator {
                 if (hitQuality >= pitchQuality) {
                     if (hitQuality - pitchQuality > 25) {
                         appendText(batter + " SCORED\n");
-                        batter.getStats().incPA();
-                        batter.getStats().incAB();
-                        batter.getStats().incH();
-                        batter.getStats().incR();
-                        batter.getStats().incRBI();
+                        batter.getStats().inc(BPA);
+                        batter.getStats().inc(BAB);
+                        batter.getStats().inc(BH);
+                        batter.getStats().inc(BR);
+                        batter.getStats().inc(BRB);
                         boxScore.addHit(top);
                         boxScore.addPoint(inning, top);
                     } else {
@@ -110,37 +110,37 @@ public class MatchSimulator {
                             if (hitQuality >= fieldingQuality) {
                                 if (random.nextBoolean()) {
                                     appendText(batter + " reached after a hit\n");
-                                    batter.getStats().incPA();
-                                    batter.getStats().incAB();
-                                    batter.getStats().incH();
+                                    batter.getStats().inc(BPA);
+                                    batter.getStats().inc(BAB);
+                                    batter.getStats().inc(BH);
                                     boxScore.addHit(top);
                                 } else {
-                                    batter.getStats().incPA();
-                                    batter.getStats().incAB();
+                                    batter.getStats().inc(BPA);
+                                    batter.getStats().inc(BAB);
                                     appendText(batter + " reached otherwise\n");
                                 }
                             } else {
                                 appendText(batter + " is OUT\n");
-                                batter.getStats().incPA();
-                                batter.getStats().incAB();
-                                pitcher.getStats().incIP();
-                                fielder.getStats().incO();
+                                batter.getStats().inc(BPA);
+                                batter.getStats().inc(BAB);
+                                pitcher.getStats().inc(FIP);
+                                fielder.getStats().inc(FPO);
                                 outs++;
                             }
                         } else {
                             appendText(batter + " reached after a hit\n");
-                            batter.getStats().incPA();
-                            batter.getStats().incAB();
-                            batter.getStats().incH();
+                            batter.getStats().inc(BPA);
+                            batter.getStats().inc(BAB);
+                            batter.getStats().inc(BH);
                             boxScore.addHit(top);
                         }
                     }
                 } else {
                     appendText(batter + " is OUT\n");
-                    batter.getStats().incPA();
-                    batter.getStats().incAB();
-                    pitcher.getStats().incIP();
-                    pitcher.getStats().incO();
+                    batter.getStats().inc(BPA);
+                    batter.getStats().inc(BAB);
+                    pitcher.getStats().inc(FIP);
+                    pitcher.getStats().inc(FPO);
                     outs++;
                 }
             } else {
@@ -258,13 +258,14 @@ public class MatchSimulator {
                     var nameWithPos = playerRecord.getPlayer().getName() + ", " + playerRecord.getPosition().toString();
                     appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
                     var stats = playerRecord.getStats();
-                    appendText(StringUtils.leftPad(String.valueOf(stats.getPA()), 2) + " | ");
-                    appendText(StringUtils.leftPad(String.valueOf(stats.getAB()), 2) + " | ");
-                    appendText(StringUtils.leftPad(String.valueOf(stats.getH()), 2) + " | ");
-                    appendText(StringUtils.leftPad(String.valueOf(stats.getR()), 2) + " | ");
-                    appendText(StringUtils.leftPad(String.valueOf(stats.getRBI()), 3) + " | ");
+                    var record = playerRecord.getStats().getStatsRecord();
+                    appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(record.getBRB()), 3) + " | ");
                     appendText(stats.getAVG() + " | ");
-                    appendText(StringUtils.leftPad(String.valueOf(stats.getO()), 2) + " | ");
+                    appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 2) + " | ");
                     appendText(stats.getIP() + " | \n");
                 });
             }
