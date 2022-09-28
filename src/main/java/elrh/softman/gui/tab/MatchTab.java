@@ -95,7 +95,9 @@ public class MatchTab extends BorderPane {
         this.match = match;
         matchHeaderTile.setMatch(match);
         awayLineup.fillLineup(match.getAwayLineup());
+        awayLineup.setReadOnly(true); // TODO without that, 8th sub spot is occasionally active, but this solution doesn't seem correct
         homeLineup.fillLineup(match.getHomeLineup());
+        homeLineup.setReadOnly(true); // TODO see above
         boxScore.loadBoxScore(match);
         match.printPlayByPlay(matchOverview);
 
