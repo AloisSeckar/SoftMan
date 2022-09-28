@@ -33,6 +33,8 @@ public class MatchSimulator {
     private int outs = 0;
     private int awayBatter = 0;
     private int homeBatter = 0;
+    private Lineup battingLineup;
+    private Lineup fieldingLineup;
 
     public MatchSimulator(Match match, TextArea target) {
         this.target = target;
@@ -68,18 +70,22 @@ public class MatchSimulator {
                 if (top) {
                     appendText("\n\nINNING " + inning + "\n");
                     appendText("\n\nTOP\n");
+                    battingLineup = awayLineup;
+                    fieldingLineup = homeLineup;
                 } else {
                     appendText("\n\nBOTTOM\n");
+                    battingLineup = homeLineup;
+                    fieldingLineup = awayLineup;
                 }
                 inningStart = false;
             }
 
-            var pitcher = top ? homeLineup.getCurrentPositionPlayer(PlayerPosition.PITCHER): awayLineup.getCurrentPositionPlayer(PlayerPosition.PITCHER);
+            var pitcher = fieldingLineup.getCurrentPositionPlayer(PlayerPosition.PITCHER);
             var pitcherAttr = pitcher.getPlayer().getAttributes();
 
             appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
 
-            var batter = top ? awayLineup.getCurrentBatter(awayBatter) : homeLineup.getCurrentBatter(homeBatter);
+            var batter = battingLineup.getCurrentBatter(top ? awayBatter : homeBatter);
             if (batter != null) {
                 var batterInfo = batter.getPlayer();
                 var batterAttr = batterInfo.getAttributes();
@@ -102,7 +108,7 @@ public class MatchSimulator {
                     } else {
 
                         int randomLocation = random.nextInt(9);
-                        var fielder = top ? homeLineup.getCurrentBatter(randomLocation) : awayLineup.getCurrentBatter(randomLocation);
+                        var fielder = fieldingLineup.getCurrentBatter(randomLocation);
 
                         if (fielder != null) {
                             int fieldingQuality = fielder.getPlayer().getAttributes().getFieldingSkill() + random.nextInt(100);
@@ -119,7 +125,7 @@ public class MatchSimulator {
                                 appendText(batter + " is OUT\n");
                                 StatsUtils.incAB(batter);
                                 fielder.getStats().inc(FPO);
-                                StatsUtils.incIP(top ? homeLineup : awayLineup);
+                                StatsUtils.incIP(fieldingLineup);
                                 outs++;
                             }
                         } else {
@@ -131,7 +137,7 @@ public class MatchSimulator {
                 } else {
                     appendText(batter + " is OUT\n");
                     StatsUtils.incAB(batter);
-                    StatsUtils.incIP(top ? homeLineup : awayLineup);
+                    StatsUtils.incIP(fieldingLineup);
                     outs++;
                 }
             } else {
