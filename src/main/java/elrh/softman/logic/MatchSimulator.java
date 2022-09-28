@@ -8,6 +8,7 @@ import elrh.softman.logic.enums.PlayerPosition;
 import static elrh.softman.logic.enums.StatsType.*;
 import elrh.softman.logic.core.stats.BoxScore;
 import elrh.softman.utils.Constants;
+import elrh.softman.utils.StatsUtils;
 import elrh.softman.utils.Utils;
 import java.util.Random;
 import javafx.scene.control.TextArea;
@@ -93,9 +94,7 @@ public class MatchSimulator {
                 if (hitQuality >= pitchQuality) {
                     if (hitQuality - pitchQuality > 25) {
                         appendText(batter + " SCORED\n");
-                        batter.getStats().inc(BPA);
-                        batter.getStats().inc(BAB);
-                        batter.getStats().inc(BH);
+                        StatsUtils.incH(batter);
                         batter.getStats().inc(BR);
                         batter.getStats().inc(BRB);
                         boxScore.addHit(top);
@@ -110,37 +109,29 @@ public class MatchSimulator {
                             if (hitQuality >= fieldingQuality) {
                                 if (random.nextBoolean()) {
                                     appendText(batter + " reached after a hit\n");
-                                    batter.getStats().inc(BPA);
-                                    batter.getStats().inc(BAB);
-                                    batter.getStats().inc(BH);
+                                    StatsUtils.incH(batter);
                                     boxScore.addHit(top);
                                 } else {
-                                    batter.getStats().inc(BPA);
-                                    batter.getStats().inc(BAB);
+                                    StatsUtils.incAB(batter);
                                     appendText(batter + " reached otherwise\n");
                                 }
                             } else {
                                 appendText(batter + " is OUT\n");
-                                batter.getStats().inc(BPA);
-                                batter.getStats().inc(BAB);
-                                pitcher.getStats().inc(FIP);
+                                StatsUtils.incAB(batter);
                                 fielder.getStats().inc(FPO);
+                                StatsUtils.incIP(top ? homeLineup : awayLineup);
                                 outs++;
                             }
                         } else {
                             appendText(batter + " reached after a hit\n");
-                            batter.getStats().inc(BPA);
-                            batter.getStats().inc(BAB);
-                            batter.getStats().inc(BH);
+                            StatsUtils.incH(batter);
                             boxScore.addHit(top);
                         }
                     }
                 } else {
                     appendText(batter + " is OUT\n");
-                    batter.getStats().inc(BPA);
-                    batter.getStats().inc(BAB);
-                    pitcher.getStats().inc(FIP);
-                    pitcher.getStats().inc(FPO);
+                    StatsUtils.incAB(batter);
+                    StatsUtils.incIP(top ? homeLineup : awayLineup);
                     outs++;
                 }
             } else {
