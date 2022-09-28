@@ -117,4 +117,22 @@ public class Lineup {
         return Utils.listNotEmpty(positionPlayers[POSITION_PLAYERS - 1]);
     }
 
+    public void setUp() {
+        for (int i = 0; i < POSITION_PLAYERS; i++) {
+            var lineupSpot = positionPlayers[i];
+            if (Utils.listNotEmpty(lineupSpot)) {
+                var first = lineupSpot.get(0);
+                first.getStats().clear();
+                positionPlayers[i] = new ArrayList<>();
+                positionPlayers[i].add(first);
+            }
+        }
+        for (int i = 0; i < SUBSTITUTES; i++) {
+            var substitute = substitutes[i];
+            if (substitute != null) {
+                substitute.getStats().clear();
+            }
+        }
+    }
+
 }

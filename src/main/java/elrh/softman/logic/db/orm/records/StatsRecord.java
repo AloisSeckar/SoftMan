@@ -14,15 +14,15 @@ public class StatsRecord {
 
     @DatabaseField(canBeNull = false)
     @NonNull
-    private long matchId;
+    private long matchId = 0;
 
     @DatabaseField(canBeNull = false)
     @NonNull
-    private long playerId;
+    private long playerId = 0;
 
     @DatabaseField(canBeNull = false)
     @NonNull
-    private String playerPos;
+    private String playerPos = "";
 
     // batter
     @DatabaseField(canBeNull = false)

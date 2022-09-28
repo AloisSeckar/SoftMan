@@ -102,6 +102,8 @@ public class MatchSimulator {
     private void setUpMatch() {
         match.getMatchInfo().setStatus(ACTIVE);
         appendText("\n\nGAME BETWEEN " + awayLineup.getTeamName() + " AND " + homeLineup.getTeamName() + "\n");
+        awayLineup.setUp();
+        homeLineup.setUp();
     }
 
     private void setUpInning() {

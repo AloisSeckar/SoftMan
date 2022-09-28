@@ -1,7 +1,6 @@
 package elrh.softman.logic.core.stats;
 
 import elrh.softman.logic.db.orm.records.StatsRecord;
-import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.enums.StatsType;
 import elrh.softman.utils.Constants;
 import lombok.Data;
@@ -9,11 +8,11 @@ import lombok.Data;
 @Data
 public class Stats {
 
-    private StatsRecord statsRecord;
+    // TODO need to init matchId, playerId and position at stats object properly to store into DB
+    private StatsRecord statsRecord = new StatsRecord();
 
-    public Stats() {
-        // TODO need to init matchId, playerId and position at stats object properly to store into DB
-        statsRecord = new StatsRecord(0, 0, "");
+    public void clear() {
+        statsRecord = new StatsRecord();
     }
 
     public void inc(StatsType stat) {
