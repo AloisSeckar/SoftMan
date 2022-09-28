@@ -12,4 +12,9 @@ public class PlayerRecord {
     private final PlayerPosition position;
     private final Stats stats = new Stats();
 
+    @Override
+    public String toString() {
+        return player.toString();
+    }
+
 }

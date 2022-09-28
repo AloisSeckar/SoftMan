@@ -1,15 +1,15 @@
 package elrh.softman.logic;
 
 import elrh.softman.logic.core.lineup.Lineup;
+import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.db.orm.MatchPlayByPlay;
 import elrh.softman.logic.core.Match;
-import elrh.softman.logic.enums.MatchStatus;
-import elrh.softman.logic.enums.PlayerPosition;
+import static elrh.softman.logic.enums.MatchStatus.*;
+import static elrh.softman.logic.enums.PlayerPosition.*;
 import static elrh.softman.logic.enums.StatsType.*;
 import elrh.softman.logic.core.stats.BoxScore;
-import elrh.softman.utils.Constants;
-import elrh.softman.utils.StatsUtils;
-import elrh.softman.utils.Utils;
+import elrh.softman.logic.db.orm.PlayerAttributes;
+import elrh.softman.utils.*;
 import java.util.Random;
 import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +31,19 @@ public class MatchSimulator {
     private int inning = 1;
     private boolean top = true;
     private int outs = 0;
-    private int awayBatter = 0;
-    private int homeBatter = 0;
+    private int awayBatter = 1;
+    private int homeBatter = 1;
     private Lineup battingLineup;
     private Lineup fieldingLineup;
+
+    private PlayerRecord batter;
+    private PlayerAttributes batterAttr;
+    private PlayerRecord pitcher;
+    private PlayerAttributes pitcherAttr;
+
+    private PlayerRecord base1;
+    private PlayerRecord base2;
+    private PlayerRecord base3;
 
     public MatchSimulator(Match match, TextArea target) {
         this.target = target;
@@ -66,120 +75,100 @@ public class MatchSimulator {
         }
 
         if (keepPlaying()) {
-            if (inningStart) {
-                if (top) {
-                    appendText("\n\nINNING " + inning + "\n");
-                    appendText("\n\nTOP\n");
-                    battingLineup = awayLineup;
-                    fieldingLineup = homeLineup;
-                } else {
-                    appendText("\n\nBOTTOM\n");
-                    battingLineup = homeLineup;
-                    fieldingLineup = awayLineup;
-                }
-                inningStart = false;
-            }
-
-            var pitcher = fieldingLineup.getCurrentPositionPlayer(PlayerPosition.PITCHER);
-            var pitcherAttr = pitcher.getPlayer().getAttributes();
-
-            appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
-
-            var batter = battingLineup.getCurrentBatter(top ? awayBatter : homeBatter);
+            setUpPlay();
             if (batter != null) {
-                var batterInfo = batter.getPlayer();
-                var batterAttr = batterInfo.getAttributes();
+                var pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
+                var hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);
+                var qualityFactor = hitQuality - pitchQuality;
+                var pitchOutcome = SimUtils.getPseudoRandomPitchOutcome(qualityFactor);
 
-                appendText("BATTER: " + batterInfo + " (" + batterAttr.getBattingSkill() + ")\n");
+                // TODO random runner actions
 
-                int pitchQuality = pitcherAttr.getPitchingSkill() + random.nextInt(100);
-                int hitQuality = batterAttr.getBattingSkill() + random.nextInt(100);
+                appendText(hitQuality + " vs. " + pitchQuality + " => q: " + qualityFactor + " => " + pitchOutcome + "\n");
 
-                appendText(pitchQuality + " vs. " + hitQuality + "\n");
-
-                if (hitQuality >= pitchQuality) {
-                    if (hitQuality - pitchQuality > 25) {
-                        appendText(batter + " SCORED\n");
-                        StatsUtils.incH(batter);
-                        batter.getStats().inc(BR);
-                        batter.getStats().inc(BRB);
-                        boxScore.addHit(top);
-                        boxScore.addPoint(inning, top);
-                    } else {
-
-                        int randomLocation = random.nextInt(9);
-                        var fielder = fieldingLineup.getCurrentBatter(randomLocation);
-
-                        if (fielder != null) {
-                            int fieldingQuality = fielder.getPlayer().getAttributes().getFieldingSkill() + random.nextInt(100);
-                            if (hitQuality >= fieldingQuality) {
-                                if (random.nextBoolean()) {
-                                    appendText(batter + " reached after a hit\n");
-                                    StatsUtils.incH(batter);
-                                    boxScore.addHit(top);
-                                } else {
-                                    StatsUtils.incAB(batter);
-                                    appendText(batter + " reached otherwise\n");
-                                }
-                            } else {
-                                appendText(batter + " is OUT\n");
-                                StatsUtils.incAB(batter);
-                                fielder.getStats().inc(FPO);
-                                StatsUtils.incIP(fieldingLineup);
-                                outs++;
-                            }
-                        } else {
-                            appendText(batter + " reached after a hit\n");
-                            StatsUtils.incH(batter);
-                            boxScore.addHit(top);
-                        }
-                    }
-                } else {
-                    appendText(batter + " is OUT\n");
-                    StatsUtils.incAB(batter);
-                    StatsUtils.incIP(fieldingLineup);
-                    outs++;
+                switch (pitchOutcome) {
+                    case SimUtils.O_K -> handleK();
+                    case SimUtils.O_W -> handleW();
+                    default -> handleP(qualityFactor);
                 }
             } else {
-                appendText("Position not filled => OUT\n");
-                outs++;
+                handleNoBatter();
             }
-
-            if (top) {
-                awayBatter++;
-                if (awayBatter > 8) {
-                    awayBatter = 0;
-                }
-            } else {
-                homeBatter++;
-                if (homeBatter > 8) {
-                    homeBatter = 0;
-                }
-            }
-
-            if (outs == 3) {
-                getScore();
-                swapLineups();
-            }
-
-            if (!keepPlaying()) {
-                wrapUpMatch();
-            }
+            wrapUpPlay();
         }
     }
 
-
     ///////
     private void setUpMatch() {
-        match.getMatchInfo().setStatus(MatchStatus.ACTIVE);
+        match.getMatchInfo().setStatus(ACTIVE);
         appendText("\n\nGAME BETWEEN " + awayLineup.getTeamName() + " AND " + homeLineup.getTeamName() + "\n");
+    }
+
+    private void setUpInning() {
+        if (top) {
+            appendText("\n\nINNING " + inning + "\n");
+            appendText("\n\nTOP\n");
+            battingLineup = awayLineup;
+            fieldingLineup = homeLineup;
+        } else {
+            appendText("\n\nBOTTOM\n");
+            battingLineup = homeLineup;
+            fieldingLineup = awayLineup;
+        }
+        inningStart = false;
+    }
+
+    private void setUpPlay() {
+        if (inningStart) {
+            setUpInning();
+        }
+
+        pitcher = fieldingLineup.getCurrentPositionPlayer(PITCHER);
+        pitcherAttr = pitcher.getPlayer().getAttributes();
+        appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
+
+        batter = battingLineup.getCurrentBatter(top ? awayBatter : homeBatter);
+        if (batter != null) {
+            batterAttr = batter.getPlayer().getAttributes();
+            appendText("BATTER: " + batter + " (" + batterAttr.getBattingSkill() + ")\n");
+        }
+    }
+
+    private void wrapUpPlay() {
+        if (top) {
+            awayBatter++;
+            if (awayBatter > 9) {
+                awayBatter = 1;
+            }
+        } else {
+            homeBatter++;
+            if (homeBatter > 9) {
+                homeBatter = 1;
+            }
+        }
+
+        if (outs == 3) {
+            wrapUpInning();
+        }
+
+        if (!keepPlaying()) {
+            wrapUpMatch();
+        }
+    }
+
+    private void wrapUpInning() {
+        getScore();
+        swapLineups();
+        base1 = null;
+        base2 = null;
+        base3 = null;
     }
 
     private void wrapUpMatch() {
         boxScore.trimIfNeeded(inning);
         appendText("\n\nGAME OVER\n\n");
         match.getMatchInfo().setHomeTeamFinishedBatting(top);
-        match.getMatchInfo().setStatus(MatchStatus.FINISHED);
+        match.getMatchInfo().setStatus(FINISHED);
 
         appendText("\n\nSTATS\n");
         printStats(awayLineup);
@@ -273,6 +262,171 @@ public class MatchSimulator {
     private void appendText(String text) {
         target.appendText(text);
         match.getPlayByPlay().add(new MatchPlayByPlay(match.getMatchInfo().getMatchId(), match.getPlayByPlay().size() + 1, text));
+    }
+
+    private void handleNoBatter() {
+        appendText("Batting spot not filled => OUT\n");
+        StatsUtils.incFielding(fieldingLineup, CATCHER, FPO);
+        StatsUtils.incIP(fieldingLineup);
+        outs++;
+    }
+
+    private void handleK() {
+        var stance = random.nextInt() % 3 == 0 ? "looking" : "swinging";
+        appendText(batter + " STRUCK OUT " + stance + " TO " + pitcher + "\n");
+
+        StatsUtils.incK(batter);
+        StatsUtils.handleFinishedBF(pitcher, true, 0, 3);
+        pitcher.getStats().inc(PK);
+        StatsUtils.incFielding(fieldingLineup, CATCHER, FPO);
+        StatsUtils.incIP(fieldingLineup);
+
+        // TODO even after strikeout runners may advance
+
+        outs++;
+    }
+
+    private void handleW() {
+        boolean walked  = random.nextInt() % 5 != 0;
+        appendText(batter + " " + (walked ? "WALKED" : "HIT BY PITCH") + "\n");
+
+        batter.getStats().inc(BPA);
+        if (walked) {
+            batter.getStats().inc(BBB);
+        } else {
+            batter.getStats().inc(BHP);
+        }
+        StatsUtils.handleFinishedBF(pitcher, false, walked ? 4 : 1, 0);
+
+        // TODO RBI with walk/hit
+        //if (base1 != null && base2 != null && base3 != null) {
+        //    batter.getStats().inc(BRB);
+        //}
+
+        handleAdvances(1, true);
+        base1 = batter;
+    }
+
+    private void handleP(int qualityFactor) {
+        var playOutcome = SimUtils.getPseudoRandomPlayOutcome(qualityFactor);
+        appendText("in play: " + playOutcome + "\n");
+
+        if (SimUtils.P_H.equals(playOutcome)) {
+            StatsUtils.incH(batter);
+            StatsUtils.handleFinishedBF(pitcher, true, 0, 0);
+            pitcher.getStats().inc(PH);
+
+            String hitString;
+            int bases = SimUtils.getPseudoRandomTotalBases(qualityFactor);
+            switch (bases) {
+                case 4 -> {
+                    hitString = "HOMERUN";
+                    batter.getStats().inc(BHR);
+                    batter.getStats().inc(BRB);
+                    pitcher.getStats().inc(PHR);
+                    scoreRun(batter);
+                    handleAdvances(4, false);
+                }
+                case 3 -> {
+                    hitString = "TRIPLE";
+                    batter.getStats().inc(B3B);
+                    pitcher.getStats().inc(P3B);
+                    handleAdvances(3, false);
+                    base3 = batter;
+                }
+                case 2 -> {
+                    hitString = "DOUBLE";
+                    batter.getStats().inc(B2B);
+                    pitcher.getStats().inc(P2B);
+                    handleAdvances(2, false);
+                    base2 = batter;
+                }
+                default -> {
+                    hitString = "SINGLE";
+                    handleAdvances(1, false);
+                    base1 = batter;
+                }
+            }
+            appendText(batter + " HITS " + hitString + "\n");
+        } else {
+
+            // TODO assists during fielding
+            // TODO extra base errors
+
+            var fielder = fieldingLineup.getCurrentPositionPlayer(SimUtils.getRandomPosition());
+            var fielderAttr = fielder.getPlayer().getAttributes();
+            appendText("FIELDER: " + fielder + " (" + fielderAttr.getFieldingSkill() + ")\n");
+            int fieldingQuality = fielderAttr.getFieldingSkill() + random.nextInt(100);
+            var fieldingFactor = fieldingQuality - qualityFactor;
+            var fieldingOutcome = SimUtils.getPseudoRandomFieldingOutcome(fieldingFactor);
+
+            appendText(fieldingQuality + " vs. " + qualityFactor + " => f: " + fieldingFactor + " => " + fieldingOutcome + "\n");
+
+            if (SimUtils.F_O.equals(fieldingOutcome)) {
+                StatsUtils.incAB(batter);
+                StatsUtils.handleFinishedBF(pitcher, true, 0, 0);
+                fielder.getStats().inc(FPO);
+                StatsUtils.incIP(fieldingLineup);
+
+                // TODO runners may advance even after out
+
+                outs++;
+
+            } else {
+                StatsUtils.incAB(batter);
+                StatsUtils.handleFinishedBF(pitcher, true, 0, 0);
+                fielder.getStats().inc(FE);
+
+                handleAdvances(1, false);
+                base1 = batter;
+
+                // TODO errors can be worse than 1B
+
+            }
+        }
+    }
+
+    private void handleAdvances(int guarantedAdvance, boolean deadBall) {
+
+        // TODO add some random "more-than-guaranted" advances + runners may be out during them
+
+        if (base3 != null && guarantedAdvance > 0) {
+            scoreRun(base3);
+            base3 = null;
+        }
+
+        if (base2 != null) {
+            if (guarantedAdvance > 0) {
+                if (guarantedAdvance > 1) {
+                    scoreRun(base2);
+                } else {
+                    base3 = base2;
+                }
+                base2 = null;
+            }
+        }
+
+        if (base1 != null) {
+            if (guarantedAdvance > 0) {
+                if (guarantedAdvance > 2) {
+                    scoreRun(base1);
+                } else if (guarantedAdvance > 1) {
+                    base3 = base1;
+                } else {
+                    base2 = base1;
+                }
+                base1 = null;
+            }
+        }
+    }
+
+    private void scoreRun(PlayerRecord runner) {
+        runner.getStats().inc(BR);
+        batter.getStats().inc(BRB); // TODO not all runs will be thanks to the batter
+        pitcher.getStats().inc(PR); // TODO inherited runners
+        pitcher.getStats().inc(PER); // TODO unearned runs
+        boxScore.addHit(top);
+        boxScore.addPoint(inning, top);
     }
 
 }
