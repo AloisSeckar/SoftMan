@@ -1,5 +1,6 @@
 package elrh.softman.utils.factory;
 
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.SourcesDBManager;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.enums.PlayerGender;

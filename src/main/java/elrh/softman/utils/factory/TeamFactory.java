@@ -1,7 +1,10 @@
 package elrh.softman.utils.factory;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
+import elrh.softman.logic.core.Player;
 import elrh.softman.logic.core.Team;
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.utils.Constants;
 
@@ -25,6 +28,15 @@ public class TeamFactory {
             usedNumbers.add(number);
             team.addPlayer(PlayerFactory.getRandomPlayerInfo(level.getGender(), getRandomBirth(level), number));
         }
+
+        GameDBManager.getInstance().savePlayers(team.getPlayers());
+
+        // TODO get rid of this and revamp whole Player's logic
+        team.getPlayers().forEach(info -> {
+            var player = new Player();
+            player.setPlayerInfo(info);
+            AssociationManager.getInstance().registerPlayer(player);
+        });
 
         team.randomizeLineup();
 

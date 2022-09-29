@@ -23,8 +23,6 @@ public class AssociationFactory {
         int year = AssociationManager.getInstance().getClock().getYear();
 
         manager.registerClub(CLUB01);
-        CLUB01.persist();
-        CLUB01.persist();
         manager.registerClub(CLUB02);
         manager.registerClub(CLUB03);
         manager.registerClub(CLUB04);
