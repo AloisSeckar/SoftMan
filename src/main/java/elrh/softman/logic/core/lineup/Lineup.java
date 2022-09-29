@@ -1,6 +1,7 @@
 package elrh.softman.logic.core.lineup;
 
 import elrh.softman.logic.Result;
+import elrh.softman.logic.db.orm.records.StatsRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.Utils;
@@ -122,7 +123,7 @@ public class Lineup {
             var lineupSpot = positionPlayers[i];
             if (Utils.listNotEmpty(lineupSpot)) {
                 var first = lineupSpot.get(0);
-                first.getStats().clear();
+                first.setStats(new StatsRecord());
                 positionPlayers[i] = new ArrayList<>();
                 positionPlayers[i].add(first);
             }
@@ -130,7 +131,7 @@ public class Lineup {
         for (int i = 0; i < SUBSTITUTES; i++) {
             var substitute = substitutes[i];
             if (substitute != null) {
-                substitute.getStats().clear();
+                substitute.setStats(new StatsRecord());
             }
         }
     }

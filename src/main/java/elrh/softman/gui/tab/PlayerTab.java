@@ -3,6 +3,7 @@ package elrh.softman.gui.tab;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.utils.StatsUtils;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;
 import org.apache.commons.lang3.StringUtils;
@@ -33,16 +34,16 @@ public class PlayerTab extends HBox {
         var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
         if (player != null) {
             player.getStats().forEach(record -> {
-                var nameWithPos = record.getMatchId() + " " + record.getPlayerPos();
+                var nameWithPos = record.getMatchId() + " " + record.getPlayerStr();
                 statsOverview.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
                 statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 2) + " | ");
                 statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 2) + " | ");
                 statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 2) + " | ");
                 statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 2) + " | ");
                 statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBRB()), 3) + " | ");
-                statsOverview.appendText(/*record.getAVG()*/ "x.xxx" + " | ");
+                statsOverview.appendText(StatsUtils.getAVG(record.getBAB(), record.getBH()) + " | ");
                 statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 2) + " | ");
-                statsOverview.appendText(/*record.getIP()*/ "x.xxx" + " | \n");
+                statsOverview.appendText(StatsUtils.getIP(record.getFIP()) + " | \n");
             });
         }
     }

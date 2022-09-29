@@ -249,15 +249,15 @@ public class MatchSimulator {
                     var nameWithPos = playerRecord.getPlayer().getName() + ", " + playerRecord.getPosition().toString();
                     appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
                     var stats = playerRecord.getStats();
-                    var record = playerRecord.getStats().getStatsRecord();
+                    var record = playerRecord.getStats();
                     appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBRB()), 3) + " | ");
-                    appendText(stats.getAVG() + " | ");
+                    appendText(StatsUtils.getAVG(record.getBAB(), record.getBH()) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 2) + " | ");
-                    appendText(stats.getIP() + " | \n");
+                    appendText(StatsUtils.getIP(record.getFIP()) + " | \n");
                 });
             }
         }

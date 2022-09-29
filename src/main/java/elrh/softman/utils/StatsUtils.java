@@ -17,10 +17,36 @@ public class StatsUtils {
                 current.forEach(data -> {
                     // TODO this looks quite inefficient...
                     var player = AssociationManager.getInstance().getPlayerById(data.getPlayer().getPlayerId());
-                    player.getStats().add(data.getStats().getStatsRecord());
+                    player.getStats().add(data.getStats());
                 });
             }
         }
+    }
+
+    public static String getAVG(int bAB, int bH) {
+        return bAB > 0 ? String.format("%.3f", (float) bH / bAB) : "0,000";
+    }
+
+    public static String getSLG(int bAB, int bH, int b2B, int b3B, int bHR) {
+        if (bAB > 0) {
+            var totalBases = bH + b2B + b3B + bHR;
+            return String.format("%.3f", (float) totalBases / bAB);
+        } else {
+            return "0,000";
+        }
+    }
+
+    public static String getERA(int pER) {
+        return String.format("%.3f", (float) pER / Constants.INNINGS);
+    }
+
+    public static String getIP(int fIP) {
+        return (fIP / 3) + "." + (fIP % 3);
+    }
+
+    public static String getFLD(int fPO, int fA, int fE) {
+        var chances = fPO + fA + fE;
+        return  chances > 0 ? String.format("%.3f", 1 - ((float) fE / chances)) : "0,000";
     }
 
     public static void incAB(PlayerRecord batter) {
