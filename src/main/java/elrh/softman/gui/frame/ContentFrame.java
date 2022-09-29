@@ -17,23 +17,15 @@ public class ContentFrame extends TabPane {
     }
     
     private ContentFrame() {
-        Tab tab1 = new Tab("Club" , ClubTab.getInstance());
-        Tab tab2 = new Tab("Match" , MatchTab.getInstance());
-        Tab tab3 = new Tab("Team", TeamTab.getInstance());
-        Tab tab4 = new Tab("Lineup", LineupTab.getInstance());
-        Tab tab5 = new Tab("Training", new Label("Manage your player's training and progress"));
-        Tab tab6 = new Tab("Standings", StandingsTab.getInstance());
-        Tab tab7 = new Tab("Stats", new Label("Statistics center"));
-        Tab tab8 = new Tab("Market", new Label("Buy and sell players"));
-
-        this.getTabs().add(tab1);
-        this.getTabs().add(tab2);
-        this.getTabs().add(tab3);
-        this.getTabs().add(tab4);
-        this.getTabs().add(tab5);
-        this.getTabs().add(tab6);
-        this.getTabs().add(tab7);
-        this.getTabs().add(tab8);
+        this.getTabs().add(new Tab("Club" , ClubTab.getInstance()));
+        this.getTabs().add(new Tab("Match" , MatchTab.getInstance()));
+        this.getTabs().add(new Tab("Team", TeamTab.getInstance()));
+        this.getTabs().add(new Tab("Player", PlayerTab.getInstance()));
+        this.getTabs().add(new Tab("Lineup", LineupTab.getInstance()));
+        this.getTabs().add(new Tab("Training", new Label("Manage your player's training and progress")));
+        this.getTabs().add(new Tab("Standings", StandingsTab.getInstance()));
+        this.getTabs().add(new Tab("Stats", new Label("Statistics center")));
+        this.getTabs().add(new Tab("Market", new Label("Buy and sell players")));
     }
 
     public void setUp() {

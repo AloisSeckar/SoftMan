@@ -1,5 +1,6 @@
 package elrh.softman.gui.table;
 
+import elrh.softman.gui.tab.PlayerTab;
 import elrh.softman.logic.db.orm.PlayerInfo;
 
 import elrh.softman.gui.tile.PlayerInfoTile;
@@ -129,7 +130,9 @@ public class TeamPlayersTable extends Pane {
         selectedItems.addListener(
                 (ListChangeListener<PlayerInfo>) change -> {
                     if (playerInfo != null && Utils.listNotEmpty(change.getList())) {
-                        playerInfo.reload(change.getList().get(0));
+                        var selected = change.getList().get(0);
+                        playerInfo.reload(selected);
+                        PlayerTab.getInstance().reload(selected);
                     }
                 }
         );
