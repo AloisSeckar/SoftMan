@@ -1,5 +1,6 @@
 package elrh.softman.utils;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.core.lineup.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
@@ -8,6 +9,19 @@ import static elrh.softman.logic.enums.StatsType.*;
 import java.util.Random;
 
 public class StatsUtils {
+
+    public static void saveStatsToPlayers(Lineup lineup) {
+        for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
+            var current = lineup.getPositionPlayers()[i];
+            if (Utils.listNotEmpty(current)) {
+                current.forEach(data -> {
+                    // TODO this looks quite inefficient...
+                    var player = AssociationManager.getInstance().getPlayerById(data.getPlayer().getPlayerId());
+                    player.getStats().add(data.getStats().getStatsRecord());
+                });
+            }
+        }
+    }
 
     public static void incAB(PlayerRecord batter) {
         if (batter != null) {
