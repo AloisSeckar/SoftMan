@@ -1,6 +1,6 @@
 package elrh.softman.utils.factory;
 
-import elrh.softman.logic.db.GameDBManager;
+import elrh.softman.logic.core.Player;
 import elrh.softman.logic.db.SourcesDBManager;
 import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.enums.PlayerGender;
@@ -14,9 +14,12 @@ public class PlayerFactory {
     // the number of available images shall increse over the time
     private static final int AVAILABLE_FACES = 21;
 
-    public static PlayerInfo getRandomPlayerInfo(PlayerGender gender, int birth, int number) {
-        PlayerInfo player =  new PlayerInfo(getRandomPlayerName(gender.toString()), gender, birth, number);
-        setRandomPlayerImg(player);
+    public static Player getRandomPlayer(PlayerGender gender, int birth, int number) {
+        var playerInfo =  new PlayerInfo(getRandomPlayerName(gender.toString()), gender, birth, number);
+        setRandomPlayerImg(playerInfo);
+
+        var player = new Player();
+        player.setPlayerInfo(playerInfo);
         return player;
     }
 

@@ -2,12 +2,9 @@ package elrh.softman.utils.factory;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
-import elrh.softman.logic.core.Player;
 import elrh.softman.logic.core.Team;
-import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.utils.Constants;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -26,17 +23,13 @@ public class TeamFactory {
                 number = rand.nextInt(99) + 1;
             } while (usedNumbers.contains(number));
             usedNumbers.add(number);
-            team.addPlayer(PlayerFactory.getRandomPlayerInfo(level.getGender(), getRandomBirth(level), number));
-        }
 
-        GameDBManager.getInstance().savePlayers(team.getPlayers());
-
-        // TODO get rid of this and revamp whole Player's logic
-        team.getPlayers().forEach(info -> {
-            var player = new Player();
-            player.setPlayerInfo(info);
+            var player = PlayerFactory.getRandomPlayer(level.getGender(), getRandomBirth(level), number);
+            player.persist();
             AssociationManager.getInstance().registerPlayer(player);
-        });
+
+            team.addPlayer(player.getPlayerInfo());
+        }
 
         team.randomizeLineup();
 

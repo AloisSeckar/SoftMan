@@ -83,27 +83,25 @@ public class AssociationManagerTest extends AbstractDBTest {
     @DisplayName("registerAndGetPlayerTest")
     void registerAndGetPlayerTest() {
         // TODO use some player factory method...
-        Player newPlayer1 = new Player();
-        newPlayer1.setPlayerInfo(PlayerFactory.getRandomPlayerInfo(PlayerGender.M, 2000, 1));
+        var newPlayer1 = PlayerFactory.getRandomPlayer(PlayerGender.M, 2000, 1);
         newPlayer1.getPlayerInfo().setPlayerId(1);
         newPlayer1.getPlayerInfo().setName(ELEMENT_NAME);
-        Player newPlayer2 = new Player();
-        newPlayer2.setPlayerInfo(PlayerFactory.getRandomPlayerInfo(PlayerGender.M, 2000, 2));
+        var newPlayer2 = PlayerFactory.getRandomPlayer(PlayerGender.M, 2000, 2);
         newPlayer2.getPlayerInfo().setPlayerId(2);
         newPlayer2.getPlayerInfo().setName(ELEMENT_NAME);
 
         result = manager.registerPlayer(newPlayer1);
         assertTrue(result.ok(), "registering player 1 should be successful");
-        List<Player> Players = manager.getPlayers(true);
-        assertEquals(1, Players.size(), "player should be registered and found");
-        Player testPlayer = Players.get(0);
+        var players = manager.getPlayers(true);
+        assertEquals(1, players.size(), "player should be registered and found");
+        Player testPlayer = players.get(0);
         assertEquals(ELEMENT_NAME, testPlayer.getPlayerInfo().getName(), "player name doesn't match");
 
         result = manager.registerPlayer(newPlayer2);
         assertTrue(result.ok(), "registering player 2 should be successful");
         assertEquals(2, manager.getPlayers(true).size(), "there should be exactly 2 players registered");
 
-        Player testPlayerById = manager.getPlayerById(testPlayer.getId());
+        var testPlayerById = manager.getPlayerById(testPlayer.getId());
         assertNotNull(testPlayerById, "player wasn't find by ID");
         assertEquals(testPlayer, testPlayerById, "player found by ID is not the same as expected");
 

@@ -25,18 +25,18 @@ public class TeamTest extends AbstractDBTest {
     @Test
     @DisplayName("addingPlayersTest")
     void addingPlayersTest() {
-        Club club = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
-        Team teamMSEN = new Team(PlayerLevel.MSEN, ELEMENT_NAME, club);
-        Team teamMU12 = new Team(PlayerLevel.MU12, ELEMENT_NAME, club);
-        Team teamFSEN = new Team(PlayerLevel.FSEN, ELEMENT_NAME, club);
-        Team teamFU12 = new Team(PlayerLevel.FU12, ELEMENT_NAME, club);
+        var club = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
+        var teamMSEN = new Team(PlayerLevel.MSEN, ELEMENT_NAME, club);
+        var teamMU12 = new Team(PlayerLevel.MU12, ELEMENT_NAME, club);
+        var teamFSEN = new Team(PlayerLevel.FSEN, ELEMENT_NAME, club);
+        var teamFU12 = new Team(PlayerLevel.FU12, ELEMENT_NAME, club);
 
-        PlayerInfo playerMSEN = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, AGE_30, 1);
-        PlayerInfo playerMJUN = PlayerFactory.getRandomPlayerInfo(PlayerGender.M, AGE_10, 2);
-        PlayerInfo playerFSEN = PlayerFactory.getRandomPlayerInfo(PlayerGender.F, AGE_30, 3);
-        PlayerInfo playerFJUN = PlayerFactory.getRandomPlayerInfo(PlayerGender.F, AGE_10, 4);
+        var playerMSEN = PlayerFactory.getRandomPlayer(PlayerGender.M, AGE_30, 1).getPlayerInfo();;
+        var playerMJUN = PlayerFactory.getRandomPlayer(PlayerGender.M, AGE_10, 2).getPlayerInfo();;
+        var playerFSEN = PlayerFactory.getRandomPlayer(PlayerGender.F, AGE_30, 3).getPlayerInfo();;
+        var playerFJUN = PlayerFactory.getRandomPlayer(PlayerGender.F, AGE_10, 4).getPlayerInfo();;
 
-        Result result = teamMSEN.addPlayer(playerMSEN);
+        var result = teamMSEN.addPlayer(playerMSEN);
         assertTrue(result.ok(), "Senior M player should be added into senior M team");
         result = teamMSEN.addPlayer(playerMJUN);
         assertFalse(result.ok(), "Junior M player shouldn't be added into senior M team");
