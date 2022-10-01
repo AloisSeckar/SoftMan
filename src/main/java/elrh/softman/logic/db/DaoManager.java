@@ -4,7 +4,6 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import elrh.softman.logic.Result;
-import elrh.softman.logic.interfaces.IDao;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import lombok.NonNull;
@@ -13,19 +12,17 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public class DaoManager<U extends AbstractDBEntity> implements IDao<U> {
+public class DaoManager<U extends AbstractDBEntity> {
 
     private Dao<U, Long> dao;
 
     @NonNull
     private final Class<U> typeParameterClass;
 
-    @Override
     public Class<U> getTypeParameterClass() {
         return typeParameterClass;
     }
 
-    @Override
     public Result init(JdbcPooledConnectionSource conn, boolean dropExisting) {
         try {
             if (dropExisting) {
@@ -40,13 +37,12 @@ public class DaoManager<U extends AbstractDBEntity> implements IDao<U> {
         }
     }
 
-    @Override
-    public Result saveObject(U object) {
+    public Result saveObject(AbstractDBEntity object) {
         try {
             if (object.getId() > 0) {
-                dao.update(object);
+                dao.update((U) object);
             } else {
-                dao.create(object);
+                dao.create((U) object);
             }
             LOG.info("OBJECT saved into DB");
             return Constants.RESULT_OK;
@@ -55,7 +51,6 @@ public class DaoManager<U extends AbstractDBEntity> implements IDao<U> {
         }
     }
 
-    @Override
     public U getObjectById(long objectId) {
         try {
             return dao.queryForId(objectId);

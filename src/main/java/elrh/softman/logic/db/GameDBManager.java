@@ -5,7 +5,6 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.db.orm.*;
 import elrh.softman.logic.db.orm.player.*;
 import elrh.softman.logic.db.orm.match.*;
-import elrh.softman.logic.interfaces.IDao;
 import elrh.softman.utils.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 @Slf4j
 public class GameDBManager {
 
-    private final List<IDao> daoList = new ArrayList<>();
+    private final List<DaoManager<? extends AbstractDBEntity>> daoList = new ArrayList<>();
 
     private JdbcPooledConnectionSource conn;
 
@@ -62,7 +61,7 @@ public class GameDBManager {
         }
     }
 
-    public Result saveObject(Class objectClass, AbstractDBEntity object) {
+    public Result saveObject(Class<? extends AbstractDBEntity> objectClass, AbstractDBEntity object) {
         var dao = daoList.stream().filter(i -> i.getTypeParameterClass() == objectClass).findFirst();
         if (dao.isPresent()) {
             return dao.get().saveObject(object);
@@ -71,7 +70,7 @@ public class GameDBManager {
         }
     }
 
-    public Object getObjectById(Class objectClass, long objectId) {
+    public Object getObjectById(Class<? extends AbstractDBEntity> objectClass, long objectId) {
         var dao = daoList.stream().filter(i -> i.getTypeParameterClass() == objectClass).findFirst();
         if (dao.isPresent()) {
             return dao.get().getObjectById(objectId);
