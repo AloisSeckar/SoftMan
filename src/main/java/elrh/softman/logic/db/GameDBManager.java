@@ -63,7 +63,7 @@ public class GameDBManager {
     }
 
     public Result saveObject(Class objectClass, AbstractDBEntity object) {
-        var dao = daoList.stream().filter(i -> i.getTypePameterClass() == objectClass).findFirst();
+        var dao = daoList.stream().filter(i -> i.getTypeParameterClass() == objectClass).findFirst();
         if (dao.isPresent()) {
             return dao.get().saveObject(object);
         } else {
@@ -72,7 +72,7 @@ public class GameDBManager {
     }
 
     public Object getObjectById(Class objectClass, long objectId) {
-        var dao = daoList.stream().filter(i -> i.getTypePameterClass() == objectClass).findFirst();
+        var dao = daoList.stream().filter(i -> i.getTypeParameterClass() == objectClass).findFirst();
         if (dao.isPresent()) {
             return dao.get().getObjectById(objectId);
         } else {

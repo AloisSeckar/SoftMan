@@ -6,7 +6,7 @@ import elrh.softman.logic.db.AbstractDBEntity;
 
 public interface IDao<T extends AbstractDBEntity> {
 
-    Class<T> getTypePameterClass();
+    Class<T> getTypeParameterClass();
 
     Result init(JdbcPooledConnectionSource conn, boolean dropExisting);
 

@@ -21,7 +21,7 @@ public class DaoManager<U extends AbstractDBEntity> implements IDao<U> {
     private final Class<U> typeParameterClass;
 
     @Override
-    public Class<U> getTypePameterClass() {
+    public Class<U> getTypeParameterClass() {
         return typeParameterClass;
     }
 
