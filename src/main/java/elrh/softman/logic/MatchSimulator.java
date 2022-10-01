@@ -176,8 +176,8 @@ public class MatchSimulator {
         printStats(awayLineup);
         printStats(homeLineup);
 
-        StatsUtils.saveStatsToPlayers(awayLineup);
-        StatsUtils.saveStatsToPlayers(homeLineup);
+        StatsUtils.saveStats(awayLineup);
+        StatsUtils.saveStats(homeLineup);
 
         // TODO save the match into correct league
         AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0).saveMatch(match);

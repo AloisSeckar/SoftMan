@@ -3,6 +3,7 @@ package elrh.softman.logic.db;
 import com.j256.ormlite.dao.*;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import elrh.softman.logic.db.orm.records.StatsRecord;
 import elrh.softman.utils.Constants;
 import elrh.softman.logic.db.orm.*;
 
@@ -26,6 +27,7 @@ public class GameDBManager {
     private Dao<ClubInfo, Long> clubDao;
     private Dao<TeamInfo, Long> teamDao;
     private Dao<PlayerInfo, Long> playerDao;
+    private Dao<StatsRecord, Long> statsRecordDao;
 
     private GameDBManager() {
     }
@@ -161,6 +163,20 @@ public class GameDBManager {
         }
     }
 
+    public elrh.softman.logic.Result saveStatsRecord(StatsRecord record) {
+        try {
+            if (record.getId() > 0) {
+                statsRecordDao.update(record);
+            } else {
+                statsRecordDao.create(record);
+            }
+            LOG.info("TEAM SAVED");
+            return Constants.RESULT_OK;
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("saveStatsRecord", ex);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////
     private void setUpDatabase() throws SQLException {
         // TODO remove this to allow re-loading
@@ -170,6 +186,7 @@ public class GameDBManager {
         TableUtils.dropTable(conn, PlayerAttributes.class, true);
         TableUtils.dropTable(conn, TeamInfo.class, true);
         TableUtils.dropTable(conn, Result.class, true);
+        TableUtils.dropTable(conn, StatsRecord.class, true);
         // TODO remove this to allow re-loading
 
         TableUtils.createTableIfNotExists(conn, LeagueInfo.class);
@@ -178,12 +195,15 @@ public class GameDBManager {
         TableUtils.createTableIfNotExists(conn, PlayerAttributes.class);
         TableUtils.createTableIfNotExists(conn, TeamInfo.class);
         TableUtils.createTableIfNotExists(conn, Result.class);
+        TableUtils.createTableIfNotExists(conn, StatsRecord.class);
 
         leagueDao = DaoManager.createDao(conn, LeagueInfo.class);
         clubDao = DaoManager.createDao(conn, ClubInfo.class);
         playerDao = DaoManager.createDao(conn, PlayerInfo.class);
         teamDao = DaoManager.createDao(conn, TeamInfo.class);
         matchDao = DaoManager.createDao(conn, Result.class);
+
+        statsRecordDao = DaoManager.createDao(conn, StatsRecord.class);
     }
 
 }
