@@ -18,6 +18,6 @@ public abstract class AbstractDBEntity {
     @Override
     public boolean equals(Object obj) {
         var other = (AbstractDBEntity) obj;
-        return other != null ? this.getId() == other.getId() : false;
+        return other != null ? this.getId() == other.getId() && this.getClass().equals(obj.getClass()) : false;
     }
 }
