@@ -12,12 +12,11 @@ import elrh.softman.logic.db.orm.TeamInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.enums.PlayerPosition;
-import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import lombok.*;
 
-public class Team implements IDatabaseEntity {
+public class Team {
     
     @Getter
     private final TeamInfo teamInfo;
@@ -30,7 +29,7 @@ public class Team implements IDatabaseEntity {
 
     public Team(PlayerLevel level, String name, Club club) {
         this.teamInfo = new TeamInfo(level, name, club.getClubInfo());
-        persist();
+        teamInfo.persist();
         defaultLineup = new Lineup(getId(), getName(), getLogo());
     }
 
@@ -39,14 +38,8 @@ public class Team implements IDatabaseEntity {
         return getName();
     }
 
-    @Override
     public long getId() {
         return teamInfo.getTeamId();
-    }
-
-    @Override
-    public void persist() {
-        GameDBManager.getInstance().saveTeam(this);
     }
 
     public String getName() {

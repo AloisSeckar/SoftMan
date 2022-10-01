@@ -9,13 +9,16 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
+import elrh.softman.logic.Result;
+import elrh.softman.logic.db.AbstractDBEntity;
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.utils.ErrorUtils;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_match_info")
-@Data @NoArgsConstructor
-public class MatchInfo {
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+public class MatchInfo extends AbstractDBEntity {
 
     @DatabaseField(generatedId = true)
     private long matchId;
@@ -54,6 +57,16 @@ public class MatchInfo {
             ErrorUtils.raise("Illegal attempt to read 'matchDay' before it was set-up");
             return null;
         }
+    }
+
+    @Override
+    public long getId() {
+        return getMatchId();
+    }
+
+    @Override
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(MatchInfo.class, this);
     }
 
 }

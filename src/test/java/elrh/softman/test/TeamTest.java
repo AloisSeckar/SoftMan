@@ -29,10 +29,10 @@ public class TeamTest extends AbstractDBTest {
         var teamFSEN = new Team(PlayerLevel.FSEN, ELEMENT_NAME, club);
         var teamFU12 = new Team(PlayerLevel.FU12, ELEMENT_NAME, club);
 
-        var playerMSEN = PlayerFactory.getRandomPlayer(PlayerGender.M, AGE_30, 1).getPlayerInfo();;
-        var playerMJUN = PlayerFactory.getRandomPlayer(PlayerGender.M, AGE_10, 2).getPlayerInfo();;
-        var playerFSEN = PlayerFactory.getRandomPlayer(PlayerGender.F, AGE_30, 3).getPlayerInfo();;
-        var playerFJUN = PlayerFactory.getRandomPlayer(PlayerGender.F, AGE_10, 4).getPlayerInfo();;
+        var playerMSEN = PlayerFactory.getRandomPlayer(PlayerGender.M, AGE_30, 1).getPlayerInfo();
+        var playerMJUN = PlayerFactory.getRandomPlayer(PlayerGender.M, AGE_10, 2).getPlayerInfo();
+        var playerFSEN = PlayerFactory.getRandomPlayer(PlayerGender.F, AGE_30, 3).getPlayerInfo();
+        var playerFJUN = PlayerFactory.getRandomPlayer(PlayerGender.F, AGE_10, 4).getPlayerInfo();
 
         var result = teamMSEN.addPlayer(playerMSEN);
         assertTrue(result.ok(), "Senior M player should be added into senior M team");

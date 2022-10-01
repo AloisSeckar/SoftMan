@@ -2,15 +2,18 @@ package elrh.softman.logic.db.orm.player;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import elrh.softman.logic.Result;
+import elrh.softman.logic.db.AbstractDBEntity;
+import elrh.softman.logic.db.GameDBManager;
 import java.util.Random;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_player_attributes")
-@Data
-public class PlayerAttributes {
+@Data @EqualsAndHashCode(callSuper=true)
+public class PlayerAttributes extends AbstractDBEntity {
     
     @DatabaseField(generatedId = true)
-    private long attributesId;
+    private long playerAttributesId;
     
     @DatabaseField(canBeNull = false)
     private int battingPower;
@@ -99,4 +102,15 @@ public class PlayerAttributes {
     public int getTotal() {
         return (getBattingSkill() + getPitchingSkill() + getFieldingSkill() + getPhysicalSkill()) / 4;
     }
+
+    @Override
+    public long getId() {
+        return getPlayerAttributesId();
+    }
+
+    @Override
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(PlayerAttributes.class, this);
+    }
+
 }

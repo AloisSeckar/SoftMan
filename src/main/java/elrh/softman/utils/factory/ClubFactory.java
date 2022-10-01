@@ -8,9 +8,8 @@ public class ClubFactory {
     public static Club getClub(String name) {
         Club newClub = new Club(name, "Unknown", "The Field");
         newClub.getClubInfo().setLogo("/img/teams/" + name.toLowerCase() + ".png");
+        newClub.getClubInfo().persist();
         newClub.setColor(getColorForName(name));
-        newClub.persist();
-
 
         return newClub;
     }

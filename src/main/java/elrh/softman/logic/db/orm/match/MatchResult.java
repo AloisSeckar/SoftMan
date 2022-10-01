@@ -2,16 +2,21 @@ package elrh.softman.logic.db.orm.match;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Match;
+import elrh.softman.logic.db.AbstractDBEntity;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.TeamInfo;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_match_result")
-@Data @NoArgsConstructor
-public class MatchResult {
-    
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+public class MatchResult extends AbstractDBEntity {
+
     @DatabaseField(generatedId = true)
+    private long matchResultId;
+
+    @DatabaseField(canBeNull = false)
     private long matchId;
  
     @DatabaseField(canBeNull = false, foreign=true, foreignAutoCreate = true, foreignAutoRefresh = true)
@@ -42,8 +47,8 @@ public class MatchResult {
     private int homeErrors;
     
     public MatchResult(Match source) {
-        awayTeam = GameDBManager.getInstance().getTeam(source.getAwayLineup().getTeamId());
-        homeTeam = GameDBManager.getInstance().getTeam(source.getHomeLineup().getTeamId());
+        awayTeam = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, source.getAwayLineup().getTeamId());
+        homeTeam = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, source.getHomeLineup().getTeamId());
         
         var boxScore = source.getBoxScore();
         innings = boxScore.getInnings();
@@ -56,25 +61,13 @@ public class MatchResult {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + (int) (this.matchId ^ (this.matchId >>> 32));
-        return hash;
+    public long getId() {
+        return getMatchResultId();
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final MatchResult other = (MatchResult) obj;
-        return this.matchId == other.matchId;
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(MatchResult.class, this);
     }
     
 }

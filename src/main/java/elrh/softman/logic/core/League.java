@@ -1,9 +1,7 @@
 package elrh.softman.logic.core;
 
 import elrh.softman.logic.Result;
-import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
-import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
@@ -20,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j @RequiredArgsConstructor
-public class League implements IDatabaseEntity {
+public class League {
 
     public static final LocalDate LEAGUE_START = LocalDate.of(Constants.START_YEAR,4,1);
 
@@ -36,14 +34,8 @@ public class League implements IDatabaseEntity {
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
 
-    @Override
     public long getId() {
         return leagueInfo.getLeagueId();
-    }
-
-    @Override
-    public void persist() {
-        GameDBManager.getInstance().saveLeague(this);
     }
 
     public String getName() {
@@ -55,7 +47,7 @@ public class League implements IDatabaseEntity {
             teams.add(team);
             standings.add(new Standing(team.getName()));
             team.getTeamInfo().setLeagueInfo(this.leagueInfo);
-            team.persist();
+            team.getTeamInfo().persist();
             LOG.info("Team " + team.getId() + " registered");
             return Constants.RESULT_OK;
         } catch (Exception ex) {
@@ -94,7 +86,7 @@ public class League implements IDatabaseEntity {
 
                     var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
                     LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayLineup().getTeamName() + " @ " + match.getHomeLineup().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
-                    GameDBManager.getInstance().saveMatch(match);
+                    match.getMatchInfo().persist();
                     matches.put(matchId, match);
                 }
                 shiftTeams();
@@ -127,7 +119,7 @@ public class League implements IDatabaseEntity {
 
     public Result saveMatch(Match match) {
         try {
-            GameDBManager.getInstance().saveMatch(match);
+            match.getMatchInfo().persist();
             includeMatchIntoStandings(match);
             LOG.info("Match " + match + " saved and included into league standings");
             return Constants.RESULT_OK;
@@ -152,7 +144,7 @@ public class League implements IDatabaseEntity {
         // TODO REMOVE
         var match = new Match(mockGetMatchInfo(), teams.get(0).getDefaultLineup(), teams.get(1).getDefaultLineup());
         match.simulate(target);
-        GameDBManager.getInstance().saveMatch(match);
+        match.getMatchInfo().persist();
     }
 
     private MatchInfo mockGetMatchInfo() {

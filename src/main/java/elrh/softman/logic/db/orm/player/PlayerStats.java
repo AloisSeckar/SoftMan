@@ -2,18 +2,21 @@ package elrh.softman.logic.db.orm.player;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import elrh.softman.logic.Result;
+import elrh.softman.logic.db.AbstractDBEntity;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.enums.StatsType;
-import elrh.softman.logic.interfaces.IDatabaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @DatabaseTable(tableName = "softman_player_stats")
-@Data
-public class PlayerStats implements IDatabaseEntity {
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+public class PlayerStats extends AbstractDBEntity {
 
     @DatabaseField(generatedId = true)
-    private long statsId;
+    private long playerStatsId;
 
     @DatabaseField(canBeNull = false)
     @NonNull
@@ -180,11 +183,12 @@ public class PlayerStats implements IDatabaseEntity {
 
     @Override
     public long getId() {
-        return getStatsId();
+        return getPlayerStatsId();
     }
 
     @Override
-    public void persist() {
-        GameDBManager.getInstance().saveStatsRecord(this);
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(PlayerStats.class, this);
     }
+
 }

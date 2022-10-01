@@ -2,14 +2,17 @@ package elrh.softman.logic.db.orm.match;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import elrh.softman.logic.Result;
+import elrh.softman.logic.db.AbstractDBEntity;
+import elrh.softman.logic.db.GameDBManager;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_match_pbp")
-@Data @NoArgsConstructor
-public class MatchPlayByPlay {
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+public class MatchPlayByPlay extends AbstractDBEntity {
 
     @DatabaseField(generatedId = true)
-    private long pbpId;
+    private long matchPlayByPlayId;
 
     @DatabaseField
     private long matchId;
@@ -24,6 +27,16 @@ public class MatchPlayByPlay {
         this.matchId = matchId;
         this.ord = ord;
         this.play = play;
+    }
+
+    @Override
+    public long getId() {
+        return getMatchPlayByPlayId();
+    }
+
+    @Override
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(MatchPlayByPlay.class, this);
     }
 
 }

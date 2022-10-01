@@ -20,15 +20,17 @@ public class UserManagerTest extends AbstractDBTest {
     @Test
     @DisplayName("userManagesTeamTest")
     void userManagesTeamTest() {
-        assertFalse(user.userManagesTeam(1), "team 1 shouldn't be managed by the user yet");
+        assertFalse(user.userManagesTeam(0), "team 0 shouldn't be managed by the user");
 
         var club = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
         club.formTeam(PlayerLevel.MSEN);
 
-        assertFalse(user.userManagesTeam(1), "team 1 shouldn't be managed by the user yet");
+        var teamId = club.getTeams().get(0).getId();
+
+        assertFalse(user.userManagesTeam(teamId), "team shouldn't be managed by the user yet");
 
         user.setActiveClub(club);
-        assertTrue(user.userManagesTeam(1), "team 1 should be managed by the user now");
+        assertTrue(user.userManagesTeam(teamId), "team should be managed by the user now");
     }
 
 }

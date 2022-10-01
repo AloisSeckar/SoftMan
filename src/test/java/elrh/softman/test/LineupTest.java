@@ -15,7 +15,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 public class LineupTest {
 
     private final PlayerInfo player1 = PlayerFactory.getRandomPlayer(PlayerGender.M, 2022, 1).getPlayerInfo();
-    private final PlayerInfo player2 = PlayerFactory.getRandomPlayer(PlayerGender.M, 2022, 2).getPlayerInfo();;
+    private final PlayerInfo player2 = PlayerFactory.getRandomPlayer(PlayerGender.M, 2022, 2).getPlayerInfo();
 
     private final PlayerRecord playerRecord1 = new PlayerRecord(player1, PlayerPosition.PITCHER);
     private final PlayerRecord playerRecord2 = new PlayerRecord(player2, PlayerPosition.CATCHER);

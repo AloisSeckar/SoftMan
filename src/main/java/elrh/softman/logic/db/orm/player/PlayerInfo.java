@@ -3,12 +3,15 @@ package elrh.softman.logic.db.orm.player;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.Result;
+import elrh.softman.logic.db.AbstractDBEntity;
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.enums.PlayerGender;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_player_info")
-@Data @NoArgsConstructor
-public class PlayerInfo implements Comparable<PlayerInfo> {
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+public class PlayerInfo extends AbstractDBEntity implements Comparable<PlayerInfo> {
     
     @DatabaseField(generatedId = true)
     private long playerId;
@@ -75,6 +78,16 @@ public class PlayerInfo implements Comparable<PlayerInfo> {
     
     public PlayerAttributes getAttributes() {
         return attributes;
+    }
+
+    @Override
+    public long getId() {
+        return getPlayerId();
+    }
+
+    @Override
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(PlayerInfo.class, this);
     }
     
 }

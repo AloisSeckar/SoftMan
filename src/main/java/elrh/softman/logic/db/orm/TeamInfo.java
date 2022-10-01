@@ -2,12 +2,16 @@ package elrh.softman.logic.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import elrh.softman.logic.Result;
+import elrh.softman.logic.db.AbstractDBEntity;
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.enums.PlayerLevel;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_team_info")
-@Data @NoArgsConstructor @RequiredArgsConstructor
-public class TeamInfo {
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+@RequiredArgsConstructor // TODO why RequiredArgsConstructor not working out of the box with Data?
+public class TeamInfo extends AbstractDBEntity {
     
     @DatabaseField(generatedId = true)
     private long teamId;
@@ -26,5 +30,15 @@ public class TeamInfo {
 
     @DatabaseField(foreign = true)
     private LeagueInfo leagueInfo;
+
+    @Override
+    public long getId() {
+        return getTeamId();
+    }
+
+    @Override
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(TeamInfo.class, this);
+    }
     
 }

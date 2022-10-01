@@ -2,14 +2,11 @@ package elrh.softman.logic.core;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
-import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.ClubInfo;
 import elrh.softman.logic.enums.PlayerLevel;
-import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.factory.TeamFactory;
-
 import java.util.HashMap;
 import java.util.List;
 import javafx.scene.paint.Color;
@@ -17,7 +14,7 @@ import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Club implements IDatabaseEntity {
+public class Club {
 
     @Getter
     private final ClubInfo clubInfo;
@@ -41,14 +38,8 @@ public class Club implements IDatabaseEntity {
         return clubInfo.getName();
     }
 
-    @Override
     public long getId() {
         return clubInfo.getClubId();
-    }
-
-    @Override
-    public void persist() {
-        GameDBManager.getInstance().saveClub(this);
     }
 
     public List<Team> getTeams() {
@@ -70,10 +61,10 @@ public class Club implements IDatabaseEntity {
         try {
             var existingTeams = teams.values().stream().filter(t -> t.getTeamInfo().getLevel() == level).count();
             var squad = getSquadCode(existingTeams);
-            var name = this.clubInfo.getName() + " " + level.getCode() + " " + squad;
+            var name = clubInfo.getName() + " " + level.getCode() + " " + squad;
 
             var newTeam = TeamFactory.getTeam(level, name, this);
-            this.teams.put(newTeam.getId(), newTeam);
+            teams.put(newTeam.getId(), newTeam);
 
             LOG.info("New team " + newTeam.getId() + "('" + name + "') was formed");
             return Constants.RESULT_OK;

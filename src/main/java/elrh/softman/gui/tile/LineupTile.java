@@ -53,7 +53,7 @@ public class LineupTile extends VBox {
 
     public void fillLineup(Lineup lineup) {
         if (lineup != null) {
-            this.team = GameDBManager.getInstance().getTeam(lineup.getTeamId());
+            this.team = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, lineup.getTeamId());
             if (team != null) {
                 // TODO get to player list more directly and correctly
                 var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());

@@ -2,13 +2,17 @@ package elrh.softman.logic.db.orm;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import elrh.softman.logic.Result;
+import elrh.softman.logic.db.AbstractDBEntity;
+import elrh.softman.logic.db.GameDBManager;
+import elrh.softman.logic.db.orm.player.PlayerAttributes;
 import elrh.softman.logic.enums.PlayerLevel;
 import java.util.Objects;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_league_info")
-@Data @NoArgsConstructor @RequiredArgsConstructor
-public class LeagueInfo {
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor @RequiredArgsConstructor
+public class LeagueInfo extends AbstractDBEntity {
     
     @DatabaseField(generatedId = true)
     private long leagueId;
@@ -47,6 +51,16 @@ public class LeagueInfo {
         }
         final LeagueInfo other = (LeagueInfo) obj;
         return (Objects.equals(this.leagueName, other.leagueName));
+    }
+
+    @Override
+    public long getId() {
+        return getLeagueId();
+    }
+
+    @Override
+    public Result persist() {
+        return GameDBManager.getInstance().saveObject(LeagueInfo.class, this);
     }
     
 }

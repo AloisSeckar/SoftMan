@@ -60,8 +60,8 @@ public class AssociationManager {
     public Result createNewLeague(String name, PlayerLevel level) {
         try {
             LeagueInfo leagueInfo = new LeagueInfo(name, level, clock.getYear(), level.getMatchId());
+            leagueInfo.persist();
             League newLeague = new League(leagueInfo);
-            newLeague.persist();
             managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
             LOG.info("New league ID " + newLeague + " created");
             return Constants.RESULT_OK;
@@ -102,10 +102,10 @@ public class AssociationManager {
             Club existingClub = registeredClubs.get(clubId);
             if (existingClub != null) {
                 existingClub.getClubInfo().setRegistered(year);
-                existingClub.persist();
+                existingClub.getClubInfo().persist();
             } else {
                 club.getClubInfo().setRegistered(year);
-                club.persist();
+                club.getClubInfo().persist();
                 registeredClubs.put(clubId, club);
             }
             LOG.info("Club " + clubId + " was registered for " + year + " season");
@@ -134,10 +134,10 @@ public class AssociationManager {
             Player existingPlayer = registeredPlayers.get(playerId);
             if (existingPlayer != null) {
                 existingPlayer.getPlayerInfo().setRegistered(year);
-                existingPlayer.persist();
+                existingPlayer.getPlayerInfo().persist();
             } else {
                 player.getPlayerInfo().setRegistered(year);
-                player.persist();
+                player.getPlayerInfo().persist();
                 registeredPlayers.put(playerId, player);
             }
             LOG.info("player " + playerId + " was registered for " + year + " season");
