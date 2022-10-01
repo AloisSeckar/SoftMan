@@ -66,8 +66,8 @@ public class League implements IDatabaseEntity {
     public Result scheduleMatches() {
         try {
             var matchIdBase = leagueInfo.getMatchId();
-            var matchesPerRound = getTotalRounds();
-            var rounds = (teams.size() - 1) * 4;
+            var matchesPerRound = teams.size() / 2;
+            var rounds = getTotalRounds();
             var roundDate = LEAGUE_START;
 
             Collections.shuffle(teams);
@@ -206,7 +206,7 @@ public class League implements IDatabaseEntity {
     ////////////////////////////////////////////////////////////////////////////
 
     private int getTotalRounds() {
-        return teams.size() / 2;
+        return (teams.size() - 1) * 4;
     }
 
     private void shiftTeams() {

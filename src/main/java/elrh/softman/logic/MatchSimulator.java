@@ -265,7 +265,9 @@ public class MatchSimulator {
     }
     
     private void appendText(String text) {
-        target.appendText(text);
+        if (target != null) {
+            target.appendText(text);
+        }
         match.getPlayByPlay().add(new MatchPlayByPlay(match.getMatchInfo().getMatchId(), match.getPlayByPlay().size() + 1, text));
     }
 

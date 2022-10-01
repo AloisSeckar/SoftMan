@@ -7,18 +7,18 @@ import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
-import elrh.softman.utils.Constants;
-import elrh.softman.utils.ErrorUtils;
-import elrh.softman.utils.FormatUtils;
+import elrh.softman.utils.*;
+import java.time.LocalDate;
 import java.util.*;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AssociationManager {
+
+    @Setter
+    private boolean testMode = false; // TODO isn't there a better way to aviod GUI constructing during unit tests?
 
     @Getter
     private final ClockManager clock = new ClockManager();
@@ -187,34 +187,35 @@ public class AssociationManager {
         return ret;
     }
 
+    public boolean isTodayMatch(Match match) {
+        var matchDate = match.getMatchInfo().getMatchDay();
+        return matchDate.compareTo(clock.getCurrentDate()) == 0;
+    }
+
     public Result nextDay() {
         try {
             if (isDayFinished() || confirmDayFinished()) {
-                getDailyMatches().values().forEach(matches -> matches.forEach(match -> {
-                    if (!match.isFinished()) {
-                        match.simulate(new TextArea());
-                    }
-                }));
-
-                ClubTab.getInstance().refreshSchedule();
-                clock.plusDays(1);
-                clock.adjustViewDay();
-                LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
-
-                ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
-                ClubTab.getInstance().setDailySchedule();
+                advanceToNextDay();
+                refreshUIComponents();
                 return Constants.RESULT_OK;
             } else {
                 return new Result(false, "Day not completed yet");
             }
         } catch (Exception ex) {
-            return ErrorUtils.handleException("AssociationManager.registerPlayer", ex);
+            return ErrorUtils.handleException("AssociationManager.nextDay", ex);
         }
     }
 
-    public boolean isTodayMatch(Match match) {
-        var matchDate = match.getMatchInfo().getMatchDay();
-        return matchDate.compareTo(clock.getCurrentDate()) == 0;
+    public Result simulateUntil(LocalDate until) {
+        try {
+            while (until.isAfter(clock.getCurrentDate())) {
+                advanceToNextDay();
+            }
+            refreshUIComponents();
+            return Constants.RESULT_OK;
+        } catch (Exception ex) {
+            return ErrorUtils.handleException("AssociationManager.simulateUntil", ex);
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -237,9 +238,33 @@ public class AssociationManager {
     }
 
     private boolean confirmDayFinished() {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Simulate the rest of the day?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-        alert.showAndWait();
-        return alert.getResult() == ButtonType.YES;
+        if (testMode) {
+            return true;
+        } else {
+            var alert = new Alert(Alert.AlertType.CONFIRMATION, "Simulate the rest of the day?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+            alert.showAndWait();
+            return alert.getResult() == ButtonType.YES;
+        }
     }
 
+    private void advanceToNextDay() {
+        getDailyMatches().values().forEach(matches -> matches.forEach(match -> {
+            if (!match.isFinished()) {
+                match.simulate(testMode ? null : new TextArea()); // TODO rendering actions shouldn't be part of simulating
+            }
+        }));
+
+        clock.plusDays(1);
+        clock.adjustViewDay();
+        LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
+    }
+
+    private void refreshUIComponents() {
+        if (!testMode) {
+            ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
+            ClubTab.getInstance().setDailySchedule();
+        }
+    }
 }
+
+

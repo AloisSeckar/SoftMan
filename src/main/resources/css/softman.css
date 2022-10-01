@@ -11,7 +11,7 @@
 }
 
 .date-label {
-    -fx-padding: 5 0 0 0;
+    -fx-padding: 5 15 0 0;
     -fx-font: bold 12px "Arial";
 }
 

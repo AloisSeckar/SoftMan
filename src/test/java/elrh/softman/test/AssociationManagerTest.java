@@ -8,6 +8,7 @@ import elrh.softman.logic.enums.PlayerLevel;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.PlayerFactory;
+import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +22,7 @@ public class AssociationManagerTest extends AbstractDBTest {
     void setUp() {
         manager = AssociationManager.getInstance();
         manager.reset();
+        manager.setTestMode(true);
     }
 
     @Test
@@ -121,6 +123,84 @@ public class AssociationManagerTest extends AbstractDBTest {
         //  getDailyMatchesForUser
         //  getDailyMatchesForLeague
         //  getRoundMatchesForLeague
+    }
+
+    @Test
+    @DisplayName("isTodayMatchTest")
+    void isTodayMatchTest() {
+        initMatches();
+
+        var match = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
+        assertFalse(manager.isTodayMatch(match), "test match should be played tomorrow");
+        result = manager.nextDay();
+        assertTrue(manager.isTodayMatch(match), "test match should be played today");
+        result = manager.nextDay();
+        assertFalse(manager.isTodayMatch(match), "test match should be played yesterday");
+    }
+
+    @Test
+    @DisplayName("nextDayTest")
+    void nextDayTest() {
+        initMatches();
+        manager.nextDay();
+
+        var match = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
+        assertTrue(match.isScheduled(), "match should be scheduled");
+
+        result = manager.nextDay();
+        assertTrue(result.ok(), "advancing to next day should be successful");
+        assertEquals(LocalDate.of(Constants.START_YEAR, 4, 2), manager.getClock().getCurrentDate(), "date should be 02.04." + Constants.START_YEAR);
+
+        assertFalse(match.isScheduled(), "match shouldn't be scheduled");
+        assertTrue(match.isFinished(), "match should be finished");
+    }
+
+    @Test
+    @DisplayName("simulateUntilTest")
+    void simulateUntilTest() {
+        initMatches();
+
+        var match1 = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
+        var match2 = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(2).get(0);
+        var match3 = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(3).get(0);
+        var match4 = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(4).get(0);
+
+        var date1 = LocalDate.of(Constants.START_YEAR, 4, 10);
+        result = manager.simulateUntil(date1);
+        assertEquals(date1, manager.getClock().getCurrentDate(), "date should be 10.04." + Constants.START_YEAR);
+
+        assertFalse(match1.isScheduled(), "1st match shouldn't be scheduled");
+        assertFalse(match1.isScheduled(), "2nd match shouldn't be scheduled");
+        assertTrue(match1.isFinished(), "1st match should be finished");
+        assertTrue(match2.isFinished(), "2nd match should be finished");
+
+        assertTrue(match3.isScheduled(), "3rd match should still be scheduled");
+        assertTrue(match4.isScheduled(), "4th match should still be scheduled");
+        assertFalse(match3.isFinished(), "3rd match shouldn't be finished yet");
+        assertFalse(match4.isFinished(), "4th match shouldn't be finished yet");
+
+        var date2 = LocalDate.of(Constants.START_YEAR, 4, 30);
+        result = manager.simulateUntil(date2);
+        assertEquals(date2, manager.getClock().getCurrentDate(), "date should be 30.04." + Constants.START_YEAR);
+
+        assertFalse(match3.isScheduled(), "3rd match shouldn't be scheduled");
+        assertFalse(match4.isScheduled(), "4th match shouldn't be scheduled");
+        assertTrue(match3.isFinished(), "3rd match should be finished");
+        assertTrue(match4.isFinished(), "4th match should be finished");
+    }
+
+    private void initMatches() {
+        var club1 = new Club("club1", ELEMENT_NAME, ELEMENT_NAME);
+        club1.formTeam(PlayerLevel.MSEN);
+        var club2 = new Club("club2", ELEMENT_NAME, ELEMENT_NAME);
+        club2.formTeam(PlayerLevel.MSEN);
+
+        manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);
+
+        var league = manager.getLeagues(Constants.START_YEAR).get(0);
+        manager.registerTeamIntoLeague(league.getId(), club1.getTeams().get(0));
+        manager.registerTeamIntoLeague(league.getId(), club2.getTeams().get(0));
+        league.scheduleMatches();
     }
 
 }
