@@ -6,6 +6,7 @@ import com.j256.ormlite.table.TableUtils;
 import elrh.softman.logic.Result;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,8 @@ public class DaoManager<U extends AbstractDBEntity> {
     private Dao<U, Long> dao;
 
     @NonNull
+    @Getter
     private final Class<U> typeParameterClass;
-
-    public Class<U> getTypeParameterClass() {
-        return typeParameterClass;
-    }
 
     public Result init(JdbcPooledConnectionSource conn, boolean dropExisting) {
         try {
