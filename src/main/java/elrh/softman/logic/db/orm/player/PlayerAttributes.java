@@ -1,4 +1,4 @@
-package elrh.softman.logic.db.orm;
+package elrh.softman.logic.db.orm.player;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;

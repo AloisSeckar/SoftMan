@@ -7,7 +7,7 @@ import elrh.softman.logic.db.GameDBManager;
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import java.util.*;
 import elrh.softman.logic.core.lineup.PlayerRecord;
-import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.player.PlayerInfo;
 import elrh.softman.logic.db.orm.TeamInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;

@@ -2,13 +2,13 @@ package elrh.softman.logic;
 
 import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.core.lineup.PlayerRecord;
-import elrh.softman.logic.db.orm.MatchPlayByPlay;
+import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
 import elrh.softman.logic.core.Match;
 import static elrh.softman.logic.enums.MatchStatus.*;
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import static elrh.softman.logic.enums.StatsType.*;
 import elrh.softman.logic.core.stats.BoxScore;
-import elrh.softman.logic.db.orm.PlayerAttributes;
+import elrh.softman.logic.db.orm.player.PlayerAttributes;
 import elrh.softman.utils.*;
 import java.util.Random;
 import javafx.scene.control.TextArea;

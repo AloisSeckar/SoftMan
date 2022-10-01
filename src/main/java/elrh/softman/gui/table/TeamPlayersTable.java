@@ -1,7 +1,7 @@
 package elrh.softman.gui.table;
 
 import elrh.softman.gui.tab.PlayerTab;
-import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.player.PlayerInfo;
 
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.utils.Utils;

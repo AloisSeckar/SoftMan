@@ -1,7 +1,7 @@
 package elrh.softman.logic.core.lineup;
 
-import elrh.softman.logic.db.orm.PlayerInfo;
-import elrh.softman.logic.db.orm.records.StatsRecord;
+import elrh.softman.logic.db.orm.player.PlayerInfo;
+import elrh.softman.logic.db.orm.player.PlayerStats;
 import elrh.softman.logic.enums.PlayerPosition;
 import lombok.Data;
 
@@ -10,7 +10,7 @@ public class PlayerRecord {
 
     private final PlayerInfo player;
     private final PlayerPosition position;
-    private StatsRecord stats = new StatsRecord();
+    private PlayerStats stats = new PlayerStats();
 
     @Override
     public String toString() {

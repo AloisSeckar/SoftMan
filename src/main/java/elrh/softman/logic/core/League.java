@@ -5,7 +5,7 @@ import elrh.softman.logic.interfaces.IDatabaseEntity;
 import elrh.softman.utils.Constants;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.LeagueInfo;
-import elrh.softman.logic.db.orm.MatchInfo;
+import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;

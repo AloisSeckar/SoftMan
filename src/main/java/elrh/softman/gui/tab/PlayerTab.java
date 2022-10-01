@@ -2,7 +2,7 @@ package elrh.softman.gui.tab;
 
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.player.PlayerInfo;
 import elrh.softman.utils.StatsUtils;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.HBox;

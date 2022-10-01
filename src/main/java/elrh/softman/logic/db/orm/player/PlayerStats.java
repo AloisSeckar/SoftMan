@@ -1,4 +1,4 @@
-package elrh.softman.logic.db.orm.records;
+package elrh.softman.logic.db.orm.player;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -8,9 +8,9 @@ import elrh.softman.logic.interfaces.IDatabaseEntity;
 import lombok.Data;
 import lombok.NonNull;
 
-@DatabaseTable(tableName = "softman_stats")
+@DatabaseTable(tableName = "softman_player_stats")
 @Data
-public class StatsRecord implements IDatabaseEntity {
+public class PlayerStats implements IDatabaseEntity {
 
     @DatabaseField(generatedId = true)
     private long statsId;

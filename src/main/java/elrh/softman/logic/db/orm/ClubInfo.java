@@ -4,7 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_clubs")
+@DatabaseTable(tableName = "softman_club_info")
 @Data @NoArgsConstructor
 public class ClubInfo {
 

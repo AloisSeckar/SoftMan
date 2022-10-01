@@ -5,7 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.logic.enums.PlayerLevel;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_teams")
+@DatabaseTable(tableName = "softman_team_info")
 @Data @NoArgsConstructor @RequiredArgsConstructor
 public class TeamInfo {
     

@@ -6,7 +6,7 @@ import elrh.softman.logic.enums.PlayerLevel;
 import java.util.Objects;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_leagues")
+@DatabaseTable(tableName = "softman_league_info")
 @Data @NoArgsConstructor @RequiredArgsConstructor
 public class LeagueInfo {
     

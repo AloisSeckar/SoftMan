@@ -1,4 +1,4 @@
-package elrh.softman.logic.db.orm;
+package elrh.softman.logic.db.orm.player;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -6,7 +6,7 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.enums.PlayerGender;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_players")
+@DatabaseTable(tableName = "softman_player_info")
 @Data @NoArgsConstructor
 public class PlayerInfo implements Comparable<PlayerInfo> {
     

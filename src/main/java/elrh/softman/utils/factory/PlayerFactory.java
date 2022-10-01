@@ -2,7 +2,7 @@ package elrh.softman.utils.factory;
 
 import elrh.softman.logic.core.Player;
 import elrh.softman.logic.db.SourcesDBManager;
-import elrh.softman.logic.db.orm.PlayerInfo;
+import elrh.softman.logic.db.orm.player.PlayerInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import org.apache.commons.lang3.StringUtils;
 

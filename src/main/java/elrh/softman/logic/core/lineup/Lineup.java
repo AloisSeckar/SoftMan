@@ -2,7 +2,7 @@ package elrh.softman.logic.core.lineup;
 
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Match;
-import elrh.softman.logic.db.orm.records.StatsRecord;
+import elrh.softman.logic.db.orm.player.PlayerStats;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.Utils;
@@ -124,7 +124,7 @@ public class Lineup {
             var lineupSpot = positionPlayers[i];
             if (Utils.listNotEmpty(lineupSpot)) {
                 var first = lineupSpot.get(0);
-                var stats = new StatsRecord();
+                var stats = new PlayerStats();
                 var playerString = first.toString() + ", " + first.getPosition().toString();
                 stats.init(match.getMatchInfo().getMatchId(), first.getPlayer().getPlayerId(), playerString);
                 first.setStats(stats);
@@ -135,7 +135,7 @@ public class Lineup {
         for (int i = 0; i < SUBSTITUTES; i++) {
             var substitute = substitutes[i];
             if (substitute != null) {
-                substitute.setStats(new StatsRecord());
+                substitute.setStats(new PlayerStats());
             }
         }
     }

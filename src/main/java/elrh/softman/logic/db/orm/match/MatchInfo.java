@@ -1,4 +1,4 @@
-package elrh.softman.logic.db.orm;
+package elrh.softman.logic.db.orm.match;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -13,7 +13,7 @@ import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.utils.ErrorUtils;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_matches")
+@DatabaseTable(tableName = "softman_match_info")
 @Data @NoArgsConstructor
 public class MatchInfo {
 

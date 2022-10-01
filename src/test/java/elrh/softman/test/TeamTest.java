@@ -1,9 +1,7 @@
 package elrh.softman.test;
 
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
-import elrh.softman.logic.db.orm.PlayerInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;

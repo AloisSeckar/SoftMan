@@ -1,14 +1,15 @@
-package elrh.softman.logic.db.orm;
+package elrh.softman.logic.db.orm.match;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.db.GameDBManager;
+import elrh.softman.logic.db.orm.TeamInfo;
 import lombok.*;
 
-@DatabaseTable(tableName = "softman_results")
+@DatabaseTable(tableName = "softman_match_result")
 @Data @NoArgsConstructor
-public class Result {
+public class MatchResult {
     
     @DatabaseField(generatedId = true)
     private long matchId;
@@ -40,7 +41,7 @@ public class Result {
     @DatabaseField(canBeNull = false)
     private int homeErrors;
     
-    public Result(Match source) {
+    public MatchResult(Match source) {
         awayTeam = GameDBManager.getInstance().getTeam(source.getAwayLineup().getTeamId());
         homeTeam = GameDBManager.getInstance().getTeam(source.getHomeLineup().getTeamId());
         
@@ -72,7 +73,7 @@ public class Result {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Result other = (Result) obj;
+        final MatchResult other = (MatchResult) obj;
         return this.matchId == other.matchId;
     }
     

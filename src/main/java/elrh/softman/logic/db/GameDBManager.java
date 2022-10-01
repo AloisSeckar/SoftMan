@@ -3,15 +3,13 @@ package elrh.softman.logic.db;
 import com.j256.ormlite.dao.*;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import elrh.softman.logic.db.orm.records.StatsRecord;
-import elrh.softman.utils.Constants;
 import elrh.softman.logic.db.orm.*;
-
+import elrh.softman.logic.db.orm.player.*;
+import elrh.softman.logic.db.orm.match.*;
+import elrh.softman.logic.core.*;
+import elrh.softman.utils.*;
 import java.sql.SQLException;
 import java.util.List;
-
-import elrh.softman.logic.core.*;
-import elrh.softman.utils.ErrorUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,12 +20,12 @@ public class GameDBManager {
 
     private JdbcPooledConnectionSource conn;
     
-    private Dao<Result, Long> matchDao;
+    private Dao<MatchResult, Long> matchDao;
     private Dao<LeagueInfo, Long> leagueDao;
     private Dao<ClubInfo, Long> clubDao;
     private Dao<TeamInfo, Long> teamDao;
     private Dao<PlayerInfo, Long> playerDao;
-    private Dao<StatsRecord, Long> statsRecordDao;
+    private Dao<PlayerStats, Long> statsRecordDao;
 
     private GameDBManager() {
     }
@@ -93,7 +91,8 @@ public class GameDBManager {
     
     public void saveMatch(Match match) {
         try {
-            Result dbObject = new Result(match);
+            // TODO better logically connect Match and ResultRecord
+            MatchResult dbObject = new MatchResult(match);
             matchDao.create(dbObject);
             LOG.info("MATCH SAVED");
         } catch (Exception ex) {
@@ -163,7 +162,7 @@ public class GameDBManager {
         }
     }
 
-    public elrh.softman.logic.Result saveStatsRecord(StatsRecord record) {
+    public elrh.softman.logic.Result saveStatsRecord(PlayerStats record) {
         try {
             if (record.getId() > 0) {
                 statsRecordDao.update(record);
@@ -185,8 +184,8 @@ public class GameDBManager {
         TableUtils.dropTable(conn, PlayerInfo.class, true);
         TableUtils.dropTable(conn, PlayerAttributes.class, true);
         TableUtils.dropTable(conn, TeamInfo.class, true);
-        TableUtils.dropTable(conn, Result.class, true);
-        TableUtils.dropTable(conn, StatsRecord.class, true);
+        TableUtils.dropTable(conn, MatchResult.class, true);
+        TableUtils.dropTable(conn, PlayerStats.class, true);
         // TODO remove this to allow re-loading
 
         TableUtils.createTableIfNotExists(conn, LeagueInfo.class);
@@ -194,16 +193,16 @@ public class GameDBManager {
         TableUtils.createTableIfNotExists(conn, PlayerInfo.class);
         TableUtils.createTableIfNotExists(conn, PlayerAttributes.class);
         TableUtils.createTableIfNotExists(conn, TeamInfo.class);
-        TableUtils.createTableIfNotExists(conn, Result.class);
-        TableUtils.createTableIfNotExists(conn, StatsRecord.class);
+        TableUtils.createTableIfNotExists(conn, MatchResult.class);
+        TableUtils.createTableIfNotExists(conn, PlayerStats.class);
 
         leagueDao = DaoManager.createDao(conn, LeagueInfo.class);
         clubDao = DaoManager.createDao(conn, ClubInfo.class);
         playerDao = DaoManager.createDao(conn, PlayerInfo.class);
         teamDao = DaoManager.createDao(conn, TeamInfo.class);
-        matchDao = DaoManager.createDao(conn, Result.class);
+        matchDao = DaoManager.createDao(conn, MatchResult.class);
 
-        statsRecordDao = DaoManager.createDao(conn, StatsRecord.class);
+        statsRecordDao = DaoManager.createDao(conn, PlayerStats.class);
     }
 
 }
