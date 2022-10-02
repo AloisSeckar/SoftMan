@@ -4,6 +4,7 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
+import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
 import org.junit.jupiter.api.*;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class LeagueTest extends AbstractDBTest {
 
-    private static final Club CLUB = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
+    private static final Club CLUB = TestUtils.getTestClub();
 
     private League league;
     private Result result;

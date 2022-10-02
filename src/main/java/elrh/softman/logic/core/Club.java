@@ -24,9 +24,10 @@ public class Club {
 
     private final HashMap<Long, Team> teams = new HashMap<>();
 
-    public Club(String name, String city, String stadium) {
+    public Club(String name, String shortName,String city, String stadium) {
         clubInfo = new ClubInfo();
         clubInfo.setName(name);
+        clubInfo.setShortName(shortName);
         clubInfo.setCity(city);
         clubInfo.setStadium(stadium);
         clubInfo.setMoney(Constants.START_FUNDS);

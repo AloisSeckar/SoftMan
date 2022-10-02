@@ -5,6 +5,7 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.enums.PlayerLevel;
+import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import java.util.List;
 import org.junit.jupiter.api.*;
@@ -20,7 +21,7 @@ public class ClubTest extends AbstractDBTest {
     void setUp() {
         manager = AssociationManager.getInstance();
         manager.reset();
-        club = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
+        club = TestUtils.getTestClub();
     }
 
     @Test

@@ -7,16 +7,16 @@ import java.util.*;
 
 public class AssociationFactory {
 
-    private static final Club CLUB01 = ClubFactory.getClub("REDS");
-    private static final Club CLUB02 = ClubFactory.getClub("BLUES");
-    private static final Club CLUB03 = ClubFactory.getClub("GREENS");
-    private static final Club CLUB04 = ClubFactory.getClub("YELLOWS");
-    private static final Club CLUB05 = ClubFactory.getClub("BLACKS");
-    private static final Club CLUB06 = ClubFactory.getClub("WHITES");
-    private static final Club CLUB07 = ClubFactory.getClub("SILVERS");
-    private static final Club CLUB08 = ClubFactory.getClub("VIOLETS");
-    private static final Club CLUB09 = ClubFactory.getClub("BROWNS");
-    private static final Club CLUB10 = ClubFactory.getClub("GOLDS");
+    private static final Club CLUB01 = ClubFactory.getClub("REDS", "RED");
+    private static final Club CLUB02 = ClubFactory.getClub("BLUES", "BLU");
+    private static final Club CLUB03 = ClubFactory.getClub("GREENS", "GRE");
+    private static final Club CLUB04 = ClubFactory.getClub("YELLOWS", "YEL");
+    private static final Club CLUB05 = ClubFactory.getClub("BLACKS", "BLA");
+    private static final Club CLUB06 = ClubFactory.getClub("WHITES", "WHI");
+    private static final Club CLUB07 = ClubFactory.getClub("SILVERS", "SIL");
+    private static final Club CLUB08 = ClubFactory.getClub("VIOLETS", "VIO");
+    private static final Club CLUB09 = ClubFactory.getClub("BROWNS", "BRO");
+    private static final Club CLUB10 = ClubFactory.getClub("GOLDS", "GOL");
 
     public static void populateAssociation() {
         AssociationManager manager = AssociationManager.getInstance();

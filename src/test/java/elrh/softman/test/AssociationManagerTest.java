@@ -5,6 +5,7 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
+import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.PlayerFactory;
@@ -43,7 +44,7 @@ public class AssociationManagerTest extends AbstractDBTest {
         assertTrue(result.ok(), "creating league should be successful");
         var league = manager.getLeagues(Constants.START_YEAR).get(0);
         var leagueId = league.getId();
-        result = manager.registerTeamIntoLeague(leagueId, new Team(PlayerLevel.MSEN, "TestTeam", new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME)));
+        result = manager.registerTeamIntoLeague(leagueId, new Team(PlayerLevel.MSEN, "TestTeam", TestUtils.getTestClub()));
         assertTrue(result.ok(), "registering team into league should be successful");
         var team = league.getTeams().get(0);
         assertNotNull(team, "a team should be presented in the league");
@@ -53,9 +54,9 @@ public class AssociationManagerTest extends AbstractDBTest {
     @Test
     @DisplayName("registerAndGetClubTest")
     void registerAndGetClubTest() {
-        Club newClub1 = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
+        Club newClub1 = TestUtils.getTestClub();
         newClub1.getClubInfo().setClubId(1);
-        Club newClub2 = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
+        Club newClub2 = TestUtils.getTestClub();
         newClub2.getClubInfo().setClubId(2);
 
         result = manager.registerClub(newClub1);
@@ -190,9 +191,9 @@ public class AssociationManagerTest extends AbstractDBTest {
     }
 
     private void initMatches() {
-        var club1 = new Club("club1", ELEMENT_NAME, ELEMENT_NAME);
+        var club1 = TestUtils.getTestClub();
         club1.formTeam(PlayerLevel.MSEN);
-        var club2 = new Club("club2", ELEMENT_NAME, ELEMENT_NAME);
+        var club2 = TestUtils.getTestClub();
         club2.formTeam(PlayerLevel.MSEN);
 
         manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);

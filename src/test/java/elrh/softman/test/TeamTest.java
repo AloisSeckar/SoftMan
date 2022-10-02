@@ -4,6 +4,7 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
+import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.PlayerFactory;
@@ -23,7 +24,7 @@ public class TeamTest extends AbstractDBTest {
     @Test
     @DisplayName("addingPlayersTest")
     void addingPlayersTest() {
-        var club = new Club(ELEMENT_NAME, ELEMENT_NAME, ELEMENT_NAME);
+        var club = TestUtils.getTestClub();
         var teamMSEN = new Team(PlayerLevel.MSEN, ELEMENT_NAME, club);
         var teamMU12 = new Team(PlayerLevel.MU12, ELEMENT_NAME, club);
         var teamFSEN = new Team(PlayerLevel.FSEN, ELEMENT_NAME, club);

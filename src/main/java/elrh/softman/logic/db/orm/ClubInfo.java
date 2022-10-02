@@ -18,6 +18,9 @@ public class ClubInfo extends AbstractDBEntity {
     @DatabaseField(canBeNull = false)
     private String name;
 
+    @DatabaseField(canBeNull = false, width = 3)
+    private String shortName;
+
     @DatabaseField(canBeNull = false)
     private String logo;
 

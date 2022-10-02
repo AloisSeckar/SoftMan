@@ -5,8 +5,8 @@ import javafx.scene.paint.Color;
 
 public class ClubFactory {
 
-    public static Club getClub(String name) {
-        Club newClub = new Club(name, "Unknown", "The Field");
+    public static Club getClub(String name, String shortName) {
+        Club newClub = new Club(name, shortName, "Unknown", "The Field");
         newClub.getClubInfo().setLogo("/img/teams/" + name.toLowerCase() + ".png");
         newClub.getClubInfo().persist();
         newClub.setColor(getColorForName(name));
