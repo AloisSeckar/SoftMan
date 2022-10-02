@@ -1,12 +1,11 @@
 package elrh.softman.logic;
 
-import elrh.softman.gui.frame.ActionFrame;
-import elrh.softman.gui.tab.ClubTab;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
+import elrh.softman.logic.sim.SimulationController;
 import elrh.softman.utils.*;
 import java.time.LocalDate;
 import java.util.*;
@@ -17,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssociationManager {
 
-    @Setter
+    @Getter @Setter
     private boolean testMode = false; // TODO isn't there a better way to aviod GUI constructing during unit tests?
 
     @Getter
@@ -28,6 +27,9 @@ public class AssociationManager {
     private final HashMap<Long, League> managedLeagues = new HashMap<>();
     private final HashMap<Long, Club> registeredClubs = new HashMap<>();
     private final HashMap<Long, Player> registeredPlayers = new HashMap<>();
+
+    @Setter
+    private ProgressIndicator guiSpinner;
 
     private static AssociationManager INSTANCE;
 
@@ -195,9 +197,9 @@ public class AssociationManager {
     public Result nextDay() {
         try {
             if (isDayFinished() || confirmDayFinished()) {
-                advanceToNextDay();
-                refreshUIComponents();
-                return Constants.RESULT_OK;
+                var sim = new SimulationController(guiSpinner);
+                sim.initialize(clock.getCurrentDate().plusDays(1));
+                return sim.getServiceResult();
             } else {
                 return new Result(false, "Day not completed yet");
             }
@@ -208,11 +210,9 @@ public class AssociationManager {
 
     public Result simulateUntil(LocalDate until) {
         try {
-            while (until.isAfter(clock.getCurrentDate())) {
-                advanceToNextDay();
-            }
-            refreshUIComponents();
-            return Constants.RESULT_OK;
+            var sim = new SimulationController(guiSpinner);
+            sim.initialize(until);
+            return sim.getServiceResult();
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.simulateUntil", ex);
         }
@@ -244,25 +244,6 @@ public class AssociationManager {
             var alert = new Alert(Alert.AlertType.CONFIRMATION, "Simulate the rest of the day?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
             alert.showAndWait();
             return alert.getResult() == ButtonType.YES;
-        }
-    }
-
-    private void advanceToNextDay() {
-        getDailyMatches().values().forEach(matches -> matches.forEach(match -> {
-            if (!match.isFinished()) {
-                match.simulate(testMode ? null : new TextArea()); // TODO rendering actions shouldn't be part of simulating
-            }
-        }));
-
-        clock.plusDays(1);
-        clock.adjustViewDay();
-        LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
-    }
-
-    private void refreshUIComponents() {
-        if (!testMode) {
-            ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
-            ClubTab.getInstance().setDailySchedule();
         }
     }
 }

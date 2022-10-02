@@ -5,8 +5,11 @@ import elrh.softman.gui.MainLayout;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.factory.AssociationFactory;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.*;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class Softman extends Application {
@@ -45,13 +48,15 @@ public class Softman extends Application {
 
     ////////////////////////////////////////////////////////////////////////////
     private void setupStage() {
-        MainLayout mainLayout = MainLayout.getInstance();
-        
-        Scene scene = new Scene(mainLayout, 0, 0);
+        var spinner = new ProgressIndicator();
+        var wrappingLayout = new StackPane(MainLayout.getInstance(), spinner);
+
+        var scene = new Scene(wrappingLayout, 0, 0);
         scene.getStylesheets().add(getClass().getResource("/css/softman.css").toExternalForm());
         scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
 
         // TODO unify actions performed upon starting new game
+        AssociationManager.getInstance().setGuiSpinner(spinner);
         AssociationManager.getInstance().nextDay();
         MainLayout.getInstance().setUp();
         
