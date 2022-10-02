@@ -197,9 +197,16 @@ public class AssociationManager {
     public Result nextDay() {
         try {
             if (isDayFinished() || confirmDayFinished()) {
-                var sim = new SimulationController(guiSpinner);
-                sim.initialize(clock.getCurrentDate().plusDays(1));
-                return sim.getServiceResult();
+                if (testMode) {
+                    // during unit test JavaFX Toolkit is not available
+                    plainAdvanceToNextDay();
+                    return Constants.RESULT_OK;
+                } else {
+                    // regular way with showing spinner
+                    var sim = new SimulationController(guiSpinner);
+                    sim.initialize(clock.getCurrentDate().plusDays(1));
+                    return sim.getServiceResult();
+                }
             } else {
                 return new Result(false, "Day not completed yet");
             }
@@ -210,9 +217,18 @@ public class AssociationManager {
 
     public Result simulateUntil(LocalDate until) {
         try {
-            var sim = new SimulationController(guiSpinner);
-            sim.initialize(until);
-            return sim.getServiceResult();
+            if (testMode) {
+                // during unit test JavaFX Toolkit is not available
+                while (until.isAfter(clock.getCurrentDate())) {
+                    plainAdvanceToNextDay();
+                }
+                return Constants.RESULT_OK;
+            } else {
+                // regular way with showing spinner
+                var sim = new SimulationController(guiSpinner);
+                sim.initialize(until);
+                return sim.getServiceResult();
+            }
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.simulateUntil", ex);
         }
@@ -245,6 +261,18 @@ public class AssociationManager {
             alert.showAndWait();
             return alert.getResult() == ButtonType.YES;
         }
+    }
+
+    private void plainAdvanceToNextDay() {
+        // this is only used during unit tests
+        // on runtime SimulationService is being called
+        getDailyMatches().values().forEach(matches -> matches.forEach(match -> {
+            if (!match.isFinished()) {
+                match.simulate(null);
+            }
+        }));
+        clock.plusDays(1);
+        clock.adjustViewDay();
     }
 }
 

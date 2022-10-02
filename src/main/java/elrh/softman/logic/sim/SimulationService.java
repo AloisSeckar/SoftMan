@@ -55,6 +55,7 @@ public class SimulationService extends Service<Result> {
         }
 
         private void advanceToNextDay() {
+            // in case of changes AssociationManager.plainAdvanceToNextDay also needs to be updated
             AssociationManager.getInstance().getDailyMatches().values().forEach(matches -> matches.forEach(match -> {
                 if (!match.isFinished()) {
                     match.simulate(manager.isTestMode() ? null : new TextArea()); // TODO rendering actions shouldn't be part of simulating
