@@ -18,8 +18,9 @@ public class MainLayout extends BorderPane {
     
     private MainLayout() {
         this.setTop(new VBox(MenuFrame.getInstance(), FocusFrame.getInstance()));
+        this.setLeft(Utils.createPadding(8d));
         this.setCenter(ContentFrame.getInstance());
-        this.setRight(Utils.createPadding(15d));
+        this.setRight(Utils.createPadding(8d));
         this.setBottom(ActionFrame.getInstance());
     }
 

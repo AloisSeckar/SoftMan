@@ -63,17 +63,24 @@
   -fx-alignment: center; 
 }
 
-.info {
+.info-full {
     -fx-background-color: #5F9EA0;
     -fx-border-color: black;
     -fx-border-width: 3px;
     -fx-min-width: 400px;
-    -fx-pref-width: 400px;
     -fx-max-width: 400px;
-    -fx-min-height: 700px;
-    -fx-pref-height: 700px;
-    -fx-max-height: 700px;
     -fx-padding: 15px;
+}
+
+.info-brief {
+    -fx-background-color: #29CD6F;
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
+    -fx-min-height: 450px;
+    -fx-max-height: 450px;
+    -fx-padding: 10px;
 }
 
 .player-name {

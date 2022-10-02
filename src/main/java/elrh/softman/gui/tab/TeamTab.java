@@ -39,7 +39,7 @@ public class TeamTab extends AnchorPane implements IFocusedTeamListener, IFocuse
         AnchorPane.setLeftAnchor(playersTable, 10d);
         AnchorPane.setTopAnchor(playersTable, 40d);
 
-        var playerInfo = new PlayerInfoTile();
+        var playerInfo = new PlayerInfoTile(true);
         super.getChildren().add(playerInfo);
         AnchorPane.setRightAnchor(playerInfo, 10d);
         AnchorPane.setTopAnchor(playerInfo, 10d);

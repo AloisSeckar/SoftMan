@@ -25,10 +25,13 @@ public class PlayerInfoTile extends VBox {
     private final Gauge fieldingGauge;
     private final Gauge physicalGauge;
 
-    public PlayerInfoTile() {
+    private final boolean full;
+
+    public PlayerInfoTile(boolean full) {
+        this.full = full;
 
         super.setAlignment(Pos.BASELINE_CENTER);
-        super.getStyleClass().add("info");
+        super.getStyleClass().add(full ? "info-full" : "info-brief");
         super.setSpacing(15);
 
         nameLabel = new Label();
@@ -48,57 +51,64 @@ public class PlayerInfoTile extends VBox {
         ageLabel.getStyleClass().add("player-age");
         super.getChildren().add(ageLabel);
 
+        var size = full ? 200 : 100;
         overallGauge = GaugeBuilder.create()
                 .skinType(Gauge.SkinType.FLAT)
                 .minValue(0).maxValue(100).decimals(0)
-                .minWidth(200).maxWidth(200)
+                .minWidth(size).maxWidth(size)
                 .barColor(Color.BLUEVIOLET)
                 .title("Overall")
                 .build();
         super.getChildren().add(overallGauge);
 
-        var statsRow = new HBox(10);
-        statsRow.setPadding(Insets.EMPTY);
-        statsRow.setAlignment(Pos.BASELINE_CENTER);
-        statsRow.getStyleClass().add("player-stats");
-        super.getChildren().add(statsRow);
+        if (full) {
+            var statsRow = new HBox(10);
+            statsRow.setPadding(Insets.EMPTY);
+            statsRow.setAlignment(Pos.BASELINE_CENTER);
+            statsRow.getStyleClass().add("player-stats");
+            super.getChildren().add(statsRow);
 
-        battingGauge = GaugeBuilder.create()
-                .skinType(Gauge.SkinType.FLAT)
-                .minValue(0).maxValue(100).decimals(0)
-                .minWidth(80).maxWidth(80)
-                .barColor(Color.CRIMSON)
-                .title("BAT")
-                .build();
-        statsRow.getChildren().add(battingGauge);
+            battingGauge = GaugeBuilder.create()
+                    .skinType(Gauge.SkinType.FLAT)
+                    .minValue(0).maxValue(100).decimals(0)
+                    .minWidth(80).maxWidth(80)
+                    .barColor(Color.CRIMSON)
+                    .title("BAT")
+                    .build();
+            statsRow.getChildren().add(battingGauge);
 
-        pitchingGauge = GaugeBuilder.create()
-                .skinType(Gauge.SkinType.FLAT)
-                .minValue(0).maxValue(100).decimals(0)
-                .minWidth(80).maxWidth(80)
-                .barColor(Color.CRIMSON)
-                .title("PIT")
-                .build();
-        statsRow.getChildren().add(pitchingGauge);
+            pitchingGauge = GaugeBuilder.create()
+                    .skinType(Gauge.SkinType.FLAT)
+                    .minValue(0).maxValue(100).decimals(0)
+                    .minWidth(80).maxWidth(80)
+                    .barColor(Color.CRIMSON)
+                    .title("PIT")
+                    .build();
+            statsRow.getChildren().add(pitchingGauge);
 
-        fieldingGauge = GaugeBuilder.create()
-                .skinType(Gauge.SkinType.FLAT)
-                .minValue(0).maxValue(100).decimals(0)
-                .minWidth(80).maxWidth(80)
-                .barColor(Color.CRIMSON)
-                .title("FLD")
-                .build();
-        statsRow.getChildren().add(fieldingGauge);
+            fieldingGauge = GaugeBuilder.create()
+                    .skinType(Gauge.SkinType.FLAT)
+                    .minValue(0).maxValue(100).decimals(0)
+                    .minWidth(80).maxWidth(80)
+                    .barColor(Color.CRIMSON)
+                    .title("FLD")
+                    .build();
+            statsRow.getChildren().add(fieldingGauge);
 
-        physicalGauge = GaugeBuilder.create()
-                .skinType(Gauge.SkinType.FLAT)
-                .minValue(0).maxValue(100).decimals(0)
-                .minWidth(80).maxWidth(80)
-                .barColor(Color.CRIMSON)
-                .title("PHY")
-                .build();
-        statsRow.getChildren().add(physicalGauge);
-
+            physicalGauge = GaugeBuilder.create()
+                    .skinType(Gauge.SkinType.FLAT)
+                    .minValue(0).maxValue(100).decimals(0)
+                    .minWidth(80).maxWidth(80)
+                    .barColor(Color.CRIMSON)
+                    .title("PHY")
+                    .build();
+            statsRow.getChildren().add(physicalGauge);
+        } else {
+            battingGauge = null;
+            pitchingGauge = null;
+            fieldingGauge = null;
+            physicalGauge = null;
+        }
     }
 
     public void reload(PlayerInfo player) {
@@ -109,10 +119,12 @@ public class PlayerInfoTile extends VBox {
             imgView.setImage(new Image(getClass().getResourceAsStream("/img/" + player.getImg())));
 
             overallGauge.setValue(player.getAttributes().getTotal());
-            battingGauge.setValue(player.getAttributes().getBattingSkill());
-            pitchingGauge.setValue(player.getAttributes().getPitchingSkill());
-            fieldingGauge.setValue(player.getAttributes().getFieldingSkill());
-            physicalGauge.setValue(player.getAttributes().getPhysicalSkill());
+            if (full) {
+                battingGauge.setValue(player.getAttributes().getBattingSkill());
+                pitchingGauge.setValue(player.getAttributes().getPitchingSkill());
+                fieldingGauge.setValue(player.getAttributes().getFieldingSkill());
+                physicalGauge.setValue(player.getAttributes().getPhysicalSkill());
+            }
         }
     }
 }
