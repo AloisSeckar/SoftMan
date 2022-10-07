@@ -160,3 +160,7 @@
     -fx-max-width: 200px;
     -fx-background-color: white;
 }
+
+.font-courier-12 {
+    -fx-font: 12px 'Courier New';
+}

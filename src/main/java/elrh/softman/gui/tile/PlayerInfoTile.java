@@ -1,8 +1,8 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.logic.db.orm.player.PlayerInfo;
+import elrh.softman.utils.GUIUtils;
 import eu.hansolo.medusa.Gauge;
-import eu.hansolo.medusa.GaugeBuilder;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -52,13 +52,7 @@ public class PlayerInfoTile extends VBox {
         super.getChildren().add(ageLabel);
 
         var size = full ? 200 : 100;
-        overallGauge = GaugeBuilder.create()
-                .skinType(Gauge.SkinType.FLAT)
-                .minValue(0).maxValue(100).decimals(0)
-                .minWidth(size).maxWidth(size)
-                .barColor(Color.BLUEVIOLET)
-                .title("Overall")
-                .build();
+        overallGauge = GUIUtils.getGauge(size, Color.BLUEVIOLET,"Overall");
         super.getChildren().add(overallGauge);
 
         if (full) {
@@ -68,40 +62,16 @@ public class PlayerInfoTile extends VBox {
             statsRow.getStyleClass().add("player-stats");
             super.getChildren().add(statsRow);
 
-            battingGauge = GaugeBuilder.create()
-                    .skinType(Gauge.SkinType.FLAT)
-                    .minValue(0).maxValue(100).decimals(0)
-                    .minWidth(80).maxWidth(80)
-                    .barColor(Color.CRIMSON)
-                    .title("BAT")
-                    .build();
+            battingGauge = GUIUtils.getGauge(80, Color.CRIMSON,"BAT");
             statsRow.getChildren().add(battingGauge);
 
-            pitchingGauge = GaugeBuilder.create()
-                    .skinType(Gauge.SkinType.FLAT)
-                    .minValue(0).maxValue(100).decimals(0)
-                    .minWidth(80).maxWidth(80)
-                    .barColor(Color.CRIMSON)
-                    .title("PIT")
-                    .build();
+            pitchingGauge = GUIUtils.getGauge(80, Color.CRIMSON,"PIT");
             statsRow.getChildren().add(pitchingGauge);
 
-            fieldingGauge = GaugeBuilder.create()
-                    .skinType(Gauge.SkinType.FLAT)
-                    .minValue(0).maxValue(100).decimals(0)
-                    .minWidth(80).maxWidth(80)
-                    .barColor(Color.CRIMSON)
-                    .title("FLD")
-                    .build();
+            fieldingGauge = GUIUtils.getGauge(80, Color.CRIMSON,"FLD");
             statsRow.getChildren().add(fieldingGauge);
 
-            physicalGauge = GaugeBuilder.create()
-                    .skinType(Gauge.SkinType.FLAT)
-                    .minValue(0).maxValue(100).decimals(0)
-                    .minWidth(80).maxWidth(80)
-                    .barColor(Color.CRIMSON)
-                    .title("PHY")
-                    .build();
+            physicalGauge = GUIUtils.getGauge(80, Color.CRIMSON,"PHY");
             statsRow.getChildren().add(physicalGauge);
         } else {
             battingGauge = null;

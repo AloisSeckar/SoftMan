@@ -1,5 +1,6 @@
 package elrh.softman.gui.tab;
 
+import elrh.softman.gui.tile.PlayerAttributesTile;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Team;
@@ -18,9 +19,9 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
 
     private final ComboBox<PlayerInfo> selectPlayerCB;
     private final PlayerInfoTile playerInfo = new PlayerInfoTile(false);
+    private final PlayerAttributesTile playerAttributesTA = new PlayerAttributesTile();
     private final TextArea seasonStatsTA = new TextArea();
     private final TextArea careerStatsTA = new TextArea();
-    private final TextArea playerAttributesTA = new TextArea();
 
     private static PlayerTab INSTANCE;
     public static PlayerTab getInstance() {
@@ -40,13 +41,9 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         selectPlayerCB.setMaxWidth(220d);
         selectPlayerCB.valueProperty().addListener((ov, oldValue, newValue) -> reload(newValue));
 
-        seasonStatsTA.setStyle("-fx-font: 12px 'Courier New';");
-
-        careerStatsTA.setStyle("-fx-font: 12px 'Courier New';");
+        seasonStatsTA.getStyleClass().add("font-courier-12 ");
+        careerStatsTA.getStyleClass().add("font-courier-12 ");
         careerStatsTA.setText("Career stats");
-
-        playerAttributesTA.setStyle("-fx-font: 12px 'Courier New';");
-        playerAttributesTA.setText("Attrs");
 
         var attributesButton = new Button("Attributes");
         attributesButton.setAlignment(Pos.CENTER);
@@ -63,13 +60,15 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         var controlBox = new VBox(new HBox(selectPlayerLabel, selectPlayerCB), playerInfo, attributesButton, seasonStatsButton, carrierStatsButton);
 
         super.setLeft(controlBox);
-        super.setCenter(seasonStatsTA);
+        super.setCenter(playerAttributesTA);
     }
 
     public void reload(PlayerInfo info) {
         selectPlayerCB.setValue(info);
 
         playerInfo.reload(info);
+
+        playerAttributesTA.reload(info.getAttributes());
 
         seasonStatsTA.clear();
         seasonStatsTA.appendText("PLAYER                         |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
