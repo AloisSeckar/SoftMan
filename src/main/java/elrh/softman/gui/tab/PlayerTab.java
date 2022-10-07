@@ -6,9 +6,11 @@ import elrh.softman.logic.core.Team;
 import elrh.softman.logic.db.orm.player.PlayerInfo;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import elrh.softman.utils.StatsUtils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,8 +18,9 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
 
     private final ComboBox<PlayerInfo> selectPlayerCB;
     private final PlayerInfoTile playerInfo = new PlayerInfoTile(false);
-
-    private final TextArea statsOverview = new TextArea();
+    private final TextArea seasonStatsTA = new TextArea();
+    private final TextArea careerStatsTA = new TextArea();
+    private final TextArea playerAttributesTA = new TextArea();
 
     private static PlayerTab INSTANCE;
     public static PlayerTab getInstance() {
@@ -37,19 +40,30 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         selectPlayerCB.setMaxWidth(220d);
         selectPlayerCB.valueProperty().addListener((ov, oldValue, newValue) -> reload(newValue));
 
-        statsOverview.setStyle("-fx-font: 12px 'Courier New';");
+        seasonStatsTA.setStyle("-fx-font: 12px 'Courier New';");
+
+        careerStatsTA.setStyle("-fx-font: 12px 'Courier New';");
+        careerStatsTA.setText("Career stats");
+
+        playerAttributesTA.setStyle("-fx-font: 12px 'Courier New';");
+        playerAttributesTA.setText("Attrs");
 
         var attributesButton = new Button("Attributes");
         attributesButton.setAlignment(Pos.CENTER);
+        attributesButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Platform.runLater(() -> super.setCenter(playerAttributesTA)));
+
         var seasonStatsButton = new Button("Season stats");
         seasonStatsButton.setAlignment(Pos.CENTER);
+        seasonStatsButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Platform.runLater(() -> super.setCenter(seasonStatsTA)));
+
         var carrierStatsButton = new Button("Carrier stats");
         carrierStatsButton.setAlignment(Pos.CENTER);
+        carrierStatsButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Platform.runLater(() -> super.setCenter(careerStatsTA)));
 
         var controlBox = new VBox(new HBox(selectPlayerLabel, selectPlayerCB), playerInfo, attributesButton, seasonStatsButton, carrierStatsButton);
 
         super.setLeft(controlBox);
-        super.setCenter(statsOverview);
+        super.setCenter(seasonStatsTA);
     }
 
     public void reload(PlayerInfo info) {
@@ -57,34 +71,34 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
 
         playerInfo.reload(info);
 
-        statsOverview.clear();
-        statsOverview.appendText("PLAYER                         |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
+        seasonStatsTA.clear();
+        seasonStatsTA.appendText("PLAYER                         |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
         var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
         if (player != null) {
             player.getStats().forEach(record -> {
                 var nameWithPos = record.getMatchId() + " " + record.getPlayerStr();
-                statsOverview.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getB2B()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getB3B()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBHR()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBSH()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBSF()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBBB()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBHP()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBSB()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBCS()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBK()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getBRB()), 3) + " | ");
-                statsOverview.appendText(StatsUtils.getAVG(record.getBAB(), record.getBH()) + " | ");
-                statsOverview.appendText(StatsUtils.getSLG(record.getBAB(), record.getBH(), record.getB2B(), record.getB3B(), record.getBHR()) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getFA()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(String.valueOf(record.getFE()), 3) + " | ");
-                statsOverview.appendText(StringUtils.leftPad(StatsUtils.getIP(record.getFIP()), 5) + " | \n");
+                seasonStatsTA.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getB2B()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getB3B()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBHR()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBSH()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBSF()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBBB()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBHP()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBSB()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBCS()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBK()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBRB()), 3) + " | ");
+                seasonStatsTA.appendText(StatsUtils.getAVG(record.getBAB(), record.getBH()) + " | ");
+                seasonStatsTA.appendText(StatsUtils.getSLG(record.getBAB(), record.getBH(), record.getB2B(), record.getB3B(), record.getBHR()) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getFA()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getFE()), 3) + " | ");
+                seasonStatsTA.appendText(StringUtils.leftPad(StatsUtils.getIP(record.getFIP()), 5) + " | \n");
             });
         }
     }
