@@ -64,63 +64,63 @@ public class PlayerStats extends AbstractDBEntity {
 
     // fielder
     @DatabaseField(canBeNull = false)
-    private int fPO;
+    private int fPO = 0;
     @DatabaseField(canBeNull = false)
-    private int fA;
+    private int fA = 0;
     @DatabaseField(canBeNull = false)
-    private int fE;
+    private int fE = 0;
     @DatabaseField(canBeNull = false)
-    private int fDP;
+    private int fDP = 0;
     @DatabaseField(canBeNull = false)
-    private int fIP;
+    private int fIP = 0;
 
     // pitcher
     @DatabaseField(canBeNull = false)
-    private int pW;
+    private int pW = 0;
     @DatabaseField(canBeNull = false)
-    private int pL;
+    private int pL = 0;
     @DatabaseField(canBeNull = false)
-    private int pS;
+    private int pS = 0;
     @DatabaseField(canBeNull = false)
-    private int pBF;
+    private int pBF = 0;
     @DatabaseField(canBeNull = false)
-    private int pAB;
+    private int pAB = 0;
     @DatabaseField(canBeNull = false)
-    private int pR;
+    private int pR = 0;
     @DatabaseField(canBeNull = false)
-    private int pER;
+    private int pER = 0;
     @DatabaseField(canBeNull = false)
-    private int pH;
+    private int pH = 0;
     @DatabaseField(canBeNull = false)
-    private int p2B;
+    private int p2B = 0;
     @DatabaseField(canBeNull = false)
-    private int p3B;
+    private int p3B = 0;
     @DatabaseField(canBeNull = false)
-    private int pHR;
+    private int pHR = 0;
     @DatabaseField(canBeNull = false)
-    private int pSH;
+    private int pSH = 0;
     @DatabaseField(canBeNull = false)
-    private int pSF;
+    private int pSF = 0;
     @DatabaseField(canBeNull = false)
-    private int pBB;
+    private int pBB = 0;
     @DatabaseField(canBeNull = false)
-    private int pHP;
+    private int pHP = 0;
     @DatabaseField(canBeNull = false)
-    private int pK;
+    private int pK = 0;
     @DatabaseField(canBeNull = false)
-    private int pWP;
+    private int pWP = 0;
     @DatabaseField(canBeNull = false)
-    private int pNP;
+    private int pNP = 0;
     @DatabaseField(canBeNull = false)
-    private int pNS;
+    private int pNS = 0;
 
     // catcher
     @DatabaseField(canBeNull = false)
-    private int cPB;
+    private int cPB = 0;
     @DatabaseField(canBeNull = false)
-    private int cSB;
+    private int cSB = 0;
     @DatabaseField(canBeNull = false)
-    private int cCS;
+    private int cCS = 0;
 
     
     // helpers
@@ -179,6 +179,102 @@ public class PlayerStats extends AbstractDBEntity {
             case CSB -> setCSB(getCSB() + 1);
             case CCS -> setCCS(getCCS() + 1);
         }
+    }
+
+    private void clear() {
+        bPA = 0;
+        bAB = 0;
+        bR = 0;
+        bH = 0;
+        b2B = 0;
+        b3B = 0;
+        bHR = 0;
+        bSH = 0;
+        bSF = 0;
+        bBB = 0;
+        bHP = 0;
+        bSB = 0;
+        bCS = 0;
+        bK = 0;
+        bRB = 0;
+
+        fPO = 0;
+        fA = 0;
+        fE = 0;
+        fDP = 0;
+        fIP = 0;
+
+        pW = 0;
+        pL = 0;
+        pS = 0;
+        pBF = 0;
+        pAB = 0;
+        pR = 0;
+        pER = 0;
+        pH = 0;
+        p2B = 0;
+        p3B = 0;
+        pHR = 0;
+        pSH = 0;
+        pSF = 0;
+        pBB = 0;
+        pHP = 0;
+        pK = 0;
+        pWP = 0;
+        pNP = 0;
+        pNS = 0;
+        
+        cPB = 0;
+        cSB = 0;
+        cCS = 0;
+    }
+    
+    public void include(PlayerStats stats) {
+        bPA += stats.getBPA();
+        bAB += stats.getBAB();
+        bR += stats.getBR();
+        bH += stats.getBH();
+        b2B += stats.getB2B();
+        b3B += stats.getB3B();
+        bHR += stats.getBHR();
+        bSH += stats.getBSH();
+        bSF += stats.getBSF();
+        bBB += stats.getBBB();
+        bHP += stats.getBHP();
+        bSB += stats.getBSB();
+        bCS += stats.getBCS();
+        bK += stats.getBK();
+        bRB += stats.getBRB();
+
+        fPO += stats.getFPO();
+        fA += stats.getFA();
+        fE += stats.getFE();
+        fDP += stats.getFDP();
+        fIP += stats.getFIP();
+
+        pW += stats.getPW();
+        pL += stats.getPL();
+        pS += stats.getPS();
+        pBF += stats.getPBF();
+        pAB += stats.getPAB();
+        pR += stats.getPR();
+        pER += stats.getPER();
+        pH += stats.getPH();
+        p2B += stats.getP2B();
+        p3B += stats.getP3B();
+        pHR += stats.getPHR();
+        pSH += stats.getPSH();
+        pSF += stats.getPSF();
+        pBB += stats.getPBB();
+        pHP += stats.getPHP();
+        pK += stats.getPK();
+        pWP += stats.getPWP();
+        pNP += stats.getPNP();
+        pNS += stats.getPNS();
+
+        cPB += stats.getCPB();
+        cSB += stats.getCSB();
+        cCS += stats.getCCS();
     }
 
     @Override

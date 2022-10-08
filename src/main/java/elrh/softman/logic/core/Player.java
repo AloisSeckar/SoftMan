@@ -12,7 +12,8 @@ public class Player {
 
     private PlayerInfo playerInfo = new PlayerInfo();
 
-    private ArrayList<PlayerStats> stats = new ArrayList<>();
+    private final ArrayList<PlayerStats> stats = new ArrayList<>();
+    private final PlayerStats seasonTotal = new PlayerStats(); // TODO deal with multiple seasons?
 
     public long getId() {
         return playerInfo.getPlayerId();

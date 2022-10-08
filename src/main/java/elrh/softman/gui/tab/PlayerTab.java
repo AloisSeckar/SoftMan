@@ -5,6 +5,7 @@ import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.db.orm.player.PlayerInfo;
+import elrh.softman.logic.db.orm.player.PlayerStats;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import elrh.softman.utils.StatsUtils;
 import javafx.application.Platform;
@@ -41,8 +42,8 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         selectPlayerCB.setMaxWidth(220d);
         selectPlayerCB.valueProperty().addListener((ov, oldValue, newValue) -> reload(newValue));
 
-        seasonStatsTA.getStyleClass().add("font-courier-12 ");
-        careerStatsTA.getStyleClass().add("font-courier-12 ");
+        seasonStatsTA.getStyleClass().add("font-courier-12");
+        careerStatsTA.getStyleClass().add("font-courier-12");
         careerStatsTA.setText("Career stats");
 
         var attributesButton = new Button("Attributes");
@@ -74,37 +75,40 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         seasonStatsTA.appendText("PLAYER                         |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
         var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
         if (player != null) {
-            player.getStats().forEach(record -> {
-                var nameWithPos = record.getMatchId() + " " + record.getPlayerStr();
-                seasonStatsTA.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getB2B()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getB3B()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBHR()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBSH()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBSF()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBBB()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBHP()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBSB()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBCS()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBK()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getBRB()), 3) + " | ");
-                seasonStatsTA.appendText(StatsUtils.getAVG(record.getBAB(), record.getBH()) + " | ");
-                seasonStatsTA.appendText(StatsUtils.getSLG(record.getBAB(), record.getBH(), record.getB2B(), record.getB3B(), record.getBHR()) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getFA()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(String.valueOf(record.getFE()), 3) + " | ");
-                seasonStatsTA.appendText(StringUtils.leftPad(StatsUtils.getIP(record.getFIP()), 5) + " | \n");
-            });
+            player.getStats().forEach(record -> renderStatsRecord(seasonStatsTA, record));
         }
+        renderStatsRecord(seasonStatsTA, player.getSeasonTotal());
     }
 
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
         selectPlayerCB.setItems(FXCollections.observableList(newlyFocusedTeam.getPlayers()));
         selectPlayerCB.setValue(selectPlayerCB.getItems().get(0));
+    }
+
+    private void renderStatsRecord(TextArea target, PlayerStats record) {
+        var nameWithPos = record.getMatchId() + " " + record.getPlayerStr();
+        target.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getB2B()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getB3B()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBHR()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBSH()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBSF()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBBB()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBHP()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBSB()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBCS()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBK()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getBRB()), 3) + " | ");
+        target.appendText(StatsUtils.getAVG(record.getBAB(), record.getBH()) + " | ");
+        target.appendText(StatsUtils.getSLG(record.getBAB(), record.getBH(), record.getB2B(), record.getB3B(), record.getBHR()) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getFA()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(String.valueOf(record.getFE()), 3) + " | ");
+        target.appendText(StringUtils.leftPad(StatsUtils.getIP(record.getFIP()), 5) + " | \n");
     }
 }

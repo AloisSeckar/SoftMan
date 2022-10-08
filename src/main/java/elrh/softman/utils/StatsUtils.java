@@ -20,6 +20,7 @@ public class StatsUtils {
                     // TODO this looks quite inefficient...
                     var player = AssociationManager.getInstance().getPlayerById(data.getPlayer().getPlayerId());
                     player.getStats().add(stats);
+                    player.getSeasonTotal().include(stats);
                 });
             }
         }
