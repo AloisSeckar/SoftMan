@@ -75,9 +75,14 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         seasonStatsTA.appendText("PLAYER                         |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
         var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
         if (player != null) {
-            player.getStats().forEach(record -> renderStatsRecord(seasonStatsTA, record));
+            player.getStats().forEach(record -> renderStatsRecord(seasonStatsTA, record, false, null));
         }
-        renderStatsRecord(seasonStatsTA, player.getSeasonTotal());
+        renderStatsRecord(seasonStatsTA, player.getSeasonTotal(), false, null);
+
+        careerStatsTA.clear();
+        careerStatsTA.appendText("SEASON |   G |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
+        renderStatsRecord(careerStatsTA, player.getSeasonTotal(), true, player.getStats().size());
+        // TODO make it variable for each year yet to come + make total career count
     }
 
     @Override
@@ -86,9 +91,15 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         selectPlayerCB.setValue(selectPlayerCB.getItems().get(0));
     }
 
-    private void renderStatsRecord(TextArea target, PlayerStats record) {
-        var nameWithPos = record.getMatchId() + " " + record.getPlayerStr();
-        target.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
+    private void renderStatsRecord(TextArea target, PlayerStats record, boolean careerStats, Integer totalGames) {
+        if (careerStats) {
+            int year = AssociationManager.getInstance().getClock().getYear();
+            target.appendText(StringUtils.rightPad(String.valueOf(year), 6, " ") + " | ");
+            target.appendText(StringUtils.leftPad(String.valueOf(totalGames), 3) + " | ");
+        } else {
+            var nameWithPos = record.getMatchId() + " " + record.getPlayerStr();
+            target.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
+        }
         target.appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 3) + " | ");
         target.appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 3) + " | ");
         target.appendText(StringUtils.leftPad(String.valueOf(record.getBR()), 3) + " | ");
