@@ -123,6 +123,9 @@ public class MatchSimulator {
     private void setUpPlay() {
         if (inningStart) {
             setUpInning();
+            evaluateRandomSubstitution(8);
+        } else {
+            evaluateRandomSubstitution(15);
         }
 
         pitcher = fieldingLineup.getCurrentPositionPlayer(PITCHER);
@@ -248,7 +251,6 @@ public class MatchSimulator {
                 players.forEach(playerRecord -> {
                     var nameWithPos = playerRecord.getPlayer().getName() + ", " + playerRecord.getPosition().toString();
                     appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
-                    var stats = playerRecord.getStats();
                     var record = playerRecord.getStats();
                     appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 2) + " | ");
@@ -434,6 +436,26 @@ public class MatchSimulator {
         pitcher.getStats().inc(PER); // TODO unearned runs
         boxScore.addHit(top);
         boxScore.addPoint(inning, top);
+    }
+
+    private void evaluateRandomSubstitution(int probability) {
+        if (inning > 2) {
+            boolean performSubstitution = random.nextInt() % probability == 0;
+            if (performSubstitution) {
+                var lineup = random.nextBoolean() ? awayLineup : homeLineup;
+                var randomSubIndex = random.nextInt(Lineup.SUBSTITUTES);
+                var randomSub = lineup.getSubstitutes()[randomSubIndex];
+                if (randomSub != null) {
+                    var randomPlrIndex = random.nextInt(Lineup.POSITION_PLAYERS);
+                    var currentPlayer = lineup.getCurrentBatter(randomPlrIndex);
+                    if (currentPlayer != null) {
+                        var substitution = new PlayerRecord(randomSub.getPlayer(), currentPlayer.getPosition());
+                        appendText("SUBSTITUTION: " + substitution.getPlayer() + "(" + substitution.getPosition() + ") FOR " + currentPlayer.getPlayer() + "(" + currentPlayer.getPosition() + ")\n");
+                        lineup.substitutePlayer(randomPlrIndex, substitution);
+                    }
+                }
+            }
+        }
     }
 
 }
