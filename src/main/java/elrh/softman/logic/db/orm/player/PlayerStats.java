@@ -24,6 +24,10 @@ public class PlayerStats extends AbstractDBEntity {
 
     @DatabaseField(canBeNull = false)
     @NonNull
+    private String matchStr = "";
+
+    @DatabaseField(canBeNull = false)
+    @NonNull
     private long playerId = 0;
 
     @DatabaseField(canBeNull = false)
@@ -125,8 +129,9 @@ public class PlayerStats extends AbstractDBEntity {
     
     // helpers
     
-    public void init(long matchId, long playerId, String playerStr) {
+    public void init(long matchId, String matchStr, long playerId, String playerStr) {
         this.matchId = matchId;
+        this.matchStr = matchStr;
         this.playerId = playerId;
         this.playerStr = playerStr;
     }

@@ -14,6 +14,9 @@ public class Player {
 
     private final ArrayList<PlayerStats> stats = new ArrayList<>();
     private final PlayerStats seasonTotal = new PlayerStats(); // TODO deal with multiple seasons?
+    {
+        seasonTotal.setMatchStr("Total");
+    }
 
     public long getId() {
         return playerInfo.getPlayerId();

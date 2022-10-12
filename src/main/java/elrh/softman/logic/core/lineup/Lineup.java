@@ -125,8 +125,9 @@ public class Lineup {
             if (Utils.listNotEmpty(lineupSpot)) {
                 var first = lineupSpot.get(0);
                 var stats = new PlayerStats();
+                var matchString = match.getAwayLineup().getTeamName() + " @ " + match.getHomeLineup().getTeamName();
                 var playerString = first.toString() + ", " + first.getPosition().toString();
-                stats.init(match.getMatchInfo().getMatchId(), first.getPlayer().getPlayerId(), playerString);
+                stats.init(match.getMatchInfo().getMatchId(), matchString, first.getPlayer().getPlayerId(), playerString);
                 first.setStats(stats);
                 positionPlayers[i] = new ArrayList<>();
                 positionPlayers[i].add(first);

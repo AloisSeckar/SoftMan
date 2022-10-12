@@ -450,6 +450,7 @@ public class MatchSimulator {
                     var currentPlayer = lineup.getCurrentBatter(randomPlrIndex);
                     if (currentPlayer != null) {
                         var substitution = new PlayerRecord(randomSub.getPlayer(), currentPlayer.getPosition());
+                        // TODO need to init the stats record (matchId, playerId, etc)
                         appendText("SUBSTITUTION: " + substitution.getPlayer() + "(" + substitution.getPosition() + ") FOR " + currentPlayer.getPlayer() + "(" + currentPlayer.getPosition() + ")\n");
                         lineup.substitutePlayer(randomPlrIndex, substitution);
                     }

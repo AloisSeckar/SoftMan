@@ -97,8 +97,7 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
             target.appendText(StringUtils.rightPad(String.valueOf(year), 6, " ") + " | ");
             target.appendText(StringUtils.leftPad(String.valueOf(totalGames), 3) + " | ");
         } else {
-            var nameWithPos = record.getMatchId() + " " + record.getPlayerStr();
-            target.appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
+            target.appendText(StringUtils.rightPad(record.getMatchStr(), 30, " ") + " | ");
         }
         target.appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 3) + " | ");
         target.appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 3) + " | ");
