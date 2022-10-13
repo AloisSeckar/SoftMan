@@ -135,6 +135,13 @@ public class PlayerStats extends AbstractDBEntity {
         this.playerId = playerId;
         this.playerStr = playerStr;
     }
+
+    public void initFrom(PlayerStats from) {
+        this.matchId = from.getMatchId();
+        this.matchStr = from.getMatchStr();
+        this.playerId = from.getPlayerId();
+        this.playerStr = from.getPlayerStr();
+    }
     public void inc(StatsType stat) {
         switch (stat) {
             // batter
