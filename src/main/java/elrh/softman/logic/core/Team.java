@@ -30,7 +30,7 @@ public class Team {
     public Team(PlayerLevel level, String name, Club club) {
         this.teamInfo = new TeamInfo(level, name, club.getClubInfo());
         teamInfo.persist();
-        defaultLineup = new Lineup(getId(), getName(), getLogo());
+        defaultLineup = new Lineup(getId(), getName(), club.getClubInfo().getShortName(), getLogo());
     }
 
     @Override

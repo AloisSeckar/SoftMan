@@ -111,7 +111,7 @@ public class LineupTile extends VBox {
     }
 
     public Lineup getLineup() {
-        var ret = new Lineup(team.getTeamId(), team.getName(), team.getClubInfo().getLogo());
+        var ret = new Lineup(team.getTeamId(), team.getName(), team.getClubInfo().getShortName(), team.getClubInfo().getLogo());
 
         Arrays.stream(positionPlayersRows).filter(LineupRowTile::isFilled).forEach(row -> ret.initPositionPlayer(row.getRow(), row.getCurrentSelection()));
         Arrays.stream(substitutesRows).filter(LineupRowTile::isFilled).forEach(row -> ret.initSubstitute(row.getRow(), row.getCurrentSelection()));

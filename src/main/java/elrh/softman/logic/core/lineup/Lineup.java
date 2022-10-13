@@ -22,6 +22,8 @@ public class Lineup {
     @Getter
     private final String teamName;
     @Getter
+    private final String teamShortName;
+    @Getter
     private final String teamLogo;
 
     @Getter
@@ -30,9 +32,10 @@ public class Lineup {
     @Getter
     private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
 
-    public Lineup(long teamId, String teamName, String teamLogo) {
+    public Lineup(long teamId, String teamName, String teamShortName, String teamLogo) {
         this.teamId = teamId;
         this.teamName = teamName;
+        this.teamShortName = teamShortName;
         this.teamLogo = teamLogo;
 
         for (int i = 0; i < POSITION_PLAYERS; i++) {
@@ -125,7 +128,7 @@ public class Lineup {
             if (Utils.listNotEmpty(lineupSpot)) {
                 var first = lineupSpot.get(0);
                 var stats = new PlayerStats();
-                var matchString = match.getAwayLineup().getTeamName() + " @ " + match.getHomeLineup().getTeamName();
+                var matchString = match.getAwayLineup().getTeamShortName() + " @ " + match.getHomeLineup().getTeamShortName();
                 var playerString = first.toString() + ", " + first.getPosition().toString();
                 stats.init(match.getMatchInfo().getMatchId(), matchString, first.getPlayer().getPlayerId(), playerString);
                 first.setStats(stats);

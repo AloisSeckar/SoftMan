@@ -16,7 +16,6 @@ public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedT
 
     private static ClubTab INSTANCE;
 
-
     private final ClubInfoTile infoTile;
     private final CalendarTile calendarTile;
     private final LeagueStadingsTable leagueTable;

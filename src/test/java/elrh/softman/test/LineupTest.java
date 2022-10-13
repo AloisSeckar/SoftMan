@@ -25,11 +25,11 @@ public class LineupTest {
 
     @BeforeEach
     void setUp() {
-        lineup = new Lineup(1, ELEMENT_NAME, ELEMENT_NAME);
+        lineup = new Lineup(1, ELEMENT_NAME, "E", ELEMENT_NAME);
     }
 
     @Test
-    @DisplayName("initPositionPlayeTest")
+    @DisplayName("initPositionPlayerTest")
     void initPositionPlayerTest() {
         result = lineup.initPositionPlayer(1, playerRecord1);
         assertTrue(result.ok(), "init player 1 should be successful");
