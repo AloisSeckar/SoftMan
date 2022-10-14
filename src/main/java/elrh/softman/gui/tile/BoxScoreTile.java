@@ -64,12 +64,12 @@ public class BoxScoreTile extends VBox {
             for (int i = 1; i <= Math.max(inningsPlayed, Constants.INNINGS); i++) {
                 String awayScoreValue;
                 String homeScoreValue;
-                if (i > inningsPlayed) {
+                if (match.isFinished() && i > inningsPlayed) {
                     awayScoreValue = "X";
                     homeScoreValue = "X";
                 } else {
                     awayScoreValue = String.valueOf(boxScore.getPointsInInning(i, true));
-                    if (i == inningsPlayed && !match.homeTeamFinishedBatting()) {
+                    if (match.isFinished() && i == inningsPlayed && !match.getMatchInfo().isHomeTeamFinishedBatting()) {
                         homeScoreValue = "X";
                     } else {
                         homeScoreValue = String.valueOf(boxScore.getPointsInInning(i, false));

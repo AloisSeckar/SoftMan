@@ -112,10 +112,12 @@ public class MatchSimulator {
             appendText("\n\nTOP\n");
             battingLineup = awayLineup;
             fieldingLineup = homeLineup;
+            match.getMatchInfo().setHomeTeamFinishedBatting(false);
         } else {
             appendText("\n\nBOTTOM\n");
             battingLineup = homeLineup;
             fieldingLineup = awayLineup;
+            match.getMatchInfo().setHomeTeamFinishedBatting(true);
         }
         inningStart = false;
     }
@@ -172,7 +174,6 @@ public class MatchSimulator {
     private void wrapUpMatch() {
         boxScore.trimIfNeeded(inning);
         appendText("\n\nGAME OVER\n\n");
-        match.getMatchInfo().setHomeTeamFinishedBatting(top);
         match.getMatchInfo().setStatus(FINISHED);
 
         appendText("\n\nSTATS\n");

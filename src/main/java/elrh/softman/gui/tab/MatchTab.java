@@ -99,13 +99,8 @@ public class MatchTab extends BorderPane {
         awayLineup.setReadOnly(true); // TODO without that, 8th sub spot is occasionally active, but this solution doesn't seem correct
         homeLineup.fillLineup(match.getHomeLineup());
         homeLineup.setReadOnly(true); // TODO see above
-        boxScore.loadBoxScore(match);
 
-        boolean todayMatch = AssociationManager.getInstance().isTodayMatch(match);
-        boolean finishedMatch = match.isFinished();
-        boolean disableControls = !todayMatch || finishedMatch;
-        simButton.setDisable(disableControls);
-        playButton.setDisable(disableControls);
+        refreshMatch();
     }
 
     private void playMatch() {
@@ -129,5 +124,15 @@ public class MatchTab extends BorderPane {
     private void refreshMatch() {
         matchOverview.clear();
         match.printPlayByPlay(matchOverview);
+
+        boxScore.loadBoxScore(match);
+
+        boolean todayMatch = AssociationManager.getInstance().isTodayMatch(match); // TODO maybe not asking every time?
+        boolean finishedMatch = match.isFinished();
+        boolean disableControls = !todayMatch || finishedMatch;
+        simButton.setDisable(disableControls);
+        playButton.setDisable(disableControls);
+
+        ClubTab.getInstance().refreshSchedule(); // TODO maybe not refreshing every single play?
     }
 }
