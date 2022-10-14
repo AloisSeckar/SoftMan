@@ -7,9 +7,9 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.core.stats.BoxScore;
+import elrh.softman.utils.ErrorUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -79,7 +79,7 @@ public class ScheduleRowTile extends BorderPane {
         playButton.setMinWidth(120d);
         playButton.setMaxWidth(120d);
         buttonBar.getChildren().add(playButton);
-        playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
+        playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> viewMatch());
 
         Button viewButton = new Button("View detail");
         viewButton.setMinWidth(120d);
@@ -122,18 +122,6 @@ public class ScheduleRowTile extends BorderPane {
         } else {
             sim = null;
         }
-
-    }
-
-    private void playMatch() {
-        if (sim != null) {
-            sim.simulatePlay();
-            ClubTab.getInstance().refreshSchedule();
-        } else {
-            var alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Cannot play!");
-            alert.showAndWait();
-        }
     }
 
     private void simulateMatch() {
@@ -141,9 +129,7 @@ public class ScheduleRowTile extends BorderPane {
             sim.simulateMatch();
             ClubTab.getInstance().refreshSchedule();
         } else {
-            var alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Cannot simulate!");
-            alert.showAndWait();
+            ErrorUtils.raise("Match simulator cannot be NULL");
         }
     }
 

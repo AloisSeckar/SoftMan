@@ -6,11 +6,10 @@ import elrh.softman.gui.tile.MatchHeaderTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.MatchSimulator;
+import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.FormatUtils;
-import elrh.softman.utils.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
@@ -31,6 +30,7 @@ public class MatchTab extends BorderPane {
     private final Button playButton;
 
     private Match match;
+    private MatchSimulator sim;
 
     public static MatchTab getInstance() {
         if (INSTANCE == null) {
@@ -93,13 +93,13 @@ public class MatchTab extends BorderPane {
 
     public void setMatch(Match match) {
         this.match = match;
+        this.sim = new MatchSimulator(match, matchOverview);
         matchHeaderTile.setMatch(match);
         awayLineup.fillLineup(match.getAwayLineup());
         awayLineup.setReadOnly(true); // TODO without that, 8th sub spot is occasionally active, but this solution doesn't seem correct
         homeLineup.fillLineup(match.getHomeLineup());
         homeLineup.setReadOnly(true); // TODO see above
         boxScore.loadBoxScore(match);
-        match.printPlayByPlay(matchOverview);
 
         boolean todayMatch = AssociationManager.getInstance().isTodayMatch(match);
         boolean finishedMatch = match.isFinished();
@@ -109,43 +109,25 @@ public class MatchTab extends BorderPane {
     }
 
     private void playMatch() {
-        var sim = getMatchSimulator();
         if (sim != null) {
             sim.simulatePlay();
             refreshMatch();
         } else {
-            var alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("No match today");
-            alert.showAndWait();
+            ErrorUtils.raise("Match simulator cannot be NULL");
         }
     }
 
     private void simulateMatch() {
-        var sim = getMatchSimulator();
         if (sim != null) {
             sim.simulateMatch();
             refreshMatch();
         } else {
-            var alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("No match today");
-            alert.showAndWait();
+            ErrorUtils.raise("Match simulator cannot be NULL");
         }
     }
 
     private void refreshMatch() {
         matchOverview.clear();
-        setMatch(match);
-    }
-
-    private MatchSimulator getMatchSimulator() {
-        MatchSimulator ret = null;
-
-        var testMatches = AssociationManager.getInstance().getDailyMatchesForUser();
-        var match = Utils.getFirstItem(testMatches);
-        if (match != null) {
-            ret = new MatchSimulator(match, MatchTab.getTarget());
-        }
-
-        return ret;
+        match.printPlayByPlay(matchOverview);
     }
 }
