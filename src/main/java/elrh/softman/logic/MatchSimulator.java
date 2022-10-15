@@ -432,6 +432,8 @@ public class MatchSimulator {
 
     private void scoreRun(PlayerRecord runner) {
         runner.getStats().inc(BR);
+        appendText(runner + " SCORED\n");
+
         batter.getStats().inc(BRB); // TODO not all runs will be thanks to the batter
         pitcher.getStats().inc(PR); // TODO inherited runners
         pitcher.getStats().inc(PER); // TODO unearned runs
