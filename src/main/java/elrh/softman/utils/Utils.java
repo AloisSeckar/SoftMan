@@ -1,5 +1,8 @@
 package elrh.softman.utils;
 
+import elrh.softman.logic.db.orm.player.PlayerInfo;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
@@ -24,6 +27,7 @@ public class Utils {
         return ret;
     }
 
+    // TODO move to GUI utils
     // TODO why GUI content overflows?
     public static Label createPadding(double width) {
         var paddingLabel = new Label("");

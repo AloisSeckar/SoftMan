@@ -2,7 +2,6 @@ package elrh.softman.utils;
 
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.GaugeBuilder;
-import javafx.geometry.Insets;
 import javafx.scene.paint.Color;
 
 public class GUIUtils {

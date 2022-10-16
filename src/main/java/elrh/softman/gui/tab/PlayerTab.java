@@ -10,15 +10,19 @@ import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import elrh.softman.utils.StatsUtils;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+
 public class PlayerTab extends BorderPane implements IFocusedTeamListener {
 
     private final ComboBox<PlayerInfo> selectPlayerCB;
+    private final ObservableList<PlayerInfo> data;
     private final PlayerInfoTile playerInfo = new PlayerInfoTile(false);
     private final PlayerAttributesTile playerAttributesTA = new PlayerAttributesTile();
     private final TextArea seasonStatsTA = new TextArea();
@@ -33,11 +37,10 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
     }
 
     private PlayerTab() {
-        var manager = AssociationManager.getInstance();
-        var user = manager.getUser();
+        data = FXCollections.observableList(new ArrayList<>());
 
         var selectPlayerLabel = new Label(" Select player: ");
-        selectPlayerCB = new ComboBox<>(FXCollections.observableList(user.getFocusedTeam().getPlayers()));
+        selectPlayerCB = new ComboBox<>(data);
         selectPlayerCB.setMinWidth(220d);
         selectPlayerCB.setMaxWidth(220d);
         selectPlayerCB.valueProperty().addListener((ov, oldValue, newValue) -> reload(newValue));
@@ -62,32 +65,44 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
 
         super.setLeft(controlBox);
         super.setCenter(playerAttributesTA);
+
+        var user = AssociationManager.getInstance().getUser();
+        focusedTeamChanged(user.getFocusedTeam());
+        user.registerFocusedTeamListener(this);
     }
 
     public void reload(PlayerInfo info) {
-        selectPlayerCB.setValue(info);
+        if (info != null) {
+            selectPlayerCB.setValue(info);
 
-        playerInfo.reload(info);
+            playerInfo.reload(info);
 
-        playerAttributesTA.reload(info.getAttributes());
+            playerAttributesTA.reload(info.getAttributes());
 
-        seasonStatsTA.clear();
-        seasonStatsTA.appendText("MATCH           |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
-        var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
-        if (player != null) {
-            player.getStats().forEach(record -> renderStatsRecord(seasonStatsTA, record, false, null));
+            seasonStatsTA.clear();
+            seasonStatsTA.appendText("MATCH           |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
+            var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
+            if (player != null) {
+                player.getStats().forEach(record -> renderStatsRecord(seasonStatsTA, record, false, null));
+            }
+            renderStatsRecord(seasonStatsTA, player.getSeasonTotal(), false, null);
+
+            careerStatsTA.clear();
+            careerStatsTA.appendText("SEASON |   G |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
+            renderStatsRecord(careerStatsTA, player.getSeasonTotal(), true, player.getStats().size());
+            // TODO make it variable for each year yet to come + make total career count
         }
-        renderStatsRecord(seasonStatsTA, player.getSeasonTotal(), false, null);
-
-        careerStatsTA.clear();
-        careerStatsTA.appendText("SEASON |   G |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
-        renderStatsRecord(careerStatsTA, player.getSeasonTotal(), true, player.getStats().size());
-        // TODO make it variable for each year yet to come + make total career count
     }
 
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
-        selectPlayerCB.setItems(FXCollections.observableList(newlyFocusedTeam.getPlayers()));
+        data.clear();
+        var players = newlyFocusedTeam.getPlayers();
+        if (players != null) {
+            data.addAll(players);
+        }
+        FXCollections.sort(data);
+
         selectPlayerCB.setValue(selectPlayerCB.getItems().get(0));
     }
 
