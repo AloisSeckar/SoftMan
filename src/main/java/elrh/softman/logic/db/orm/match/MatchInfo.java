@@ -23,16 +23,24 @@ public class MatchInfo extends AbstractDBEntity {
     @DatabaseField(generatedId = true)
     private long matchId;
 
+    @DatabaseField(canBeNull = false)
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Date matchDay;
 
+    @DatabaseField(canBeNull = false)
+    private long leagueId;
+    @DatabaseField(canBeNull = false)
     private int leagueRound;
 
+    @DatabaseField(canBeNull = false)
     private long awayTeamId;
+    @DatabaseField(canBeNull = false)
     private long homeTeamId;
 
+    @DatabaseField(canBeNull = false)
     private MatchStatus status;
+    @DatabaseField(canBeNull = false)
     private boolean homeTeamFinishedBatting;
 
     public void setMatchDay(LocalDate matchDayLocal) {

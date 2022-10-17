@@ -82,6 +82,7 @@ public class League {
                     var info = new MatchInfo();
                     info.setMatchId(matchId);
                     info.setMatchDay(roundDate);
+                    info.setLeagueId(getId());
                     info.setLeagueRound(i);
 
                     var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
@@ -133,26 +134,6 @@ public class League {
             mockPreviewCurrentRound(target);
             mockPlayRound(target);
         }
-    }
-
-    public Match mockGetMatch() {
-        // TODO REMOVE
-        return new Match(mockGetMatchInfo(), teams.get(0).getDefaultLineup(), teams.get(1).getDefaultLineup());
-    }
-
-    public void mockPlayMatch(TextArea target) {
-        // TODO REMOVE
-        var match = new Match(mockGetMatchInfo(), teams.get(0).getDefaultLineup(), teams.get(1).getDefaultLineup());
-        match.simulate(target);
-        match.getMatchInfo().persist();
-    }
-
-    private MatchInfo mockGetMatchInfo() {
-        // TODO REMOVE
-        var ret = new MatchInfo();
-        ret.setMatchId(1);
-        ret.setMatchDay(LocalDate.now());
-        return ret;
     }
 
     public void mockPlayRound(TextArea target) {

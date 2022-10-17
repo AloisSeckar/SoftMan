@@ -183,8 +183,13 @@ public class MatchSimulator {
         StatsUtils.saveStats(awayLineup);
         StatsUtils.saveStats(homeLineup);
 
-        // TODO save the match into correct league
-        AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0).saveMatch(match);
+        var leagueId = match.getMatchInfo().getLeagueId();
+        var league = AssociationManager.getInstance().getLeagueById(leagueId);
+        if (league != null) {
+            league.saveMatch(match);
+        } else {
+            ErrorUtils.raise("Unknown leagueId " + leagueId);
+        }
     }
 
     private boolean keepPlaying() {

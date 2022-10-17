@@ -60,6 +60,7 @@ public class StandingsTab extends AnchorPane {
         AnchorPane.setTopAnchor(leagueTable, 85d);
     }
 
+    // TODO delete mock and connect real leagues
     private void mockLeague() {
         try {
             testLeague.mockPlayLeague(testTextArea);
