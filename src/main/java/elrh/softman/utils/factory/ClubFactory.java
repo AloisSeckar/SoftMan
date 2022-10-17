@@ -27,6 +27,12 @@ public class ClubFactory {
             case "VIOLETS" -> Color.VIOLET;
             case "BROWNS" -> Color.SADDLEBROWN;
             case "GOLDS" -> Color.GOLD;
+            case "CYANS" -> Color.CYAN;
+            case "PURPLES" -> Color.PURPLE;
+            case "ORANGES" -> Color.ORANGE;
+            case "LIMES" -> Color.LIMEGREEN;
+            case "PINKS" -> Color.PINK;
+            case "BLOODS" -> Color.DARKRED;
             default -> Color.GRAY;
         };
     }
