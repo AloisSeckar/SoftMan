@@ -1,8 +1,10 @@
 package elrh.softman.gui.tab;
 
+import elrh.softman.gui.frame.ContentFrame;
 import elrh.softman.gui.tile.PlayerAttributesTile;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.core.Match;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.db.orm.player.PlayerInfo;
 import elrh.softman.logic.db.orm.player.PlayerStats;
@@ -127,9 +129,9 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
                 matchLink.setBorder(Border.EMPTY);
                 matchLink.setPadding(new Insets(4, 0, 4, 0));
                 matchLink.setOnAction(e -> {
-                    var alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setContentText("You requested match " + record.getMatchId());
-                    alert.showAndWait();
+                    var match = Match.getMatchFromDB(record.getMatchId());
+                    MatchTab.getInstance().setMatch(match);
+                    ContentFrame.getInstance().switchTo("Match");
                 });
                 target.getChildren().add(matchLink);
                 target.getChildren().add(new Text(" | "));

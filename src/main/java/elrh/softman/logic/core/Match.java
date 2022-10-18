@@ -1,6 +1,7 @@
 package elrh.softman.logic.core;
 
 import elrh.softman.logic.core.lineup.Lineup;
+import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
 import elrh.softman.logic.MatchSimulator;
@@ -72,6 +73,18 @@ public class Match {
 
     public boolean isFinished() {
         return matchInfo.getStatus() == MatchStatus.FINISHED;
+    }
+
+    public static Match getMatchFromDB(long matchId) {
+        var matchInfo = (MatchInfo) GameDBManager.getInstance().getObjectById(MatchInfo.class, matchId);
+
+        // TODO match info not saved into DB
+        // TODO get away lineup
+        // TODO get home lineup
+        // TODO get list of play-by-play situations
+
+        var match = new Match(matchInfo, new Lineup(1, "a", "b", "c"), new Lineup(2, "d", "e", "f"));
+        return match;
     }
     
 }
