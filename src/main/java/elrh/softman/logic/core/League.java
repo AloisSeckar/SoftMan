@@ -29,7 +29,7 @@ public class League {
     @Getter
     private ArrayList<Team> teams = new ArrayList<>();
 
-    private final HashMap<Integer, Match> matches = new HashMap<>();
+    private final HashMap<Long, Match> matches = new HashMap<>();
 
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
@@ -57,7 +57,7 @@ public class League {
 
     public Result scheduleMatches() {
         try {
-            var matchIdBase = leagueInfo.getMatchId();
+            var matchNumberBase = leagueInfo.getMatchNumber();
             var matchesPerRound = teams.size() / 2;
             var rounds = getTotalRounds();
             var roundDate = LEAGUE_START;
@@ -67,7 +67,7 @@ public class League {
             for (int i = 1; i <= rounds; i++) {
                 for (int j = 0; j < matchesPerRound; j++) {
 
-                    int matchId = matchIdBase + ((i - 1) * matchesPerRound) + (j + 1);
+                    int matchNumber = matchNumberBase + ((i - 1) * matchesPerRound) + (j + 1);
 
                     int homeTeamIndex;
                     int awayTeamIndex;
@@ -80,15 +80,20 @@ public class League {
                     }
 
                     var info = new MatchInfo();
-                    info.setMatchId(matchId);
+                    info.setMatchNumber(matchNumber);
                     info.setMatchDay(roundDate);
                     info.setLeagueId(getId());
                     info.setLeagueRound(i);
 
                     var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
-                    LOG.info("Match: " + info.getMatchId() + " - " + match.getAwayLineup().getTeamName() + " @ " + match.getHomeLineup().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
-                    match.getMatchInfo().persist();
-                    matches.put(matchId, match);
+                    LOG.info("Match: " + info.getMatchNumber() + " - " + match.getAwayLineup().getTeamName() + " @ " + match.getHomeLineup().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
+                    var result = match.getMatchInfo().persist();
+                    if (result.ok()) {
+                        LOG.info("Saved into DB");
+                    } else {
+                        ErrorUtils.raise(result.message());
+                    }
+                    matches.put(match.getId(), match);
                 }
                 shiftTeams();
                 roundDate = roundDate.plusDays(7);

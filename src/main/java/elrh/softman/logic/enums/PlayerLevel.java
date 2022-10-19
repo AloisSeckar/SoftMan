@@ -25,6 +25,6 @@ public enum PlayerLevel {
     private final String code;
 
     @Getter
-    private final int matchId;
+    private final int matchNumber;
 
 }

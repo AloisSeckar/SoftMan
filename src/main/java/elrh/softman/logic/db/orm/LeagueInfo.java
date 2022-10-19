@@ -5,7 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.db.AbstractDBEntity;
 import elrh.softman.logic.db.GameDBManager;
-import elrh.softman.logic.db.orm.player.PlayerAttributes;
 import elrh.softman.logic.enums.PlayerLevel;
 import java.util.Objects;
 import lombok.*;
@@ -31,7 +30,7 @@ public class LeagueInfo extends AbstractDBEntity {
     
     @DatabaseField(canBeNull = false)
     @NonNull
-    private int matchId;
+    private int matchNumber;
     
     @Override
     public int hashCode() {

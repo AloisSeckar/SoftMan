@@ -53,6 +53,10 @@ public class Match {
         }
 
     }
+
+    public long getId() {
+        return matchInfo.getMatchId();
+    }
     
     public void simulate(TextArea target) {
         MatchSimulator sim = new MatchSimulator(this, target);
@@ -78,7 +82,6 @@ public class Match {
     public static Match getMatchFromDB(long matchId) {
         var matchInfo = (MatchInfo) GameDBManager.getInstance().getObjectById(MatchInfo.class, matchId);
 
-        // TODO match info not saved into DB
         // TODO get away lineup
         // TODO get home lineup
         // TODO get list of play-by-play situations

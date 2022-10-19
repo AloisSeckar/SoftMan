@@ -24,6 +24,9 @@ public class MatchInfo extends AbstractDBEntity {
     private long matchId;
 
     @DatabaseField(canBeNull = false)
+    private int matchNumber;
+
+    @DatabaseField(canBeNull = false)
     @Getter(AccessLevel.NONE)
     @Setter(AccessLevel.NONE)
     private Date matchDay;
