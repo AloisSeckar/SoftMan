@@ -41,11 +41,10 @@ public class PlayerInfo extends AbstractDBEntity implements Comparable<PlayerInf
         this.name = name;
         this.gender = gender;
 
-        // TODO default img should be different and stored in "faces" directory
         if (gender == PlayerGender.M) {
-            this.img = "player-m.png";
+            this.img = "vecteezy/avatar-boy.jpg";
         } else {
-            this.img = "player-f.png";
+            this.img = "vecteezy/avatar-girl.jpg";
         }
 
         this.birth = birth;

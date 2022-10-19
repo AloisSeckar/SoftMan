@@ -2,6 +2,7 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
+import elrh.softman.utils.GUIUtils;
 import elrh.softman.utils.Utils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -48,7 +49,7 @@ public class ClubInfoTile extends VBox {
             registeredLabel.setText(club.isActive() ? "Active" : "Inactive");
             ownerLabel.setText(AssociationManager.getInstance().getUser().getActiveClub() == club ? "Player" : "PC");
 
-            Image defaultImg = new Image(getClass().getResourceAsStream(club.getClubInfo().getLogo()));
+            Image defaultImg = GUIUtils.getImageOrDefault(club.getClubInfo().getLogo());
             logoView.setImage(defaultImg);
 
             Utils.setBackgroundColor(ClubInfoTile.this, club.getColor());
@@ -59,7 +60,7 @@ public class ClubInfoTile extends VBox {
             registeredLabel.setText("");
             ownerLabel.setText("");
 
-            Image defaultImg = new Image(getClass().getResourceAsStream("/img/ball.png"));
+            Image defaultImg = GUIUtils.getImageOrDefault("/img/ball.png");
             logoView.setImage(defaultImg);
 
             Utils.setBackgroundColor(ClubInfoTile.this, Color.GRAY);

@@ -8,12 +8,12 @@ import elrh.softman.logic.core.Match;
 import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.core.stats.BoxScore;
 import elrh.softman.utils.ErrorUtils;
+import elrh.softman.utils.GUIUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -102,7 +102,7 @@ public class ScheduleRowTile extends BorderPane {
 
             sim = new MatchSimulator(match, MatchTab.getTarget());
 
-            awayImage.setImage(new Image(getClass().getResourceAsStream(match.getAwayLineup().getTeamLogo())));
+            awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getTeamLogo()));
             Tooltip.install(awayImage, new Tooltip(match.getAwayLineup().getTeamName()));
 
             switch (match.getMatchInfo().getStatus()) {
@@ -116,7 +116,7 @@ public class ScheduleRowTile extends BorderPane {
                 }
             }
 
-            homeImage.setImage(new Image(getClass().getResourceAsStream(match.getHomeLineup().getTeamLogo())));
+            homeImage.setImage(GUIUtils.getImageOrDefault(match.getHomeLineup().getTeamLogo()));
             Tooltip.install(homeImage, new Tooltip(match.getHomeLineup().getTeamName()));
 
         } else {

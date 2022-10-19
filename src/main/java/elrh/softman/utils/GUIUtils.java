@@ -2,6 +2,7 @@ package elrh.softman.utils;
 
 import eu.hansolo.medusa.Gauge;
 import eu.hansolo.medusa.GaugeBuilder;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class GUIUtils {
@@ -14,6 +15,15 @@ public class GUIUtils {
                         .barColor(color)
                         .title(title)
                         .build();
+    }
+
+    public static Image getImageOrDefault(String src) {
+        try {
+            return new Image(GUIUtils.class.getResourceAsStream(src));
+        } catch (NullPointerException nex) {
+            // this image should always exist in resources
+            return new Image(GUIUtils.class.getResourceAsStream("/img/ball.png"));
+        }
     }
 
 }

@@ -44,7 +44,7 @@ public class PlayerInfoTile extends VBox {
         imgView.getStyleClass().add("player-img");
         super.getChildren().add(imgView);
 
-        Image defaultImg = new Image(getClass().getResourceAsStream("/img/ball.png"));
+        Image defaultImg = GUIUtils.getImageOrDefault("/img/ball.png");
         imgView.setImage(defaultImg);
 
         ageLabel = new Label();
@@ -86,7 +86,7 @@ public class PlayerInfoTile extends VBox {
             nameLabel.setText(player.getName());
             ageLabel.setText(player.getAge() + " yrs");
 
-            imgView.setImage(new Image(getClass().getResourceAsStream("/img/" + player.getImg())));
+            imgView.setImage(GUIUtils.getImageOrDefault("/img/" + player.getImg()));
 
             overallGauge.setValue(player.getAttributes().getTotal());
             if (full) {

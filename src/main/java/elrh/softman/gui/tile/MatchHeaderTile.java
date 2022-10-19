@@ -2,8 +2,8 @@ package elrh.softman.gui.tile;
 
 import elrh.softman.logic.core.Match;
 import elrh.softman.utils.FormatUtils;
+import elrh.softman.utils.GUIUtils;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
@@ -38,9 +38,9 @@ public class MatchHeaderTile extends BorderPane {
 
     public void setMatch(Match match) {
         if (match != null) {
-            awayImage.setImage(new Image(getClass().getResourceAsStream(match.getAwayLineup().getTeamLogo())));
+            awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getTeamLogo()));
             titleLabel.setText(match.getAwayLineup().getTeamName() + " vs. " + match.getHomeLineup().getTeamName());
-            homeImage.setImage(new Image(getClass().getResourceAsStream(match.getHomeLineup().getTeamLogo())));
+            homeImage.setImage(GUIUtils.getImageOrDefault(match.getHomeLineup().getTeamLogo()));
         }
     }
 
