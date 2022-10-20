@@ -10,6 +10,8 @@ import elrh.softman.logic.core.stats.*;
 import elrh.softman.utils.ErrorUtils;
 import java.util.ArrayList;
 import java.util.List;
+
+import elrh.softman.utils.Utils;
 import javafx.scene.control.TextArea;
 import lombok.Data;
 
@@ -84,9 +86,18 @@ public class Match {
 
         // TODO get away lineup
         // TODO get home lineup
-        // TODO get list of play-by-play situations
 
         var match = new Match(matchInfo, new Lineup(1, "a", "b", "c"), new Lineup(2, "d", "e", "f"));
+
+        var dbList = GameDBManager.getInstance().getObjectsByQuery(MatchPlayByPlay.class, "matchId", matchId);
+        if (Utils.listNotEmpty(dbList)) {
+            var pbpList = new ArrayList<MatchPlayByPlay>();
+            dbList.forEach(item -> {
+                pbpList.add((MatchPlayByPlay) item);
+            });
+            match.setPlayByPlay(pbpList);
+        }
+
         return match;
     }
     

@@ -6,6 +6,8 @@ import com.j256.ormlite.table.TableUtils;
 import elrh.softman.logic.Result;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
+import java.util.HashMap;
+import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +59,17 @@ public class DaoManager<U extends AbstractDBEntity> {
             return null;
         }
     }
+
+    public List<U> getObjectsByQuery(String column, Object value) {
+        try {
+            var query = new HashMap<String, Object>();
+            query.put(column, value);
+            return dao.queryForFieldValues(query);
+        } catch (Exception ex) {
+            ErrorUtils.handleException("getObjectByQuery", ex);
+            return null;
+        }
+    }
+
 
 }

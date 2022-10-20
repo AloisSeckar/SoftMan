@@ -276,7 +276,10 @@ public class MatchSimulator {
         if (target != null) {
             target.appendText(text);
         }
-        match.getPlayByPlay().add(new MatchPlayByPlay(match.getMatchInfo().getMatchId(), match.getPlayByPlay().size() + 1, text));
+        //
+        var pbp = new MatchPlayByPlay(match.getMatchInfo().getMatchId(), match.getPlayByPlay().size() + 1, text);
+        pbp.persist();
+        match.getPlayByPlay().add(pbp);
     }
 
     private void handleNoBatter() {

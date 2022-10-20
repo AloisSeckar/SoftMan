@@ -8,6 +8,8 @@ import elrh.softman.logic.db.orm.match.*;
 import elrh.softman.utils.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -62,7 +64,7 @@ public class GameDBManager {
     }
 
     public Result saveObject(Class<? extends AbstractDBEntity> objectClass, AbstractDBEntity object) {
-        var dao = daoList.stream().filter(i -> i.getTypeParameterClass() == objectClass).findFirst();
+        var dao = getDaoForClass(objectClass);
         if (dao.isPresent()) {
             return dao.get().saveObject(object);
         } else {
@@ -71,9 +73,19 @@ public class GameDBManager {
     }
 
     public Object getObjectById(Class<? extends AbstractDBEntity> objectClass, long objectId) {
-        var dao = daoList.stream().filter(i -> i.getTypeParameterClass() == objectClass).findFirst();
+        var dao = getDaoForClass(objectClass);
         if (dao.isPresent()) {
             return dao.get().getObjectById(objectId);
+        } else {
+            LOG.warn("DAO not found for " + objectClass);
+            return null;
+        }
+    }
+
+    public List<?> getObjectsByQuery(Class<? extends AbstractDBEntity> objectClass, String column, Object value) {
+        var dao = getDaoForClass(objectClass);
+        if (dao.isPresent()) {
+            return dao.get().getObjectsByQuery(column, value);
         } else {
             LOG.warn("DAO not found for " + objectClass);
             return null;
@@ -88,5 +100,9 @@ public class GameDBManager {
                 LOG.error("GameDBManager.closeConnection", ex);
             }
         }
+    }
+
+    private Optional<DaoManager<? extends AbstractDBEntity>> getDaoForClass(Class<? extends AbstractDBEntity> objectClass) {
+        return daoList.stream().filter(i -> i.getTypeParameterClass() == objectClass).findFirst();
     }
 }
