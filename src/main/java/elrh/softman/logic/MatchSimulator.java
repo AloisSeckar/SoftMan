@@ -1,7 +1,7 @@
 package elrh.softman.logic;
 
-import elrh.softman.logic.core.lineup.Lineup;
-import elrh.softman.logic.core.lineup.PlayerRecord;
+import elrh.softman.logic.core.Lineup;
+import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
 import elrh.softman.logic.core.Match;
 import static elrh.softman.logic.enums.MatchStatus.*;
@@ -101,7 +101,7 @@ public class MatchSimulator {
     ///////
     private void setUpMatch() {
         match.getMatchInfo().setStatus(ACTIVE);
-        appendText("\n\nGAME BETWEEN " + awayLineup.getTeamName() + " AND " + homeLineup.getTeamName() + "\n");
+        appendText("\n\nGAME BETWEEN " + awayLineup.getLinuepInfo().getTeamName() + " AND " + homeLineup.getLinuepInfo().getTeamName() + "\n");
         awayLineup.setUp(match);
         homeLineup.setUp(match);
     }
@@ -243,12 +243,12 @@ public class MatchSimulator {
     }
 
     private void getScore() {
-        appendText("\n\n" + awayLineup.getTeamName() + ": " + boxScore.getTotalPoints(true) + "\n");
-        appendText(homeLineup.getTeamName() + ": " + boxScore.getTotalPoints(false) + "\n");
+        appendText("\n\n" + awayLineup.getLinuepInfo().getTeamName() + ": " + boxScore.getTotalPoints(true) + "\n");
+        appendText(homeLineup.getLinuepInfo().getTeamName() + ": " + boxScore.getTotalPoints(false) + "\n");
     }
 
     private void printStats(Lineup lineup) {
-        appendText("\n\n" + lineup.getTeamName() + "\n");
+        appendText("\n\n" + lineup.getLinuepInfo().getTeamName() + "\n");
         appendText("PLAYER                         | PA | AB |  H |  R | RBI |   AVG |  O |  IP | \n");
 
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {

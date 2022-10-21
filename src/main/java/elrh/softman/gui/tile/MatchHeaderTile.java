@@ -38,9 +38,9 @@ public class MatchHeaderTile extends BorderPane {
 
     public void setMatch(Match match) {
         if (match != null) {
-            awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getTeamLogo()));
-            titleLabel.setText(match.getAwayLineup().getTeamName() + " vs. " + match.getHomeLineup().getTeamName());
-            homeImage.setImage(GUIUtils.getImageOrDefault(match.getHomeLineup().getTeamLogo()));
+            awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getLinuepInfo().getTeamLogo()));
+            titleLabel.setText(match.getAwayLineup().getLinuepInfo().getTeamName() + " vs. " + match.getHomeLineup().getLinuepInfo().getTeamName());
+            homeImage.setImage(GUIUtils.getImageOrDefault(match.getHomeLineup().getLinuepInfo().getTeamLogo()));
         }
     }
 

@@ -47,8 +47,8 @@ public class MatchResult extends AbstractDBEntity {
     private int homeErrors;
     
     public MatchResult(Match source) {
-        awayTeam = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, source.getAwayLineup().getTeamId());
-        homeTeam = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, source.getHomeLineup().getTeamId());
+        awayTeam = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, source.getAwayLineup().getLinuepInfo().getTeamId());
+        homeTeam = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, source.getHomeLineup().getLinuepInfo().getTeamId());
         
         var boxScore = source.getBoxScore();
         innings = boxScore.getInnings();

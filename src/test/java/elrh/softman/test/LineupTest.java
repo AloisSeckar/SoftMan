@@ -1,8 +1,9 @@
 package elrh.softman.test;
 
 import elrh.softman.logic.Result;
-import elrh.softman.logic.core.lineup.*;
+import elrh.softman.logic.core.Lineup;
 import elrh.softman.logic.db.orm.player.PlayerInfo;
+import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.factory.PlayerFactory;

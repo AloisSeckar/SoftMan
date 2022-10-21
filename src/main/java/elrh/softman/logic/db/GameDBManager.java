@@ -3,13 +3,13 @@ package elrh.softman.logic.db;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.db.orm.*;
+import elrh.softman.logic.db.orm.lineup.*;
 import elrh.softman.logic.db.orm.player.*;
 import elrh.softman.logic.db.orm.match.*;
 import elrh.softman.utils.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,10 +30,12 @@ public class GameDBManager {
     }
 
     private GameDBManager() {
+        daoList.add(new DaoManager<>(LinuepInfo.class));
         daoList.add(new DaoManager<>(MatchInfo.class));
         daoList.add(new DaoManager<>(MatchPlayByPlay.class));
         daoList.add(new DaoManager<>(MatchResult.class));
         daoList.add(new DaoManager<>(PlayerAttributes.class));
+        daoList.add(new DaoManager<>(PlayerRecord.class));
         daoList.add(new DaoManager<>(PlayerInfo.class));
         daoList.add(new DaoManager<>(PlayerStats.class));
         daoList.add(new DaoManager<>(ClubInfo.class));

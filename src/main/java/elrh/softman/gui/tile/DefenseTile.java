@@ -2,7 +2,7 @@ package elrh.softman.gui.tile;
 
 import static elrh.softman.logic.enums.PlayerPosition.*;
 
-import elrh.softman.logic.core.lineup.PlayerRecord;
+import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;

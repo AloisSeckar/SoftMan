@@ -1,11 +1,11 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.core.lineup.Lineup;
-import static elrh.softman.logic.core.lineup.Lineup.*;
+import elrh.softman.logic.core.Lineup;
+import static elrh.softman.logic.core.Lineup.*;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.player.PlayerInfo;
-import elrh.softman.logic.core.lineup.PlayerRecord;
+import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.db.orm.TeamInfo;
 import elrh.softman.logic.enums.PlayerPosition;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ public class LineupTile extends VBox {
 
     public void fillLineup(Lineup lineup) {
         if (lineup != null) {
-            this.team = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, lineup.getTeamId());
+            this.team = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, lineup.getLinuepInfo().getTeamId());
             if (team != null) {
                 // TODO get to player list more directly and correctly
                 var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
@@ -68,7 +68,7 @@ public class LineupTile extends VBox {
                     substitutesRows[i].setUp(playerList, lineup.getSubstitutes()[i]);
                 }
             } else {
-                ErrorUtils.raise("Team " + lineup.getTeamId() + " not found");
+                ErrorUtils.raise("Team " + lineup.getLinuepInfo().getTeamId() + " not found");
             }
         } else {
             ErrorUtils.raise("Illega passing of NULL Lineup object");

@@ -5,7 +5,7 @@ import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
-import elrh.softman.logic.core.lineup.Lineup;
+import elrh.softman.logic.core.Lineup;
 import elrh.softman.logic.interfaces.IFocusedClubListener;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import elrh.softman.utils.Utils;

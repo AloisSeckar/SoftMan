@@ -1,7 +1,8 @@
-package elrh.softman.logic.core.lineup;
+package elrh.softman.logic.core;
 
 import elrh.softman.logic.Result;
-import elrh.softman.logic.core.Match;
+import elrh.softman.logic.db.orm.lineup.LinuepInfo;
+import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.db.orm.player.PlayerStats;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.Constants;
@@ -18,13 +19,7 @@ public class Lineup {
     public static final int SUBSTITUTES = 8;
 
     @Getter
-    private final long teamId;
-    @Getter
-    private final String teamName;
-    @Getter
-    private final String teamShortName;
-    @Getter
-    private final String teamLogo;
+    private final LinuepInfo linuepInfo;
 
     @Getter
     private final ArrayList<PlayerRecord>[] positionPlayers = new ArrayList[POSITION_PLAYERS];
@@ -33,10 +28,7 @@ public class Lineup {
     private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
 
     public Lineup(long teamId, String teamName, String teamShortName, String teamLogo) {
-        this.teamId = teamId;
-        this.teamName = teamName;
-        this.teamShortName = teamShortName;
-        this.teamLogo = teamLogo;
+        this.linuepInfo = new LinuepInfo(teamId, teamName, teamShortName, teamLogo);
 
         for (int i = 0; i < POSITION_PLAYERS; i++) {
             positionPlayers[i] = new ArrayList<>();
@@ -128,7 +120,7 @@ public class Lineup {
             if (Utils.listNotEmpty(lineupSpot)) {
                 var first = lineupSpot.get(0);
                 var stats = new PlayerStats();
-                var matchString = match.getAwayLineup().getTeamShortName() + " @ " + match.getHomeLineup().getTeamShortName();
+                var matchString = match.getAwayLineup().getLinuepInfo().getTeamShortName() + " @ " + match.getHomeLineup().getLinuepInfo().getTeamShortName();
                 var playerString = first.toString() + ", " + first.getPosition().toString();
                 stats.init(match.getMatchInfo().getMatchId(), matchString, first.getPlayer().getPlayerId(), playerString);
                 first.setStats(stats);

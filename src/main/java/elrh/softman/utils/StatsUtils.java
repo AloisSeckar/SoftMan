@@ -1,8 +1,8 @@
 package elrh.softman.utils;
 
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.core.lineup.Lineup;
-import elrh.softman.logic.core.lineup.PlayerRecord;
+import elrh.softman.logic.core.Lineup;
+import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.enums.StatsType;
 import static elrh.softman.logic.enums.StatsType.*;

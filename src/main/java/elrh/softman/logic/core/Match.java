@@ -1,6 +1,5 @@
 package elrh.softman.logic.core;
 
-import elrh.softman.logic.core.lineup.Lineup;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
@@ -40,7 +39,7 @@ public class Match {
         
         if (awayLineup != null) {
             this.awayLineup = awayLineup;
-            this.matchInfo.setAwayTeamId(awayLineup.getTeamId());
+            this.matchInfo.setAwayTeamId(awayLineup.getLinuepInfo().getTeamId());
         } else {
             this.awayLineup = null;
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'awayLineup'");
@@ -48,7 +47,7 @@ public class Match {
         
         if (homeLineup != null) {
             this.homeLineup = homeLineup;
-            this.matchInfo.setHomeTeamId(homeLineup.getTeamId());
+            this.matchInfo.setHomeTeamId(homeLineup.getLinuepInfo().getTeamId());
         } else {
             this.homeLineup = null;
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'homeLineup'");

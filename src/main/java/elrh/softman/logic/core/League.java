@@ -86,7 +86,7 @@ public class League {
                     info.setLeagueRound(i);
 
                     var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
-                    LOG.info("Match: " + info.getMatchNumber() + " - " + match.getAwayLineup().getTeamName() + " @ " + match.getHomeLineup().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
+                    LOG.info("Match: " + info.getMatchNumber() + " - " + match.getAwayLineup().getLinuepInfo().getTeamName() + " @ " + match.getHomeLineup().getLinuepInfo().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
                     var result = match.getMatchInfo().persist();
                     if (result.ok()) {
                         LOG.info("Saved into DB");
@@ -196,7 +196,7 @@ public class League {
     }
 
     private void includeMatchIntoStandings(Match match) {
-        var homeTeamName = match.getHomeLineup().getTeamName();
+        var homeTeamName = match.getHomeLineup().getLinuepInfo().getTeamName();
         Standing homeTeamStanding;
         int homeTeamIndex = -1;
         do {
@@ -204,7 +204,7 @@ public class League {
             homeTeamStanding = standings.get(homeTeamIndex);
         } while (!homeTeamName.equals(homeTeamStanding.getTeam()) || homeTeamIndex > 9);
 
-        var awayTeamName = match.getAwayLineup().getTeamName();
+        var awayTeamName = match.getAwayLineup().getLinuepInfo().getTeamName();
         Standing awayTeamStanding;
         int awayTeamIndex = -1;
         do {

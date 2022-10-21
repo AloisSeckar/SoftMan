@@ -53,8 +53,8 @@ public class BoxScoreTile extends VBox {
     }
 
     public void loadBoxScore(Match match) {
-        awayTeam.setText(match.getAwayLineup().getTeamName());
-        homeTeam.setText(match.getHomeLineup().getTeamName());
+        awayTeam.setText(match.getAwayLineup().getLinuepInfo().getTeamName());
+        homeTeam.setText(match.getHomeLineup().getLinuepInfo().getTeamName());
         var boxScore = match.getBoxScore();
         if (boxScore != null) {
             innings.getChildren().clear();
