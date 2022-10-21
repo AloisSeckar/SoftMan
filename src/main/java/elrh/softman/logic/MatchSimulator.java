@@ -100,10 +100,15 @@ public class MatchSimulator {
 
     ///////
     private void setUpMatch() {
+        var matchId = match.getId();
+        var matchStr = awayLineup.getLinuepInfo().getTeamShortName() + " @ " + homeLineup.getLinuepInfo().getTeamShortName();
+
+        awayLineup.setUp(matchId, matchStr);
+        homeLineup.setUp(matchId, matchStr);
+
         match.getMatchInfo().setStatus(ACTIVE);
-        appendText("\n\nGAME BETWEEN " + awayLineup.getLinuepInfo().getTeamName() + " AND " + homeLineup.getLinuepInfo().getTeamName() + "\n");
-        awayLineup.setUp(match);
-        homeLineup.setUp(match);
+
+        appendText("\n\nGAME BETWEEN " +  awayLineup.getLinuepInfo().getTeamName() + " AND " + homeLineup.getLinuepInfo().getTeamName() + "\n");
     }
 
     private void setUpInning() {

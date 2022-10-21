@@ -54,32 +54,32 @@ public class AssociationFactory {
 
         var leagueMen1 = manager.getLeagues(year).get(0);
         var leagueMenTeams1 = createTeams(PlayerLevel.MSEN, Arrays.asList(CLUB01, CLUB02, CLUB03, CLUB04, CLUB05, CLUB06, CLUB07, CLUB08));
-        leagueMenTeams1.forEach(leagueMen1::registerTeam);
+        leagueMenTeams1.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueMen1.getId(), team));
         leagueMen1.scheduleMatches();
 
         var leagueMen2 = manager.getLeagues(year).get(1);
         var leagueMenTeams2 = createTeams(PlayerLevel.MSEN, Arrays.asList(CLUB09, CLUB10, CLUB11, CLUB12, CLUB13, CLUB14, CLUB15, CLUB16));
-        leagueMenTeams2.forEach(leagueMen2::registerTeam);
+        leagueMenTeams2.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueMen2.getId(), team));
         leagueMen2.scheduleMatches();
 
         var leagueWomen1 = manager.getLeagues(year).get(2);
         var leagueWomenTeams1 = createTeams(PlayerLevel.FSEN, Arrays.asList(CLUB01, CLUB02, CLUB03, CLUB04, CLUB05, CLUB06, CLUB09, CLUB10));
-        leagueWomenTeams1.forEach(leagueWomen1::registerTeam);
+        leagueWomenTeams1.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueWomen1.getId(), team));
         leagueWomen1.scheduleMatches();
 
         var leagueWomen2 = manager.getLeagues(year).get(3);
         var leagueWomenTeams2 = createTeams(PlayerLevel.FSEN, Arrays.asList(CLUB07, CLUB08, CLUB11, CLUB12, CLUB13, CLUB14, CLUB15, CLUB16));
-        leagueWomenTeams2.forEach(leagueWomen2::registerTeam);
+        leagueWomenTeams2.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueWomen2.getId(), team));
         leagueWomen2.scheduleMatches();
 
         var leagueJuniorBoys = manager.getLeagues(year).get(4);
         var leagueJuniorBoysTeams = createTeams(PlayerLevel.MU18, Arrays.asList(CLUB01, CLUB02, CLUB04, CLUB05, CLUB06, CLUB08));
-        leagueJuniorBoysTeams.forEach(leagueJuniorBoys::registerTeam);
+        leagueJuniorBoysTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueJuniorBoys.getId(), team));
         leagueJuniorBoys.scheduleMatches();
 
         var leagueJuniorGirls = manager.getLeagues(year).get(5);
         var leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB01, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
-        leagueJuniorGirlsTeams.forEach(leagueJuniorGirls::registerTeam);
+        leagueJuniorGirlsTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueJuniorGirls.getId(), team));
         leagueJuniorGirls.scheduleMatches();
 
         CLUB01.formTeam(PlayerLevel.MSEN); // to test a "C" team not participating in any league

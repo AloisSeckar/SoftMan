@@ -1,5 +1,6 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.db.orm.lineup.LinuepInfo;
 import elrh.softman.logic.db.orm.player.PlayerRecord;
@@ -29,9 +30,15 @@ public class Lineup {
 
     public Lineup(long teamId, String teamName, String teamShortName, String teamLogo) {
         this.linuepInfo = new LinuepInfo(teamId, teamName, teamShortName, teamLogo);
+        reset();
+    }
 
+    public void reset() {
         for (int i = 0; i < POSITION_PLAYERS; i++) {
             positionPlayers[i] = new ArrayList<>();
+        }
+        for (int i = 0; i < SUBSTITUTES; i++) {
+            substitutes[i] = null;
         }
     }
 
@@ -114,15 +121,25 @@ public class Lineup {
         return Utils.listNotEmpty(positionPlayers[POSITION_PLAYERS - 1]);
     }
 
-    public void setUp(Match match) {
+    public void setUp(long matchId, String matchStr) {
+        var teamId = linuepInfo.getTeamId();
+        var team = AssociationManager.getInstance().getTeamById(teamId);
+        var lineup = team.getDefaultLineup();
+
+        for (int i = 0; i < POSITION_PLAYERS; i++) {
+            positionPlayers[i] = lineup.getPositionPlayers()[i];
+        }
+        for (int i = 0; i < SUBSTITUTES; i++) {
+            substitutes[i] = lineup.getSubstitutes()[i];
+        }
+
         for (int i = 0; i < POSITION_PLAYERS; i++) {
             var lineupSpot = positionPlayers[i];
             if (Utils.listNotEmpty(lineupSpot)) {
                 var first = lineupSpot.get(0);
                 var stats = new PlayerStats();
-                var matchString = match.getAwayLineup().getLinuepInfo().getTeamShortName() + " @ " + match.getHomeLineup().getLinuepInfo().getTeamShortName();
                 var playerString = first.toString() + ", " + first.getPosition().toString();
-                stats.init(match.getMatchInfo().getMatchId(), matchString, first.getPlayer().getPlayerId(), playerString);
+                stats.init(matchId, matchStr, first.getPlayer().getPlayerId(), playerString);
                 first.setStats(stats);
                 positionPlayers[i] = new ArrayList<>();
                 positionPlayers[i].add(first);
