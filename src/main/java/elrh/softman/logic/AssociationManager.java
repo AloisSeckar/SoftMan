@@ -26,6 +26,7 @@ public class AssociationManager {
 
     private final HashMap<Long, League> managedLeagues = new HashMap<>();
     private final HashMap<Long, Club> registeredClubs = new HashMap<>();
+    private final HashMap<Long, Team> registeredTeams = new HashMap<>();
     private final HashMap<Long, Player> registeredPlayers = new HashMap<>();
 
     @Setter
@@ -48,6 +49,7 @@ public class AssociationManager {
         user.reset();
         managedLeagues.clear();
         registeredClubs.clear();
+        registeredTeams.clear();
         registeredPlayers.clear();
     }
 
@@ -76,7 +78,11 @@ public class AssociationManager {
         try {
             League league = managedLeagues.get(leagueId);
             if (league != null) {
-                return league.registerTeam(team);
+                var res = league.registerTeam(team);
+                if (res.ok()) {
+                    registeredTeams.put(team.getId(), team);
+                }
+                return res;
             } else {
                 return new Result(false, "League " + leagueId + " not found");
             }
@@ -115,6 +121,10 @@ public class AssociationManager {
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerClub", ex);
         }
+    }
+
+    public Team getTeamById(long teamId) {
+        return registeredTeams.get(teamId);
     }
 
     public List<Player> getPlayers(boolean active) {

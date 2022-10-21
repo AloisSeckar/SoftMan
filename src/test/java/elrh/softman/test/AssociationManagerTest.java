@@ -49,6 +49,10 @@ public class AssociationManagerTest extends AbstractDBTest {
         var team = league.getTeams().get(0);
         assertNotNull(team, "a team should be presented in the league");
         assertEquals("TestTeam", team.getName(), "correct team should be presented in the league");
+        var teamId = team.getId();
+        team = manager.getTeamById(teamId);
+        assertNotNull(team, "a team should be found among registered teams");
+        assertEquals("TestTeam", team.getName(), "correct team should be found among registered teams");
     }
 
     @Test
