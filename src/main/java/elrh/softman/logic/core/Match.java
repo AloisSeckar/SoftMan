@@ -60,6 +60,7 @@ public class Match {
     }
     
     public void simulate(TextArea target) {
+        // TODO get rid of this method - MatchSimulator should be created outside Match instance
         MatchSimulator sim = new MatchSimulator(this, target);
         sim.simulateMatch();
     }

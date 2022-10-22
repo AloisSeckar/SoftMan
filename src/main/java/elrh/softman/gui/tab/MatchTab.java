@@ -94,6 +94,7 @@ public class MatchTab extends BorderPane {
     public void setMatch(Match match) {
         this.match = match;
         this.sim = new MatchSimulator(match, matchOverview);
+        sim.setVisualMode(true);
         matchHeaderTile.setMatch(match);
         awayLineup.fillLineup(match.getAwayLineup());
         awayLineup.setReadOnly(true); // TODO without that, 8th sub spot is occasionally active, but this solution doesn't seem correct

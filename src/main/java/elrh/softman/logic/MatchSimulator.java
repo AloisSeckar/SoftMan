@@ -12,6 +12,7 @@ import elrh.softman.logic.db.orm.player.PlayerAttributes;
 import elrh.softman.utils.*;
 import java.util.Random;
 import javafx.scene.control.TextArea;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 public class MatchSimulator {
 
     private static final Random random = new Random();
+
+    @Setter
+    private boolean visualMode = false;
 
     private final TextArea target;
     private final Match match;
@@ -278,13 +282,15 @@ public class MatchSimulator {
     }
     
     private void appendText(String text) {
-        if (target != null) {
-            target.appendText(text);
-        }
-        //
         var pbp = new MatchPlayByPlay(match.getMatchInfo().getMatchId(), match.getPlayByPlay().size() + 1, text);
-        pbp.persist();
         match.getPlayByPlay().add(pbp);
+
+        if (visualMode) {
+            if (target != null) {
+                target.appendText(text);
+            }
+            pbp.persist();
+        }
     }
 
     private void handleNoBatter() {
