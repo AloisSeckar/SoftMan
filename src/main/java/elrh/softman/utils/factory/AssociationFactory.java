@@ -45,12 +45,12 @@ public class AssociationFactory {
         manager.registerClub(CLUB15);
         manager.registerClub(CLUB16);
 
-        manager.createNewLeague("1st League Men", PlayerLevel.MSEN);
-        manager.createNewLeague("2nd League Men", PlayerLevel.MSEN);
-        manager.createNewLeague("1st League Women", PlayerLevel.FSEN);
-        manager.createNewLeague("2nd League Women", PlayerLevel.FSEN);
-        manager.createNewLeague("League Junior Boys", PlayerLevel.MU18);
-        manager.createNewLeague("League Junior Girls", PlayerLevel.FU18);
+        manager.createNewLeague("1st League Men", PlayerLevel.MSEN, 1);
+        manager.createNewLeague("2nd League Men", PlayerLevel.MSEN, 2);
+        manager.createNewLeague("1st League Women", PlayerLevel.FSEN, 1);
+        manager.createNewLeague("2nd League Women", PlayerLevel.FSEN, 2);
+        manager.createNewLeague("League Junior Boys", PlayerLevel.MU18, 1);
+        manager.createNewLeague("League Junior Girls", PlayerLevel.FU18, 1);
 
         var leagueMen1 = manager.getLeagues(year).get(0);
         var leagueMenTeams1 = createTeams(PlayerLevel.MSEN, Arrays.asList(CLUB01, CLUB02, CLUB03, CLUB04, CLUB05, CLUB06, CLUB07, CLUB08));

@@ -61,9 +61,9 @@ public class AssociationManager {
         return managedLeagues.get(leagueId);
     }
 
-    public Result createNewLeague(String name, PlayerLevel level) {
+    public Result createNewLeague(String name, PlayerLevel level, int tier) {
         try {
-            LeagueInfo leagueInfo = new LeagueInfo(name, level, clock.getYear(), level.getMatchNumber());
+            LeagueInfo leagueInfo = new LeagueInfo(name, level, clock.getYear(), level.getMatchNumber() + ((tier - 1) * 200));
             leagueInfo.persist();
             League newLeague = new League(leagueInfo);
             managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);

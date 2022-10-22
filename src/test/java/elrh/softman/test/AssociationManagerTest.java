@@ -29,7 +29,7 @@ public class AssociationManagerTest extends AbstractDBTest {
     @Test
     @DisplayName("createAndGetLeagueTest")
     void createAndGetLeagueTest() {
-        result = manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);
+        result = manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN, 1);
         assertTrue(result.ok(), "creating league should be successful");
         List<League> leagues = manager.getLeagues(Constants.START_YEAR);
         assertEquals(1, leagues.size(), "league should be registered and found");
@@ -40,7 +40,7 @@ public class AssociationManagerTest extends AbstractDBTest {
     @Test
     @DisplayName("registerTeamIntoLeagueTest")
     void registerTeamIntoLeague() {
-        result = manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);
+        result = manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN, 1);
         assertTrue(result.ok(), "creating league should be successful");
         var league = manager.getLeagues(Constants.START_YEAR).get(0);
         var leagueId = league.getId();
@@ -200,7 +200,7 @@ public class AssociationManagerTest extends AbstractDBTest {
         var club2 = TestUtils.getTestClub();
         club2.formTeam(PlayerLevel.MSEN);
 
-        manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN);
+        manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN, 1);
 
         var league = manager.getLeagues(Constants.START_YEAR).get(0);
         manager.registerTeamIntoLeague(league.getId(), club1.getTeams().get(0));
