@@ -4,10 +4,12 @@ import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.ClubTab;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
+import elrh.softman.logic.core.Match;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.utils.*;
 import java.time.LocalDate;
-
+import java.util.*;
+import java.util.concurrent.*;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -15,7 +17,6 @@ import javafx.scene.control.TextArea;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @RequiredArgsConstructor
@@ -55,12 +56,20 @@ public class SimulationService extends Service<Result> {
         }
 
         private void advanceToNextDay() {
-            // in case of changes AssociationManager.plainAdvanceToNextDay also needs to be updated
-            AssociationManager.getInstance().getDailyMatches().values().forEach(matches -> matches.forEach(match -> {
-                if (!match.isFinished()) {
-                    match.simulate(manager.isTestMode() ? null : new TextArea()); // TODO rendering actions shouldn't be part of simulating
-                }
-            }));
+            // in case of changes AssociationManager.plainAdvanceToNextDay (used during testing) should also be updated
+            // however, since only few matches are being processed during tests, there was no need to adopt Fork/Join Framework yet
+            var dailyMatches = new ArrayList<Match>();
+            AssociationManager.getInstance().getDailyMatches().values().forEach(dailyMatches::addAll);
+
+            var taskPool = ForkJoinPool.commonPool();
+            var ret = taskPool.invoke(new RecursiveMatchSimulation(dailyMatches));
+
+            var date = clock.getCurrentDate().format(FormatUtils.DF);
+            if (ret) {
+                LOG.info(date + " - DAILY MATCHES successfully simulated");
+            } else {
+                LOG.warn(date + " - Not all matches were properly simulated");
+            }
 
             clock.plusDays(1);
             clock.adjustViewDay();
@@ -76,4 +85,46 @@ public class SimulationService extends Service<Result> {
             }
         }
     }
+    private static class RecursiveMatchSimulation extends RecursiveTask<Boolean> {
+
+        private final List<Match> matchesToPlay;
+
+        public RecursiveMatchSimulation(List<Match> matchesToPlay) {
+            this.matchesToPlay = matchesToPlay;
+        }
+
+        @Override
+        protected Boolean compute() {
+            var ret = false;
+            if (Utils.listNotEmpty(matchesToPlay)) {
+                if (matchesToPlay.size() > 1) {
+                    ret = ForkJoinTask.invokeAll(createSubtasks()).stream().allMatch(ForkJoinTask::join);
+                } else {
+                    ret = simulate(matchesToPlay.get(0));
+                }
+            } else {
+                ret = true;
+            }
+            return ret;
+        }
+
+        private List<RecursiveMatchSimulation> createSubtasks() {
+            var subtasks = new ArrayList<RecursiveMatchSimulation>();
+            matchesToPlay.forEach(match -> subtasks.add(new RecursiveMatchSimulation(Collections.singletonList(match))));
+            return subtasks;
+        }
+
+        private Boolean simulate(Match match) {
+            try {
+                if (!match.isFinished()) {
+                    match.simulate(AssociationManager.getInstance().isTestMode() ? null : new TextArea()); // TODO rendering actions shouldn't be part of simulating
+                }
+                return true;
+            } catch (Exception ex) {
+                ErrorUtils.handleException("RecursiveMatchSimulation.simulate", ex);
+                return false;
+            }
+        }
+    }
+
 }
