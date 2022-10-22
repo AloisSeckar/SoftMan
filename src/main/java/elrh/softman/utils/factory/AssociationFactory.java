@@ -3,26 +3,28 @@ package elrh.softman.utils.factory;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.enums.PlayerLevel;
+import javafx.scene.paint.Color;
+
 import java.util.*;
 
 public class AssociationFactory {
 
-    private static final Club CLUB01 = ClubFactory.getClub("REDS", "RED");
-    private static final Club CLUB02 = ClubFactory.getClub("BLUES", "BLU");
-    private static final Club CLUB03 = ClubFactory.getClub("GREENS", "GRE");
-    private static final Club CLUB04 = ClubFactory.getClub("YELLOWS", "YEL");
-    private static final Club CLUB05 = ClubFactory.getClub("BLACKS", "BLA");
-    private static final Club CLUB06 = ClubFactory.getClub("WHITES", "WHI");
-    private static final Club CLUB07 = ClubFactory.getClub("SILVERS", "SIL");
-    private static final Club CLUB08 = ClubFactory.getClub("VIOLETS", "VIO");
-    private static final Club CLUB09 = ClubFactory.getClub("BROWNS", "BRO");
-    private static final Club CLUB10 = ClubFactory.getClub("GOLDS", "GOL");
-    private static final Club CLUB11 = ClubFactory.getClub("CYANS", "CYA");
-    private static final Club CLUB12 = ClubFactory.getClub("PURPLES", "PUR");
-    private static final Club CLUB13 = ClubFactory.getClub("ORANGES", "ORA");
-    private static final Club CLUB14 = ClubFactory.getClub("LIMES", "LIM");
-    private static final Club CLUB15 = ClubFactory.getClub("PINKS", "PIN");
-    private static final Club CLUB16 = ClubFactory.getClub("BLOODS", "BLO");
+    private static final Club CLUB01 = ClubFactory.getClub("PALADINS", "PAL", "paladins", Color.LIGHTBLUE);
+    private static final Club CLUB02 = ClubFactory.getClub("SMOKIN' COWBOYS", "COW", "smokin-cowboys", Color.PURPLE);
+    private static final Club CLUB03 = ClubFactory.getClub("GREEN MARES", "GMR", "green-mares", Color.FORESTGREEN);
+    private static final Club CLUB04 = ClubFactory.getClub("KING COBRAS", "CBR", "king-cobras", Color.YELLOW);
+    private static final Club CLUB05 = ClubFactory.getClub("MINOTAURS", "MIN", "minotaurs", Color.VIOLET);
+    private static final Club CLUB06 = ClubFactory.getClub("PIRATES", "PIR", "pirates", Color.ORANGE);
+    private static final Club CLUB07 = ClubFactory.getClub("SPARTANS", "SPA", "spartans", Color.DARKRED);
+    private static final Club CLUB08 = ClubFactory.getClub("STEEL FALCONS", "FAL", "steel-falcons", Color.GOLD);
+    private static final Club CLUB09 = ClubFactory.getClub("SHARX", "SHX", "sharx", Color.NAVY);
+    private static final Club CLUB10 = ClubFactory.getClub("ASSASSINS", "ASA", "assassins", Color.DARKGREEN);
+    private static final Club CLUB11 = ClubFactory.getClub("RAGING BULLS", "BUL", "raging-bulls", Color.LIGHTGRAY);
+    private static final Club CLUB12 = ClubFactory.getClub("RAVENS", "RAV", "ravens", Color.DARKGRAY);
+    private static final Club CLUB13 = ClubFactory.getClub("TOMCATS", "TOM", "tomcats", Color.DARKSLATEGRAY);
+    private static final Club CLUB14 = ClubFactory.getClub("VIKINGS", "VIK", "vikings", Color.PALETURQUOISE);
+    private static final Club CLUB15 = ClubFactory.getClub("WHITE RABBITS", "RAB", "white-rabbits", Color.TEAL);
+    private static final Club CLUB16 = ClubFactory.getClub("WIZARDS", "WIZ", "wizards", Color.CORNSILK);
 
     public static void populateAssociation() {
         AssociationManager manager = AssociationManager.getInstance();

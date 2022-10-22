@@ -17,3 +17,5 @@ Check implementation info and status at [wiki page](https://github.com/AloisSeck
 - Vector images by **Vecteezy**
     - <a href="https://www.vecteezy.com/free-vector/softball-field">Softball Field Vectors by Vecteezy</a>
     - <a href="https://www.vecteezy.com/free-vector/blank-avatar">Blank Avatar Vectors by Vecteezy</a>
+    - <a href="https://www.vecteezy.com/free-vector/team-logo">Team Logo Vectors by Vecteezy</a>
+    - <a href="https://www.vecteezy.com/free-vector/nature">Nature Vectors by Vecteezy</a>
