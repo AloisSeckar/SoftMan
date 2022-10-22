@@ -53,6 +53,7 @@ public class LineupTile extends VBox {
 
     public void fillLineup(Lineup lineup) {
         if (lineup != null) {
+            // TODO is this effective way to get necessary data?
             this.team = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, lineup.getLinuepInfo().getTeamId());
             if (team != null) {
                 // TODO get to player list more directly and correctly

@@ -24,11 +24,11 @@ public class TeamInfo extends AbstractDBEntity {
     @NonNull
     private String name;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     @NonNull
     private ClubInfo clubInfo;
 
-    @DatabaseField(foreign = true)
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private LeagueInfo leagueInfo;
 
     @Override

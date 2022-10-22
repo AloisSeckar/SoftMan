@@ -9,25 +9,25 @@ import elrh.softman.logic.enums.PlayerPosition;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_player_record")
-@Data @EqualsAndHashCode(callSuper=true)
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
 public class PlayerRecord extends AbstractDBEntity {
 
     @DatabaseField(generatedId = true)
     private long playerRecordId;
 
-    @DatabaseField(canBeNull = false, foreign = true)
-    private final PlayerInfo player;
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
+    private PlayerInfo player;
 
     @DatabaseField(canBeNull = false)
-    private final PlayerPosition position;
+    private PlayerPosition position;
+
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
+    private PlayerStats stats = new PlayerStats();
 
     public PlayerRecord(PlayerInfo player, PlayerPosition position) {
         this.player = player;
         this.position = position;
     }
-
-    @DatabaseField(canBeNull = false, foreign = true)
-    private PlayerStats stats = new PlayerStats();
 
     @Override
     public String toString() {

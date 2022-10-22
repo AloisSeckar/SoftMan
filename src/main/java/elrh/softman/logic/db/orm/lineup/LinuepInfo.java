@@ -8,23 +8,28 @@ import elrh.softman.logic.db.GameDBManager;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_lineup_info")
-@Data @EqualsAndHashCode(callSuper=true) @RequiredArgsConstructor
+@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
+@RequiredArgsConstructor
 public class LinuepInfo extends AbstractDBEntity {
 
     @DatabaseField(generatedId = true)
     private long lineupId;
 
     @DatabaseField(canBeNull = false)
-    private final long teamId;
+    @NonNull
+    private long teamId;
 
     @DatabaseField(canBeNull = false)
-    private final String teamName;
+    @NonNull
+    private String teamName;
 
     @DatabaseField(canBeNull = false)
-    private final String teamShortName;
+    @NonNull
+    private String teamShortName;
 
     @DatabaseField(canBeNull = false)
-    private final String teamLogo;
+    @NonNull
+    private String teamLogo;
 
     @Override
     public long getId() {

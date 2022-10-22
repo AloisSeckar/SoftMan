@@ -34,7 +34,7 @@ public class PlayerInfo extends AbstractDBEntity implements Comparable<PlayerInf
     @DatabaseField(canBeNull = false)
     private int number;
     
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = false, foreign = true, foreignAutoRefresh = true)
     private PlayerAttributes attributes;
 
     public PlayerInfo(String name, PlayerGender gender, int birth, int number) {
