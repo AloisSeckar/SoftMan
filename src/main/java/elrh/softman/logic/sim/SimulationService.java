@@ -3,6 +3,7 @@ package elrh.softman.logic.sim;
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.ClubTab;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.managers.ClockManager;
@@ -13,7 +14,6 @@ import java.util.concurrent.*;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.scene.control.TextArea;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -117,7 +117,8 @@ public class SimulationService extends Service<Result> {
         private Boolean simulate(Match match) {
             try {
                 if (!match.isFinished()) {
-                    match.simulate(AssociationManager.getInstance().isTestMode() ? null : new TextArea()); // TODO rendering actions shouldn't be part of simulating
+                    var sim = new MatchSimulator(match, null);
+                    sim.simulateMatch();
                 }
                 return true;
             } catch (Exception ex) {

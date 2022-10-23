@@ -3,13 +3,11 @@ package elrh.softman.logic.core;
 import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
-import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.logic.core.stats.*;
 import elrh.softman.utils.ErrorUtils;
 import java.util.ArrayList;
 import java.util.List;
-
 import elrh.softman.utils.Utils;
 import javafx.scene.control.TextArea;
 import lombok.Data;
@@ -58,12 +56,6 @@ public class Match {
     public long getId() {
         return matchInfo.getMatchId();
     }
-    
-    public void simulate(TextArea target) {
-        // TODO get rid of this method - MatchSimulator should be created outside Match instance
-        MatchSimulator sim = new MatchSimulator(this, target);
-        sim.simulateMatch();
-    }
 
     public void printPlayByPlay(TextArea target) {
         playByPlay.forEach(pbp -> target.appendText(pbp.getPlay()));
@@ -86,6 +78,8 @@ public class Match {
 
         // TODO get away lineup
         // TODO get home lineup
+        // TODO pbp not being saved anywhere
+        // TODO AssociationManager should hold at least all teams and possibly also all matches in-memory
 
         var match = new Match(matchInfo, new Lineup(1, "a", "b", "c"), new Lineup(2, "d", "e", "f"));
 

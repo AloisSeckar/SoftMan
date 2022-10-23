@@ -278,7 +278,8 @@ public class AssociationManager {
         // on runtime SimulationService is being called
         getDailyMatches().values().forEach(matches -> matches.forEach(match -> {
             if (!match.isFinished()) {
-                match.simulate(null);
+                var sim = new MatchSimulator(match, null);
+                sim.simulateMatch();
             }
         }));
         clock.plusDays(1);
