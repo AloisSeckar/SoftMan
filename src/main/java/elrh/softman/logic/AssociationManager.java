@@ -26,8 +26,9 @@ public class AssociationManager {
 
     private final HashMap<Long, League> managedLeagues = new HashMap<>();
     private final HashMap<Long, Club> registeredClubs = new HashMap<>();
-    private final HashMap<Long, Team> registeredTeams = new HashMap<>();
     private final HashMap<Long, Player> registeredPlayers = new HashMap<>();
+    private final HashMap<Long, Team> currentTeams = new HashMap<>();
+    private final HashMap<Long, Match> currentMatches = new HashMap<>();
 
     @Setter
     private ProgressIndicator guiSpinner;
@@ -49,7 +50,7 @@ public class AssociationManager {
         user.reset();
         managedLeagues.clear();
         registeredClubs.clear();
-        registeredTeams.clear();
+        currentTeams.clear();
         registeredPlayers.clear();
     }
 
@@ -80,7 +81,7 @@ public class AssociationManager {
             if (league != null) {
                 var res = league.registerTeam(team);
                 if (res.ok()) {
-                    registeredTeams.put(team.getId(), team);
+                    addCurrentTeam(team);
                 }
                 return res;
             } else {
@@ -123,10 +124,6 @@ public class AssociationManager {
         }
     }
 
-    public Team getTeamById(long teamId) {
-        return registeredTeams.get(teamId);
-    }
-
     public List<Player> getPlayers(boolean active) {
         if (active) {
             return registeredPlayers.values().stream().filter(Player::isActive).toList();
@@ -157,6 +154,22 @@ public class AssociationManager {
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerPlayer", ex);
         }
+    }
+
+    public void addCurrentTeam(Team team) {
+        currentTeams.put(team.getId(), team);
+    }
+
+    public Team getTeamById(long teamId) {
+        return currentTeams.get(teamId);
+    }
+
+    public void addCurrentMatch(Match match) {
+        currentMatches.put(match.getId(), match);
+    }
+
+    public Match getMatchById(long matchId) {
+        return currentMatches.get(matchId);
     }
 
     public  HashMap<Long, List<Match>> getDailyMatches() {

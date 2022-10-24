@@ -3,6 +3,7 @@ package elrh.softman.test;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
+import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
@@ -10,7 +11,7 @@ import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.PlayerFactory;
 import java.time.LocalDate;
-import java.util.List;
+import elrh.softman.utils.factory.TeamFactory;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,9 +32,9 @@ public class AssociationManagerTest extends AbstractDBTest {
     void createAndGetLeagueTest() {
         result = manager.createNewLeague(ELEMENT_NAME, PlayerLevel.MSEN, 1);
         assertTrue(result.ok(), "creating league should be successful");
-        List<League> leagues = manager.getLeagues(Constants.START_YEAR);
+        var leagues = manager.getLeagues(Constants.START_YEAR);
         assertEquals(1, leagues.size(), "league should be registered and found");
-        League testLeague = leagues.get(0);
+        var testLeague = leagues.get(0);
         assertEquals(ELEMENT_NAME, testLeague.getLeagueInfo().getLeagueName(), "league name doesn't match");
     }
 
@@ -58,23 +59,23 @@ public class AssociationManagerTest extends AbstractDBTest {
     @Test
     @DisplayName("registerAndGetClubTest")
     void registerAndGetClubTest() {
-        Club newClub1 = TestUtils.getTestClub();
+        var newClub1 = TestUtils.getTestClub();
         newClub1.getClubInfo().setClubId(1);
-        Club newClub2 = TestUtils.getTestClub();
+        var newClub2 = TestUtils.getTestClub();
         newClub2.getClubInfo().setClubId(2);
 
         result = manager.registerClub(newClub1);
         assertTrue(result.ok(), "registering club 1 should be successful");
-        List<Club> clubs = manager.getClubs(true);
+        var clubs = manager.getClubs(true);
         assertEquals(1, clubs.size(), "club should be registered and found");
-        Club testClub = clubs.get(0);
+        var testClub = clubs.get(0);
         assertEquals(ELEMENT_NAME, testClub.getClubInfo().getName(), "club name doesn't match");
 
         result = manager.registerClub(newClub2);
         assertTrue(result.ok(), "registering club 2 should be successful");
         assertEquals(2, manager.getClubs(true).size(), "there should be exactly 2 clubs registered");
 
-        Club testClubById = manager.getClubById(testClub.getId());
+        var testClubById = manager.getClubById(testClub.getId());
         assertNotNull(testClubById, "club wasn't find by ID");
         assertEquals(testClub, testClubById, "club found by ID is not the same as expected");
 
@@ -118,6 +119,39 @@ public class AssociationManagerTest extends AbstractDBTest {
         assertTrue(result.ok(), "registering player 1 for next year should be successful");
         assertEquals(1, manager.getPlayers(true).size(), "only 1 player should be active after re-registration");
         assertEquals(2, manager.getPlayers(false).size(), "there still should be exactly 2 players managed");
+    }
+
+    @Test
+    @DisplayName("addAndGetTeamTest")
+    void addAndGetTeamTest() {
+        var club = TestUtils.getTestClub();
+        var team = TeamFactory.getTeam(PlayerLevel.MSEN, ELEMENT_NAME + "_test", club);
+        var id = team.getId();
+
+        manager.addCurrentTeam(team);
+
+        var retrieved = manager.getTeamById(id);
+        assertNotNull(retrieved, "a team should be found");
+        assertEquals(team.getName(), retrieved.getName(), "correct team should be found");
+    }
+
+    @Test
+    @DisplayName("addAndGetMatchTest")
+    void addAndGetMatchTest() {
+        var matchId = 101L;
+        var matchNumber = 101;
+        var mockMatchInfo = new MatchInfo();
+        mockMatchInfo.setMatchId(matchId);
+        mockMatchInfo.setMatchNumber(matchNumber);
+        var mockAway = new Lineup(1, "a", "a", "a");
+        var mockHome = new Lineup(1, "a", "a", "a");
+        var match = new Match(mockMatchInfo, mockAway, mockHome);
+
+        manager.addCurrentMatch(match);
+
+        var retrieved = manager.getMatchById(matchId);
+        assertNotNull(retrieved, "a team should be found");
+        assertEquals(matchNumber, retrieved.getMatchInfo().getMatchNumber(), "correct team should be found");
     }
 
     @Test
