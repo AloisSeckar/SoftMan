@@ -1,5 +1,6 @@
 package elrh.softman.logic.core;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.utils.Constants;
 import elrh.softman.logic.db.orm.LeagueInfo;
@@ -94,6 +95,7 @@ public class League {
                         ErrorUtils.raise(result.message());
                     }
                     matches.put(match.getId(), match);
+                    AssociationManager.getInstance().addCurrentMatch(match);
                 }
                 shiftTeams();
                 roundDate = roundDate.plusDays(7);

@@ -129,7 +129,7 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
                 matchLink.setBorder(Border.EMPTY);
                 matchLink.setPadding(new Insets(4, 0, 4, 0));
                 matchLink.setOnAction(e -> {
-                    var match = Match.getMatchFromDB(record.getMatchId());
+                    var match = Match.getMatchDetail(record.getMatchId());
                     MatchTab.getInstance().setMatch(match);
                     ContentFrame.getInstance().switchTo("Match");
                 });
