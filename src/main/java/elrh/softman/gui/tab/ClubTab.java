@@ -67,10 +67,13 @@ public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedT
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
         leagueTable.setLeague(AssociationManager.getInstance().getUser().getFocusedLeague());
+        setDailySchedule();
     }
 
     public void setDailySchedule() {
-        calendarTile.setDailySchedule();
+        var league = AssociationManager.getInstance().getUser().getFocusedLeague();
+        var leagueId = league != null ? league.getId() : 0;
+        calendarTile.setDailySchedule(leagueId);
         leagueTable.refresh();
     }
 

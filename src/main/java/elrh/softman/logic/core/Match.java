@@ -7,6 +7,8 @@ import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.logic.core.stats.*;
 import elrh.softman.utils.ErrorUtils;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import elrh.softman.utils.Utils;
@@ -72,6 +74,13 @@ public class Match {
 
     public boolean isFinished() {
         return matchInfo.getStatus() == MatchStatus.FINISHED;
+    }
+
+    public boolean belongsToLeagueAndDate(long leagueId, LocalDate date) {
+        return matchInfo.getLeagueId() == leagueId && matchInfo.getMatchDay().compareTo(date) == 0;
+    }
+    public boolean belongsToLeagueAndRound(long leagueId, int round) {
+        return matchInfo.getLeagueId() == leagueId && matchInfo.getLeagueRound() == round;
     }
 
     public static Match getMatchDetail(long matchId) {

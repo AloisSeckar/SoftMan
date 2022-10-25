@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
 import java.util.ArrayList;
 
 public class CalendarTile extends VBox {
@@ -18,6 +17,8 @@ public class CalendarTile extends VBox {
     private final ArrayList<ScheduleRowTile> dailyScheduleRows = new ArrayList<>();
 
     private int rows = 0;
+
+    private long leagueId;
 
     public CalendarTile() {
 
@@ -49,27 +50,21 @@ public class CalendarTile extends VBox {
 
     }
 
-    public void setDailySchedule() {
+    public void setDailySchedule(long leagueId) {
+        this.leagueId = leagueId;
         var viewDate = AssociationManager.getInstance().getClock().getViewDate();
         titleLabel.setText(viewDate.format(FormatUtils.DF));
 
         dailySchedule.getChildren().clear();
         dailyScheduleRows.clear();
-        var matches = AssociationManager.getInstance().getDailyMatches();
+        var matches = AssociationManager.getInstance().getDailyMatchesForLeague(leagueId);
         if (matches.size() > 0) {
             rows = 0;
-            matches.forEach((leagueId, leagueMatches) -> {
-                dailySchedule.getChildren().add(new Label(String.valueOf(leagueId)));
-                if (leagueMatches.size() > 0) {
-                    for (var match : leagueMatches) {
-                        var row = new ScheduleRowTile(rows++ % 2 == 0);
-                        row.setMatch(match);
-                        dailySchedule.getChildren().add(row);
-                        dailyScheduleRows.add(row);
-                    }
-                } else {
-                    dailySchedule.getChildren().add(new Label("No matches scheduled today"));
-                }
+            matches.forEach(match -> {
+                var row = new ScheduleRowTile(rows++ % 2 == 0);
+                row.setMatch(match);
+                dailySchedule.getChildren().add(row);
+                dailyScheduleRows.add(row);
             });
         } else {
             dailySchedule.getChildren().add(new Label("No matches scheduled today"));
@@ -84,17 +79,17 @@ public class CalendarTile extends VBox {
 
     private void adjustDay() {
         AssociationManager.getInstance().getClock().adjustViewDay();
-        setDailySchedule();
+        setDailySchedule(leagueId);
     }
 
     private void prevDay() {
         AssociationManager.getInstance().getClock().prevViewDay();
-        setDailySchedule();
+        setDailySchedule(leagueId);
     }
 
     private void nextDay() {
         AssociationManager.getInstance().getClock().nextViewDay();
-        setDailySchedule();
+        setDailySchedule(leagueId);
     }
 
 }

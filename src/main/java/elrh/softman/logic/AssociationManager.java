@@ -195,21 +195,11 @@ public class AssociationManager {
     }
 
     public List<Match> getDailyMatchesForLeague(long leagueId) {
-        var ret = new ArrayList<Match>();
-        var league = managedLeagues.get(leagueId);
-        if (league != null) {
-            ret.addAll(league.getMatchesForDay(clock.getViewDate()));
-        }
-        return ret;
+        return currentMatches.values().stream().filter(m -> m.belongsToLeagueAndDate(leagueId, clock.getViewDate())).toList();
     }
 
     public List<Match> getRoundMatchesForLeague(long leagueId, int round) {
-        var ret = new ArrayList<Match>();
-        var league = managedLeagues.get(leagueId);
-        if (league != null) {
-            ret.addAll(league.getMatchesForRound(round));
-        }
-        return ret;
+        return currentMatches.values().stream().filter(m -> m.belongsToLeagueAndRound(leagueId, round)).toList();
     }
 
     public boolean isTodayMatch(Match match) {
