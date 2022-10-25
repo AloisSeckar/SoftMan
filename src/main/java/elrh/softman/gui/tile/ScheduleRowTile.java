@@ -17,7 +17,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 
 public class ScheduleRowTile extends BorderPane {
 
@@ -62,28 +62,31 @@ public class ScheduleRowTile extends BorderPane {
 
         super.setCenter(infoBox);
 
-        var buttonBar = new VBox(10);
+        var buttonBar = new HBox(10);
         buttonBar.setPadding(new Insets(2,5,2,25));
         super.setRight(buttonBar);
         BorderPane.setAlignment(buttonBar, Pos.CENTER);
         BorderPane.setMargin(buttonBar, new Insets(5));
         buttonBar.setAlignment(Pos.CENTER);
 
-        simButton = new Button("Simulate game");
-        simButton.setMinWidth(120d);
-        simButton.setMaxWidth(120d);
+        simButton = new Button("S");
+        simButton.setTooltip(new Tooltip("Simulate match"));
+        simButton.setMinWidth(30d);
+        simButton.setMaxWidth(30d);
         buttonBar.getChildren().add(simButton);
         simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
 
-        playButton = new Button("Play game");
-        playButton.setMinWidth(120d);
-        playButton.setMaxWidth(120d);
+        playButton = new Button("P");
+        playButton.setTooltip(new Tooltip("Play match"));
+        playButton.setMinWidth(30d);
+        playButton.setMaxWidth(30d);
         buttonBar.getChildren().add(playButton);
         playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> viewMatch());
 
-        Button viewButton = new Button("View detail");
-        viewButton.setMinWidth(120d);
-        viewButton.setMaxWidth(120d);
+        Button viewButton = new Button("V");
+        viewButton.setTooltip(new Tooltip("View match"));
+        viewButton.setMinWidth(30d);
+        viewButton.setMaxWidth(30d);
         buttonBar.getChildren().add(viewButton);
         viewButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> viewMatch());
 
