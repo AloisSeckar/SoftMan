@@ -32,6 +32,9 @@ public class MatchInfo extends AbstractDBEntity {
     private Date matchDay;
 
     @DatabaseField(canBeNull = false)
+    private String stadium;
+
+    @DatabaseField(canBeNull = false)
     private long leagueId;
     @DatabaseField(canBeNull = false)
     private int leagueRound;

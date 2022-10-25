@@ -109,7 +109,7 @@ public class ScheduleRowTile extends BorderPane {
             Tooltip.install(awayImage, new Tooltip(match.getAwayLineup().getLinuepInfo().getTeamName()));
 
             switch (match.getMatchInfo().getStatus()) {
-                case SCHEDULED -> titleLabel.setText(match.getMatchInfo().getMatchDay().toString() + " @ " + "Ballpark");
+                case SCHEDULED -> titleLabel.setText(match.getMatchInfo().getMatchDay().toString() + " @ " + match.getMatchInfo().getStadium());
                 case ACTIVE -> titleLabel.setText("LIVE");
                 case FINISHED -> {
                     BoxScore score = match.getBoxScore();

@@ -143,6 +143,7 @@ public class AssociationManagerTest extends AbstractDBTest {
         var mockMatchInfo = new MatchInfo();
         mockMatchInfo.setMatchId(matchId);
         mockMatchInfo.setMatchNumber(matchNumber);
+        mockMatchInfo.setStadium(ELEMENT_NAME);
         var mockAway = new Lineup(1, "a", "a", "a");
         var mockHome = new Lineup(1, "a", "a", "a");
         var match = new Match(mockMatchInfo, mockAway, mockHome);

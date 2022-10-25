@@ -85,6 +85,8 @@ public class League {
                     info.setMatchDay(roundDate);
                     info.setLeagueId(getId());
                     info.setLeagueRound(i);
+                    // TODO not quite nice way to retrieve...
+                    info.setStadium(teams.get(homeTeamIndex).getTeamInfo().getClubInfo().getStadium());
 
                     var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
                     LOG.info("Match: " + info.getMatchNumber() + " - " + match.getAwayLineup().getLinuepInfo().getTeamName() + " @ " + match.getHomeLineup().getLinuepInfo().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");

@@ -9,22 +9,22 @@ import java.util.*;
 
 public class AssociationFactory {
 
-    private static final Club CLUB01 = ClubFactory.getClub("PALADINS", "PAL", "paladins", Color.LIGHTBLUE);
-    private static final Club CLUB02 = ClubFactory.getClub("SMOKIN' COWBOYS", "COW", "smokin-cowboys", Color.PURPLE);
-    private static final Club CLUB03 = ClubFactory.getClub("GREEN MARES", "GMR", "green-mares", Color.FORESTGREEN);
-    private static final Club CLUB04 = ClubFactory.getClub("KING COBRAS", "CBR", "king-cobras", Color.YELLOW);
-    private static final Club CLUB05 = ClubFactory.getClub("MINOTAURS", "MIN", "minotaurs", Color.VIOLET);
-    private static final Club CLUB06 = ClubFactory.getClub("PIRATES", "PIR", "pirates", Color.ORANGE);
-    private static final Club CLUB07 = ClubFactory.getClub("SPARTANS", "SPA", "spartans", Color.DARKRED);
-    private static final Club CLUB08 = ClubFactory.getClub("STEEL FALCONS", "FAL", "steel-falcons", Color.GOLD);
-    private static final Club CLUB09 = ClubFactory.getClub("SHARX", "SHX", "sharx", Color.NAVY);
-    private static final Club CLUB10 = ClubFactory.getClub("ASSASSINS", "ASA", "assassins", Color.DARKGREEN);
-    private static final Club CLUB11 = ClubFactory.getClub("RAGING BULLS", "BUL", "raging-bulls", Color.LIGHTGRAY);
-    private static final Club CLUB12 = ClubFactory.getClub("RAVENS", "RAV", "ravens", Color.DARKGRAY);
-    private static final Club CLUB13 = ClubFactory.getClub("TOMCATS", "TOM", "tomcats", Color.DARKSLATEGRAY);
-    private static final Club CLUB14 = ClubFactory.getClub("VIKINGS", "VIK", "vikings", Color.PALETURQUOISE);
-    private static final Club CLUB15 = ClubFactory.getClub("WHITE RABBITS", "RAB", "white-rabbits", Color.TEAL);
-    private static final Club CLUB16 = ClubFactory.getClub("WIZARDS", "WIZ", "wizards", Color.CORNSILK);
+    private static final Club CLUB01 = ClubFactory.getClub("PALADINS", "PAL", "paladins", "The Arena", Color.LIGHTBLUE);
+    private static final Club CLUB02 = ClubFactory.getClub("SMOKIN' COWBOYS", "COW", "smokin-cowboys", "Smokin' Range", Color.PURPLE);
+    private static final Club CLUB03 = ClubFactory.getClub("GREEN MARES", "GMR", "green-mares", "Horse pen", Color.FORESTGREEN);
+    private static final Club CLUB04 = ClubFactory.getClub("KING COBRAS", "CBR", "king-cobras", "The Nest", Color.YELLOW);
+    private static final Club CLUB05 = ClubFactory.getClub("MINOTAURS", "MIN", "minotaurs", "Labyrinth", Color.VIOLET);
+    private static final Club CLUB06 = ClubFactory.getClub("PIRATES", "PIR", "pirates", "Black Pearl Cove", Color.ORANGE);
+    private static final Club CLUB07 = ClubFactory.getClub("SPARTANS", "SPA", "spartans", "Sparta Field", Color.DARKRED);
+    private static final Club CLUB08 = ClubFactory.getClub("STEEL FALCONS", "FAL", "steel-falcons", "Steelwings Stadium", Color.GOLD);
+    private static final Club CLUB09 = ClubFactory.getClub("SHARX", "SHX", "sharx", "Sharx Bay", Color.NAVY);
+    private static final Club CLUB10 = ClubFactory.getClub("ASSASSINS", "ASA", "assassins", "Dark House", Color.DARKGREEN);
+    private static final Club CLUB11 = ClubFactory.getClub("RAGING BULLS", "BUL", "raging-bulls", "Bull Ridge", Color.LIGHTGRAY);
+    private static final Club CLUB12 = ClubFactory.getClub("RAVENS", "RAV", "ravens", "Black Feather Field", Color.DARKGRAY);
+    private static final Club CLUB13 = ClubFactory.getClub("TOMCATS", "TOM", "tomcats", "Cat Palace", Color.DARKSLATEGRAY);
+    private static final Club CLUB14 = ClubFactory.getClub("VIKINGS", "VIK", "vikings", "Valhalla", Color.PALETURQUOISE);
+    private static final Club CLUB15 = ClubFactory.getClub("WHITE RABBITS", "RAB", "white-rabbits", "Rabbit Hole", Color.TEAL);
+    private static final Club CLUB16 = ClubFactory.getClub("WIZARDS", "WIZ", "wizards", "The Tower", Color.CORNSILK);
 
     public static void populateAssociation() {
         AssociationManager manager = AssociationManager.getInstance();
