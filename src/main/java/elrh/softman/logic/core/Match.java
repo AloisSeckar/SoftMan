@@ -6,12 +6,10 @@ import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.logic.core.stats.*;
-import elrh.softman.utils.ErrorUtils;
-
+import elrh.softman.utils.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import elrh.softman.utils.Utils;
 import javafx.scene.control.TextArea;
 import lombok.Data;
 

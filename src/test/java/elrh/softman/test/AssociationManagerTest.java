@@ -3,7 +3,6 @@ package elrh.softman.test;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
-import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
@@ -12,8 +11,8 @@ import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.PlayerFactory;
 import java.time.LocalDate;
 import elrh.softman.utils.factory.TeamFactory;
-import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.*;
 
 public class AssociationManagerTest extends AbstractDBTest {
 
@@ -138,21 +137,12 @@ public class AssociationManagerTest extends AbstractDBTest {
     @Test
     @DisplayName("addAndGetMatchTest")
     void addAndGetMatchTest() {
-        var matchId = 101L;
-        var matchNumber = 101;
-        var mockMatchInfo = new MatchInfo();
-        mockMatchInfo.setMatchId(matchId);
-        mockMatchInfo.setMatchNumber(matchNumber);
-        mockMatchInfo.setStadium(ELEMENT_NAME);
-        var mockAway = new Lineup(1, "a", "a", "a");
-        var mockHome = new Lineup(1, "a", "a", "a");
-        var match = new Match(mockMatchInfo, mockAway, mockHome);
-
+        var match = TestUtils.getTestMatch();
         manager.addCurrentMatch(match);
 
-        var retrieved = manager.getMatchById(matchId);
+        var retrieved = manager.getMatchById(match.getMatchInfo().getMatchId());
         assertNotNull(retrieved, "a team should be found");
-        assertEquals(matchNumber, retrieved.getMatchInfo().getMatchNumber(), "correct team should be found");
+        assertEquals(match.getMatchInfo().getMatchNumber(), retrieved.getMatchInfo().getMatchNumber(), "correct team should be found");
     }
 
     @Test
