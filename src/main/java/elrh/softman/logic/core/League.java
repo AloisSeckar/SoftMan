@@ -46,7 +46,7 @@ public class League {
     public Result registerTeam(Team team) {
         try {
             teams.add(team);
-            standings.add(new Standing(team.getName()));
+            standings.add(new Standing(team.getId(), team.getName()));
             team.getTeamInfo().setLeagueInfo(this.leagueInfo);
             team.getTeamInfo().persist();
             LOG.info("Team " + team.getId() + " registered");

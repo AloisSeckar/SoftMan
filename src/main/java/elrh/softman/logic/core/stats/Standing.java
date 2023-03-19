@@ -4,7 +4,8 @@ import lombok.*;
 
 @Data
 public class Standing implements Comparable<Standing> {
-    
+
+    private long teamId;
     private String team;
     
     private int games;
@@ -13,7 +14,8 @@ public class Standing implements Comparable<Standing> {
     private int runsFor;
     private int runsAgainst;
 
-    public Standing(String team) {
+    public Standing(long teamId, String team) {
+        this.teamId = teamId;
         this.team = team;
     }
     
