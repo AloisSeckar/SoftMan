@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum StatsType {
 
+    // games
+    G("g"),
+
     // batter
     BPA("bPA"),
     BAB("bAB"),

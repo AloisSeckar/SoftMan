@@ -86,7 +86,7 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
             playerAttributesTA.reload(info.getAttributes());
 
             seasonStatsTA.getChildren().clear();
-            var sHeader = new Text("MATCH           |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
+            var sHeader = new Text("MATCH           |   G |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
             seasonStatsTA.getChildren().add(sHeader);
             var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
             if (player != null) {
@@ -139,6 +139,13 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         }
 
         var sb = new StringBuilder();
+        if (!careerStats) {
+            if ("Season total".equals(record.getMatchStr())) {
+                sb.append(StringUtils.leftPad(String.valueOf(record.getGames()), 3)).append(" | ");
+            } else {
+                sb.append(StringUtils.leftPad("1", 3)).append(" | ");
+            }
+        }
         sb.append(StringUtils.leftPad(String.valueOf(record.getBPA()), 3)).append(" | ");
         sb.append(StringUtils.leftPad(String.valueOf(record.getBAB()), 3)).append(" | ");
         sb.append(StringUtils.leftPad(String.valueOf(record.getBR()), 3)).append(" | ");

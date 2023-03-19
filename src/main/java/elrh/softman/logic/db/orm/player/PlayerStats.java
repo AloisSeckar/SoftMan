@@ -34,6 +34,11 @@ public class PlayerStats extends AbstractDBEntity {
     @NonNull
     private String playerStr = "";
 
+    // always "1" for single-game stats
+    // sum of "n" for season and career stats
+    @DatabaseField(canBeNull = false)
+    private int games = 0;
+
     // batter
     @DatabaseField(canBeNull = false)
     private int bPA = 0;
@@ -144,6 +149,7 @@ public class PlayerStats extends AbstractDBEntity {
     }
     public void inc(StatsType stat) {
         switch (stat) {
+            case G -> setGames(getGames() + 1);
             // batter
             case BPA -> setBPA(getBPA() + 1);
             case BAB -> setBAB(getBAB() + 1);
@@ -194,6 +200,7 @@ public class PlayerStats extends AbstractDBEntity {
     }
 
     private void clear() {
+        games = 0;
         bPA = 0;
         bAB = 0;
         bR = 0;
@@ -242,6 +249,7 @@ public class PlayerStats extends AbstractDBEntity {
     }
     
     public void include(PlayerStats stats) {
+        games += 1;
         bPA += stats.getBPA();
         bAB += stats.getBAB();
         bR += stats.getBR();
