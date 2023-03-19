@@ -185,6 +185,16 @@ public class League {
          */
     }
 
+    public long[] getAdvancingTeams() {
+        Collections.sort(standings);
+        return new long[] {standings.get(0).getTeamId(), standings.get(1).getTeamId()};
+    }
+
+    public long[] getRelegatedTeams() {
+        Collections.sort(standings);
+        return new long[] {standings.get(standings.size() - 2).getTeamId(), standings.get(standings.size() - 1).getTeamId()};
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private int getTotalRounds() {
