@@ -15,6 +15,11 @@ public class LeagueInfo extends AbstractDBEntity {
     
     @DatabaseField(generatedId = true)
     private long leagueId;
+
+    @DatabaseField
+    private Long leagueAbove;
+    @DatabaseField
+    private Long leagueBelow;
     
     @DatabaseField(canBeNull = false)
     @NonNull
