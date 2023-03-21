@@ -81,7 +81,9 @@ public class AssociationFactory {
         leagueMen2.scheduleMatches();
 
         leagueMen1.getLeagueInfo().setLeagueBelow(leagueMen2.getId());
+        leagueMen1.getLeagueInfo().persist();
         leagueMen2.getLeagueInfo().setLeagueAbove(leagueMen1.getId());
+        leagueMen2.getLeagueInfo().persist();
 
         var leagueWomen1 = manager.getLeagues(year).get(2);
         var leagueWomenTeams1 = createTeams(PlayerLevel.FSEN, Arrays.asList(CLUB01, CLUB02, CLUB03, CLUB04, CLUB05, CLUB06, CLUB09, CLUB10));
@@ -94,7 +96,9 @@ public class AssociationFactory {
         leagueWomen2.scheduleMatches();
 
         leagueWomen1.getLeagueInfo().setLeagueBelow(leagueWomen2.getId());
+        leagueWomen1.getLeagueInfo().persist();
         leagueWomen2.getLeagueInfo().setLeagueAbove(leagueWomen1.getId());
+        leagueWomen2.getLeagueInfo().persist();
 
         var leagueJuniorBoys = manager.getLeagues(year).get(4);
         var leagueJuniorBoysTeams = createTeams(PlayerLevel.MU18, Arrays.asList(CLUB01, CLUB02, CLUB04, CLUB05, CLUB06, CLUB08));
