@@ -49,7 +49,7 @@ public class AssociationFactory {
         createLeagues();
 
         // TODO remove
-        // to test a "C" team not participating in any league
+        // to test a "B" team not participating in any league
         CLUB01.formTeam(PlayerLevel.MSEN);
 
         // TODO allow players to pick club
@@ -114,9 +114,13 @@ public class AssociationFactory {
     private static ArrayList<Team> createTeams(PlayerLevel level, List<Club> participants) {
         ArrayList<Team> ret = new ArrayList<>();
         participants.forEach(club -> {
-            club.formTeam(level);
-            var newTeam = club.getTeams().get(club.getTeams().size() - 1);
-            ret.add(newTeam);
+            var result = club.formTeam(level);
+            if (result.ok()) {
+                var newTeam = club.getTeamById(Integer.valueOf(result.message()));
+                ret.add(newTeam);
+            } else {
+                throw new RuntimeException("Failed to create a team");
+            }
         });
         return ret;
     }

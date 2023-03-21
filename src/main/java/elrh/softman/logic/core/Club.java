@@ -68,7 +68,7 @@ public class Club {
             teams.put(newTeam.getId(), newTeam);
 
             LOG.info("New team " + newTeam.getId() + "('" + name + "') was formed");
-            return Constants.RESULT_OK;
+            return new Result(true, String.valueOf(newTeam.getId()));
         } catch (Exception ex) {
             return ErrorUtils.handleException("Club.formTeam", ex);
         }
