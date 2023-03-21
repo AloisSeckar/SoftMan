@@ -28,8 +28,6 @@ public class AssociationFactory {
 
     public static void populateAssociation() {
         AssociationManager manager = AssociationManager.getInstance();
-        int year = AssociationManager.getInstance().getClock().getYear();
-
         manager.registerClub(CLUB01);
         manager.registerClub(CLUB02);
         manager.registerClub(CLUB03);
@@ -46,6 +44,24 @@ public class AssociationFactory {
         manager.registerClub(CLUB14);
         manager.registerClub(CLUB15);
         manager.registerClub(CLUB16);
+
+        // create leagues for the initial year
+        createLeagues();
+
+        // TODO remove
+        // to test a "C" team not participating in any league
+        CLUB01.formTeam(PlayerLevel.MSEN);
+
+        // TODO allow players to pick club
+        manager.getUser().setActiveClub(CLUB01);
+        manager.getUser().setFocusedClub(CLUB01);
+        manager.getUser().setFocusedTeam(CLUB01.getTeams().get(0));
+    }
+
+    // this is being called at the begining of every year
+    public static void createLeagues() {
+        AssociationManager manager = AssociationManager.getInstance();
+        int year = AssociationManager.getInstance().getClock().getYear();
 
         manager.createNewLeague("1st League Men", PlayerLevel.MSEN, 1);
         manager.createNewLeague("2nd League Men", PlayerLevel.MSEN, 2);
@@ -89,12 +105,6 @@ public class AssociationFactory {
         var leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB01, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
         leagueJuniorGirlsTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueJuniorGirls.getId(), team));
         leagueJuniorGirls.scheduleMatches();
-
-        CLUB01.formTeam(PlayerLevel.MSEN); // to test a "C" team not participating in any league
-
-        manager.getUser().setActiveClub(CLUB01);
-        manager.getUser().setFocusedClub(CLUB01);
-        manager.getUser().setFocusedTeam(CLUB01.getTeams().get(0));
     }
 
     private static ArrayList<Team> createTeams(PlayerLevel level, List<Club> participants) {
