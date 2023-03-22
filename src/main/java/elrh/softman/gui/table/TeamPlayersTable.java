@@ -6,6 +6,7 @@ import elrh.softman.logic.db.orm.player.PlayerInfo;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.utils.Utils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
@@ -118,7 +119,7 @@ public class TeamPlayersTable extends Pane {
             }
         });
         
-        table.getColumns().setAll(numberCol, nameCol, ageCol, skillCol, battingCol, pitchingCol, fieldingCol, physicalCol);
+        table.getColumns().setAll(Arrays.asList(numberCol, nameCol, ageCol, skillCol, battingCol, pitchingCol, fieldingCol, physicalCol));
         
         table.setFixedCellSize(25);
         table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(40));

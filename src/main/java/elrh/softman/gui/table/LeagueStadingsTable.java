@@ -4,6 +4,8 @@ import elrh.softman.Softman;
 import elrh.softman.logic.core.League;
 import elrh.softman.logic.core.stats.Standing;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
 import javafx.scene.layout.*;
@@ -121,7 +123,7 @@ public class LeagueStadingsTable extends VBox {
             }
         });
 
-        table.getColumns().setAll(numberCol, teamCol, gamesCol, winsCol, losesCol, runsForCol, runsAgainstCol, pointsCol);
+        table.getColumns().setAll(Arrays.asList(numberCol, teamCol, gamesCol, winsCol, losesCol, runsForCol, runsAgainstCol, pointsCol));
         
         table.setFixedCellSize(25);
         table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(40));

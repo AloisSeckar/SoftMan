@@ -4,9 +4,7 @@ import de.jensd.fx.glyphs.fontawesome.*;
 import elrh.softman.Softman;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
 
 public class MenuFrame extends AnchorPane {
 

@@ -116,7 +116,7 @@ public class AssociationFactory {
         participants.forEach(club -> {
             var result = club.formTeam(level);
             if (result.ok()) {
-                var newTeam = club.getTeamById(Integer.valueOf(result.message()));
+                var newTeam = club.getTeamById(Integer.parseInt(result.message()));
                 ret.add(newTeam);
             } else {
                 throw new RuntimeException("Failed to create a team");

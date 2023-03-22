@@ -5,7 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.db.AbstractDBEntity;
 import elrh.softman.logic.db.GameDBManager;
-import elrh.softman.logic.db.orm.player.PlayerAttributes;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_club_info")

@@ -10,6 +10,8 @@ import elrh.softman.utils.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javafx.scene.control.TextArea;
 import lombok.Data;
 
@@ -83,11 +85,7 @@ public class Match {
 
     public static Match getMatchDetail(long matchId) {
         var match = AssociationManager.getInstance().getMatchById(matchId);
-        if (match != null) {
-            return match;
-        } else {
-            return getMatchFromDB(matchId);
-        }
+        return Objects.requireNonNullElseGet(match, () -> getMatchFromDB(matchId));
     }
     private static Match getMatchFromDB(long matchId) {
         var matchInfo = (MatchInfo) GameDBManager.getInstance().getObjectById(MatchInfo.class, matchId);
@@ -102,9 +100,7 @@ public class Match {
         var dbList = GameDBManager.getInstance().getObjectsByQuery(MatchPlayByPlay.class, "matchId", matchId);
         if (Utils.listNotEmpty(dbList)) {
             var pbpList = new ArrayList<MatchPlayByPlay>();
-            dbList.forEach(item -> {
-                pbpList.add((MatchPlayByPlay) item);
-            });
+            dbList.forEach(item -> pbpList.add((MatchPlayByPlay) item));
             match.setPlayByPlay(pbpList);
         }
 

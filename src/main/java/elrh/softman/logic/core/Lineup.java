@@ -126,12 +126,8 @@ public class Lineup {
         var team = AssociationManager.getInstance().getTeamById(teamId);
         var lineup = team.getDefaultLineup();
 
-        for (int i = 0; i < POSITION_PLAYERS; i++) {
-            positionPlayers[i] = lineup.getPositionPlayers()[i];
-        }
-        for (int i = 0; i < SUBSTITUTES; i++) {
-            substitutes[i] = lineup.getSubstitutes()[i];
-        }
+        System.arraycopy(lineup.getPositionPlayers(), 0, positionPlayers, 0, POSITION_PLAYERS);
+        System.arraycopy(lineup.getSubstitutes(), 0, substitutes, 0, SUBSTITUTES);
 
         for (int i = 0; i < POSITION_PLAYERS; i++) {
             var lineupSpot = positionPlayers[i];

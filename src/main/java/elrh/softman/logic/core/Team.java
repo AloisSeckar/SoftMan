@@ -119,8 +119,7 @@ public class Team {
         
         var availablePlayers = new ArrayList<>(players);
 
-        var availablePositions = new ArrayList<PlayerPosition>();
-        availablePositions.addAll(Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD));
+        var availablePositions = Arrays.asList(PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE, SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD);
         if (useDP) {
             availablePositions.add(DESIGNATED_PLAYER);
         }

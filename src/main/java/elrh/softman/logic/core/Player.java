@@ -1,6 +1,5 @@
 package elrh.softman.logic.core;
 
-import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.db.orm.player.PlayerInfo;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.db.orm.player.PlayerStats;
