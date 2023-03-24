@@ -32,6 +32,10 @@ public class LeagueInfo extends AbstractDBEntity {
     @DatabaseField(canBeNull = false)
     @NonNull
     private int year;
+
+    @DatabaseField(canBeNull = false)
+    @NonNull
+    private int tier;
     
     @DatabaseField(canBeNull = false)
     @NonNull

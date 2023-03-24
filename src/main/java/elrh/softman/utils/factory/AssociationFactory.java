@@ -58,7 +58,7 @@ public class AssociationFactory {
         manager.getUser().setFocusedTeam(CLUB01.getTeams().get(0));
     }
 
-    // this is being called at the begining of every year
+    // this is being called when the association is initialized for the first time
     public static void createLeagues() {
         AssociationManager manager = AssociationManager.getInstance();
         int year = AssociationManager.getInstance().getClock().getYear();
@@ -109,6 +109,55 @@ public class AssociationFactory {
         var leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB01, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
         leagueJuniorGirlsTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueJuniorGirls.getId(), team));
         leagueJuniorGirls.scheduleMatches();
+    }
+
+    // this is being called at the beginning of every year
+    public static void recreateLeagues() {
+        AssociationManager manager = AssociationManager.getInstance();
+        var year = AssociationManager.getInstance().getClock().getYear();
+        var leagues = manager.getLeagues(year - 1);
+        leagues.forEach(league -> {
+            var info = league.getLeagueInfo();
+            var teams = league.getTeams().size();
+            var standings = league.getStandings();
+            Collections.sort(standings);
+
+            // setup new league
+            manager.createNewLeague(info.getLeagueName(), info.getLevel(), info.getTier());
+            var newLeague = manager.getLeagues(year).get(manager.getLeagues(year).size() - 1); // TODO direct acess by ID
+
+            // copy teams from previous season
+            var newLeagueTeams = new ArrayList<>(league.getTeams());
+
+            // transfer teams to/from league above
+            if (info.getLeagueAbove() != null) {
+                var advancingTeam1 = manager.getTeamById(standings.get(0).getTeamId());
+                newLeagueTeams.remove(advancingTeam1);
+                var advancingTeam2 = manager.getTeamById(standings.get(1).getTeamId());
+                newLeagueTeams.remove(advancingTeam2);
+                var teamsFromAbove = manager.getLeagueById(info.getLeagueAbove()).getRelegatedTeams();
+                for (long teamId : teamsFromAbove) {
+                    var teamFromAbove = manager.getTeamById(teamId);
+                    newLeagueTeams.add(teamFromAbove);
+                }
+            }
+            // transfer teams to/from league below
+            if (info.getLeagueBelow() != null) {
+                var relegatedTeam1 = manager.getTeamById(standings.get(teams - 1).getTeamId());
+                newLeagueTeams.remove(relegatedTeam1);
+                var relegatedTeam2 = manager.getTeamById(standings.get(teams - 2).getTeamId());
+                newLeagueTeams.remove(relegatedTeam2);
+                var teamsFromBelow = manager.getLeagueById(info.getLeagueBelow()).getAdvancingTeams();
+                for (long teamId : teamsFromBelow) {
+                    var teamFromBelow = manager.getTeamById(teamId);
+                    newLeagueTeams.add(teamFromBelow);
+                }
+            }
+
+            // register teams and create new schedule
+            newLeagueTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(newLeague.getId(), team));
+            newLeague.scheduleMatches();
+        });
     }
 
     private static ArrayList<Team> createTeams(PlayerLevel level, List<Club> participants) {

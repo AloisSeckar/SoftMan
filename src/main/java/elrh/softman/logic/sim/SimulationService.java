@@ -79,7 +79,7 @@ public class SimulationService extends Service<Result> {
             // TODO probably move elsewhere (maybe even separate UI action?)
             // advance to next year
             if (clock.getCurrentDate().equals(LocalDate.of(2024, 1, 1))) {
-                AssociationFactory.createLeagues();
+                AssociationFactory.recreateLeagues();
             }
         }
 

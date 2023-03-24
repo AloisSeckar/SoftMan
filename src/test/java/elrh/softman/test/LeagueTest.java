@@ -22,7 +22,7 @@ public class LeagueTest extends AbstractDBTest {
 
     @BeforeEach
     void setUp() {
-        LeagueInfo info = new LeagueInfo(ELEMENT_NAME, PlayerLevel.MSEN, Constants.START_YEAR, 1000);
+        LeagueInfo info = new LeagueInfo(ELEMENT_NAME, PlayerLevel.MSEN, Constants.START_YEAR, 1, 1000);
         league = new League(info);
     }
 
@@ -118,12 +118,12 @@ public class LeagueTest extends AbstractDBTest {
         league.getStandings().add(sTeam6);
 
         var advancing = league.getAdvancingTeams();
-        assertTrue(advancing[0] == team3.getId(), "Team 3 should be 1st");
-        assertTrue(advancing[1] == team1.getId(), "Team 1 should be 2nd");
+        assertEquals(advancing[0], team3.getId(), "Team 3 should be 1st");
+        assertEquals(advancing[1], team1.getId(), "Team 1 should be 2nd");
 
         var relegated = league.getRelegatedTeams();
-        assertTrue(relegated[0] == team6.getId(), "Team 6 should be 5th");
-        assertTrue(relegated[1] == team4.getId(), "Team 4 should be 6th");
+        assertEquals(relegated[0], team6.getId(), "Team 6 should be 5th");
+        assertEquals(relegated[1], team4.getId(), "Team 4 should be 6th");
 
     }
 
