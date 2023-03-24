@@ -5,7 +5,6 @@ import elrh.softman.gui.MainLayout;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.factory.AssociationFactory;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.*;

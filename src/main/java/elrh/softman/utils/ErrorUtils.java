@@ -25,5 +25,5 @@ public class ErrorUtils {
         public ReportedException(String message) {
             super(message);
         }
-    };
+    }
 }
