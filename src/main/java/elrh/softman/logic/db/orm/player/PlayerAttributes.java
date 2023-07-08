@@ -62,6 +62,9 @@ public class PlayerAttributes extends AbstractDBEntity {
     
     @DatabaseField(canBeNull = false)
     private int luck;
+
+    @DatabaseField(canBeNull = false)
+    private int fatigue;
     
     public PlayerAttributes() {
         Random rand = new Random();
@@ -81,6 +84,7 @@ public class PlayerAttributes extends AbstractDBEntity {
         this.talent = rand.nextInt(100) + 1;
         this.dedication = rand.nextInt(100) + 1;
         this.luck = rand.nextInt(100) + 1;
+        this.fatigue = 0;
     }
 
     public int getBattingSkill() {
