@@ -141,15 +141,15 @@
 }
 
 .field {
-    -fx-min-width: 857px;
-    -fx-pref-width: 857px;
-    -fx-max-width: 857px;
+    -fx-min-width: 850px;
+    -fx-pref-width: 850px;
+    -fx-max-width: 850px;
     -fx-min-height: 600px;
     -fx-pref-height: 600px;
     -fx-max-height: 600px;
     -fx-background-image: url("/img/vecteezy/field.png");
     -fx-background-repeat: stretch;
-    -fx-background-size: 857px 600px;
+    -fx-background-size: 850px 600px;
     -fx-background-position: center center;
     -fx-padding-top: 1000px;
 }

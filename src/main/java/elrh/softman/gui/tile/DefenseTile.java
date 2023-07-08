@@ -6,10 +6,12 @@ import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 
-public class DefenseTile extends VBox {
+public class DefenseTile extends Pane {
+
+    private static final int W2 = 425; // bg width  = 850px
+    private static final int H2 = 300; // bg H2 = 600px
 
     private final Label posP = createLabel(PITCHER);
     private final Label posC = createLabel(CATCHER);
@@ -25,32 +27,46 @@ public class DefenseTile extends VBox {
     public DefenseTile() {
         super.getStyleClass().add("framed");
         super.getStyleClass().add("field");
-        super.setAlignment(Pos.CENTER);
 
-        HBox row1 = new HBox(posCF);
-        row1.setAlignment(Pos.CENTER);
-        row1.getStyleClass().add("padding-5");
-        super.getChildren().add(row1);
-        HBox row2 = new HBox(posLF,posRF);
-        row2.setAlignment(Pos.CENTER);
-        row2.getStyleClass().add("padding-5");
-        super.getChildren().add(row2);
-        HBox row3 = new HBox(posSS,pos2B);
-        row3.setAlignment(Pos.CENTER);
-        row3.getStyleClass().add("padding-5");
-        super.getChildren().add(row3);
-        HBox row4 = new HBox(pos3B,posP,pos1B);
-        row4.setAlignment(Pos.CENTER);
-        row4.getStyleClass().add("padding-5");
-        super.getChildren().add(row4);
-        HBox row5 = new HBox(posC);
-        row5.setAlignment(Pos.CENTER);
-        row5.getStyleClass().add("padding-5");
-        super.getChildren().add(row5);
-        HBox row6 = new HBox(posDP);
-        row6.setAlignment(Pos.CENTER);
-        row6.getStyleClass().add("padding-5");
-        super.getChildren().add(row6);
+        posLF.setLayoutX(50);
+        posLF.setLayoutY(H2);
+        super.getChildren().add(posLF);
+
+        posCF.setLayoutX(W2 - 100);
+        posCF.setLayoutY(H2 - 30);
+        super.getChildren().add(posCF);
+
+        posRF.setLayoutX(W2 * 2 - 250);
+        posRF.setLayoutY(H2);
+        super.getChildren().add(posRF);
+
+        posSS.setLayoutX(W2 - 225);
+        posSS.setLayoutY(H2 + 70);
+        super.getChildren().add(posSS);
+        
+        pos2B.setLayoutX(W2 + 25);
+        pos2B.setLayoutY(H2 + 70);
+        super.getChildren().add(pos2B);
+
+        pos3B.setLayoutX(85);
+        pos3B.setLayoutY(H2 + 120);
+        super.getChildren().add(pos3B);
+
+        posP.setLayoutX(W2 - 100);
+        posP.setLayoutY(H2 + 145);
+        super.getChildren().add(posP);
+
+        pos1B.setLayoutX(W2 * 2 - 285);
+        pos1B.setLayoutY(H2 + 120);
+        super.getChildren().add(pos1B);
+
+        posC.setLayoutX(W2 - 100);
+        posC.setLayoutY(H2 + 240);
+        super.getChildren().add(posC);
+
+        posDP.setLayoutX(30);
+        posDP.setLayoutY(H2 + 240);
+        super.getChildren().add(posDP);
     }
 
     public void setPosition(PlayerRecord position) {
