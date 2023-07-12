@@ -31,7 +31,13 @@ public class PlayerTest {
         int expectedFatigue = fatigue + (20 - modifier) + (15 - modifier);
         int actualFatigue = player.getPlayerInfo().getAttributes().getFatigue();
 
-        assertEquals(actualFatigue, expectedFatigue, "Player's fatigue expected to be " + expectedFatigue + ", but was " + actualFatigue);
+        assertEquals(expectedFatigue, actualFatigue,"Player's fatigue expected to be " + expectedFatigue + ", but was " + actualFatigue);
+
+        player.getPlayerInfo().getAttributes().setFatigue(99);
+        player.increaseFatigue(ActivityType.MATCH);
+        actualFatigue = player.getPlayerInfo().getAttributes().getFatigue();
+
+        assertEquals(100, actualFatigue, "Player's max fatigue is limited to 100");
     }
 
     @Test
@@ -50,7 +56,13 @@ public class PlayerTest {
         int expectedFatigue = 100 - (10 + modifier) - (10 + modifier);
         int actualFatigue = player.getPlayerInfo().getAttributes().getFatigue();
 
-        assertEquals(actualFatigue, expectedFatigue, "Player's fatigue expected to be " + expectedFatigue + ", but was " + actualFatigue);
+        assertEquals(expectedFatigue, actualFatigue, "Player's fatigue expected to be " + expectedFatigue + ", but was " + actualFatigue);
+
+        player.getPlayerInfo().getAttributes().setFatigue(1);
+        player.decreaseFatigue();
+        actualFatigue = player.getPlayerInfo().getAttributes().getFatigue();
+
+        assertEquals(0, actualFatigue, "Player's max fatigue is limited to 100");
     }
 
 }

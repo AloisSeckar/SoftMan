@@ -35,7 +35,7 @@ public class Player {
     public void increaseFatigue(ActivityType activity) {
         PlayerAttributes attributes = playerInfo.getAttributes();
         int actualFatigue = activity.getBaseFatigue() - (attributes.getEndurance() / 10);
-        attributes.setFatigue(attributes.getFatigue() + actualFatigue);
+        attributes.setFatigue(Math.min(attributes.getFatigue() + actualFatigue, 100));
         attributes.persist();
     }
 
