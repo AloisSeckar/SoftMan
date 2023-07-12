@@ -23,12 +23,12 @@ public class PlayerTest {
         int endurance = player.getPlayerInfo().getAttributes().getEndurance();
         int modifier = endurance / 10;
 
-        // + (20 - modifier)
+        // + (25 - modifier)
         player.increaseFatigue(ActivityType.TRAINING);
-        // + (15 - modifier)
+        // + (20 - modifier)
         player.increaseFatigue(ActivityType.MATCH);
 
-        int expectedFatigue = fatigue + (20 - modifier) + (15 - modifier);
+        int expectedFatigue = fatigue + (25 - modifier) + (20 - modifier);
         int actualFatigue = player.getPlayerInfo().getAttributes().getFatigue();
 
         assertEquals(expectedFatigue, actualFatigue,"Player's fatigue expected to be " + expectedFatigue + ", but was " + actualFatigue);

@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ActivityType {
 
-    TRAINING(20),
-    MATCH(15);
+    TRAINING(25),
+    MATCH(20);
 
     @Getter
     private final int baseFatigue;
