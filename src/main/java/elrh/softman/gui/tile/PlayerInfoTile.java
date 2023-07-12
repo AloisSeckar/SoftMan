@@ -6,6 +6,7 @@ import eu.hansolo.medusa.Gauge;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -18,6 +19,9 @@ public class PlayerInfoTile extends VBox {
     private final Label ageLabel;
 
     private final ImageView imgView;
+
+    private final ProgressBar fatigueBar;
+    private final Label fatigueLabel;
 
     private final Gauge overallGauge;
     private final Gauge battingGauge;
@@ -51,7 +55,14 @@ public class PlayerInfoTile extends VBox {
         ageLabel.getStyleClass().add("player-age");
         super.getChildren().add(ageLabel);
 
-        var size = full ? 200 : 100;
+        fatigueBar = new ProgressBar();
+        fatigueLabel = new Label();
+        var hBox = new HBox(new Label("Fatigue:"), fatigueBar, fatigueLabel);
+        hBox.setSpacing(5);
+        super.getChildren().add(hBox);
+        hBox.setAlignment(Pos.CENTER);
+
+        var size = full ? 150 : 100;
         overallGauge = GUIUtils.getGauge(size, Color.BLUEVIOLET,"Overall");
         super.getChildren().add(overallGauge);
 
@@ -87,6 +98,9 @@ public class PlayerInfoTile extends VBox {
             ageLabel.setText(player.getAge() + " yrs");
 
             imgView.setImage(GUIUtils.getImageOrDefault("/img/" + player.getImg()));
+
+            fatigueBar.setProgress(player.getAttributes().getFatigue() / 100);
+            fatigueLabel.setText(String.valueOf(player.getAttributes().getFatigue()));
 
             overallGauge.setValue(player.getAttributes().getTotal());
             if (full) {
