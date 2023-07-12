@@ -3,6 +3,7 @@ package elrh.softman.utils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Lineup;
 import elrh.softman.logic.db.orm.player.PlayerRecord;
+import elrh.softman.logic.enums.ActivityType;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.enums.StatsType;
 import static elrh.softman.logic.enums.StatsType.*;
@@ -21,6 +22,9 @@ public class StatsUtils {
                     var player = AssociationManager.getInstance().getPlayerById(data.getPlayer().getPlayerId());
                     player.getStats().add(stats);
                     player.getSeasonTotal().include(stats);
+                    // TODO if we kept this here, the method should be renamed...
+                    // TODO fatigue based on actual amount of playtime
+                    player.increaseFatigue(ActivityType.MATCH);
                 });
             }
         }

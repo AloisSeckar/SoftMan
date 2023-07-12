@@ -99,7 +99,7 @@ public class PlayerInfoTile extends VBox {
 
             imgView.setImage(GUIUtils.getImageOrDefault("/img/" + player.getImg()));
 
-            fatigueBar.setProgress(player.getAttributes().getFatigue() / 100);
+            fatigueBar.setProgress(player.getAttributes().getFatigue() / 100d);
             fatigueLabel.setText(String.valueOf(player.getAttributes().getFatigue()));
 
             overallGauge.setValue(player.getAttributes().getTotal());

@@ -6,6 +6,7 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Match;
+import elrh.softman.logic.core.Player;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.utils.*;
 import elrh.softman.utils.factory.AssociationFactory;
@@ -74,6 +75,10 @@ public class SimulationService extends Service<Result> {
 
             clock.plusDays(1);
             clock.adjustViewDay();
+
+            // actions upon next day - players regenerate
+            AssociationManager.getInstance().getPlayers(true).forEach(Player::decreaseFatigue);
+
             LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
 
             // TODO probably move elsewhere (maybe even separate UI action?)
