@@ -11,7 +11,7 @@ public class Constants {
 
     public static final Result RESULT_OK = new Result(true, null);
 
-    public static final int START_YEAR = 2023;
+    public static final int START_YEAR = 2025;
 
     // TODO change it to 01.01.
     public static final LocalDate START_DATE = LocalDate.of(Constants.START_YEAR, 3, 31);
