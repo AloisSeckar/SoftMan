@@ -21,7 +21,7 @@ import javafx.scene.layout.HBox;
 
 public class ScheduleRowTile extends BorderPane {
 
-    private static final int LOGO_SIZE = 60;
+    private static final int LOGO_SIZE = 40;
 
     private final Label titleLabel;
     private final ImageView awayImage;

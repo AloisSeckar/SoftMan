@@ -138,6 +138,7 @@
 
 .club-info {
     -fx-padding: 10px;
+    -fx-pref-height: 100%;
 }
 
 .field {

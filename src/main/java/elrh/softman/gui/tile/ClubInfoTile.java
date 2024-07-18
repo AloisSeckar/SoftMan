@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -23,6 +24,16 @@ public class ClubInfoTile extends VBox {
     public ClubInfoTile() {
         super.getStyleClass().add("club-info");
         super.getStyleClass().add("framed");
+
+        ImageView stadiumView = new ImageView();
+        stadiumView.setFitWidth(400);
+        stadiumView.setFitHeight(250);
+        stadiumView.getStyleClass().add("framed");
+
+        Image stadiumImg = GUIUtils.getImageOrDefault("/img/stadium.jpg");
+        stadiumView.setImage(stadiumImg);
+
+        super.getChildren().add(stadiumView);
 
         nameLabel.getStyleClass().setAll("h3");
 
@@ -42,6 +53,7 @@ public class ClubInfoTile extends VBox {
     }
 
     public void reload(Club club) {
+
         if (club != null) {
             nameLabel.setText(club.getClubInfo().getName());
             stadiumLabel.setText(club.getClubInfo().getStadium());
