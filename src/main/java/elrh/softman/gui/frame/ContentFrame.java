@@ -22,7 +22,7 @@ public class ContentFrame extends TabPane {
         this.getTabs().add(new Tab("Team", TeamTab.getInstance()));
         this.getTabs().add(new Tab("Player", PlayerTab.getInstance()));
         this.getTabs().add(new Tab("Lineup", LineupTab.getInstance()));
-        this.getTabs().add(new Tab("Training", new Label("Manage your player's training and progress")));
+        this.getTabs().add(new Tab("Training", TrainingTab.getInstance()));
         this.getTabs().add(new Tab("Standings", StandingsTab.getInstance()));
         this.getTabs().add(new Tab("Stats", new Label("Statistics center")));
         this.getTabs().add(new Tab("Market", new Label("Buy and sell players")));

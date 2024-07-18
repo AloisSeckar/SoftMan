@@ -135,6 +135,13 @@
             <version>16.0.0</version>
         </dependency>
 
+        <!-- for GUI enhancements - https://controlsfx.github.io/ -->
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>11.2.1</version>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
