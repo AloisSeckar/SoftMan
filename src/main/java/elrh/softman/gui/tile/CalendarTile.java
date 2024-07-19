@@ -23,6 +23,7 @@ public class CalendarTile extends VBox {
     public CalendarTile() {
 
         var topRow = new HBox();
+        topRow.setSpacing(5d);
         topRow.setAlignment(Pos.CENTER_LEFT);
 
         var adjustButton = new Button("O");
@@ -34,8 +35,7 @@ public class CalendarTile extends VBox {
         topRow.getChildren().add(prevDayButton);
 
         titleLabel = new Label("Today");
-        titleLabel.getStyleClass().setAll("h3");
-        titleLabel.getStyleClass().add("padding-5");
+        titleLabel.getStyleClass().setAll("schedule-date");
         topRow.getChildren().add(titleLabel);
 
         var prevNextButton = new Button(">");
@@ -45,9 +45,7 @@ public class CalendarTile extends VBox {
         super.getChildren().add(topRow);
 
         dailySchedule = new VBox();
-        dailySchedule.getStyleClass().add("padding-5");
         super.getChildren().add(dailySchedule);
-
     }
 
     public void setDailySchedule(long leagueId) {

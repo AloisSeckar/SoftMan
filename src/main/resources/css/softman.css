@@ -137,8 +137,18 @@
 }
 
 .club-info {
-    -fx-padding: 10px;
+    -fx-padding: 5px;
     -fx-pref-height: 100%;
+}
+
+.league-name {
+    -fx-font: bold 20px "Arial";
+    -fx-padding: 2;
+}
+
+.schedule-date {
+    -fx-font: bold 20px "Arial";
+    -fx-padding: 2;
 }
 
 .field {

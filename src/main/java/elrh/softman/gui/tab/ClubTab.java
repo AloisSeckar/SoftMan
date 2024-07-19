@@ -8,12 +8,14 @@ import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.interfaces.IFocusedClubListener;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import org.kordamp.bootstrapfx.scene.layout.Panel;
 
-public class ClubTab extends HBox implements IFocusedClubListener, IFocusedTeamListener {
+public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedTeamListener {
 
     private static ClubTab INSTANCE;
 
@@ -29,6 +31,15 @@ public class ClubTab extends HBox implements IFocusedClubListener, IFocusedTeamL
     }
 
     private ClubTab() {
+        setPadding(new Insets(5, 5, 5, 5));
+        setHgap(5);
+        setVgap(5);
+
+        ColumnConstraints column1 = new ColumnConstraints();
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setHgrow(Priority.ALWAYS);
+        getColumnConstraints().addAll(column1, column2);
+
         infoTile = new ClubInfoTile();
         infoTile.setAlignment(Pos.CENTER);
 
@@ -37,23 +48,21 @@ public class ClubTab extends HBox implements IFocusedClubListener, IFocusedTeamL
         infoPanel.setMaxWidth(450);
         infoPanel.getStyleClass().add("panel-info");
         infoPanel.setBody(infoTile);
+        add(infoPanel, 0, 0, 1, 2);
 
         leagueTable = new LeagueStadingsTable();
-        leagueTable.setAlignment(Pos.CENTER_RIGHT);
+        leagueTable.setAlignment(Pos.CENTER_LEFT);
         var standingsPanel = new Panel("Standings");
         standingsPanel.getStyleClass().add("panel-info");
         standingsPanel.setBody(leagueTable);
+        add(standingsPanel, 1, 0);
 
         calendarTile = new CalendarTile();
         calendarTile.setAlignment(Pos.CENTER_RIGHT);
         var schedulePanel = new Panel("Schedule");
         schedulePanel.getStyleClass().add("panel-info");
         schedulePanel.setBody(calendarTile);
-
-        var contentColumn = new VBox(standingsPanel, schedulePanel);
-
-        super.getChildren().add(infoPanel);
-        super.getChildren().add(contentColumn);
+        add(schedulePanel, 1, 1);
 
         infoTile.reload(AssociationManager.getInstance().getUser().getFocusedClub());
         leagueTable.setLeague(AssociationManager.getInstance().getUser().getFocusedLeague());

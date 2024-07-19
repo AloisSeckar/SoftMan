@@ -4,7 +4,6 @@ import elrh.softman.logic.core.League;
 import elrh.softman.logic.core.stats.Standing;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.*;
 import javafx.scene.layout.*;
 import javafx.scene.control.*;
@@ -22,14 +21,13 @@ public class LeagueStadingsTable extends VBox {
         data = FXCollections.observableList(new ArrayList<>());
 
         nameLabel = new Label();
-        nameLabel.getStyleClass().setAll("h3");
+        nameLabel.getStyleClass().add("league-name");
         super.getChildren().add(nameLabel);
+        super.getStyleClass().setAll("padding-5");
 
         table = new TableView<>();
-        table.setMinWidth(770d);
-        table.setMaxWidth(770d);
-        table.setMinHeight(270d);
-        table.setMaxHeight(270d);
+        table.setPrefWidth(820d);
+        table.setPrefHeight(225d);
         table.setItems(data);
 
         TableColumn<Standing, String> numberCol = new TableColumn<>("#");
@@ -45,8 +43,8 @@ public class LeagueStadingsTable extends VBox {
         numberCol.setSortable(false);
 
         TableColumn<Standing, String> teamCol = new TableColumn<>("Team");
-        teamCol.setMinWidth(200d);
-        teamCol.setMaxWidth(200d);
+        teamCol.setMinWidth(250d);
+        teamCol.setMaxWidth(250d);
         teamCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
             @Override
             public String getValue() {
@@ -122,9 +120,6 @@ public class LeagueStadingsTable extends VBox {
         });
 
         table.getColumns().setAll(Arrays.asList(numberCol, teamCol, gamesCol, winsCol, losesCol, runsForCol, runsAgainstCol, pointsCol));
-        
-        table.setFixedCellSize(25);
-        table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(10));
 
         super.getChildren().add(table);
     }
