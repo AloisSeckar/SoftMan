@@ -64,17 +64,22 @@ public class AssociationFactory {
         int year = AssociationManager.getInstance().getClock().getYear();
 
         manager.createNewLeague("1st League Men", PlayerLevel.MSEN, 1);
+        // TODO more than one league
+        /*
         manager.createNewLeague("2nd League Men", PlayerLevel.MSEN, 2);
         manager.createNewLeague("1st League Women", PlayerLevel.FSEN, 1);
         manager.createNewLeague("2nd League Women", PlayerLevel.FSEN, 2);
         manager.createNewLeague("League Junior Boys", PlayerLevel.MU18, 1);
         manager.createNewLeague("League Junior Girls", PlayerLevel.FU18, 1);
+         */
 
         var leagueMen1 = manager.getLeagues(year).get(0);
         var leagueMenTeams1 = createTeams(PlayerLevel.MSEN, Arrays.asList(CLUB01, CLUB02, CLUB03, CLUB04, CLUB05, CLUB06, CLUB07, CLUB08));
         leagueMenTeams1.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueMen1.getId(), team));
         leagueMen1.scheduleMatches();
 
+        // TODO more than one league
+        /*
         var leagueMen2 = manager.getLeagues(year).get(1);
         var leagueMenTeams2 = createTeams(PlayerLevel.MSEN, Arrays.asList(CLUB09, CLUB10, CLUB11, CLUB12, CLUB13, CLUB14, CLUB15, CLUB16));
         leagueMenTeams2.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueMen2.getId(), team));
@@ -109,6 +114,7 @@ public class AssociationFactory {
         var leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB01, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
         leagueJuniorGirlsTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueJuniorGirls.getId(), team));
         leagueJuniorGirls.scheduleMatches();
+         */
     }
 
     // this is being called at the beginning of every year
