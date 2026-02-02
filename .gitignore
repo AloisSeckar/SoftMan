@@ -32,6 +32,9 @@ nbactions.xml
 # IDEA project files
 .idea/
 
+# VS Code project files
+.vscode/
+
 # local app files
 sav/
 log/

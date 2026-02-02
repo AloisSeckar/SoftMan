@@ -22,6 +22,7 @@ public class Lineup {
     @Getter
     private final LinuepInfo linuepInfo;
 
+    @SuppressWarnings("unchecked") // TODO try to solve
     @Getter
     private final ArrayList<PlayerRecord>[] positionPlayers = new ArrayList[POSITION_PLAYERS];
 

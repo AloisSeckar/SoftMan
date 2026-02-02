@@ -82,6 +82,7 @@ public class DefenseTile extends Pane {
             case CENTER_FIELD -> posCF.setText(text);
             case RIGHT_FIELD -> posRF.setText(text);
             case DESIGNATED_PLAYER, OFFENSIVE_ONLY -> posDP.setText(text);
+            default -> { /* nothing */ }
         }
     }
 

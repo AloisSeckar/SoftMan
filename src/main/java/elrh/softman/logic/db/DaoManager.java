@@ -1,7 +1,7 @@
 package elrh.softman.logic.db;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import elrh.softman.logic.Result;
 import elrh.softman.utils.Constants;
@@ -23,7 +23,7 @@ public class DaoManager<U extends AbstractDBEntity> {
     @Getter
     private final Class<U> typeParameterClass;
 
-    public Result init(JdbcPooledConnectionSource conn, boolean dropExisting) {
+    public Result init(ConnectionSource conn, boolean dropExisting) {
         try {
             if (dropExisting) {
                 TableUtils.dropTable(conn, typeParameterClass, true);
@@ -36,10 +36,12 @@ public class DaoManager<U extends AbstractDBEntity> {
             return ErrorUtils.handleException("init", ex);
         }
     }
-
+    
+    @SuppressWarnings("unchecked") // TODO try to solve 
     public Result saveObject(AbstractDBEntity object) {
         try {
             if (object.getId() > 0) {
+                
                 dao.update((U) object);
             } else {
                 dao.create((U) object);

@@ -199,6 +199,7 @@ public class PlayerStats extends AbstractDBEntity {
         }
     }
 
+    // TODO will this be used?
     private void clear() {
         games = 0;
         bPA = 0;

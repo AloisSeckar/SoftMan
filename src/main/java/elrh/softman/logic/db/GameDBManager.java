@@ -48,12 +48,21 @@ public class GameDBManager {
     public Result setConnection(String gameId) {
         try {
             if (StringUtils.isNotBlank(gameId)) {
+                // Create the directory if it doesn't exist
+                java.nio.file.Files.createDirectories(java.nio.file.Paths.get("sav"));
+                
                 String url = Constants.GAME_DB.replace("$id$", gameId);
                 conn = new JdbcPooledConnectionSource(url);
                 LOG.info("DB connection to 'GAME' (ID = " + gameId + ") successful");
 
                 var dropExisting = true; // TODO remove this to allow re-loading
-                daoList.forEach(dao -> dao.init(conn, dropExisting));
+                for (var dao : daoList) {
+                    var result = dao.init(conn, dropExisting);
+                    if (!result.ok()) {
+                        LOG.error("Failed to initialize DAO for {}: {}", dao.getTypeParameterClass().getSimpleName(), result.message());
+                        return result;
+                    }
+                }
 
                 return Constants.RESULT_OK;
             } else {

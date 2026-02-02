@@ -10,7 +10,7 @@ import java.util.Objects;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_league_info")
-@Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor @RequiredArgsConstructor
+@Data @NoArgsConstructor @RequiredArgsConstructor
 public class LeagueInfo extends AbstractDBEntity {
     
     @DatabaseField(generatedId = true)
