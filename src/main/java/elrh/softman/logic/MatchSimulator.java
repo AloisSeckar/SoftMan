@@ -88,7 +88,7 @@ public class MatchSimulator {
 
                 // TODO random runner actions
 
-                appendText(hitQuality + " vs. " + pitchQuality + " => q: " + qualityFactor + " => " + pitchOutcome + "\n");
+                appendText(String.format("%d vs. %d => q: %d => %s\n", hitQuality, pitchQuality, qualityFactor, pitchOutcome));
 
                 switch (pitchOutcome) {
                     case SimUtils.O_K -> handleK();
@@ -105,19 +105,23 @@ public class MatchSimulator {
     ///////
     private void setUpMatch() {
         var matchId = match.getId();
-        var matchStr = awayLineup.getLinuepInfo().getTeamShortName() + " @ " + homeLineup.getLinuepInfo().getTeamShortName();
+        var matchStr = String.format("%s @ %s",
+            awayLineup.getLinuepInfo().getTeamShortName(),
+            homeLineup.getLinuepInfo().getTeamShortName());
 
         awayLineup.setUp(matchId, matchStr);
         homeLineup.setUp(matchId, matchStr);
 
         match.getMatchInfo().setStatus(ACTIVE);
 
-        appendText("\n\nGAME BETWEEN " +  awayLineup.getLinuepInfo().getTeamName() + " AND " + homeLineup.getLinuepInfo().getTeamName() + "\n");
+        appendText(String.format("\n\nGAME BETWEEN %s AND %s\n",
+            awayLineup.getLinuepInfo().getTeamName(),
+            homeLineup.getLinuepInfo().getTeamName()));
     }
 
     private void setUpInning() {
         if (top) {
-            appendText("\n\nINNING " + inning + "\n");
+            appendText(String.format("\n\nINNING %d\n", inning));
             appendText("\n\nTOP\n");
             battingLineup = awayLineup;
             fieldingLineup = homeLineup;
@@ -141,12 +145,12 @@ public class MatchSimulator {
 
         pitcher = fieldingLineup.getCurrentPositionPlayer(PITCHER);
         pitcherAttr = pitcher.getPlayer().getAttributes();
-        appendText("PITCHER: " + pitcher + " (" + pitcherAttr.getPitchingSkill() + ")\n");
+        appendText(String.format("PITCHER: %s (%d)\n", pitcher, pitcherAttr.getPitchingSkill()));
 
         batter = battingLineup.getCurrentBatter(top ? awayBatter : homeBatter);
         if (batter != null) {
             batterAttr = batter.getPlayer().getAttributes();
-            appendText("BATTER: " + batter + " (" + batterAttr.getBattingSkill() + ")\n");
+            appendText(String.format("BATTER: %s (%d)\n", batter, batterAttr.getBattingSkill()));
         }
     }
 
@@ -197,7 +201,7 @@ public class MatchSimulator {
         if (league != null) {
             league.saveMatch(match);
         } else {
-            ErrorUtils.raise("Unknown leagueId " + leagueId);
+            ErrorUtils.raise(String.format("Unknown leagueId %d", leagueId));
         }
     }
 
@@ -252,19 +256,25 @@ public class MatchSimulator {
     }
 
     private void getScore() {
-        appendText("\n\n" + awayLineup.getLinuepInfo().getTeamName() + ": " + boxScore.getTotalPoints(true) + "\n");
-        appendText(homeLineup.getLinuepInfo().getTeamName() + ": " + boxScore.getTotalPoints(false) + "\n");
+        appendText(String.format("\n\n%s: %d\n",
+            awayLineup.getLinuepInfo().getTeamName(),
+            boxScore.getTotalPoints(true)));
+        appendText(String.format("%s: %d\n",
+            homeLineup.getLinuepInfo().getTeamName(),
+            boxScore.getTotalPoints(false)));
     }
 
     private void printStats(Lineup lineup) {
-        appendText("\n\n" + lineup.getLinuepInfo().getTeamName() + "\n");
+        appendText(String.format("\n\n%s\n", lineup.getLinuepInfo().getTeamName()));
         appendText("PLAYER                         | PA | AB |  H |  R | RBI |   AVG |  O |  IP | \n");
 
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
             var players = lineup.getPositionPlayers()[i];
             if (Utils.listNotEmpty(players)) {
                 players.forEach(playerRecord -> {
-                    var nameWithPos = playerRecord.getPlayer().getName() + ", " + playerRecord.getPosition().toString();
+                    var nameWithPos = String.format("%s, %s",
+                        playerRecord.getPlayer().getName(),
+                        playerRecord.getPosition());
                     appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
                     var record = playerRecord.getStats();
                     appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 2) + " | ");
@@ -302,7 +312,7 @@ public class MatchSimulator {
 
     private void handleK() {
         var stance = random.nextInt() % 3 == 0 ? "looking" : "swinging";
-        appendText(batter + " STRUCK OUT " + stance + " TO " + pitcher + "\n");
+        appendText(String.format("%s STRUCK OUT %s TO %s\n", batter, stance, pitcher));
 
         StatsUtils.incK(batter);
         StatsUtils.handleFinishedBF(pitcher, true, 0, 3);
@@ -317,7 +327,7 @@ public class MatchSimulator {
 
     private void handleW() {
         boolean walked  = random.nextInt() % 5 != 0;
-        appendText(batter + " " + (walked ? "WALKED" : "HIT BY PITCH") + "\n");
+        appendText(String.format("%s %s\n", batter, walked ? "WALKED" : "HIT BY PITCH"));
 
         batter.getStats().inc(BPA);
         if (walked) {
@@ -338,7 +348,7 @@ public class MatchSimulator {
 
     private void handleP(int qualityFactor) {
         var playOutcome = SimUtils.getPseudoRandomPlayOutcome(qualityFactor);
-        appendText("in play: " + playOutcome + "\n");
+        appendText(String.format("in play: %s\n", playOutcome));
 
         if (SimUtils.P_H.equals(playOutcome)) {
             StatsUtils.incH(batter);

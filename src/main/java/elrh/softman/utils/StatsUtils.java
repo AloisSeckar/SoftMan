@@ -48,12 +48,12 @@ public class StatsUtils {
     }
 
     public static String getIP(int fIP) {
-        return (fIP / 3) + "." + (fIP % 3);
+        return String.format("%d.%d", fIP / 3, fIP % 3);
     }
 
     public static String getFLD(int fPO, int fA, int fE) {
         var chances = fPO + fA + fE;
-        return  chances > 0 ? String.format("%.3f", 1 - ((float) fE / chances)) : "0,000";
+        return chances > 0 ? String.format("%.3f", 1 - ((float) fE / chances)) : "0,000";
     }
 
     public static void incAB(PlayerRecord batter) {

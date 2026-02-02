@@ -49,7 +49,7 @@ public class League {
             standings.add(new Standing(team.getId(), team.getName()));
             team.getTeamInfo().setLeagueInfo(this.leagueInfo);
             team.getTeamInfo().persist();
-            LOG.info("Team " + team.getId() + " registered");
+            LOG.info("Team {} registered", team.getId());
             return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("League.registerTeam", ex);
@@ -89,7 +89,12 @@ public class League {
                     info.setStadium(teams.get(homeTeamIndex).getTeamInfo().getClubInfo().getStadium());
 
                     var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
-                    LOG.info("Match: " + info.getMatchNumber() + " - " + match.getAwayLineup().getLinuepInfo().getTeamName() + " @ " + match.getHomeLineup().getLinuepInfo().getTeamName() + "; " + info.getMatchDay().toString() + " (rnd " + info.getLeagueRound() + ")");
+                    LOG.info("Match: {} - {} @ {}; {} (rnd {})",
+                        info.getMatchNumber(),
+                        match.getAwayLineup().getLinuepInfo().getTeamName(),
+                        match.getHomeLineup().getLinuepInfo().getTeamName(),
+                        info.getMatchDay(),
+                        info.getLeagueRound());
                     var result = match.getMatchInfo().persist();
                     if (result.ok()) {
                         LOG.info("Saved into DB");
@@ -122,7 +127,7 @@ public class League {
         if (round >= 0 && round <= getTotalRounds()) {
             return matches.values().stream().filter(match -> match.getMatchInfo().getLeagueRound() == round).toList();
         } else {
-            ErrorUtils.raise("Called 'getRoundMatches' with parameter out-of-bounds (called " + round + ", available " + getTotalRounds() + ")");
+            ErrorUtils.raise(String.format("Called 'getRoundMatches' with parameter out-of-bounds (called %d, available %d)", round, getTotalRounds()));
             return null;
         }
     }
@@ -131,7 +136,7 @@ public class League {
         try {
             match.getMatchInfo().persist();
             includeMatchIntoStandings(match);
-            LOG.info("Match " + match + " saved and included into league standings");
+            LOG.info("Match {} saved and included into league standings", match);
             return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("League.saveMatch", ex);

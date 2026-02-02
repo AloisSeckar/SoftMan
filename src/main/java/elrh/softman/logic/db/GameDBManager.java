@@ -51,9 +51,9 @@ public class GameDBManager {
                 // Create the directory if it doesn't exist
                 java.nio.file.Files.createDirectories(java.nio.file.Paths.get("sav"));
                 
-                String url = Constants.GAME_DB.replace("$id$", gameId);
+                var url = Constants.GAME_DB.replace("$id$", gameId);
                 conn = new JdbcPooledConnectionSource(url);
-                LOG.info("DB connection to 'GAME' (ID = " + gameId + ") successful");
+                LOG.info("DB connection to 'GAME' (ID = {}) successful", gameId);
 
                 var dropExisting = true; // TODO remove this to allow re-loading
                 for (var dao : daoList) {
@@ -75,32 +75,27 @@ public class GameDBManager {
     }
 
     public Result saveObject(Class<? extends AbstractDBEntity> objectClass, AbstractDBEntity object) {
-        var dao = getDaoForClass(objectClass);
-        if (dao.isPresent()) {
-            return dao.get().saveObject(object);
-        } else {
-            return new Result(false, "DAO not found for " + objectClass);
-        }
+        return getDaoForClass(objectClass)
+            .map(dao -> dao.saveObject(object))
+            .orElse(new Result(false, "DAO not found for " + objectClass));
     }
 
     public Object getObjectById(Class<? extends AbstractDBEntity> objectClass, long objectId) {
-        var dao = getDaoForClass(objectClass);
-        if (dao.isPresent()) {
-            return dao.get().getObjectById(objectId);
-        } else {
-            LOG.warn("DAO not found for " + objectClass);
-            return null;
-        }
+        return getDaoForClass(objectClass)
+            .map(dao -> dao.getObjectById(objectId))
+            .orElseGet(() -> {
+                LOG.warn("DAO not found for {}", objectClass);
+                return null;
+            });
     }
 
     public List<?> getObjectsByQuery(Class<? extends AbstractDBEntity> objectClass, String column, Object value) {
-        var dao = getDaoForClass(objectClass);
-        if (dao.isPresent()) {
-            return dao.get().getObjectsByQuery(column, value);
-        } else {
-            LOG.warn("DAO not found for " + objectClass);
-            return null;
-        }
+        return getDaoForClass(objectClass)
+            .map(dao -> dao.getObjectsByQuery(column, value))
+            .orElseGet(() -> {
+                LOG.warn("DAO not found for {}", objectClass);
+                return null;
+            });
     }
 
     public void closeConnection() {

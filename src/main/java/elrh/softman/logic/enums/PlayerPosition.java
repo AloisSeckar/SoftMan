@@ -30,25 +30,18 @@ public enum PlayerPosition {
 
     public static List<PlayerPosition> getAvailablePositions(boolean includeDP, boolean includeInGame) {
         var ret = new ArrayList<PlayerPosition>();
-
-        ret.add(PITCHER);
-        ret.add(CATCHER);
-        ret.add(FIRST_BASE);
-        ret.add(SECOND_BASE);
-        ret.add(THIRD_BASE);
-        ret.add(SHORT_STOP);
-        ret.add(LEFT_FIELD);
-        ret.add(CENTER_FIELD);
-        ret.add(RIGHT_FIELD);
+        
+        ret.addAll(List.of(
+            PITCHER, CATCHER, FIRST_BASE, SECOND_BASE, THIRD_BASE,
+            SHORT_STOP, LEFT_FIELD, CENTER_FIELD, RIGHT_FIELD
+        ));
 
         if (includeDP) {
             ret.add(DESIGNATED_PLAYER);
         }
 
         if (includeInGame) {
-            ret.add(OFFENSIVE_ONLY);
-            ret.add(PINCH_HITTER);
-            ret.add(PINCH_RUNNER);
+            ret.addAll(List.of(OFFENSIVE_ONLY, PINCH_HITTER, PINCH_RUNNER));
         }
 
         return ret;

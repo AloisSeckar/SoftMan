@@ -99,9 +99,10 @@ public class Match {
 
         var dbList = GameDBManager.getInstance().getObjectsByQuery(MatchPlayByPlay.class, "matchId", matchId);
         if (Utils.listNotEmpty(dbList)) {
-            var pbpList = new ArrayList<MatchPlayByPlay>();
-            dbList.forEach(item -> pbpList.add((MatchPlayByPlay) item));
-            match.setPlayByPlay(pbpList);
+            var pbpList = dbList.stream()
+                .map(item -> (MatchPlayByPlay) item)
+                .toList();
+            match.setPlayByPlay(new ArrayList<>(pbpList));
         }
 
         return match;

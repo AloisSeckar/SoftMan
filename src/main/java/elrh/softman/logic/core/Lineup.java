@@ -38,9 +38,7 @@ public class Lineup {
         for (int i = 0; i < POSITION_PLAYERS; i++) {
             positionPlayers[i] = new ArrayList<>();
         }
-        for (int i = 0; i < SUBSTITUTES; i++) {
-            substitutes[i] = null;
-        }
+        Arrays.fill(substitutes, null);
     }
 
     public Result initPositionPlayer(int batOrder, PlayerRecord player) {
@@ -50,7 +48,7 @@ public class Lineup {
             positionPlayers[batOrder - 1] = newList;
             return Constants.RESULT_OK;
         } else {
-            return new Result(false, "Batting order " + batOrder + " out of bounds (1 - " + POSITION_PLAYERS + ")");
+            return new Result(false, String.format("Batting order %d out of bounds (1 - %d)", batOrder, POSITION_PLAYERS));
         }
     }
 
@@ -59,7 +57,7 @@ public class Lineup {
             substitutes[subOrder - 1] = player;
             return Constants.RESULT_OK;
         } else {
-            return new Result(false, "Substitute position " + subOrder + " out of bounds (1 - " + SUBSTITUTES + ")");
+            return new Result(false, String.format("Substitute position %d out of bounds (1 - %d)", subOrder, SUBSTITUTES));
         }
     }
 
@@ -70,10 +68,10 @@ public class Lineup {
                 records.add(player);
                 return Constants.RESULT_OK;
             } else {
-                return new Result(false, "Batting order " + batOrder + " not initialized");
+                return new Result(false, String.format("Batting order %d not initialized", batOrder));
             }
         } else {
-            return new Result(false, "Batting order " + batOrder + " out of bounds (1 - " + POSITION_PLAYERS + ")");
+            return new Result(false, String.format("Batting order %d out of bounds (1 - %d)", batOrder, POSITION_PLAYERS));
         }
     }
 
@@ -135,7 +133,7 @@ public class Lineup {
             if (Utils.listNotEmpty(lineupSpot)) {
                 var first = lineupSpot.get(0);
                 var stats = new PlayerStats();
-                var playerString = first.toString() + ", " + first.getPosition().toString();
+                var playerString = String.format("%s, %s", first, first.getPosition());
                 stats.init(matchId, matchStr, first.getPlayer().getPlayerId(), playerString);
                 first.setStats(stats);
                 positionPlayers[i] = new ArrayList<>();

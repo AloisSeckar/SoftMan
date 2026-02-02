@@ -96,12 +96,12 @@ public class LineupTile extends VBox {
             for (var rowToCheck : checkedLineup) {
                 PlayerInfo playerToCheck = rowToCheck.getPlayer();
                 if (playerToCheck != null && playerToCheck.equals(currentSelection.getPlayer())) {
-                    return playerToCheck.getName() + " is already filled";
+                    return String.format("%s is already filled", playerToCheck.getName());
                 }
 
                 PlayerPosition positionToCheck = rowToCheck.getPosition();
                 if (positionToCheck != null && positionToCheck.equals(currentSelection.getPosition())) {
-                    return positionToCheck.name() + " is already filled";
+                    return String.format("%s is already filled", positionToCheck.name());
                 }
             }
 

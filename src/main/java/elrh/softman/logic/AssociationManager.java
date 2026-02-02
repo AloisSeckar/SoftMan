@@ -70,7 +70,7 @@ public class AssociationManager {
             leagueInfo.persist();
             League newLeague = new League(leagueInfo);
             managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
-            LOG.info("New league ID " + newLeague + " created");
+            LOG.info("New league {} created", newLeague);
             return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.createNewLeague", ex);
@@ -87,7 +87,7 @@ public class AssociationManager {
                 }
                 return res;
             } else {
-                return new Result(false, "League " + leagueId + " not found");
+                return new Result(false, String.format("League %d not found", leagueId));
             }
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerTeamIntoLeague", ex);
@@ -119,7 +119,7 @@ public class AssociationManager {
                 club.getClubInfo().persist();
                 registeredClubs.put(clubId, club);
             }
-            LOG.info("Club " + clubId + " was registered for " + year + " season");
+            LOG.info("Club {} was registered for {} season", clubId, year);
             return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerClub", ex);
@@ -151,7 +151,7 @@ public class AssociationManager {
                 player.getPlayerInfo().persist();
                 registeredPlayers.put(playerId, player);
             }
-            LOG.info("player " + playerId + " was registered for " + year + " season");
+            LOG.info("player {} was registered for {} season", playerId, year);
             return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerPlayer", ex);
