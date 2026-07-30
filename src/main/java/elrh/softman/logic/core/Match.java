@@ -40,7 +40,7 @@ public class Match {
         
         if (awayLineup != null) {
             this.awayLineup = awayLineup;
-            this.matchInfo.setAwayTeamId(awayLineup.getLinuepInfo().getTeamId());
+            this.matchInfo.setAwayTeamId(awayLineup.getLineupInfo().getTeamId());
         } else {
             this.awayLineup = null;
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'awayLineup'");
@@ -48,7 +48,7 @@ public class Match {
         
         if (homeLineup != null) {
             this.homeLineup = homeLineup;
-            this.matchInfo.setHomeTeamId(homeLineup.getLinuepInfo().getTeamId());
+            this.matchInfo.setHomeTeamId(homeLineup.getLineupInfo().getTeamId());
         } else {
             this.homeLineup = null;
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'homeLineup'");

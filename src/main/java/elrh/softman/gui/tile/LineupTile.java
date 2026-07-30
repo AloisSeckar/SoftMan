@@ -54,7 +54,7 @@ public class LineupTile extends VBox {
     public void fillLineup(Lineup lineup) {
         if (lineup != null) {
             // TODO is this effective way to get necessary data?
-            this.team = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, lineup.getLinuepInfo().getTeamId());
+            this.team = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, lineup.getLineupInfo().getTeamId());
             if (team != null) {
                 // TODO get to player list more directly and correctly
                 var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
@@ -69,7 +69,7 @@ public class LineupTile extends VBox {
                     substitutesRows[i].setUp(playerList, lineup.getSubstitutes()[i]);
                 }
             } else {
-                ErrorUtils.raise("Team " + lineup.getLinuepInfo().getTeamId() + " not found");
+                ErrorUtils.raise("Team " + lineup.getLineupInfo().getTeamId() + " not found");
             }
         } else {
             ErrorUtils.raise("Illega passing of NULL Lineup object");

@@ -91,8 +91,8 @@ public class League {
                     var match = new Match(info, teams.get(homeTeamIndex).getDefaultLineup(), teams.get(awayTeamIndex).getDefaultLineup());
                     LOG.info("Match: {} - {} @ {}; {} (rnd {})",
                         info.getMatchNumber(),
-                        match.getAwayLineup().getLinuepInfo().getTeamName(),
-                        match.getHomeLineup().getLinuepInfo().getTeamName(),
+                        match.getAwayLineup().getLineupInfo().getTeamName(),
+                        match.getHomeLineup().getLineupInfo().getTeamName(),
                         info.getMatchDay(),
                         info.getLeagueRound());
                     var result = match.getMatchInfo().persist();
@@ -215,7 +215,7 @@ public class League {
     }
 
     private void includeMatchIntoStandings(Match match) {
-        var homeTeamName = match.getHomeLineup().getLinuepInfo().getTeamName();
+        var homeTeamName = match.getHomeLineup().getLineupInfo().getTeamName();
         Standing homeTeamStanding;
         int homeTeamIndex = -1;
         do {
@@ -223,7 +223,7 @@ public class League {
             homeTeamStanding = standings.get(homeTeamIndex);
         } while (!homeTeamName.equals(homeTeamStanding.getTeam()) || homeTeamIndex > 9);
 
-        var awayTeamName = match.getAwayLineup().getLinuepInfo().getTeamName();
+        var awayTeamName = match.getAwayLineup().getLineupInfo().getTeamName();
         Standing awayTeamStanding;
         int awayTeamIndex = -1;
         do {

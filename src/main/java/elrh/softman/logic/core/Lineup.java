@@ -2,7 +2,7 @@ package elrh.softman.logic.core;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
-import elrh.softman.logic.db.orm.lineup.LinuepInfo;
+import elrh.softman.logic.db.orm.lineup.LineupInfo;
 import elrh.softman.logic.db.orm.player.PlayerRecord;
 import elrh.softman.logic.db.orm.player.PlayerStats;
 import elrh.softman.logic.enums.PlayerPosition;
@@ -20,7 +20,7 @@ public class Lineup {
     public static final int SUBSTITUTES = 8;
 
     @Getter
-    private final LinuepInfo linuepInfo;
+    private final LineupInfo lineupInfo;
 
     @SuppressWarnings("unchecked") // TODO try to solve
     @Getter
@@ -30,7 +30,7 @@ public class Lineup {
     private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
 
     public Lineup(long teamId, String teamName, String teamShortName, String teamLogo) {
-        this.linuepInfo = new LinuepInfo(teamId, teamName, teamShortName, teamLogo);
+        this.lineupInfo = new LineupInfo(teamId, teamName, teamShortName, teamLogo);
         reset();
     }
 
@@ -121,7 +121,7 @@ public class Lineup {
     }
 
     public void setUp(long matchId, String matchStr) {
-        var teamId = linuepInfo.getTeamId();
+        var teamId = lineupInfo.getTeamId();
         var team = AssociationManager.getInstance().getTeamById(teamId);
         var lineup = team.getDefaultLineup();
 

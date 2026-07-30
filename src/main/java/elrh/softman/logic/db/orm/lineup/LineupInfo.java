@@ -10,7 +10,7 @@ import lombok.*;
 @DatabaseTable(tableName = "softman_lineup_info")
 @Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
 @RequiredArgsConstructor
-public class LinuepInfo extends AbstractDBEntity {
+public class LineupInfo extends AbstractDBEntity {
 
     @DatabaseField(generatedId = true)
     private long lineupId;
@@ -38,7 +38,7 @@ public class LinuepInfo extends AbstractDBEntity {
 
     @Override
     public Result persist() {
-        return GameDBManager.getInstance().saveObject(LinuepInfo.class, this);
+        return GameDBManager.getInstance().saveObject(LineupInfo.class, this);
     }
 
 }

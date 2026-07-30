@@ -188,7 +188,7 @@ public class AssociationManager {
         var ret = new ArrayList<Match>();
         for (var entry : getDailyMatches().entrySet()) {
             entry.getValue().forEach(match -> {
-                if (user.userManagesTeam(match.getHomeLineup().getLinuepInfo().getTeamId()) || user.userManagesTeam(match.getAwayLineup().getLinuepInfo().getTeamId())) {
+                if (user.userManagesTeam(match.getHomeLineup().getLineupInfo().getTeamId()) || user.userManagesTeam(match.getAwayLineup().getLineupInfo().getTeamId())) {
                     ret.add(match);
                 }
             });

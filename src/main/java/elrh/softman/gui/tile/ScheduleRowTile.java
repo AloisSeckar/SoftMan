@@ -105,8 +105,8 @@ public class ScheduleRowTile extends BorderPane {
 
             sim = new MatchSimulator(match, MatchTab.getTarget());
 
-            awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getLinuepInfo().getTeamLogo()));
-            Tooltip.install(awayImage, new Tooltip(match.getAwayLineup().getLinuepInfo().getTeamName()));
+            awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getLineupInfo().getTeamLogo()));
+            Tooltip.install(awayImage, new Tooltip(match.getAwayLineup().getLineupInfo().getTeamName()));
 
             switch (match.getMatchInfo().getStatus()) {
                 case SCHEDULED -> titleLabel.setText(match.getMatchInfo().getMatchDay().toString() + " @ " + match.getMatchInfo().getStadium());
@@ -119,8 +119,8 @@ public class ScheduleRowTile extends BorderPane {
                 }
             }
 
-            homeImage.setImage(GUIUtils.getImageOrDefault(match.getHomeLineup().getLinuepInfo().getTeamLogo()));
-            Tooltip.install(homeImage, new Tooltip(match.getHomeLineup().getLinuepInfo().getTeamName()));
+            homeImage.setImage(GUIUtils.getImageOrDefault(match.getHomeLineup().getLineupInfo().getTeamLogo()));
+            Tooltip.install(homeImage, new Tooltip(match.getHomeLineup().getLineupInfo().getTeamName()));
 
         } else {
             sim = null;

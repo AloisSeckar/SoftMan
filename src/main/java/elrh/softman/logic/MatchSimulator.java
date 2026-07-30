@@ -106,8 +106,8 @@ public class MatchSimulator {
     private void setUpMatch() {
         var matchId = match.getId();
         var matchStr = String.format("%s @ %s",
-            awayLineup.getLinuepInfo().getTeamShortName(),
-            homeLineup.getLinuepInfo().getTeamShortName());
+            awayLineup.getLineupInfo().getTeamShortName(),
+            homeLineup.getLineupInfo().getTeamShortName());
 
         awayLineup.setUp(matchId, matchStr);
         homeLineup.setUp(matchId, matchStr);
@@ -115,8 +115,8 @@ public class MatchSimulator {
         match.getMatchInfo().setStatus(ACTIVE);
 
         appendText(String.format("\n\nGAME BETWEEN %s AND %s\n",
-            awayLineup.getLinuepInfo().getTeamName(),
-            homeLineup.getLinuepInfo().getTeamName()));
+            awayLineup.getLineupInfo().getTeamName(),
+            homeLineup.getLineupInfo().getTeamName()));
     }
 
     private void setUpInning() {
@@ -257,15 +257,15 @@ public class MatchSimulator {
 
     private void getScore() {
         appendText(String.format("\n\n%s: %d\n",
-            awayLineup.getLinuepInfo().getTeamName(),
+            awayLineup.getLineupInfo().getTeamName(),
             boxScore.getTotalPoints(true)));
         appendText(String.format("%s: %d\n",
-            homeLineup.getLinuepInfo().getTeamName(),
+            homeLineup.getLineupInfo().getTeamName(),
             boxScore.getTotalPoints(false)));
     }
 
     private void printStats(Lineup lineup) {
-        appendText(String.format("\n\n%s\n", lineup.getLinuepInfo().getTeamName()));
+        appendText(String.format("\n\n%s\n", lineup.getLineupInfo().getTeamName()));
         appendText("PLAYER                         | PA | AB |  H |  R | RBI |   AVG |  O |  IP | \n");
 
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {

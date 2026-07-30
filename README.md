@@ -15,7 +15,7 @@ Check implementation info and status at [wiki page](https://github.com/AloisSeck
 
 ## Technologies
 
-- Java 21 (OpenJDK)
+- Java 25 (OpenJDK)
 - [JavaFX](https://openjfx.io/)
 - [BootstrapFX](https://github.com/kordamp/bootstrapfx)
 - [FontAwesomeFX](https://bitbucket.org/Jerady/fontawesomefx/branch/fontawesomefx-9.1.2)

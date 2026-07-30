@@ -30,7 +30,7 @@ public class GameDBManager {
     }
 
     private GameDBManager() {
-        daoList.add(new DaoManager<>(LinuepInfo.class));
+        daoList.add(new DaoManager<>(LineupInfo.class));
         daoList.add(new DaoManager<>(MatchInfo.class));
         daoList.add(new DaoManager<>(MatchPlayByPlay.class));
         daoList.add(new DaoManager<>(MatchResult.class));
