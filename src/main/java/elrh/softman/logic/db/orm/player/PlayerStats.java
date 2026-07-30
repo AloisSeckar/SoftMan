@@ -19,7 +19,6 @@ public class PlayerStats extends AbstractDBEntity {
     private long playerStatsId;
 
     @DatabaseField(canBeNull = false)
-    @NonNull
     private long matchId = 0;
 
     @DatabaseField(canBeNull = false)
@@ -27,7 +26,6 @@ public class PlayerStats extends AbstractDBEntity {
     private String matchStr = "";
 
     @DatabaseField(canBeNull = false)
-    @NonNull
     private long playerId = 0;
 
     @DatabaseField(canBeNull = false)

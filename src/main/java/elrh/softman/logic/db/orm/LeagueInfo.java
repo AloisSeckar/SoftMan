@@ -10,7 +10,7 @@ import java.util.Objects;
 import lombok.*;
 
 @DatabaseTable(tableName = "softman_league_info")
-@Data @NoArgsConstructor @RequiredArgsConstructor
+@Data @NoArgsConstructor(force = true) @RequiredArgsConstructor
 public class LeagueInfo extends AbstractDBEntity {
     
     @DatabaseField(generatedId = true)
@@ -30,17 +30,14 @@ public class LeagueInfo extends AbstractDBEntity {
     private PlayerLevel level;
     
     @DatabaseField(canBeNull = false)
-    @NonNull
-    private int year;
+    private final int year;
 
     @DatabaseField(canBeNull = false)
-    @NonNull
-    private int tier;
+    private final int tier;
     
     @DatabaseField(canBeNull = false)
-    @NonNull
-    private int matchNumber;
-    
+    private final int matchNumber;
+
     @Override
     public int hashCode() {
         return leagueName != null ? leagueName.hashCode() : 0;
