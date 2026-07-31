@@ -196,56 +196,6 @@ public class PlayerStats extends AbstractDBEntity {
             case CCS -> setCCS(getCCS() + 1);
         }
     }
-
-    // TODO will this be used?
-    private void clear() {
-        games = 0;
-        bPA = 0;
-        bAB = 0;
-        bR = 0;
-        bH = 0;
-        b2B = 0;
-        b3B = 0;
-        bHR = 0;
-        bSH = 0;
-        bSF = 0;
-        bBB = 0;
-        bHP = 0;
-        bSB = 0;
-        bCS = 0;
-        bK = 0;
-        bRB = 0;
-
-        fPO = 0;
-        fA = 0;
-        fE = 0;
-        fDP = 0;
-        fIP = 0;
-
-        pW = 0;
-        pL = 0;
-        pS = 0;
-        pBF = 0;
-        pAB = 0;
-        pR = 0;
-        pER = 0;
-        pH = 0;
-        p2B = 0;
-        p3B = 0;
-        pHR = 0;
-        pSH = 0;
-        pSF = 0;
-        pBB = 0;
-        pHP = 0;
-        pK = 0;
-        pWP = 0;
-        pNP = 0;
-        pNS = 0;
-        
-        cPB = 0;
-        cSB = 0;
-        cCS = 0;
-    }
     
     public void include(PlayerStats stats) {
         games += 1;
