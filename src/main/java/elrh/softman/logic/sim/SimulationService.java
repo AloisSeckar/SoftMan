@@ -11,6 +11,7 @@ import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.utils.*;
 import elrh.softman.utils.factory.AssociationFactory;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.*;
 import java.util.concurrent.*;
 import javafx.application.Platform;
@@ -82,8 +83,8 @@ public class SimulationService extends Service<Result> {
             LOG.info("NEW DAY. Today is " + clock.getCurrentDate().format(FormatUtils.DF));
 
             // TODO probably move elsewhere (maybe even separate UI action?)
-            // advance to next year
-            if (clock.getCurrentDate().equals(LocalDate.of(2024, 1, 1))) {
+            // advance to next year, regardless of which year it currently is
+            if (MonthDay.from(clock.getCurrentDate()).equals(MonthDay.of(1, 1))) {
                 AssociationFactory.recreateLeagues();
             }
         }
