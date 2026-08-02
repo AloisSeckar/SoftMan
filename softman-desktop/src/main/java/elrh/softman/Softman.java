@@ -6,6 +6,7 @@ import elrh.softman.gui.MainLayout;
 import elrh.softman.gui.sim.SimulationController;
 import elrh.softman.gui.utils.InfoUtils;
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.AssociationFactory;
 import elrh.softman.utils.factory.PlayerFactory;
 import javafx.application.Application;
@@ -61,7 +62,6 @@ public class Softman extends Application {
         // TODO unify actions performed upon starting new game
         AssociationManager.getInstance().setSimulationRunner(new SimulationController(spinner));
         AssociationManager.getInstance().setConfirmationPrompt(InfoUtils::confirm);
-        AssociationManager.getInstance().setGameRepository(new SqliteGameRepository());
         AssociationManager.getInstance().nextDay();
         MainLayout.getInstance().setUp();
         
@@ -87,11 +87,16 @@ public class Softman extends Application {
         nameSource = new SqliteNameSource();
         PlayerFactory.setNameSource(nameSource);
 
-        AssociationManager.getInstance();
+        var world = AssociationManager.getInstance();
+        world.setGameRepository(new SqliteGameRepository());
+        if (world.hasSaveFile(Constants.DEFAULT_GAME_ID) && world.loadGame(Constants.DEFAULT_GAME_ID).ok()) {
+            return;
+        }
         AssociationFactory.populateAssociation();
     }
     
     private static void tearDownGame() {
+        AssociationManager.getInstance().saveGame(Constants.DEFAULT_GAME_ID);
         if (nameSource != null) {
             nameSource.close();
         }

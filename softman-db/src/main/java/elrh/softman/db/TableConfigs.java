@@ -15,21 +15,54 @@ final class TableConfigs {
     }
 
     static List<DatabaseTableConfig<?>> all() {
-        return List.of(
-            config(ClubInfo.class, "softman_club_info",
-                id("clubId"),
-                col("name"), col("shortName"), col("logo"), col("city"), col("stadium"),
-                col("color"), col("registered"), col("money")),
+        // built as locals so foreign() can wire up the actual nested config instead of relying on annotation scanning
+        var clubInfo = config(ClubInfo.class, "softman_club_info",
+            id("clubId"),
+            col("name"), col("shortName"), col("logo"), col("city"), col("stadium"),
+            col("color"), col("registered"), col("money"));
 
-            config(LeagueInfo.class, "softman_league_info",
-                id("leagueId"),
-                uuid("leagueAbove"), uuid("leagueBelow"),
-                col("leagueName"), col("level"), col("year"), col("tier"), col("matchNumber")),
+        var leagueInfo = config(LeagueInfo.class, "softman_league_info",
+            id("leagueId"),
+            uuid("leagueAbove"), uuid("leagueBelow"),
+            col("leagueName"), col("level"), col("year"), col("tier"), col("matchNumber"));
+
+        var playerAttributes = config(PlayerAttributes.class, "softman_player_attributes",
+            id("playerAttributesId"),
+            col("battingPower"), col("swingControl"), col("pitchEvaluation"),
+            col("pitchingSpeed"), col("ballControl"), col("pitchVariety"),
+            col("fieldingReach"), col("gloveControl"), col("throwControl"),
+            col("strength"), col("speed"), col("endurance"), col("recovery"),
+            col("talent"), col("dedication"), col("luck"), col("fatigue"));
+
+        var playerInfo = config(PlayerInfo.class, "softman_player_info",
+            id("playerId"),
+            col("name"), col("gender"), col("img"), col("birth"), col("registered"), col("number"),
+            foreign("attributes", playerAttributes));
+
+        var playerStats = config(PlayerStats.class, "softman_player_stats",
+            id("playerStatsId"),
+            uuid("matchId"), col("matchStr"), uuid("playerId"), col("playerStr"), col("games"),
+            // batter
+            col("bPA"), col("bAB"), col("bR"), col("bH"), col("b2B"), col("b3B"), col("bHR"),
+            col("bSH"), col("bSF"), col("bBB"), col("bHP"), col("bSB"), col("bCS"), col("bK"), col("bRB"),
+            // fielder
+            col("fPO"), col("fA"), col("fE"), col("fDP"), col("fIP"),
+            // pitcher
+            col("pW"), col("pL"), col("pS"), col("pBF"), col("pAB"), col("pR"), col("pER"),
+            col("pH"), col("p2B"), col("p3B"), col("pHR"), col("pSH"), col("pSF"), col("pBB"),
+            col("pHP"), col("pK"), col("pWP"), col("pNP"), col("pNS"),
+            // catcher
+            col("cPB"), col("cSB"), col("cCS"));
+
+        return List.of(
+            clubInfo,
+
+            leagueInfo,
 
             config(TeamInfo.class, "softman_team_info",
                 id("teamId"),
                 col("level"), col("name"),
-                foreign("clubInfo"), foreign("leagueInfo")),
+                foreign("clubInfo", clubInfo), foreign("leagueInfo", leagueInfo)),
 
             config(LineupInfo.class, "softman_lineup_info",
                 id("lineupId"),
@@ -50,37 +83,15 @@ final class TableConfigs {
                 id("matchPlayByPlayId"),
                 uuid("matchId"), col("ord"), col("play")),
 
-            config(PlayerInfo.class, "softman_player_info",
-                id("playerId"),
-                col("name"), col("gender"), col("img"), col("birth"), col("registered"), col("number"),
-                foreign("attributes")),
+            playerInfo,
 
-            config(PlayerAttributes.class, "softman_player_attributes",
-                id("playerAttributesId"),
-                col("battingPower"), col("swingControl"), col("pitchEvaluation"),
-                col("pitchingSpeed"), col("ballControl"), col("pitchVariety"),
-                col("fieldingReach"), col("gloveControl"), col("throwControl"),
-                col("strength"), col("speed"), col("endurance"), col("recovery"),
-                col("talent"), col("dedication"), col("luck"), col("fatigue")),
+            playerAttributes,
 
             config(PlayerRecord.class, "softman_player_record",
                 id("playerRecordId"),
-                foreign("player"), col("position"), foreign("stats")),
+                foreign("player", playerInfo), col("position"), foreign("stats", playerStats)),
 
-            config(PlayerStats.class, "softman_player_stats",
-                id("playerStatsId"),
-                uuid("matchId"), col("matchStr"), uuid("playerId"), col("playerStr"), col("games"),
-                // batter
-                col("bPA"), col("bAB"), col("bR"), col("bH"), col("b2B"), col("b3B"), col("bHR"),
-                col("bSH"), col("bSF"), col("bBB"), col("bHP"), col("bSB"), col("bCS"), col("bK"), col("bRB"),
-                // fielder
-                col("fPO"), col("fA"), col("fE"), col("fDP"), col("fIP"),
-                // pitcher
-                col("pW"), col("pL"), col("pS"), col("pBF"), col("pAB"), col("pR"), col("pER"),
-                col("pH"), col("p2B"), col("p3B"), col("pHR"), col("pSH"), col("pSF"), col("pBB"),
-                col("pHP"), col("pK"), col("pWP"), col("pNP"), col("pNS"),
-                // catcher
-                col("cPB"), col("cSB"), col("cCS")),
+            playerStats,
 
             config(Standing.class, "softman_standing",
                 id("standingId"),
@@ -139,11 +150,12 @@ final class TableConfigs {
         return config;
     }
 
-    private static DatabaseFieldConfig foreign(String fieldName) {
+    private static DatabaseFieldConfig foreign(String fieldName, DatabaseTableConfig<?> foreignConfig) {
         var config = new DatabaseFieldConfig(fieldName);
         config.setForeign(true);
         config.setForeignAutoRefresh(true);
         config.setMaxForeignAutoRefreshLevel(2);
+        config.setForeignTableConfig(foreignConfig);
         return config;
     }
 }

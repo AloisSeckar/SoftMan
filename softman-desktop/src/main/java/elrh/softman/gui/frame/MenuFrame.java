@@ -2,6 +2,11 @@ package elrh.softman.gui.frame;
 
 import de.jensd.fx.glyphs.fontawesome.*;
 import elrh.softman.Softman;
+import elrh.softman.gui.MainLayout;
+import elrh.softman.gui.utils.InfoUtils;
+import elrh.softman.logic.AssociationManager;
+import elrh.softman.utils.Constants;
+import elrh.softman.utils.factory.AssociationFactory;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -23,17 +28,35 @@ public class MenuFrame extends AnchorPane {
         
         var newGame = new MenuItem("New game", new FontAwesomeIconView(FontAwesomeIcon.FILE_ALT));
         newGame.setOnAction((ActionEvent t) -> {
-            // TODO new
+            if (InfoUtils.confirm("Start a new game? Unsaved progress will be lost.")) {
+                AssociationManager.getInstance().reset();
+                AssociationFactory.populateAssociation();
+                MainLayout.getInstance().setUp();
+            }
         });
         
         var loadGame = new MenuItem("Load game", new FontAwesomeIconView(FontAwesomeIcon.FOLDER_OPEN_ALT));
         loadGame.setOnAction((ActionEvent t) -> {
-            // TODO load
+            var world = AssociationManager.getInstance();
+            if (!world.hasSaveFile(Constants.DEFAULT_GAME_ID)) {
+                InfoUtils.showMessage("No saved game found.");
+                return;
+            }
+            if (InfoUtils.confirm("Load the last saved game? Unsaved progress will be lost.")) {
+                var result = world.loadGame(Constants.DEFAULT_GAME_ID);
+                if (result.ok()) {
+                    MainLayout.getInstance().setUp();
+                    InfoUtils.showMessage("Game loaded.");
+                } else {
+                    InfoUtils.showMessage("Load failed: " + result.message());
+                }
+            }
         });
         
         var saveGame = new MenuItem("Save game", new FontAwesomeIconView(FontAwesomeIcon.FLOPPY_ALT));
         saveGame.setOnAction((ActionEvent t) -> {
-            // TODO save
+            var result = AssociationManager.getInstance().saveGame(Constants.DEFAULT_GAME_ID);
+            InfoUtils.showMessage(result.ok() ? "Game saved." : "Save failed: " + result.message());
         });
         
         var info = new MenuItem("About", new FontAwesomeIconView(FontAwesomeIcon.INFO));
