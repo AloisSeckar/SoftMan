@@ -2,7 +2,7 @@ package elrh.softman.utils;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Lineup;
-import elrh.softman.logic.db.orm.player.PlayerRecord;
+import elrh.softman.logic.core.data.PlayerRecord;
 import elrh.softman.logic.enums.ActivityType;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.enums.StatsType;
@@ -17,7 +17,6 @@ public class StatsUtils {
             if (Utils.listNotEmpty(current)) {
                 current.forEach(data -> {
                     var stats = data.getStats();
-                    stats.persist();
                     // TODO this looks quite inefficient...
                     var player = AssociationManager.getInstance().getPlayerById(data.getPlayer().getPlayerId());
                     player.getStats().add(stats);

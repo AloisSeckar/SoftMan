@@ -1,7 +1,7 @@
 package elrh.softman.logic;
 
 import elrh.softman.logic.core.*;
-import elrh.softman.logic.db.orm.LeagueInfo;
+import elrh.softman.logic.core.data.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
@@ -24,11 +24,12 @@ public class AssociationManager {
     @Getter
     private final UserManager user = new UserManager();
 
-    private final HashMap<Long, League> managedLeagues = new HashMap<>();
-    private final HashMap<Long, Club> registeredClubs = new HashMap<>();
-    private final HashMap<Long, Player> registeredPlayers = new HashMap<>();
-    private final HashMap<Long, Team> currentTeams = new HashMap<>();
-    private final HashMap<Long, Match> currentMatches = new HashMap<>();
+    // LinkedHashMap: UUID keys have no natural order, insertion order must be kept stable
+    private final Map<UUID, League> managedLeagues = new LinkedHashMap<>();
+    private final Map<UUID, Club> registeredClubs = new LinkedHashMap<>();
+    private final Map<UUID, Player> registeredPlayers = new LinkedHashMap<>();
+    private final Map<UUID, Team> currentTeams = new LinkedHashMap<>();
+    private final Map<UUID, Match> currentMatches = new LinkedHashMap<>();
 
     @Setter
     private ISimulationRunner simulationRunner;
@@ -61,7 +62,19 @@ public class AssociationManager {
         return managedLeagues.values().stream().filter(l -> l.getLeagueInfo().getYear() == year).toList();
     }
 
-    public League getLeagueById(long leagueId) {
+    public List<League> getAllLeagues() {
+        return List.copyOf(managedLeagues.values());
+    }
+
+    public List<Team> getAllTeams() {
+        return List.copyOf(currentTeams.values());
+    }
+
+    public List<Match> getAllMatches() {
+        return List.copyOf(currentMatches.values());
+    }
+
+    public League getLeagueById(UUID leagueId) {
         return managedLeagues.get(leagueId);
     }
 
@@ -70,7 +83,6 @@ public class AssociationManager {
             var year = clock.getYear();
             var matchNumber = level.getMatchNumber() + ((tier - 1) * 200);
             LeagueInfo leagueInfo = new LeagueInfo(name, level, year, tier, matchNumber);
-            leagueInfo.persist();
             League newLeague = new League(leagueInfo);
             managedLeagues.put(newLeague.getLeagueInfo().getLeagueId(), newLeague);
             LOG.info("New league {} created", newLeague);
@@ -80,7 +92,7 @@ public class AssociationManager {
         }
     }
 
-    public Result registerTeamIntoLeague(long leagueId, Team team) {
+    public Result registerTeamIntoLeague(UUID leagueId, Team team) {
         try {
             League league = managedLeagues.get(leagueId);
             if (league != null) {
@@ -90,7 +102,7 @@ public class AssociationManager {
                 }
                 return res;
             } else {
-                return new Result(false, String.format("League %d not found", leagueId));
+                return new Result(false, String.format("League %s not found", leagueId));
             }
         } catch (Exception ex) {
             return ErrorUtils.handleException("AssociationManager.registerTeamIntoLeague", ex);
@@ -105,21 +117,19 @@ public class AssociationManager {
         }
     }
 
-    public Club getClubById(long clubId) {
+    public Club getClubById(UUID clubId) {
         return registeredClubs.get(clubId);
     }
 
     public Result registerClub(Club club) {
         try {
-            long clubId = club.getId();
+            var clubId = club.getId();
             int year = clock.getYear();
             Club existingClub = registeredClubs.get(clubId);
             if (existingClub != null) {
                 existingClub.getClubInfo().setRegistered(year);
-                existingClub.getClubInfo().persist();
             } else {
                 club.getClubInfo().setRegistered(year);
-                club.getClubInfo().persist();
                 registeredClubs.put(clubId, club);
             }
             LOG.info("Club {} was registered for {} season", clubId, year);
@@ -137,21 +147,19 @@ public class AssociationManager {
         }
     }
 
-    public Player getPlayerById(long playerId) {
+    public Player getPlayerById(UUID playerId) {
         return registeredPlayers.get(playerId);
     }
 
     public Result registerPlayer(Player player) {
         try {
-            long playerId = player.getId();
+            var playerId = player.getId();
             int year = clock.getYear();
             Player existingPlayer = registeredPlayers.get(playerId);
             if (existingPlayer != null) {
                 existingPlayer.getPlayerInfo().setRegistered(year);
-                existingPlayer.getPlayerInfo().persist();
             } else {
                 player.getPlayerInfo().setRegistered(year);
-                player.getPlayerInfo().persist();
                 registeredPlayers.put(playerId, player);
             }
             LOG.info("player {} was registered for {} season", playerId, year);
@@ -165,7 +173,20 @@ public class AssociationManager {
         currentTeams.put(team.getId(), team);
     }
 
-    public Team getTeamById(long teamId) {
+    // used when reassembling a loaded world; unlike register*, these have no side effects
+    public void restoreLeague(League league) {
+        managedLeagues.put(league.getId(), league);
+    }
+
+    public void restoreClub(Club club) {
+        registeredClubs.put(club.getId(), club);
+    }
+
+    public void restorePlayer(Player player) {
+        registeredPlayers.put(player.getId(), player);
+    }
+
+    public Team getTeamById(UUID teamId) {
         return currentTeams.get(teamId);
     }
 
@@ -173,12 +194,12 @@ public class AssociationManager {
         currentMatches.put(match.getId(), match);
     }
 
-    public Match getMatchById(long matchId) {
+    public Match getMatchById(UUID matchId) {
         return currentMatches.get(matchId);
     }
 
-    public  HashMap<Long, List<Match>> getDailyMatches() {
-        var ret = new HashMap<Long, List<Match>>();
+    public  Map<UUID, List<Match>> getDailyMatches() {
+        var ret = new LinkedHashMap<UUID, List<Match>>();
         getLeagues(clock.getYear()).forEach(league -> {
             var leagueId = league.getLeagueInfo().getLeagueId();
             var leagueMatches = new ArrayList<>(league.getMatchesForDay(clock.getViewDate()));
@@ -199,11 +220,11 @@ public class AssociationManager {
         return ret;
     }
 
-    public List<Match> getDailyMatchesForLeague(long leagueId) {
+    public List<Match> getDailyMatchesForLeague(UUID leagueId) {
         return currentMatches.values().stream().filter(m -> m.belongsToLeagueAndDate(leagueId, clock.getViewDate())).toList();
     }
 
-    public List<Match> getRoundMatchesForLeague(long leagueId, int round) {
+    public List<Match> getRoundMatchesForLeague(UUID leagueId, int round) {
         return currentMatches.values().stream().filter(m -> m.belongsToLeagueAndRound(leagueId, round)).toList();
     }
 

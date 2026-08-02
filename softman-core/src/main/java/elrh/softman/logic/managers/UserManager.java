@@ -3,6 +3,7 @@ package elrh.softman.logic.managers;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.interfaces.*;
 import java.util.HashSet;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -60,7 +61,7 @@ public class UserManager {
         focusedTeamListeners.forEach(l -> l.focusedTeamChanged(null));
     }
 
-    public boolean userManagesTeam(long teamId) {
+    public boolean userManagesTeam(UUID teamId) {
         if (activeClub != null) {
             return activeClub.getTeamIds().contains(teamId);
         } else {

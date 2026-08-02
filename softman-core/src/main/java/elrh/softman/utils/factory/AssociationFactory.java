@@ -141,7 +141,7 @@ public class AssociationFactory {
                 var advancingTeam2 = manager.getTeamById(standings.get(1).getTeamId());
                 newLeagueTeams.remove(advancingTeam2);
                 var teamsFromAbove = manager.getLeagueById(info.getLeagueAbove()).getRelegatedTeams();
-                for (long teamId : teamsFromAbove) {
+                for (var teamId : teamsFromAbove) {
                     var teamFromAbove = manager.getTeamById(teamId);
                     newLeagueTeams.add(teamFromAbove);
                 }
@@ -153,7 +153,7 @@ public class AssociationFactory {
                 var relegatedTeam2 = manager.getTeamById(standings.get(teams - 2).getTeamId());
                 newLeagueTeams.remove(relegatedTeam2);
                 var teamsFromBelow = manager.getLeagueById(info.getLeagueBelow()).getAdvancingTeams();
-                for (long teamId : teamsFromBelow) {
+                for (var teamId : teamsFromBelow) {
                     var teamFromBelow = manager.getTeamById(teamId);
                     newLeagueTeams.add(teamFromBelow);
                 }
@@ -170,7 +170,7 @@ public class AssociationFactory {
         participants.forEach(club -> {
             var result = club.formTeam(level);
             if (result.ok()) {
-                var newTeam = club.getTeamById(Integer.parseInt(result.message()));
+                var newTeam = club.getTeamById(UUID.fromString(result.message()));
                 ret.add(newTeam);
             } else {
                 throw new RuntimeException("Failed to create a team");

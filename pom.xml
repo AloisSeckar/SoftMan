@@ -10,6 +10,7 @@
 
     <modules>
         <module>softman-core</module>
+        <module>softman-db</module>
         <module>softman-desktop</module>
     </modules>
 
@@ -31,6 +32,12 @@
             <dependency>
                 <groupId>elrh</groupId>
                 <artifactId>softman-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>elrh</groupId>
+                <artifactId>softman-db</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -1,9 +1,8 @@
 package elrh.softman.logic.core;
 
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.db.GameDBManager;
-import elrh.softman.logic.db.orm.match.MatchInfo;
-import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
+import elrh.softman.logic.core.data.MatchInfo;
+import elrh.softman.logic.core.data.MatchPlayByPlay;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.logic.core.stats.*;
 import elrh.softman.logic.interfaces.IMatchReporter;
@@ -11,7 +10,7 @@ import elrh.softman.utils.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.UUID;
 
 import lombok.Data;
 
@@ -41,6 +40,7 @@ public class Match {
         if (awayLineup != null) {
             this.awayLineup = awayLineup;
             this.matchInfo.setAwayTeamId(awayLineup.getLineupInfo().getTeamId());
+            this.matchInfo.setAwayLineupId(awayLineup.getLineupInfo().getLineupId());
         } else {
             this.awayLineup = null;
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'awayLineup'");
@@ -49,6 +49,7 @@ public class Match {
         if (homeLineup != null) {
             this.homeLineup = homeLineup;
             this.matchInfo.setHomeTeamId(homeLineup.getLineupInfo().getTeamId());
+            this.matchInfo.setHomeLineupId(homeLineup.getLineupInfo().getLineupId());
         } else {
             this.homeLineup = null;
             ErrorUtils.raise("Illegal 'Match' constructor call with NULL 'homeLineup'");
@@ -56,7 +57,7 @@ public class Match {
 
     }
 
-    public long getId() {
+    public UUID getId() {
         return matchInfo.getMatchId();
     }
 
@@ -76,36 +77,15 @@ public class Match {
         return matchInfo.getStatus() == MatchStatus.FINISHED;
     }
 
-    public boolean belongsToLeagueAndDate(long leagueId, LocalDate date) {
-        return matchInfo.getLeagueId() == leagueId && matchInfo.getMatchDay().compareTo(date) == 0;
+    public boolean belongsToLeagueAndDate(UUID leagueId, LocalDate date) {
+        return matchInfo.getLeagueId().equals(leagueId) && matchInfo.getMatchDay().compareTo(date) == 0;
     }
-    public boolean belongsToLeagueAndRound(long leagueId, int round) {
-        return matchInfo.getLeagueId() == leagueId && matchInfo.getLeagueRound() == round;
+    public boolean belongsToLeagueAndRound(UUID leagueId, int round) {
+        return matchInfo.getLeagueId().equals(leagueId) && matchInfo.getLeagueRound() == round;
     }
 
-    public static Match getMatchDetail(long matchId) {
-        var match = AssociationManager.getInstance().getMatchById(matchId);
-        return Objects.requireNonNullElseGet(match, () -> getMatchFromDB(matchId));
+    public static Match getMatchDetail(UUID matchId) {
+        return AssociationManager.getInstance().getMatchById(matchId);
     }
-    private static Match getMatchFromDB(long matchId) {
-        var matchInfo = (MatchInfo) GameDBManager.getInstance().getObjectById(MatchInfo.class, matchId);
 
-        // TODO get away lineup
-        // TODO get home lineup
-        // TODO pbp not being saved anywhere
-        // TODO AssociationManager should hold at least all teams and possibly also all matches in-memory
-
-        var match = new Match(matchInfo, new Lineup(1, "a", "b", "c"), new Lineup(2, "d", "e", "f"));
-
-        var dbList = GameDBManager.getInstance().getObjectsByQuery(MatchPlayByPlay.class, "matchId", matchId);
-        if (Utils.listNotEmpty(dbList)) {
-            var pbpList = dbList.stream()
-                .map(item -> (MatchPlayByPlay) item)
-                .toList();
-            match.setPlayByPlay(new ArrayList<>(pbpList));
-        }
-
-        return match;
-    }
-    
 }

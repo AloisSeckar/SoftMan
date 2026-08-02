@@ -2,13 +2,15 @@ package elrh.softman.logic.core;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
-import elrh.softman.logic.db.orm.ClubInfo;
+import elrh.softman.logic.core.data.ClubInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.factory.TeamFactory;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,10 +20,8 @@ public class Club {
     @Getter
     private final ClubInfo clubInfo;
 
-    @Getter @Setter
-    private String color; // web hex, e.g. "#ADD8E6" TODO how to persist and represent in DB?
-
-    private final HashMap<Long, Team> teams = new HashMap<>();
+    // LinkedHashMap: UUID keys have no natural order, insertion order must be kept stable
+    private final Map<UUID, Team> teams = new LinkedHashMap<>();
 
     public Club(String name, String shortName, String city, String stadium) {
         clubInfo = new ClubInfo();
@@ -33,24 +33,41 @@ public class Club {
         clubInfo.setLogo("softman.jpg");
     }
 
+    public Club(ClubInfo clubInfo) {
+        this.clubInfo = clubInfo;
+    }
+
+    public String getColor() {
+        return clubInfo.getColor();
+    }
+
+    public void setColor(String color) {
+        clubInfo.setColor(color);
+    }
+
     @Override
     public String toString() {
         return clubInfo.getName();
     }
 
-    public long getId() {
+    public UUID getId() {
         return clubInfo.getClubId();
     }
 
     public List<Team> getTeams() {
         return teams.values().stream().toList();
     }
-    public List<Long> getTeamIds() {
+    public List<UUID> getTeamIds() {
         return teams.values().stream().map(Team::getId).toList();
     }
 
-    public Team getTeamById(long teamId) {
+    public Team getTeamById(UUID teamId) {
         return teams.get(teamId);
+    }
+
+    // used when reassembling a loaded world
+    public void restoreTeam(Team team) {
+        teams.put(team.getId(), team);
     }
 
     public boolean isActive() {

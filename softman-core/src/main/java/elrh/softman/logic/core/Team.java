@@ -5,9 +5,9 @@ import elrh.softman.logic.Result;
 
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import java.util.*;
-import elrh.softman.logic.db.orm.player.PlayerRecord;
-import elrh.softman.logic.db.orm.player.PlayerInfo;
-import elrh.softman.logic.db.orm.TeamInfo;
+import elrh.softman.logic.core.data.PlayerRecord;
+import elrh.softman.logic.core.data.PlayerInfo;
+import elrh.softman.logic.core.data.TeamInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.enums.PlayerPosition;
@@ -28,8 +28,13 @@ public class Team {
 
     public Team(PlayerLevel level, String name, Club club) {
         this.teamInfo = new TeamInfo(level, name, club.getClubInfo());
-        teamInfo.persist();
         defaultLineup = new Lineup(getId(), getName(), club.getClubInfo().getShortName(), getLogo());
+    }
+
+    // used when reassembling a loaded world
+    public Team(TeamInfo teamInfo, Lineup defaultLineup) {
+        this.teamInfo = teamInfo;
+        this.defaultLineup = defaultLineup;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class Team {
         return getName();
     }
 
-    public long getId() {
+    public UUID getId() {
         return teamInfo.getTeamId();
     }
 

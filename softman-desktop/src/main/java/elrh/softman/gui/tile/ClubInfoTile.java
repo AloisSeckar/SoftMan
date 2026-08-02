@@ -3,7 +3,6 @@ package elrh.softman.gui.tile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
 import elrh.softman.gui.utils.GUIUtils;
-import elrh.softman.utils.Utils;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;

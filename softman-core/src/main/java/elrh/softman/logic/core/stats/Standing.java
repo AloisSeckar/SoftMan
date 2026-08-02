@@ -1,11 +1,14 @@
 package elrh.softman.logic.core.stats;
 
+import java.util.UUID;
 import lombok.*;
 
 @Data
 public class Standing implements Comparable<Standing> {
 
-    private long teamId;
+    private UUID standingId = UUID.randomUUID();
+    private UUID leagueId;
+    private UUID teamId;
     private String team;
     
     private int games;
@@ -14,9 +17,13 @@ public class Standing implements Comparable<Standing> {
     private int runsFor;
     private int runsAgainst;
 
-    public Standing(long teamId, String team) {
+    public Standing(UUID leagueId, UUID teamId, String team) {
+        this.leagueId = leagueId;
         this.teamId = teamId;
         this.team = team;
+    }
+
+    public Standing() {
     }
     
     public int getPoints() {

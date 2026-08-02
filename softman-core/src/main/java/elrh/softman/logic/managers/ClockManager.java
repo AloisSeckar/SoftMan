@@ -16,6 +16,11 @@ public class ClockManager {
         currentDate = viewDate = Constants.START_DATE;
     }
 
+    public void restore(LocalDate currentDate, LocalDate viewDate) {
+        this.currentDate = currentDate;
+        this.viewDate = viewDate;
+    }
+
     public void prevViewDay() {
         viewDate = viewDate.minusDays(1);
     }

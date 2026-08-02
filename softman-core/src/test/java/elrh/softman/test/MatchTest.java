@@ -1,7 +1,7 @@
 package elrh.softman.test;
 
 import elrh.softman.logic.core.Match;
-import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
+import elrh.softman.logic.core.data.MatchPlayByPlay;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.test.utils.TestUtils;
 import java.util.Collections;
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-public class MatchTest extends AbstractDBTest {
+public class MatchTest {
 
     private Match match;
 

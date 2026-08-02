@@ -3,7 +3,8 @@ package elrh.softman.test.utils;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Lineup;
 import elrh.softman.logic.core.Match;
-import elrh.softman.logic.db.orm.match.MatchInfo;
+import elrh.softman.logic.core.data.MatchInfo;
+import java.util.UUID;
 
 public class TestUtils {
 
@@ -14,14 +15,13 @@ public class TestUtils {
     }
 
     public static Match getTestMatch() {
-        var matchId = 101L;
         var matchNumber = 101;
         var mockMatchInfo = new MatchInfo();
-        mockMatchInfo.setMatchId(matchId);
         mockMatchInfo.setMatchNumber(matchNumber);
         mockMatchInfo.setStadium(ELEMENT_NAME);
-        var mockAway = new Lineup(1, "a", "a", "a");
-        var mockHome = new Lineup(1, "a", "a", "a");
+        var teamId = UUID.randomUUID();
+        var mockAway = new Lineup(teamId, "a", "a", "a");
+        var mockHome = new Lineup(teamId, "a", "a", "a");
         return new Match(mockMatchInfo, mockAway, mockHome);
     }
 

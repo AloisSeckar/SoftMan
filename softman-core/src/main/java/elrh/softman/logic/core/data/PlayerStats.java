@@ -1,138 +1,85 @@
-package elrh.softman.logic.db.orm.player;
+package elrh.softman.logic.core.data;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-import elrh.softman.logic.Result;
-import elrh.softman.logic.db.AbstractDBEntity;
-import elrh.softman.logic.db.GameDBManager;
 import elrh.softman.logic.enums.StatsType;
+import java.util.UUID;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-@DatabaseTable(tableName = "softman_player_stats")
 @Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
-public class PlayerStats extends AbstractDBEntity {
+public class PlayerStats extends AbstractEntity {
 
-    @DatabaseField(generatedId = true)
-    private long playerStatsId;
+    private UUID playerStatsId = UUID.randomUUID();
 
-    @DatabaseField(canBeNull = false)
-    private long matchId = 0;
+    private UUID matchId;
 
-    @DatabaseField(canBeNull = false)
     @NonNull
     private String matchStr = "";
 
-    @DatabaseField(canBeNull = false)
-    private long playerId = 0;
+    private UUID playerId;
 
-    @DatabaseField(canBeNull = false)
     @NonNull
     private String playerStr = "";
 
     // always "1" for single-game stats
     // sum of "n" for season and career stats
-    @DatabaseField(canBeNull = false)
     private int games = 0;
 
     // batter
-    @DatabaseField(canBeNull = false)
     private int bPA = 0;
-    @DatabaseField(canBeNull = false)
     private int bAB = 0;
-    @DatabaseField(canBeNull = false)
     private int bR = 0;
-    @DatabaseField(canBeNull = false)
     private int bH = 0;
-    @DatabaseField(canBeNull = false)
     private int b2B = 0;
-    @DatabaseField(canBeNull = false)
     private int b3B = 0;
-    @DatabaseField(canBeNull = false)
     private int bHR = 0;
-    @DatabaseField(canBeNull = false)
     private int bSH = 0;
-    @DatabaseField(canBeNull = false)
     private int bSF = 0;
-    @DatabaseField(canBeNull = false)
     private int bBB = 0;
-    @DatabaseField(canBeNull = false)
     private int bHP = 0;
-    @DatabaseField(canBeNull = false)
     private int bSB = 0;
-    @DatabaseField(canBeNull = false)
     private int bCS = 0;
-    @DatabaseField(canBeNull = false)
     private int bK = 0;
-    @DatabaseField(canBeNull = false)
     private int bRB = 0;
 
     // fielder
-    @DatabaseField(canBeNull = false)
     private int fPO = 0;
-    @DatabaseField(canBeNull = false)
     private int fA = 0;
-    @DatabaseField(canBeNull = false)
     private int fE = 0;
-    @DatabaseField(canBeNull = false)
     private int fDP = 0;
-    @DatabaseField(canBeNull = false)
     private int fIP = 0;
 
     // pitcher
-    @DatabaseField(canBeNull = false)
     private int pW = 0;
-    @DatabaseField(canBeNull = false)
     private int pL = 0;
-    @DatabaseField(canBeNull = false)
     private int pS = 0;
-    @DatabaseField(canBeNull = false)
     private int pBF = 0;
-    @DatabaseField(canBeNull = false)
     private int pAB = 0;
-    @DatabaseField(canBeNull = false)
     private int pR = 0;
-    @DatabaseField(canBeNull = false)
     private int pER = 0;
-    @DatabaseField(canBeNull = false)
     private int pH = 0;
-    @DatabaseField(canBeNull = false)
     private int p2B = 0;
-    @DatabaseField(canBeNull = false)
     private int p3B = 0;
-    @DatabaseField(canBeNull = false)
     private int pHR = 0;
-    @DatabaseField(canBeNull = false)
     private int pSH = 0;
-    @DatabaseField(canBeNull = false)
     private int pSF = 0;
-    @DatabaseField(canBeNull = false)
     private int pBB = 0;
-    @DatabaseField(canBeNull = false)
     private int pHP = 0;
-    @DatabaseField(canBeNull = false)
     private int pK = 0;
-    @DatabaseField(canBeNull = false)
     private int pWP = 0;
-    @DatabaseField(canBeNull = false)
     private int pNP = 0;
-    @DatabaseField(canBeNull = false)
     private int pNS = 0;
 
     // catcher
-    @DatabaseField(canBeNull = false)
     private int cPB = 0;
-    @DatabaseField(canBeNull = false)
     private int cSB = 0;
-    @DatabaseField(canBeNull = false)
     private int cCS = 0;
 
-    
+
     // helpers
-    
-    public void init(long matchId, String matchStr, long playerId, String playerStr) {
+
+    public void init(UUID matchId, String matchStr, UUID playerId, String playerStr) {
         this.matchId = matchId;
         this.matchStr = matchStr;
         this.playerId = playerId;
@@ -145,6 +92,7 @@ public class PlayerStats extends AbstractDBEntity {
         this.playerId = from.getPlayerId();
         this.playerStr = from.getPlayerStr();
     }
+
     public void inc(StatsType stat) {
         switch (stat) {
             case G -> setGames(getGames() + 1);
@@ -196,7 +144,7 @@ public class PlayerStats extends AbstractDBEntity {
             case CCS -> setCCS(getCCS() + 1);
         }
     }
-    
+
     public void include(PlayerStats stats) {
         games += 1;
         bPA += stats.getBPA();
@@ -247,13 +195,8 @@ public class PlayerStats extends AbstractDBEntity {
     }
 
     @Override
-    public long getId() {
+    public UUID getId() {
         return getPlayerStatsId();
-    }
-
-    @Override
-    public Result persist() {
-        return GameDBManager.getInstance().saveObject(PlayerStats.class, this);
     }
 
 }

@@ -14,7 +14,7 @@ import elrh.softman.utils.factory.TeamFactory;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
-public class AssociationManagerTest extends AbstractDBTest {
+public class AssociationManagerTest {
 
     private AssociationManager manager;
     private Result result;
@@ -59,9 +59,7 @@ public class AssociationManagerTest extends AbstractDBTest {
     @DisplayName("registerAndGetClubTest")
     void registerAndGetClubTest() {
         var newClub1 = TestUtils.getTestClub();
-        newClub1.getClubInfo().setClubId(1);
         var newClub2 = TestUtils.getTestClub();
-        newClub2.getClubInfo().setClubId(2);
 
         result = manager.registerClub(newClub1);
         assertTrue(result.ok(), "registering club 1 should be successful");
@@ -91,10 +89,8 @@ public class AssociationManagerTest extends AbstractDBTest {
     void registerAndGetPlayerTest() {
         // TODO use some player factory method...
         var newPlayer1 = PlayerFactory.getRandomPlayer(PlayerGender.M, 2000, 1);
-        newPlayer1.getPlayerInfo().setPlayerId(1);
         newPlayer1.getPlayerInfo().setName(ELEMENT_NAME);
         var newPlayer2 = PlayerFactory.getRandomPlayer(PlayerGender.M, 2000, 2);
-        newPlayer2.getPlayerInfo().setPlayerId(2);
         newPlayer2.getPlayerInfo().setName(ELEMENT_NAME);
 
         result = manager.registerPlayer(newPlayer1);

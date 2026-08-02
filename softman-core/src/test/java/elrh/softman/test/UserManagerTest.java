@@ -6,7 +6,7 @@ import elrh.softman.test.utils.TestUtils;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserManagerTest extends AbstractDBTest {
+public class UserManagerTest {
 
     private UserManager user;
 
@@ -18,7 +18,7 @@ public class UserManagerTest extends AbstractDBTest {
     @Test
     @DisplayName("userManagesTeamTest")
     void userManagesTeamTest() {
-        assertFalse(user.userManagesTeam(0), "team 0 shouldn't be managed by the user");
+        assertFalse(user.userManagesTeam(java.util.UUID.randomUUID()), "unknown team shouldn't be managed by the user");
 
         var club = TestUtils.getTestClub();
         club.formTeam(PlayerLevel.MSEN);

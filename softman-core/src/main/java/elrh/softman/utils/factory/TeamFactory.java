@@ -13,7 +13,6 @@ public class TeamFactory {
     public static Team getTeam(PlayerLevel level, String name, Club club) {
 
         var team = new Team(level, name, club);
-        team.getTeamInfo().persist();
 
         var rand = new Random();
         var usedNumbers = new ArrayList<>();
@@ -25,7 +24,6 @@ public class TeamFactory {
             usedNumbers.add(number);
 
             var player = PlayerFactory.getRandomPlayer(level.getGender(), getRandomBirth(level), number);
-            player.getPlayerInfo().persist();
             AssociationManager.getInstance().registerPlayer(player);
 
             team.addPlayer(player.getPlayerInfo());

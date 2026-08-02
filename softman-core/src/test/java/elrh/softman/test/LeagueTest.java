@@ -3,7 +3,7 @@ package elrh.softman.test;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.core.stats.Standing;
-import elrh.softman.logic.db.orm.LeagueInfo;
+import elrh.softman.logic.core.data.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
@@ -13,9 +13,9 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-public class LeagueTest extends AbstractDBTest {
-
+public class LeagueTest {
     private static final Club CLUB = TestUtils.getTestClub();
+    private static final java.util.UUID LEAGUE_ID = java.util.UUID.randomUUID();
 
     private League league;
     private Result result;
@@ -64,7 +64,7 @@ public class LeagueTest extends AbstractDBTest {
         var team6 = new Team(PlayerLevel.MSEN, ELEMENT_NAME + "6", CLUB);
 
         // should be 2nd
-        var sTeam1 = new Standing(team1.getId(), team1.getName());
+        var sTeam1 = new Standing(LEAGUE_ID, team1.getId(), team1.getName());
         sTeam1.setGames(3);
         sTeam1.setWins(2);
         sTeam1.setLoses(1);
@@ -73,7 +73,7 @@ public class LeagueTest extends AbstractDBTest {
         league.getStandings().add(sTeam1);
 
         // should be 3rd
-        var sTeam2 = new Standing(team2.getId(), team2.getName());
+        var sTeam2 = new Standing(LEAGUE_ID, team2.getId(), team2.getName());
         sTeam2.setGames(3);
         sTeam2.setWins(2);
         sTeam2.setLoses(1);
@@ -82,7 +82,7 @@ public class LeagueTest extends AbstractDBTest {
         league.getStandings().add(sTeam2);
 
         // should be 1st
-        var sTeam3 = new Standing(team3.getId(), team3.getName());
+        var sTeam3 = new Standing(LEAGUE_ID, team3.getId(), team3.getName());
         sTeam3.setGames(3);
         sTeam3.setWins(3);
         sTeam3.setLoses(0);
@@ -91,7 +91,7 @@ public class LeagueTest extends AbstractDBTest {
         league.getStandings().add(sTeam3);
 
         // should be 6th
-        var sTeam4 = new Standing(team4.getId(), team4.getName());
+        var sTeam4 = new Standing(LEAGUE_ID, team4.getId(), team4.getName());
         sTeam4.setGames(3);
         sTeam4.setWins(0);
         sTeam4.setLoses(3);
@@ -100,7 +100,7 @@ public class LeagueTest extends AbstractDBTest {
         league.getStandings().add(sTeam4);
 
         // should be 4th
-        var sTeam5 = new Standing(team5.getId(), team5.getName());
+        var sTeam5 = new Standing(LEAGUE_ID, team5.getId(), team5.getName());
         sTeam5.setGames(3);
         sTeam5.setWins(1);
         sTeam5.setLoses(2);
@@ -109,7 +109,7 @@ public class LeagueTest extends AbstractDBTest {
         league.getStandings().add(sTeam5);
 
         // should be 5th
-        var sTeam6 = new Standing(team6.getId(), team6.getName());
+        var sTeam6 = new Standing(LEAGUE_ID, team6.getId(), team6.getName());
         sTeam6.setGames(3);
         sTeam6.setWins(1);
         sTeam6.setLoses(2);

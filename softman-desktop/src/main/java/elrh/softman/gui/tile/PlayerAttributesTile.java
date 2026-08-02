@@ -1,6 +1,6 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.logic.db.orm.player.PlayerAttributes;
+import elrh.softman.logic.core.data.PlayerAttributes;
 import elrh.softman.gui.utils.FormatUtils;
 import elrh.softman.gui.utils.GUIUtils;
 import eu.hansolo.medusa.Gauge;

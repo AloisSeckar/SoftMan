@@ -1,11 +1,12 @@
 package elrh.softman;
 
-import elrh.softman.logic.db.*;
+import elrh.softman.db.SqliteNameSource;
 import elrh.softman.gui.MainLayout;
 import elrh.softman.gui.sim.SimulationController;
 import elrh.softman.gui.utils.InfoUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.factory.AssociationFactory;
+import elrh.softman.utils.factory.PlayerFactory;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
@@ -78,16 +79,19 @@ public class Softman extends Application {
         });
     }
 
+    private static SqliteNameSource nameSource;
+
     private static void setupGame() {
-        String gameId = "test";
-        GameDBManager.getInstance().setConnection(gameId);
-        
+        nameSource = new SqliteNameSource();
+        PlayerFactory.setNameSource(nameSource);
+
         AssociationManager.getInstance();
         AssociationFactory.populateAssociation();
     }
     
     private static void tearDownGame() {
-        SourcesDBManager.getInstance().closeConnection();
-        GameDBManager.getInstance().closeConnection();
+        if (nameSource != null) {
+            nameSource.close();
+        }
     }
 }

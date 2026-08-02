@@ -8,11 +8,12 @@ import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class) // order must be preserved to compare team DB ids
-public class ClubTest extends AbstractDBTest {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class ClubTest {
 
     private AssociationManager manager;
     private Club club;
@@ -67,16 +68,17 @@ public class ClubTest extends AbstractDBTest {
         assertEquals(2, club.getTeams().size(), "there should be 2 teams in club");
 
         var teamIds = club.getTeamIds();
-        assertTrue(teamIds.contains(5L), "there should be team with ID 2");
-        assertFalse(teamIds.contains(6L), "there shouldn't be team with ID 3");
+        assertTrue(teamIds.contains(club.getTeams().get(0).getId()), "1st formed team should be among team IDs");
+        assertFalse(teamIds.contains(UUID.randomUUID()), "an unknown ID shouldn't be among team IDs");
     }
 
     @Test
     @Order(4)
     @DisplayName("getTeamByIdTest")
     void getTeamByIdTest() {
-        assertNull(club.getTeamById(6), "there should be no team with ID 6 yet");
+        assertNull(club.getTeamById(UUID.randomUUID()), "there should be no team with an unknown ID");
         club.formTeam(PlayerLevel.MSEN);
-        assertNotNull(club.getTeamById(6), "there should bet team with ID 6 now");
+        var teamId = club.getTeams().get(0).getId();
+        assertNotNull(club.getTeamById(teamId), "team should be found by its own ID");
     }
 }

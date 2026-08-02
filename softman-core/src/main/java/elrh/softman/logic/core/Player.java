@@ -1,10 +1,11 @@
 package elrh.softman.logic.core;
 
-import elrh.softman.logic.db.orm.player.PlayerAttributes;
-import elrh.softman.logic.db.orm.player.PlayerInfo;
+import elrh.softman.logic.core.data.PlayerAttributes;
+import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.db.orm.player.PlayerStats;
+import elrh.softman.logic.core.data.PlayerStats;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import elrh.softman.logic.enums.ActivityType;
 import lombok.Data;
@@ -20,7 +21,7 @@ public class Player {
         seasonTotal.setMatchStr("Season total");
     }
 
-    public long getId() {
+    public UUID getId() {
         return playerInfo.getPlayerId();
     }
 
@@ -36,7 +37,6 @@ public class Player {
         PlayerAttributes attributes = playerInfo.getAttributes();
         int actualFatigue = activity.getBaseFatigue() - (attributes.getEndurance() / 10);
         attributes.setFatigue(Math.min(attributes.getFatigue() + actualFatigue, 100));
-        attributes.persist();
     }
 
     public void decreaseFatigue() {
@@ -44,7 +44,6 @@ public class Player {
         int baseRecovery = 10;
         int actualRecovery = baseRecovery + (attributes.getRecovery() / 10);
         attributes.setFatigue(Math.max(attributes.getFatigue() - actualRecovery, 0));
-        attributes.persist();
     }
 
 }

@@ -59,6 +59,20 @@ public class BoxScore {
         return innings;
     }
 
+    public int[] getPoints(boolean away) {
+        return away ? awayPoints : homePoints;
+    }
+
+    public void restore(int[] awayPoints, int[] homePoints, int awayHits, int homeHits, int awayErrors, int homeErrors) {
+        this.innings = Math.max(awayPoints.length, homePoints.length);
+        this.awayPoints = Arrays.copyOf(awayPoints, innings);
+        this.homePoints = Arrays.copyOf(homePoints, innings);
+        this.awayHits = awayHits;
+        this.homeHits = homeHits;
+        this.awayErrors = awayErrors;
+        this.homeErrors = homeErrors;
+    }
+
     public int getPointsInInning(int inning, boolean away) {
         if (inning > 0 && inning <= this.innings) {
             if (away) {

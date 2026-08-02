@@ -1,6 +1,6 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.logic.db.orm.player.PlayerInfo;
+import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.gui.utils.GUIUtils;
 import eu.hansolo.medusa.Gauge;
 import javafx.geometry.Insets;

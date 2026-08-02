@@ -18,7 +18,7 @@ public class CalendarTile extends VBox {
 
     private int rows = 0;
 
-    private long leagueId;
+    private java.util.UUID leagueId;
 
     public CalendarTile() {
 
@@ -48,7 +48,7 @@ public class CalendarTile extends VBox {
         super.getChildren().add(dailySchedule);
     }
 
-    public void setDailySchedule(long leagueId) {
+    public void setDailySchedule(java.util.UUID leagueId) {
         this.leagueId = leagueId;
         var viewDate = AssociationManager.getInstance().getClock().getViewDate();
         titleLabel.setText(viewDate.format(FormatUtils.DF));

@@ -1,14 +1,14 @@
 package elrh.softman.logic;
 
 import elrh.softman.logic.core.Lineup;
-import elrh.softman.logic.db.orm.player.PlayerRecord;
-import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
+import elrh.softman.logic.core.data.PlayerRecord;
+import elrh.softman.logic.core.data.MatchPlayByPlay;
 import elrh.softman.logic.core.Match;
 import static elrh.softman.logic.enums.MatchStatus.*;
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import static elrh.softman.logic.enums.StatsType.*;
 import elrh.softman.logic.core.stats.BoxScore;
-import elrh.softman.logic.db.orm.player.PlayerAttributes;
+import elrh.softman.logic.core.data.PlayerAttributes;
 import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.*;
 import java.util.Random;
@@ -299,7 +299,6 @@ public class MatchSimulator {
             if (reporter != null) {
                 reporter.report(text);
             }
-            pbp.persist();
         }
     }
 

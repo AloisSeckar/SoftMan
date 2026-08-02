@@ -2,9 +2,9 @@ package elrh.softman.logic.core;
 
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
-import elrh.softman.logic.db.orm.lineup.LineupInfo;
-import elrh.softman.logic.db.orm.player.PlayerRecord;
-import elrh.softman.logic.db.orm.player.PlayerStats;
+import elrh.softman.logic.core.data.LineupInfo;
+import elrh.softman.logic.core.data.PlayerRecord;
+import elrh.softman.logic.core.data.PlayerStats;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.Utils;
@@ -29,8 +29,14 @@ public class Lineup {
     @Getter
     private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
 
-    public Lineup(long teamId, String teamName, String teamShortName, String teamLogo) {
+    public Lineup(UUID teamId, String teamName, String teamShortName, String teamLogo) {
         this.lineupInfo = new LineupInfo(teamId, teamName, teamShortName, teamLogo);
+        reset();
+    }
+
+    // used when reassembling a loaded world, so the stored lineup identity is kept
+    public Lineup(LineupInfo lineupInfo) {
+        this.lineupInfo = lineupInfo;
         reset();
     }
 
@@ -120,7 +126,7 @@ public class Lineup {
         return Utils.listNotEmpty(positionPlayers[POSITION_PLAYERS - 1]);
     }
 
-    public void setUp(long matchId, String matchStr) {
+    public void setUp(UUID matchId, String matchStr) {
         var teamId = lineupInfo.getTeamId();
         var team = AssociationManager.getInstance().getTeamById(teamId);
         var lineup = team.getDefaultLineup();

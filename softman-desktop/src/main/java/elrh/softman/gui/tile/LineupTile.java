@@ -3,10 +3,9 @@ package elrh.softman.gui.tile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Lineup;
 import static elrh.softman.logic.core.Lineup.*;
-import elrh.softman.logic.db.GameDBManager;
-import elrh.softman.logic.db.orm.player.PlayerInfo;
-import elrh.softman.logic.db.orm.player.PlayerRecord;
-import elrh.softman.logic.db.orm.TeamInfo;
+import elrh.softman.logic.core.data.PlayerInfo;
+import elrh.softman.logic.core.data.PlayerRecord;
+import elrh.softman.logic.core.data.TeamInfo;
 import elrh.softman.logic.enums.PlayerPosition;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,12 +52,10 @@ public class LineupTile extends VBox {
 
     public void fillLineup(Lineup lineup) {
         if (lineup != null) {
-            // TODO is this effective way to get necessary data?
-            this.team = (TeamInfo) GameDBManager.getInstance().getObjectById(TeamInfo.class, lineup.getLineupInfo().getTeamId());
+            var lineupTeam = AssociationManager.getInstance().getTeamById(lineup.getLineupInfo().getTeamId());
+            this.team = lineupTeam != null ? lineupTeam.getTeamInfo() : null;
             if (team != null) {
-                // TODO get to player list more directly and correctly
-                var club = AssociationManager.getInstance().getClubById(team.getClubInfo().getClubId());
-                var players = club.getTeamById(team.getTeamId()).getPlayers();
+                var players = lineupTeam.getPlayers();
                 var playerList = FXCollections.observableArrayList(players);
                 playerList.add(0, null);
                 // TODO get to player list more directly and correctly

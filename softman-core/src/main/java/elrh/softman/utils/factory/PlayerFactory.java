@@ -1,9 +1,10 @@
 package elrh.softman.utils.factory;
 
 import elrh.softman.logic.core.Player;
-import elrh.softman.logic.db.SourcesDBManager;
-import elrh.softman.logic.db.orm.player.PlayerInfo;
+import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.logic.enums.PlayerGender;
+import elrh.softman.logic.interfaces.INameSource;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Random;
@@ -14,8 +15,11 @@ public class PlayerFactory {
     // the number of available images will increase over the time
     private static final int AVAILABLE_FACES = 46;
 
+    @Setter
+    private static INameSource nameSource;
+
     public static Player getRandomPlayer(PlayerGender gender, int birth, int number) {
-        var playerInfo =  new PlayerInfo(getRandomPlayerName(gender.toString()), gender, birth, number);
+        var playerInfo =  new PlayerInfo(getRandomPlayerName(gender), gender, birth, number);
         setRandomPlayerImg(playerInfo);
 
         var player = new Player();
@@ -23,8 +27,11 @@ public class PlayerFactory {
         return player;
     }
 
-    private static String getRandomPlayerName(String gender) {
-        return SourcesDBManager.getInstance().getRandomFirstName(gender) + " " + SourcesDBManager.getInstance().getRandomLastName();
+    private static String getRandomPlayerName(PlayerGender gender) {
+        if (nameSource == null) {
+            return "Player";
+        }
+        return nameSource.getRandomFirstName(gender) + " " + nameSource.getRandomLastName();
     }
 
     private static void setRandomPlayerImg(PlayerInfo player) {

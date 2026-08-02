@@ -2,8 +2,8 @@ package elrh.softman.test;
 
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.Lineup;
-import elrh.softman.logic.db.orm.player.PlayerInfo;
-import elrh.softman.logic.db.orm.player.PlayerRecord;
+import elrh.softman.logic.core.data.PlayerInfo;
+import elrh.softman.logic.core.data.PlayerRecord;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.factory.PlayerFactory;
@@ -26,7 +26,7 @@ public class LineupTest {
 
     @BeforeEach
     void setUp() {
-        lineup = new Lineup(1, ELEMENT_NAME, "E", ELEMENT_NAME);
+        lineup = new Lineup(java.util.UUID.randomUUID(), ELEMENT_NAME, "E", ELEMENT_NAME);
     }
 
     @Test

@@ -3,16 +3,18 @@ package elrh.softman.logic.core;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.utils.Constants;
-import elrh.softman.logic.db.orm.LeagueInfo;
-import elrh.softman.logic.db.orm.match.MatchInfo;
+import elrh.softman.logic.core.data.LeagueInfo;
+import elrh.softman.logic.core.data.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
 import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +32,12 @@ public class League {
     @Getter
     private ArrayList<Team> teams = new ArrayList<>();
 
-    private final HashMap<Long, Match> matches = new HashMap<>();
+    private final Map<UUID, Match> matches = new LinkedHashMap<>();
 
     @Getter
     private final ArrayList<Standing> standings = new ArrayList<>();
 
-    public long getId() {
+    public UUID getId() {
         return leagueInfo.getLeagueId();
     }
 
@@ -46,9 +48,8 @@ public class League {
     public Result registerTeam(Team team) {
         try {
             teams.add(team);
-            standings.add(new Standing(team.getId(), team.getName()));
+            standings.add(new Standing(getId(), team.getId(), team.getName()));
             team.getTeamInfo().setLeagueInfo(this.leagueInfo);
-            team.getTeamInfo().persist();
             LOG.info("Team {} registered", team.getId());
             return Constants.RESULT_OK;
         } catch (Exception ex) {
@@ -95,12 +96,6 @@ public class League {
                         match.getHomeLineup().getLineupInfo().getTeamName(),
                         info.getMatchDay(),
                         info.getLeagueRound());
-                    var result = match.getMatchInfo().persist();
-                    if (result.ok()) {
-                        LOG.info("Saved into DB");
-                    } else {
-                        ErrorUtils.raise(result.message());
-                    }
                     matches.put(match.getId(), match);
                     AssociationManager.getInstance().addCurrentMatch(match);
                 }
@@ -134,13 +129,17 @@ public class League {
 
     public Result saveMatch(Match match) {
         try {
-            match.getMatchInfo().persist();
             includeMatchIntoStandings(match);
-            LOG.info("Match {} saved and included into league standings", match);
+            LOG.info("Match {} included into league standings", match);
             return Constants.RESULT_OK;
         } catch (Exception ex) {
             return ErrorUtils.handleException("League.saveMatch", ex);
         }
+    }
+
+    // used when reassembling a loaded world
+    public void restoreMatch(Match match) {
+        matches.put(match.getId(), match);
     }
 
     public void mockPlayLeague(IMatchReporter reporter) {
@@ -190,14 +189,14 @@ public class League {
          */
     }
 
-    public long[] getAdvancingTeams() {
+    public UUID[] getAdvancingTeams() {
         Collections.sort(standings);
-        return new long[] {standings.get(0).getTeamId(), standings.get(1).getTeamId()};
+        return new UUID[] {standings.get(0).getTeamId(), standings.get(1).getTeamId()};
     }
 
-    public long[] getRelegatedTeams() {
+    public UUID[] getRelegatedTeams() {
         Collections.sort(standings);
-        return new long[] {standings.get(standings.size() - 2).getTeamId(), standings.get(standings.size() - 1).getTeamId()};
+        return new UUID[] {standings.get(standings.size() - 2).getTeamId(), standings.get(standings.size() - 1).getTeamId()};
     }
 
     ////////////////////////////////////////////////////////////////////////////
