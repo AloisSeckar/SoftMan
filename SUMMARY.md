@@ -48,27 +48,30 @@ graph TD
     C --> N[SourcesDBManager] --> O[(softman.db — names)]
 ```
 
-### Package map (`src/main/java/elrh/softman/`)
+### Package map
 
-| Package | Contents |
-|---|---|
-| `.` | `Softman` — JavaFX `Application` entry point, game setup/teardown |
-| `gui` | `MainLayout` (BorderPane root) |
-| `gui.frame` | `MenuFrame`, `FocusFrame`, `ContentFrame`, `ActionFrame` |
-| `gui.tab` | `ClubTab`, `MatchTab`, `TeamTab`, `PlayerTab`, `LineupTab`, `TrainingTab`, `StandingsTab` |
-| `gui.tile` | `ClubInfoTile`, `CalendarTile`, `ScheduleRowTile`, `MatchHeaderTile`, `BoxScoreTile`, `LineupTile`, `LineupRowTile`, `DefenseTile`, `PlayerInfoTile`, `PlayerAttributesTile` |
-| `gui.table` | `LeagueStadingsTable`, `TeamPlayersTable` |
-| `logic` | `AssociationManager`, `MatchSimulator`, `Result` (record-like OK/message wrapper) |
-| `logic.core` | `League`, `Club`, `Team`, `Player`, `Match`, `Lineup` |
-| `logic.core.stats` | `Standing`, `BoxScore` |
-| `logic.managers` | `ClockManager`, `UserManager` |
-| `logic.sim` | `SimulationController`, `SimulationService` |
-| `logic.db` | `AbstractDBEntity`, `DaoManager<T>`, `GameDBManager`, `SourcesDBManager` |
-| `logic.db.orm` | `ClubInfo`, `LeagueInfo`, `TeamInfo`, `lineup.LinuepInfo`, `player.*`, `match.*` |
-| `logic.enums` | `PlayerPosition`, `PlayerLevel`, `PlayerGender`, `MatchStatus`, `StatsType`, `ActivityType` |
-| `logic.interfaces` | `IFocusedClubListener`, `IFocusedTeamListener` |
-| `utils` | `Constants`, `ErrorUtils`, `FormatUtils`, `GUIUtils`, `InfoUtils`, `SimUtils`, `StatsUtils`, `Utils`, `ext.ProgressIndicatorUtil` |
-| `utils.factory` | `AssociationFactory`, `ClubFactory`, `TeamFactory`, `PlayerFactory` |
+`softman-core/src/main/java/elrh/softman/` and `softman-desktop/src/main/java/elrh/softman/`
+
+| Module | Package | Contents |
+|---|---|---|
+| desktop | `.` | `Softman` — JavaFX `Application` entry point, game setup/teardown |
+| desktop | `gui` | `MainLayout` (BorderPane root) |
+| desktop | `gui.frame` | `MenuFrame`, `FocusFrame`, `ContentFrame`, `ActionFrame` |
+| desktop | `gui.tab` | `ClubTab`, `MatchTab`, `TeamTab`, `PlayerTab`, `LineupTab`, `TrainingTab`, `StandingsTab` |
+| desktop | `gui.tile` | `ClubInfoTile`, `CalendarTile`, `ScheduleRowTile`, `MatchHeaderTile`, `BoxScoreTile`, `LineupTile`, `LineupRowTile`, `DefenseTile`, `PlayerInfoTile`, `PlayerAttributesTile` |
+| desktop | `gui.table` | `LeagueStadingsTable`, `TeamPlayersTable` |
+| desktop | `gui.sim` | `SimulationController`, `SimulationService` |
+| desktop | `gui.utils` | `FormatUtils`, `GUIUtils`, `InfoUtils`, `ProgressIndicatorUtil` |
+| core | `logic` | `AssociationManager`, `MatchSimulator`, `Result` (record-like OK/message wrapper) |
+| core | `logic.core` | `League`, `Club`, `Team`, `Player`, `Match`, `Lineup` |
+| core | `logic.core.stats` | `Standing`, `BoxScore` |
+| core | `logic.managers` | `ClockManager`, `UserManager` |
+| core | `logic.db` | `AbstractDBEntity`, `DaoManager<T>`, `GameDBManager`, `SourcesDBManager` |
+| core | `logic.db.orm` | `ClubInfo`, `LeagueInfo`, `TeamInfo`, `lineup.LinuepInfo`, `player.*`, `match.*` |
+| core | `logic.enums` | `PlayerPosition`, `PlayerLevel`, `PlayerGender`, `MatchStatus`, `StatsType`, `ActivityType` |
+| core | `logic.interfaces` | `IFocusedClubListener`, `IFocusedTeamListener`, `ISimulationRunner` |
+| core | `utils` | `Constants`, `ErrorUtils`, `SimUtils`, `StatsUtils`, `Utils` |
+| core | `utils.factory` | `AssociationFactory`, `ClubFactory`, `TeamFactory`, `PlayerFactory` |
 
 ### Cross-cutting patterns
 - **Singletons everywhere** — every manager, frame and tab exposes `getInstance()`. Convenient but makes testing awkward (see `AssociationManager.testMode` flag hack).

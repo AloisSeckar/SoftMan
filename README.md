@@ -7,7 +7,14 @@ Softball manager and simulator game in JavaFX.
 - Clone repo from github
 - create local `log` and `sav` folders
 - `mvn clean install` to re-compile the project
-- `mvn javafx:run` to run the application
+- `mvn -pl softman-desktop javafx:run` to run the application
+
+## Modules
+
+| Module | Contents |
+|---|---|
+| `softman-core` | domain, rules, simulation, persistence (`logic`, `utils`) |
+| `softman-desktop` | JavaFX client (`Softman`, `gui`) and application resources |
 
 ## Status
 
