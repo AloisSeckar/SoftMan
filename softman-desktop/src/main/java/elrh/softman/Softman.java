@@ -1,6 +1,7 @@
 package elrh.softman;
 
 import elrh.softman.db.SqliteNameSource;
+import elrh.softman.db.SqliteGameRepository;
 import elrh.softman.gui.MainLayout;
 import elrh.softman.gui.sim.SimulationController;
 import elrh.softman.gui.utils.InfoUtils;
@@ -60,6 +61,7 @@ public class Softman extends Application {
         // TODO unify actions performed upon starting new game
         AssociationManager.getInstance().setSimulationRunner(new SimulationController(spinner));
         AssociationManager.getInstance().setConfirmationPrompt(InfoUtils::confirm);
+        AssociationManager.getInstance().setGameRepository(new SqliteGameRepository());
         AssociationManager.getInstance().nextDay();
         MainLayout.getInstance().setUp();
         

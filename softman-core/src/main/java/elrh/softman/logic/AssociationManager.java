@@ -6,6 +6,7 @@ import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
 import elrh.softman.logic.interfaces.IConfirmationPrompt;
+import elrh.softman.logic.interfaces.IGameRepository;
 import elrh.softman.logic.interfaces.ISimulationRunner;
 import elrh.softman.utils.*;
 import java.time.LocalDate;
@@ -37,6 +38,9 @@ public class AssociationManager {
     @Setter
     private IConfirmationPrompt confirmationPrompt;
 
+    @Setter
+    private IGameRepository gameRepository;
+
     private static AssociationManager INSTANCE;
 
     private AssociationManager() {
@@ -56,6 +60,25 @@ public class AssociationManager {
         registeredClubs.clear();
         currentTeams.clear();
         registeredPlayers.clear();
+        currentMatches.clear();
+    }
+
+    public boolean hasSaveFile(String gameId) {
+        return gameRepository != null && gameRepository.saveExists(gameId);
+    }
+
+    public Result saveGame(String gameId) {
+        if (gameRepository == null) {
+            return new Result(false, "No game repository configured");
+        }
+        return gameRepository.save(gameId, this);
+    }
+
+    public Result loadGame(String gameId) {
+        if (gameRepository == null) {
+            return new Result(false, "No game repository configured");
+        }
+        return gameRepository.load(gameId, this);
     }
 
     public List<League> getLeagues(int year) {

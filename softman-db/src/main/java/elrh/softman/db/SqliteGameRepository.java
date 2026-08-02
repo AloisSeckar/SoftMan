@@ -6,6 +6,7 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.core.data.*;
 import elrh.softman.logic.core.stats.Standing;
+import elrh.softman.logic.interfaces.IGameRepository;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
@@ -18,12 +19,14 @@ import lombok.extern.slf4j.Slf4j;
  * Nothing here is called during simulation - the world lives in memory and is only snapshotted on demand.
  */
 @Slf4j
-public class SqliteGameRepository {
+public class SqliteGameRepository implements IGameRepository {
 
+    @Override
     public boolean saveExists(String gameId) {
         return GameDatabase.saveExists(gameId);
     }
 
+    @Override
     public Result save(String gameId, AssociationManager world) {
         try (var db = GameDatabase.open(gameId, true)) {
             inTransaction(db, () -> {
@@ -37,6 +40,7 @@ public class SqliteGameRepository {
         }
     }
 
+    @Override
     public Result load(String gameId, AssociationManager world) {
         try (var db = GameDatabase.open(gameId, false)) {
             var meta = first(db.dao(GameMeta.class).queryForAll());
