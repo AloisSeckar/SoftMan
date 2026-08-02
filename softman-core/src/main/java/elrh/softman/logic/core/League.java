@@ -6,13 +6,13 @@ import elrh.softman.utils.Constants;
 import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
+import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javafx.scene.control.TextArea;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -143,16 +143,16 @@ public class League {
         }
     }
 
-    public void mockPlayLeague(TextArea target) {
+    public void mockPlayLeague(IMatchReporter reporter) {
         for (int i = 1; i <= 18; i++) {
-            mockPreviewCurrentRound(target);
-            mockPlayRound(target);
+            mockPreviewCurrentRound(reporter);
+            mockPlayRound(reporter);
         }
     }
 
-    public void mockPlayRound(TextArea target) {
+    public void mockPlayRound(IMatchReporter reporter) {
         // TODO REMOVE
-        target.appendText("MOCK BROKEN AND HOPEFULLY DEAD");
+        reporter.report("MOCK BROKEN AND HOPEFULLY DEAD");
         /*
         Match match;
         for (int i = 0; i < 5; i++) {
@@ -172,9 +172,9 @@ public class League {
          */
     }
 
-    public void mockPreviewCurrentRound(TextArea target) {
+    public void mockPreviewCurrentRound(IMatchReporter reporter) {
         // TODO REMOVE
-        target.appendText("MOCK BROKEN AND HOPEFULLY DEAD");
+        reporter.report("MOCK BROKEN AND HOPEFULLY DEAD");
         /*
         StringBuilder sb = new StringBuilder();
         sb.append("LEAGUE ROUND ").append(leagueInfo.getRound()).append("\n");

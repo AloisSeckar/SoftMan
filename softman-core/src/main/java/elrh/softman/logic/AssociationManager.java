@@ -5,11 +5,11 @@ import elrh.softman.logic.db.orm.LeagueInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.ClockManager;
 import elrh.softman.logic.managers.UserManager;
+import elrh.softman.logic.interfaces.IConfirmationPrompt;
 import elrh.softman.logic.interfaces.ISimulationRunner;
 import elrh.softman.utils.*;
 import java.time.LocalDate;
 import java.util.*;
-import javafx.scene.control.*;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,6 +32,9 @@ public class AssociationManager {
 
     @Setter
     private ISimulationRunner simulationRunner;
+
+    @Setter
+    private IConfirmationPrompt confirmationPrompt;
 
     private static AssociationManager INSTANCE;
 
@@ -265,12 +268,10 @@ public class AssociationManager {
     }
 
     private boolean confirmDayFinished() {
-        if (testMode) {
+        if (testMode || confirmationPrompt == null) {
             return true;
         } else {
-            var alert = new Alert(Alert.AlertType.CONFIRMATION, "Simulate the rest of the day?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
-            alert.showAndWait();
-            return alert.getResult() == ButtonType.YES;
+            return confirmationPrompt.confirm("Simulate the rest of the day?");
         }
     }
 

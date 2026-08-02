@@ -9,9 +9,9 @@ import static elrh.softman.logic.enums.PlayerPosition.*;
 import static elrh.softman.logic.enums.StatsType.*;
 import elrh.softman.logic.core.stats.BoxScore;
 import elrh.softman.logic.db.orm.player.PlayerAttributes;
+import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.*;
 import java.util.Random;
-import javafx.scene.control.TextArea;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +24,7 @@ public class MatchSimulator {
     @Setter
     private boolean visualMode = false;
 
-    private final TextArea target;
+    private final IMatchReporter reporter;
     private final Match match;
 
     private final BoxScore boxScore;
@@ -49,8 +49,8 @@ public class MatchSimulator {
     private PlayerRecord base2;
     private PlayerRecord base3;
 
-    public MatchSimulator(Match match, TextArea target) {
-        this.target = target;
+    public MatchSimulator(Match match, IMatchReporter reporter) {
+        this.reporter = reporter;
         this.match = match;
         awayLineup = match.getAwayLineup();
         homeLineup = match.getHomeLineup();
@@ -296,8 +296,8 @@ public class MatchSimulator {
         match.getPlayByPlay().add(pbp);
 
         if (visualMode) {
-            if (target != null) {
-                target.appendText(text);
+            if (reporter != null) {
+                reporter.report(text);
             }
             pbp.persist();
         }

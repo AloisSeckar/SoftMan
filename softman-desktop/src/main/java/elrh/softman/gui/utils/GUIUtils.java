@@ -47,4 +47,8 @@ public class GUIUtils {
         region.setBackground(new Background(new BackgroundFill(color, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
+    public static void setBackgroundColor(Region region, String webColor) {
+        setBackgroundColor(region, Color.web(webColor));
+    }
+
 }

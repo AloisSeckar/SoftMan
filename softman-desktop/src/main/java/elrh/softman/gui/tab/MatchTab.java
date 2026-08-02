@@ -6,6 +6,7 @@ import elrh.softman.gui.tile.MatchHeaderTile;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Match;
 import elrh.softman.logic.MatchSimulator;
+import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.ErrorUtils;
 import elrh.softman.gui.utils.FormatUtils;
 import javafx.geometry.Insets;
@@ -87,13 +88,13 @@ public class MatchTab extends BorderPane {
 
     }
 
-    public static TextArea getTarget() {
-        return INSTANCE.matchOverview;
+    public static IMatchReporter getMatchReporter() {
+        return INSTANCE.matchOverview::appendText;
     }
 
     public void setMatch(Match match) {
         this.match = match;
-        this.sim = new MatchSimulator(match, matchOverview);
+        this.sim = new MatchSimulator(match, matchOverview::appendText);
         sim.setVisualMode(true);
         matchHeaderTile.setMatch(match);
         awayLineup.fillLineup(match.getAwayLineup());
@@ -124,7 +125,7 @@ public class MatchTab extends BorderPane {
 
     private void refreshMatch() {
         matchOverview.clear();
-        match.printPlayByPlay(matchOverview);
+        match.printPlayByPlay(matchOverview::appendText);
 
         boxScore.loadBoxScore(match);
 

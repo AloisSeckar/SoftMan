@@ -9,7 +9,6 @@ import elrh.softman.utils.ErrorUtils;
 import elrh.softman.utils.factory.TeamFactory;
 import java.util.HashMap;
 import java.util.List;
-import javafx.scene.paint.Color;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,7 +19,7 @@ public class Club {
     private final ClubInfo clubInfo;
 
     @Getter @Setter
-    private Color color; // TODO how to persist and represent in DB?
+    private String color; // web hex, e.g. "#ADD8E6" TODO how to persist and represent in DB?
 
     private final HashMap<Long, Team> teams = new HashMap<>();
 

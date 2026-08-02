@@ -39,21 +39,6 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- TEMPORARY: core still leaks JavaFX types (TextArea, Color, ProgressIndicator).
-             Removing this dependency is the litmus test for step 2 of PLAN.md. -->
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-base</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>

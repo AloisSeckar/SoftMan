@@ -6,8 +6,6 @@ import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.test.utils.TestUtils;
 import java.util.Collections;
 
-import javafx.application.Platform;
-import javafx.scene.control.TextArea;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,11 +30,9 @@ public class MatchTest extends AbstractDBTest {
         var mockPBPList = Collections.singletonList(mockPBP);
         match.setPlayByPlay(mockPBPList);
 
-        Platform.startup(() -> {}); // TODO produces 'Unsupported JavaFX configuration' warning into console
-        var textArea = new TextArea();
-        match.printPlayByPlay(textArea);
-        assertEquals(textArea.getText(), testString, "TestString should be printed in TextArea");
-        Platform.exit();
+        var output = new StringBuilder();
+        match.printPlayByPlay(output::append);
+        assertEquals(testString, output.toString(), "TestString should be passed to the reporter");
     }
 
     @Test

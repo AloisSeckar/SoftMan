@@ -1,8 +1,8 @@
 package elrh.softman.logic.core.stats;
 
 import elrh.softman.utils.Constants;
+import elrh.softman.logic.interfaces.IMatchReporter;
 import java.util.Arrays;
-import javafx.scene.control.TextArea;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -94,7 +94,7 @@ public class BoxScore {
         }
     }
 
-    public void printBoxScore(TextArea target) {
+    public void printBoxScore(IMatchReporter reporter) {
         StringBuilder lineSeparator = new StringBuilder();
         lineSeparator.append("---------");
         lineSeparator.append("-----".repeat(awayPoints.length));
@@ -127,7 +127,7 @@ public class BoxScore {
         sb.append(pad(homeErrors)).append(" | \n");
         sb.append(lineSeparator);
 
-        target.appendText(sb + "\n");
+        reporter.report(sb + "\n");
     }
 
     private int sumPoints(int[] innings) {

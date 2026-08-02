@@ -103,7 +103,7 @@ public class ScheduleRowTile extends BorderPane {
             simButton.setDisable(!todayMatch);
             playButton.setDisable(!todayMatch);
 
-            sim = new MatchSimulator(match, MatchTab.getTarget());
+            sim = new MatchSimulator(match, MatchTab.getMatchReporter());
 
             awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getLineupInfo().getTeamLogo()));
             Tooltip.install(awayImage, new Tooltip(match.getAwayLineup().getLineupInfo().getTeamName()));

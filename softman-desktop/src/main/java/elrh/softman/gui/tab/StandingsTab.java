@@ -63,7 +63,7 @@ public class StandingsTab extends AnchorPane {
     // TODO delete mock and connect real leagues
     private void mockLeague() {
         try {
-            testLeague.mockPlayLeague(testTextArea);
+            testLeague.mockPlayLeague(testTextArea::appendText);
             leagueTable.refresh();
             
             InfoUtils.showMessage("Finished");
@@ -76,8 +76,8 @@ public class StandingsTab extends AnchorPane {
     
     private void mockRound() {
         try {
-            testLeague.mockPreviewCurrentRound(testTextArea);
-            testLeague.mockPlayRound(testTextArea);
+            testLeague.mockPreviewCurrentRound(testTextArea::appendText);
+            testLeague.mockPlayRound(testTextArea::appendText);
             leagueTable.refresh();
         } catch (Exception ex) {
             LOG.error("ROUND FAILED", ex);

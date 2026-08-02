@@ -6,13 +6,13 @@ import elrh.softman.logic.db.orm.match.MatchInfo;
 import elrh.softman.logic.db.orm.match.MatchPlayByPlay;
 import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.logic.core.stats.*;
+import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javafx.scene.control.TextArea;
 import lombok.Data;
 
 @Data
@@ -60,8 +60,8 @@ public class Match {
         return matchInfo.getMatchId();
     }
 
-    public void printPlayByPlay(TextArea target) {
-        playByPlay.forEach(pbp -> target.appendText(pbp.getPlay()));
+    public void printPlayByPlay(IMatchReporter reporter) {
+        playByPlay.forEach(pbp -> reporter.report(pbp.getPlay()));
     }
 
     public boolean isScheduled() {

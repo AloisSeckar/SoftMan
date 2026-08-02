@@ -69,7 +69,7 @@ graph TD
 | core | `logic.db` | `AbstractDBEntity`, `DaoManager<T>`, `GameDBManager`, `SourcesDBManager` |
 | core | `logic.db.orm` | `ClubInfo`, `LeagueInfo`, `TeamInfo`, `lineup.LinuepInfo`, `player.*`, `match.*` |
 | core | `logic.enums` | `PlayerPosition`, `PlayerLevel`, `PlayerGender`, `MatchStatus`, `StatsType`, `ActivityType` |
-| core | `logic.interfaces` | `IFocusedClubListener`, `IFocusedTeamListener`, `ISimulationRunner` |
+| core | `logic.interfaces` | `IFocusedClubListener`, `IFocusedTeamListener`, `ISimulationRunner`, `IMatchReporter`, `IConfirmationPrompt` |
 | core | `utils` | `Constants`, `ErrorUtils`, `SimUtils`, `StatsUtils`, `Utils` |
 | core | `utils.factory` | `AssociationFactory`, `ClubFactory`, `TeamFactory`, `PlayerFactory` |
 

@@ -3,6 +3,7 @@ package elrh.softman;
 import elrh.softman.logic.db.*;
 import elrh.softman.gui.MainLayout;
 import elrh.softman.gui.sim.SimulationController;
+import elrh.softman.gui.utils.InfoUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.factory.AssociationFactory;
 import javafx.application.Application;
@@ -57,6 +58,7 @@ public class Softman extends Application {
 
         // TODO unify actions performed upon starting new game
         AssociationManager.getInstance().setSimulationRunner(new SimulationController(spinner));
+        AssociationManager.getInstance().setConfirmationPrompt(InfoUtils::confirm);
         AssociationManager.getInstance().nextDay();
         MainLayout.getInstance().setUp();
         
