@@ -11,6 +11,11 @@
 | JavaFX version | Bump **21.0.5 → 25 LTS** up front; deal with fallout if it appears |
 | Third-party libs | Well-maintained OSS allowed |
 | Scope | Rewrite the **view layer**; wiring, logic and public APIs stay |
+| Singletons | Keep `getInstance()` everywhere — least churn, wiring untouched |
+| Java level | Modern Java 25 features welcome (records for view models, sealed, pattern matching) |
+| Lombok | Yes, in view/kit code, same as the rest of the project |
+| Kit package | `elrh.softman.gui.kit` |
+| Verification split | Agent runs `mvn -q -pl softman-desktop -am compile` + TestFX smoke test, then stops. Human runs the app and eyeballs. Agent must not speculate about visual results |
 
 ### Why not FXML
 FXML pays off for static forms, many similar dialogs, and designer/developer separation. It costs a
@@ -52,6 +57,53 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
   backdrop. Re-export or place on a card surface.
 
 ## Plan
+
+### Phase -1 — Groundwork for AI-assisted work (do FIRST)
+
+Purpose: stop every session re-deriving the same facts, and cap token burn. The repo currently has
+**no** `AGENTS.md`, **no** `.github/copilot-instructions.md`, **no** `*.instructions.md`, **no**
+`.editorconfig`. Only `.gitignore` exists (it already covers `target/`, `.vscode/`, `sav/`, `log/`).
+
+**-1a. Root `AGENTS.md`** — max ~60 lines, terse; long files get skimmed and cost tokens every turn.
+   - Module map: `softman-core` (game logic, must not import JavaFX), `softman-db` (ORMLite + SQLite),
+     `softman-desktop` (JavaFX)
+   - Commands: `mvn clean install`; `mvn -pl softman-desktop -am javafx:run`;
+     mainClass `elrh.softman.Softman`; a debug profile already exists in `javafx-maven-plugin`
+   - Conventions: Java 25 source/target, Lombok, SLF4J (+simple), `getInstance()` singleton pattern
+   - Off-limits: `target/`, `sav/`, `log/`, generated sources
+   - Comment policy: one short line, only when the code cannot show it. No essays, no change-log comments
+   - Pointer: "read `GUI.md` before any GUI work"
+
+**-1b. `.github/instructions/gui.instructions.md`** with frontmatter `applyTo: "softman-desktop/**"`
+   so these apply automatically without restating them each session:
+   - Build UI through `elrh.softman.gui.kit` (`Cards`, `Tables`, `Ratings`, `Icons`, `Layouts`) — never ad-hoc
+   - No hex literals in Java or CSS; only AtlantaFX looked-up vars and `-sm-*` tokens
+   - No `setLayoutX/Y`, no `AnchorPane` pixel anchors, no fixed px sizes
+   - Preserve existing public methods (`setMatch`, `reload`, `refresh`, listener registration) —
+     view construction only, no logic changes
+   - Theme is `NordLight` — **light**; never assume dark surfaces
+   - Once the golden template exists: "match `ClubInfoTile` as the reference implementation"
+
+**-1c. `.vscode/settings.json`** — `files.exclude` + `search.exclude` for `**/target`, `log/`, `sav/`.
+   The workspace overview currently lists every `target/classes/**` tree, which is pure waste on every
+   prompt. `.vscode/` is gitignored, so this stays local.
+
+**-1d. Record the locked conventions** (table above) in `AGENTS.md` so no session has to guess.
+
+**-1e. TestFX headless smoke test** in `softman-desktop/src/test/java`:
+   - Deps: `org.testfx:testfx-core` + `testfx-junit5` (plus Monocle if a headless environment is needed)
+   - Instantiates `MainLayout` and asserts all 9 tabs and all 10 tiles construct without exception
+   - This is the unattended safety net — it turns "did I break it?" into an exit code and catches
+     NPEs and missing-CSS-class breakage the agent cannot see
+   - **Must pass before Phase 0 starts**, so it is a true regression baseline
+
+**-1f. Convert the phase list below into a checkbox checklist** for cross-session progress tracking.
+
+**-1g. Working discipline** (process, not code):
+   - Branch per phase; commit after each verified step — `git reset` is free, agent undo is not
+   - **One phase per session.** Open each session with "read `GUI.md` + `AGENTS.md`, execute Phase X step N"
+   - Phase 1 plus exactly one tile (`ClubInfoTile`), human-reviewed, becomes the **golden template**;
+     every later tile references it instead of open-ended design. Single biggest token saver
 
 ### Phase 0 — Foundation (blocking)
 1. Root `pom.xml`: `fx.version` 21.0.5 → 25.x LTS. Rebuild and smoke-test before touching UI.
@@ -111,13 +163,14 @@ documented in `PLAN.md`; new features (Save/Load, Training, Market, Stats); navi
 beyond the enum swap.
 
 ## Verification
-1. `mvn clean install` at root — compiles on Java 25 / JavaFX 25
-2. `mvn -pl softman-desktop -am javafx:run` — all 9 tabs open, no exceptions
-3. Per Phase-2 item: open the tab, resize the window, confirm no clipping (esp. LineupTab,
+1. `mvn -pl softman-desktop -am test` — TestFX smoke test green (baseline from Phase -1)
+2. `mvn clean install` at root — compiles on Java 25 / JavaFX 25
+3. `mvn -pl softman-desktop -am javafx:run` — all 9 tabs open, no exceptions
+4. Per Phase-2 item: open the tab, resize the window, confirm no clipping (esp. LineupTab,
    StandingsTab, DefenseTile)
-4. Contrast check: no light-grey-on-white text; play-by-play and all tables readable
-5. "Next day" and simulate a match — `SimulationService` `Platform.runLater` refreshes repaint correctly
-6. ScheduleRow S/P/V buttons and PlayerTab match hyperlink — navigation survives the enum refactor
-7. Grep the gui package for `bootstrapfx`, `de.jensd`, `eu.hansolo`, `#[0-9a-fA-F]{6}` → zero before
+5. Contrast check: no light-grey-on-white text; play-by-play and all tables readable
+6. "Next day" and simulate a match — `SimulationService` `Platform.runLater` refreshes repaint correctly
+7. ScheduleRow S/P/V buttons and PlayerTab match hyperlink — navigation survives the enum refactor
+8. Grep the gui package for `bootstrapfx`, `de.jensd`, `eu.hansolo`, `#[0-9a-fA-F]{6}` → zero before
    closing Phase 3
-8. Before/after screenshots of ClubTab, MatchTab, TeamTab, PlayerTab
+9. Before/after screenshots of ClubTab, MatchTab, TeamTab, PlayerTab
