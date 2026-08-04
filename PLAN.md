@@ -27,7 +27,7 @@ If the simulation engine can run with no display, no user, no `main()`, and prod
 ## Where the current code blocks that
 
 | Blocker | Where | Why it matters |
-|---|---|---|
+| --- | --- | --- |
 | JavaFX types inside game logic | `MatchSimulator` takes a `TextArea`; `AssociationManager` holds a `ProgressIndicator`; `Club` holds a `javafx.scene.paint.Color`; `League.mockPlay*` takes a `TextArea` | Core cannot be loaded on a headless server at all |
 | Global singletons = exactly one world | `AssociationManager.getInstance()`, `ClockManager`, `GameDBManager`, `UserManager` | A server hosts *many* leagues concurrently. Singleton world state is the #1 thing that's expensive to retrofit |
 | `testMode` flag | `AssociationManager` | Symptom of the same coupling — logic branching on "is there a UI?" |
@@ -84,7 +84,7 @@ Server simulates, clients render. Never trust a client-computed result. This fal
 
 Split the Maven build into modules. This mechanically enforces the rules — JavaFX *cannot* be accidentally imported into core:
 
-```
+```text
 softman-parent (pom)
 ├── softman-core        # domain, rules, MatchSimulator, commands, events
 │                       # deps: NONE beyond slf4j/commons. No JavaFX. No JDBC.
@@ -130,11 +130,11 @@ Steps 1–5 also happen to fix most of what's currently broken in the codebase, 
 ---
 ---
 
-# Tech Stack Review — SQLite & JavaFX
+## Tech Stack Review — SQLite & JavaFX
 
 > Follow-up question, 2026-07-30: assuming a single-player desktop app in Java, are SQLite and JavaFX wise and sustainable choices?
 
-## Short verdict
+### Short verdict
 
 **JavaFX: keep it.** It's a reasonable, sustainable choice for this kind of game, and it's already half-built.
 **SQLite: keep the engine, drop the usage pattern.** The problem isn't SQLite — it's using a live ORM as the game's working memory.
@@ -149,7 +149,7 @@ Ask the shape question first: **is the world state relational, or is it an objec
 It's an object graph. And it's *tiny*:
 
 | Entity | Count |
-|---|---|
+| --- | --- |
 | Clubs | 16 |
 | Players | ~320 (16 × 20) |
 | Matches per season | 112 (8 teams × 28 rounds) |
@@ -164,7 +164,7 @@ It isn't SQLite. It's that OrmLite is used as **active-record working memory**: 
 ### Three viable directions
 
 | Approach | Fit |
-|---|---|
+| --- | --- |
 | **A. In-memory world + snapshot file** (JSON via Jackson, or binary) | ⭐ Best fit for v1. Matches the `World` object above exactly. Save = serialize; load = deserialize. Trivially testable. And serialization work carries straight over to network transport |
 | **B. SQLite as a save-file *format*** — write the whole world in one transaction on save, read it all on load | Reasonable if crash-resistance and inspectability matter (a save can be opened in DB Browser). Still in-memory at runtime |
 | **C. SQLite as a live queried store** (current approach) | Only justified for **historical archives** — career stats across 30 seasons, where data grows unbounded and ad-hoc queries are wanted |
@@ -176,6 +176,7 @@ One relevant detail: **SQLite doesn't carry into multiplayer anyway** — single
 ### If a DB is kept, reconsider OrmLite
 
 OrmLite 6.1 is old and slowly maintained. Better options if going DB-backed:
+
 - **plain JDBC + Java records** — genuinely fine at this scale, zero magic, no annotations
 - **JDBI 3** — thin, modern, record-friendly
 - **jOOQ** — excellent for typed SQL and a possible later move to Postgres
@@ -187,6 +188,7 @@ Skip Hibernate/JPA entirely — massive complexity for 320 players.
 ## 2. JavaFX — sustainable, with one strategic caveat
 
 **Why it's a fine choice:**
+
 - Actively maintained (Gluon), regular releases, LTS track — not a dead technology
 - Genuinely good at **data-dense desktop UI**: `TableView`, sorting, virtualization, bindings. That's ~80% of a manager game
 - Native Java, no bridge, no IPC, no second language
@@ -194,6 +196,7 @@ Skip Hibernate/JPA entirely — massive complexity for 320 players.
 - Working tabs, tiles, tables and a lineup editor already exist. Rewriting the UI now is exactly the kind of restart that kills side projects
 
 **Honest downsides:**
+
 - Small and shrinking community; fewer libraries, fewer answers
 - Distribution needs `jlink`/`jpackage` — solvable, but a chunk of work
 - No hot reload; UI iteration is slow (UI is built programmatically, so every tweak is a recompile)
@@ -204,6 +207,7 @@ Skip Hibernate/JPA entirely — massive complexity for 320 players.
 Given the multiplayer ambition: **a web UI is the only frontend that carries over to online play.** Every online manager game (Hattrick, OOTP online leagues, browser football managers) is a web app — because the UI is tables, forms and dashboards, which the web does better than anything, and because it's the same UI for one player or a thousand.
 
 Building a local HTTP server (Javalin/Helidon, ~50 lines) serving a web frontend would give:
+
 - one UI codebase for desktop and future multiplayer
 - vastly faster iteration
 - but: a second tech stack to learn/maintain, a worse "it's an app" feel, and discarded existing work
@@ -211,6 +215,7 @@ Building a local HTTP server (Javalin/Helidon, ~50 lines) serving a web frontend
 **Call: don't switch now.** The module split above makes the UI a *driver*, not the architecture — so this becomes a genuinely reversible decision. Finish the single-player game on JavaFX. If and when multiplayer becomes real, `softman-desktop` is one client and a web client is another, both talking to the same core. That's the whole point of doing the split first.
 
 If JavaFX is kept, two worth-it upgrades:
+
 - **AtlantaFX** instead of BootstrapFX — modern, actively maintained themes, dark mode
 - Consider FXML + Scene Builder for *static* layouts (tabs, forms); keep programmatic construction for dynamic content like lineup rows
 
@@ -221,7 +226,7 @@ If JavaFX is kept, two worth-it upgrades:
 More urgent than either question above — the current stack leans on several effectively-abandoned libraries:
 
 | Dependency | Version | Concern |
-|---|---|---|
+| --- | --- | --- |
 | **FontAwesomeFX** | 9.1.2 | Hosted on Bitbucket, no releases in years; the README links a Bitbucket branch that may not survive. **Highest risk** |
 | **BootstrapFX** | 0.4.0 | No release in years; styling is dated |
 | **Medusa** | 16.0.0 | Sporadic maintenance, niche (gauges only) |
