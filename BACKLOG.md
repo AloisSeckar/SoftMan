@@ -15,7 +15,6 @@ Tasks deferred for later. Remove an entry once it is done.
   batter after 2–3 failed at-bats, pick replacements by attributes instead of at random.
 - [ ] **Per-team strategy** — `MatchSimulator` uses one strategy for both teams; allow a different one per
   team (e.g. user-chosen coaching style for auto-simulated games).
-- [ ] **"Simulate inning" button** in `MatchTab` — `MatchSimulator.simulateInning()` already exists.
 
 ## Match simulation
 

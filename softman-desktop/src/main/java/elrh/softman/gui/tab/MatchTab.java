@@ -39,6 +39,7 @@ public class MatchTab extends BorderPane {
     private final TextArea matchOverview;
 
     private final Button simButton;
+    private final Button simInningButton;
     private final Button playButton;
 
     private final HBox substitutionBar;
@@ -91,13 +92,16 @@ public class MatchTab extends BorderPane {
         simButton = new Button("Simulate game");
         simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
 
+        simInningButton = new Button("Simulate inning");
+        simInningButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateInning());
+
         playButton = new Button("Play game");
         playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
 
         Button refreshButton = new Button("Refresh");
         refreshButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> refreshMatch());
 
-        var buttonBar = new HBox(10, simButton, playButton, refreshButton);
+        var buttonBar = new HBox(10, simButton, simInningButton, playButton, refreshButton);
         buttonBar.getStyleClass().add("padding-5");
         buttonBar.setAlignment(Pos.CENTER);
 
@@ -170,6 +174,15 @@ public class MatchTab extends BorderPane {
         }
     }
 
+    private void simulateInning() {
+        if (sim != null) {
+            sim.simulateInning();
+            refreshMatch();
+        } else {
+            ErrorUtils.raise("Match simulator cannot be NULL");
+        }
+    }
+
     private void refreshMatch() {
         matchOverview.clear();
         match.printPlayByPlay(matchOverview::appendText);
@@ -185,6 +198,7 @@ public class MatchTab extends BorderPane {
         boolean finishedMatch = match.isFinished();
         controlsDisabled = !todayMatch || finishedMatch;
         simButton.setDisable(controlsDisabled);
+        simInningButton.setDisable(controlsDisabled);
         playButton.setDisable(controlsDisabled);
 
         refreshSubstitutions();
