@@ -10,6 +10,12 @@ Tasks deferred for later. Remove an entry once it is done.
 - [ ] **Courtesy runners** for pitcher/catcher (do not count as substitution).
 - [ ] **Offensive substitutions other than PH/PR** — currently only the upcoming batter or a runner
   can be replaced while batting.
+- [ ] **Systematic substitution strategy** — new `ISubstitutionStrategy` beside `RandomSubstitutionStrategy`:
+  pull the pitcher after a series of hits/walks (per-game `PlayerStats` of the current pitcher), pull a
+  batter after 2–3 failed at-bats, pick replacements by attributes instead of at random.
+- [ ] **Per-team strategy** — `MatchSimulator` uses one strategy for both teams; allow a different one per
+  team (e.g. user-chosen coaching style for auto-simulated games).
+- [ ] **"Simulate inning" button** in `MatchTab` — `MatchSimulator.simulateInning()` already exists.
 
 ## Match simulation
 

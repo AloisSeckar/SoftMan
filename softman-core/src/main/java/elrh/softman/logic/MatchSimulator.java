@@ -13,10 +13,13 @@ import static elrh.softman.logic.enums.StatsType.*;
 import elrh.softman.logic.core.stats.BoxScore;
 import elrh.softman.logic.core.data.PlayerAttributes;
 import elrh.softman.logic.interfaces.IMatchReporter;
+import elrh.softman.logic.interfaces.ISubstitutionStrategy;
+import elrh.softman.logic.strategy.RandomSubstitutionStrategy;
 import elrh.softman.utils.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,9 +32,14 @@ public class MatchSimulator {
     @Setter
     private boolean visualMode = false;
 
-    // substitutions of this team are made by the user, never randomly
+    // the user substitutes for this team, the strategy only takes over during auto-simulation
     @Setter
     private UUID managedTeamId;
+
+    @Setter
+    private ISubstitutionStrategy substitutionStrategy = new RandomSubstitutionStrategy();
+
+    private boolean autoSimulation = false;
 
     private final IMatchReporter reporter;
     private final Match match;
@@ -41,8 +49,12 @@ public class MatchSimulator {
     private final Lineup homeLineup;
     
     private boolean inningStart = true;
+    @Getter
+    private boolean halfInningStart = false;
+    @Getter
     private int inning = 1;
     private boolean top = true;
+    @Getter
     private int outs = 0;
     private int awayBatter = 1;
     private int homeBatter = 1;
@@ -68,16 +80,28 @@ public class MatchSimulator {
 
     // keep simulating until the end of the match
     public void simulateMatch() {
-        while (!match.isFinished()) {
-            simulateInning();
+        boolean previous = autoSimulation;
+        autoSimulation = true;
+        try {
+            while (!match.isFinished()) {
+                simulateInning();
+            }
+        } finally {
+            autoSimulation = previous;
         }
     }
 
     // keep simulating until the end of current inning
     public void simulateInning() {
-        int currentInning = inning;
-        while (!match.isFinished() && inning == currentInning) {
-            simulatePlay();
+        boolean previous = autoSimulation;
+        autoSimulation = true;
+        try {
+            int currentInning = inning;
+            while (!match.isFinished() && inning == currentInning) {
+                simulatePlay();
+            }
+        } finally {
+            autoSimulation = previous;
         }
     }
 
@@ -115,12 +139,16 @@ public class MatchSimulator {
         return lineup == (top ? awayLineup : homeLineup);
     }
 
+    public int getUpcomingBatOrder(Lineup lineup) {
+        return lineup == awayLineup ? awayBatter : homeBatter;
+    }
+
     // PH for the upcoming batter, PR for a runner, null when the spot cannot be replaced on offense
     public PlayerPosition getOffensiveRole(Lineup lineup, int batOrder) {
         if (!isBatting(lineup)) {
             return null;
         }
-        if (batOrder == (lineup == awayLineup ? awayBatter : homeBatter)) {
+        if (batOrder == getUpcomingBatOrder(lineup)) {
             return PINCH_HITTER;
         }
         var current = lineup.getCurrentBatter(batOrder);
@@ -221,12 +249,11 @@ public class MatchSimulator {
     }
 
     private void setUpPlay() {
+        halfInningStart = inningStart;
         if (inningStart) {
             setUpInning();
-            evaluateRandomSubstitution(8);
-        } else {
-            evaluateRandomSubstitution(15);
         }
+        evaluateSubstitutions();
         ensureDefense();
 
         pitcher = fieldingLineup.getCurrentPositionPlayer(PITCHER);
@@ -574,19 +601,14 @@ public class MatchSimulator {
         boxScore.addPoint(inning, top);
     }
 
-    private void evaluateRandomSubstitution(int probability) {
-        if (inning > 2 && random.nextInt(probability) == 0) {
-            var lineup = random.nextBoolean() ? awayLineup : homeLineup;
-            if (managedTeamId != null && managedTeamId.equals(lineup.getLineupInfo().getTeamId())) {
-                return;
-            }
-            var batOrder = 1 + random.nextInt(Lineup.POSITION_PLAYERS);
-            var currentPlayer = lineup.getCurrentBatter(batOrder);
-            var candidates = lineup.getAvailableReplacements(batOrder);
-            if (currentPlayer != null && !candidates.isEmpty()) {
-                var randomSub = candidates.get(random.nextInt(candidates.size()));
-                // failures (e.g. offense spot that is neither batter nor runner) just mean no substitution
-                substitute(lineup, batOrder, randomSub, currentPlayer.getPosition());
+    private void evaluateSubstitutions() {
+        if (substitutionStrategy != null) {
+            for (var lineup : new Lineup[] {battingLineup, fieldingLineup}) {
+                boolean userDecides = !autoSimulation && managedTeamId != null
+                    && managedTeamId.equals(lineup.getLineupInfo().getTeamId());
+                if (!userDecides) {
+                    substitutionStrategy.evaluate(this, lineup);
+                }
             }
         }
     }

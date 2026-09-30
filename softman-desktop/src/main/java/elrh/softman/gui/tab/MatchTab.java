@@ -160,12 +160,11 @@ public class MatchTab extends BorderPane {
         }
     }
 
+    // during auto-simulation the substitution strategy settles the defense
     private void simulateMatch() {
         if (sim != null) {
-            if (defenseReady()) {
-                sim.simulateMatch();
-                refreshMatch();
-            }
+            sim.simulateMatch();
+            refreshMatch();
         } else {
             ErrorUtils.raise("Match simulator cannot be NULL");
         }
