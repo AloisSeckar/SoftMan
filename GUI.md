@@ -59,11 +59,37 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 
 ## Plan
 
+### Progress
+
+- [x] -1a `AGENTS.md`
+- [x] -1b `.github/instructions/gui.instructions.md`
+- [x] -1c `.vscode/settings.json` excludes
+- [x] -1d Locked conventions recorded in `AGENTS.md`
+- [x] -1e TestFX smoke test (`softman-desktop/src/test/java/elrh/softman/gui/GuiSmokeTest.java`), green on JavaFX 21
+- [x] -1f This checklist
+- [x] 0.1 JavaFX 25.0.4
+- [x] 0.2 AtlantaFX 2.1.0, Ikonli 12.4.0 (+ Feather pack), ControlsFX 11.2.4
+- [x] 0.3 `NordLight` user-agent stylesheet via `Softman.applyTheme(Scene)`; `softman.css` + BootstrapFX still layered on top
+- [ ] 0.4 Human: run the app, screenshot the baseline
+- [ ] 1.1 `softman.css` token layer
+- [ ] 1.2 `gui.kit` package
+- [ ] Golden template: `ClubInfoTile` on the kit, human-reviewed
+- [ ] 2.1 Chrome
+- [ ] 2.2 Tiles
+- [ ] 2.3 PlayerAttributesTile
+- [ ] 2.4 Tables
+- [ ] 2.5 DefenseTile
+- [ ] 2.6 Lineup / Training / Standings tabs
+- [ ] 2.7 PlayerTab
+- [ ] 2.8 MatchTab
+- [ ] 2.9 Asset contrast pass
+- [ ] 3.1 Drop old libs
+- [ ] 3.2 Light/dark toggle
+- [ ] 3.3 Dev tools (optional)
+
 ### Phase -1 — Groundwork for AI-assisted work (do FIRST)
 
-Purpose: stop every session re-deriving the same facts, and cap token burn. The repo currently has
-**no** `AGENTS.md`, **no** `.github/copilot-instructions.md`, **no** `*.instructions.md`, **no**
-`.editorconfig`. Only `.gitignore` exists (it already covers `target/`, `.vscode/`, `sav/`, `log/`).
+Purpose: stop every session re-deriving the same facts, and cap token burn.
 
 **-1a. Root `AGENTS.md`** — max ~60 lines, terse; long files get skimmed and cost tokens every turn.
 

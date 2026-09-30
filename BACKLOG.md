@@ -27,3 +27,9 @@ Tasks deferred for later. Remove an entry once it is done.
   `LineupTab` after the game until the next game's `setUp`, and past matches don't keep their own lineups.
 - [ ] **Starter stats written into default lineup records** — `Lineup.setUp` sets the match stats on the
   default lineup's `PlayerRecord`s (consequence of the shared lineup above).
+
+## GUI
+
+- [ ] **Migrate to AtlantaFX 3.0.0** — released 2026-09-24; GUI.md locks 2.1.0. Check the changelog for
+  breaking changes (theme classes, `Styles` constants, looked-up `-color-*` vars), bump in root `pom.xml`,
+  run `GuiSmokeTest`, then update the version in GUI.md.

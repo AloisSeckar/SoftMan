@@ -76,11 +76,11 @@ public class MenuFrame extends AnchorPane {
         var menu = new MenuBar();
         menu.getMenus().addAll(menuGame, menuShow);
         
-        menu.prefWidthProperty().bind(Softman.getPrimaryStage().widthProperty());
         menu.getStyleClass().setAll("menu-bar");
         
         super.getChildren().add(menu);
         AnchorPane.setLeftAnchor(menu, 0d);
+        AnchorPane.setRightAnchor(menu, 0d);
         AnchorPane.setTopAnchor(menu, 0d);
 
         // TODO return this custom view control  before going live!

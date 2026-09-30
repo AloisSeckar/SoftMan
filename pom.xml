@@ -18,11 +18,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>25</maven.compiler.release>
 
-        <fx.version>21.0.5</fx.version>
+        <fx.version>25.0.4</fx.version>
         <slf4j.version>2.0.17</slf4j.version>
         <junit.version>6.0.2</junit.version>
         <hamcrest.version>3.0</hamcrest.version>
         <lombok.version>1.18.48</lombok.version>
+        <testfx.version>4.0.18</testfx.version>
+        <ikonli.version>12.4.0</ikonli.version>
     </properties>
 
     <dependencyManagement>
@@ -133,7 +135,26 @@
             <dependency>
                 <groupId>org.controlsfx</groupId>
                 <artifactId>controlsfx</artifactId>
-                <version>11.2.3</version>
+                <version>11.2.4</version>
+            </dependency>
+
+            <!-- theme - https://github.com/mkpaz/atlantafx -->
+            <dependency>
+                <groupId>io.github.mkpaz</groupId>
+                <artifactId>atlantafx-base</artifactId>
+                <version>2.1.0</version>
+            </dependency>
+
+            <!-- icons - https://kordamp.org/ikonli/ -->
+            <dependency>
+                <groupId>org.kordamp.ikonli</groupId>
+                <artifactId>ikonli-javafx</artifactId>
+                <version>${ikonli.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kordamp.ikonli</groupId>
+                <artifactId>ikonli-feather-pack</artifactId>
+                <version>${ikonli.version}</version>
             </dependency>
 
             <!-- testing -->
@@ -153,6 +174,18 @@
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>
                 <version>${hamcrest.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testfx</groupId>
+                <artifactId>testfx-core</artifactId>
+                <version>${testfx.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testfx</groupId>
+                <artifactId>testfx-junit5</artifactId>
+                <version>${testfx.version}</version>
                 <scope>test</scope>
             </dependency>
 

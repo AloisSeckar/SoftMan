@@ -1,5 +1,6 @@
 package elrh.softman;
 
+import atlantafx.base.theme.NordLight;
 import elrh.softman.db.SqliteNameSource;
 import elrh.softman.db.SqliteGameRepository;
 import elrh.softman.gui.MainLayout;
@@ -56,8 +57,7 @@ public class Softman extends Application {
         var wrappingLayout = new StackPane(MainLayout.getInstance(), spinner);
 
         var scene = new Scene(wrappingLayout, 0, 0);
-        scene.getStylesheets().add(getClass().getResource("/css/softman.css").toExternalForm());
-        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
+        applyTheme(scene);
 
         // TODO unify actions performed upon starting new game
         AssociationManager.getInstance().setSimulationRunner(new SimulationController(spinner));
@@ -79,6 +79,12 @@ public class Softman extends Application {
                 closeIfConfirmed();
             }
         });
+    }
+
+    public static void applyTheme(Scene scene) {
+        Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
+        scene.getStylesheets().add(Softman.class.getResource("/css/softman.css").toExternalForm());
+        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
     }
 
     private static SqliteNameSource nameSource;
