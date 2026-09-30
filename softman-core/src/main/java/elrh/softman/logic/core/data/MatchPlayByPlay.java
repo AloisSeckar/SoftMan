@@ -1,7 +1,9 @@
 package elrh.softman.logic.core.data;
 
 import java.util.UUID;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
 public class MatchPlayByPlay extends AbstractEntity {

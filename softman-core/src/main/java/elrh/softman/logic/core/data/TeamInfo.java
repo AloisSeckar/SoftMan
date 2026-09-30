@@ -2,7 +2,11 @@ package elrh.softman.logic.core.data;
 
 import elrh.softman.logic.enums.PlayerLevel;
 import java.util.UUID;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
 @RequiredArgsConstructor // TODO why RequiredArgsConstructor not working out of the box with Data?

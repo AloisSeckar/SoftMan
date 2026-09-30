@@ -3,7 +3,10 @@ package elrh.softman.logic.core.data;
 import elrh.softman.logic.enums.PlayerLevel;
 import java.util.Objects;
 import java.util.UUID;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data @NoArgsConstructor(force = true) @RequiredArgsConstructor
 public class LeagueInfo extends AbstractEntity {

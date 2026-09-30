@@ -2,7 +2,8 @@ package elrh.softman.logic.core.data;
 
 import java.util.Random;
 import java.util.UUID;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data @EqualsAndHashCode(callSuper=true)
 public class PlayerAttributes extends AbstractEntity {

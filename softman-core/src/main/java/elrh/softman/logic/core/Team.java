@@ -13,7 +13,7 @@ import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
-import lombok.*;
+import lombok.Getter;
 
 public class Team {
     

@@ -1,7 +1,11 @@
 package elrh.softman.logic.core.data;
 
 import java.util.UUID;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor(force = true)
 @RequiredArgsConstructor

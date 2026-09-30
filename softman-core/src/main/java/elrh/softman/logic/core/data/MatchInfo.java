@@ -4,7 +4,12 @@ import elrh.softman.logic.enums.MatchStatus;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
 import java.util.UUID;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
 public class MatchInfo extends AbstractEntity {

@@ -1,7 +1,8 @@
 package elrh.softman.logic.enums;
 
 import static elrh.softman.logic.enums.PlayerGender.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum PlayerLevel {

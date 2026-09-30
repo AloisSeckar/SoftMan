@@ -9,7 +9,7 @@ import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.Utils;
 import java.util.*;
-import lombok.*;
+import lombok.Getter;
 
 // TODO better validations (player may not be in lineup twice, all positions must be set, etc.)
 // TODO method for retrieving current player at given position in defense

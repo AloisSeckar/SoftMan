@@ -1,7 +1,7 @@
 package elrh.softman.logic.core.stats;
 
 import java.util.UUID;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class Standing implements Comparable<Standing> {

@@ -3,7 +3,9 @@ package elrh.softman.logic.core.data;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.enums.PlayerGender;
 import java.util.UUID;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data @EqualsAndHashCode(callSuper=true) @NoArgsConstructor
 public class PlayerInfo extends AbstractEntity implements Comparable<PlayerInfo> {

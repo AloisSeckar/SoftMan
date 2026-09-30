@@ -6,7 +6,9 @@ import java.time.LocalDate;
 import elrh.softman.logic.interfaces.ISimulationRunner;
 import elrh.softman.utils.ErrorUtils;
 import javafx.scene.control.ProgressIndicator;
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class SimulationController implements ISimulationRunner {

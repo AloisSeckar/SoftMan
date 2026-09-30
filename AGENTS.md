@@ -25,7 +25,7 @@ Working directory for run/test is the repo root — `softman.db`, `sav/` and `lo
 ## Conventions
 
 - Java 25 source/target; modern language features (records, sealed, pattern matching) welcome
-- Lombok everywhere, incl. `@Slf4j` — log via the generated `LOG` field
+- Lombok everywhere, incl. `@Slf4j` — log via the generated `LOG` field (wildcard `import lombok.*` is not possible, all must be explicit)
 - Errors: `ErrorUtils.handleException(source, ex)` / `ErrorUtils.raise(msg)`; operations return `Result`
 - Singletons use the `getInstance()` pattern — keep it, do not introduce DI
 - Logging: SLF4J API + `slf4j-simple` (`simplelogger.properties` per module)
