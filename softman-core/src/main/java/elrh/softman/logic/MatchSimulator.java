@@ -398,7 +398,8 @@ public class MatchSimulator {
                     }
                 });
                 for (int j = 0; j < lines.size(); j++) {
-                    appendText(StringUtils.rightPad(names.get(j).toString(), 30, " ") + " | ");
+                    var indent = j > 0 ? "  " : "";
+                    appendText(StringUtils.rightPad(indent + names.get(j), 30, " ") + " | ");
                     var record = lines.get(j);
                     appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 2) + " | ");
