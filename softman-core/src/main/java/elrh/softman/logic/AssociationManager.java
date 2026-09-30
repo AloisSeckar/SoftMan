@@ -226,7 +226,7 @@ public class AssociationManager {
         var ret = new LinkedHashMap<UUID, List<Match>>();
         getLeagues(clock.getYear()).forEach(league -> {
             var leagueId = league.getLeagueInfo().getLeagueId();
-            var leagueMatches = new ArrayList<>(league.getMatchesForDay(clock.getViewDate()));
+            var leagueMatches = new ArrayList<>(league.getMatchesForDay(clock.getCurrentDate()));
             ret.put(leagueId, leagueMatches);
         });
         return ret;

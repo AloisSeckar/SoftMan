@@ -182,6 +182,18 @@ public class AssociationManagerTest {
     }
 
     @Test
+    @DisplayName("nextDayIgnoresViewDateTest")
+    void nextDayIgnoresViewDateTest() {
+        initMatches();
+        var match = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
+
+        manager.getClock().nextViewDay();
+        result = manager.nextDay();
+        assertTrue(result.ok(), "advancing to next day should be successful");
+        assertTrue(match.isScheduled(), "match on the viewed date must not be simulated before its day");
+    }
+
+    @Test
     @DisplayName("simulateUntilTest")
     void simulateUntilTest() {
         initMatches();
