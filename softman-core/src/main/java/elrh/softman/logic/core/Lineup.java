@@ -3,6 +3,7 @@ package elrh.softman.logic.core;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.data.LineupInfo;
+import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.logic.core.data.PlayerRecord;
 import elrh.softman.logic.core.data.PlayerStats;
 import elrh.softman.logic.enums.PlayerPosition;
@@ -81,6 +82,113 @@ public class Lineup {
         }
     }
 
+    // fastpitch rules: a starter may re-enter once into his own spot, a substitute never re-enters
+    public List<PlayerInfo> getAvailableReplacements(int batOrder) {
+        var ret = new ArrayList<PlayerInfo>();
+        var spot = getSpot(batOrder);
+        if (spot == null) {
+            return ret;
+        }
+        var starter = spot.getFirst().getPlayer();
+        if (!samePlayer(spot.getLast().getPlayer(), starter) && !hasReEntered(spot)) {
+            ret.add(starter);
+        }
+        for (var substitute : substitutes) {
+            if (substitute != null && !hasAppeared(substitute.getPlayer())) {
+                ret.add(substitute.getPlayer());
+            }
+        }
+        return ret;
+    }
+
+    // DP/FLEX moves are not supported, so the DP spot stays offense-only
+    public List<PlayerPosition> getDefensivePositions(int batOrder) {
+        var spot = getSpot(batOrder);
+        if (spot != null && spot.getFirst().getPosition() == PlayerPosition.DESIGNATED_PLAYER) {
+            return List.of(PlayerPosition.DESIGNATED_PLAYER);
+        }
+        return PlayerPosition.getAvailablePositions(false, false);
+    }
+
+    public Result replacePlayer(int batOrder, PlayerInfo player, PlayerPosition position) {
+        var spot = getSpot(batOrder);
+        if (spot == null) {
+            return new Result(false, String.format("Batting order %d not initialized", batOrder));
+        }
+        if (player == null || getAvailableReplacements(batOrder).stream().noneMatch(p -> samePlayer(p, player))) {
+            return new Result(false, String.format("%s cannot enter the game at batting order %d", player, batOrder));
+        }
+        if (position == null || !isAllowedPosition(batOrder, position)) {
+            return new Result(false, String.format("Position %s is not allowed at batting order %d", position, batOrder));
+        }
+        appendRecord(spot, player, position);
+        return Constants.RESULT_OK;
+    }
+
+    public Result changePosition(int batOrder, PlayerPosition position) {
+        var spot = getSpot(batOrder);
+        if (spot == null) {
+            return new Result(false, String.format("Batting order %d not initialized", batOrder));
+        }
+        if (position == null || !getDefensivePositions(batOrder).contains(position)) {
+            return new Result(false, String.format("Position %s is not allowed at batting order %d", position, batOrder));
+        }
+        var current = spot.getLast();
+        if (current.getPosition() == position) {
+            return new Result(false, String.format("%s already plays %s", current, position));
+        }
+        appendRecord(spot, current.getPlayer(), position);
+        return Constants.RESULT_OK;
+    }
+
+    public Result checkDefense() {
+        var counts = new EnumMap<PlayerPosition, Integer>(PlayerPosition.class);
+        for (int i = 1; i <= POSITION_PLAYERS; i++) {
+            var current = getCurrentBatter(i);
+            if (current != null) {
+                if (!getDefensivePositions(i).contains(current.getPosition())) {
+                    return new Result(false, String.format("%s (%s) needs a defensive position", current, current.getPosition()));
+                }
+                counts.merge(current.getPosition(), 1, Integer::sum);
+            }
+        }
+        for (var position : PlayerPosition.getAvailablePositions(false, false)) {
+            int count = counts.getOrDefault(position, 0);
+            if (count == 0) {
+                return new Result(false, String.format("Nobody plays %s", position));
+            } else if (count > 1) {
+                return new Result(false, String.format("%s is assigned more than once", position));
+            }
+        }
+        return Constants.RESULT_OK;
+    }
+
+    // fallback for AI and full simulation: unsettled or duplicated players take the uncovered positions
+    public List<PlayerRecord> settleDefense() {
+        var changed = new ArrayList<PlayerRecord>();
+        var missing = new ArrayList<>(PlayerPosition.getAvailablePositions(false, false));
+        var unsettled = new ArrayList<Integer>();
+        for (int i = 1; i <= POSITION_PLAYERS; i++) {
+            var current = getCurrentBatter(i);
+            if (current != null) {
+                if (getDefensivePositions(i).contains(current.getPosition())
+                    && (current.getPosition() == PlayerPosition.DESIGNATED_PLAYER || missing.remove(current.getPosition()))) {
+                    continue;
+                }
+                unsettled.add(i);
+            }
+        }
+        for (int batOrder : unsettled) {
+            var allowed = getDefensivePositions(batOrder);
+            var position = allowed.contains(PlayerPosition.DESIGNATED_PLAYER) ? PlayerPosition.DESIGNATED_PLAYER
+                : !missing.isEmpty() ? missing.removeFirst() : null;
+            if (position != null) {
+                changed.add(appendRecord(positionPlayers[batOrder - 1], getCurrentBatter(batOrder).getPlayer(), position));
+            }
+        }
+        return changed;
+    }
+
     public PlayerRecord getCurrentBatter(int batOrder) {
         if (batOrder > 0 && batOrder <= POSITION_PLAYERS) {
             var lineupSpot = positionPlayers[batOrder - 1];
@@ -152,6 +260,60 @@ public class Lineup {
                 substitute.setStats(new PlayerStats());
             }
         }
+    }
+
+    private ArrayList<PlayerRecord> getSpot(int batOrder) {
+        if (batOrder > 0 && batOrder <= POSITION_PLAYERS && Utils.listNotEmpty(positionPlayers[batOrder - 1])) {
+            return positionPlayers[batOrder - 1];
+        }
+        return null;
+    }
+
+    private boolean isAllowedPosition(int batOrder, PlayerPosition position) {
+        return position == PlayerPosition.PINCH_HITTER || position == PlayerPosition.PINCH_RUNNER
+            || getDefensivePositions(batOrder).contains(position);
+    }
+
+    // new record per change keeps the starter record intact; the same player keeps one stats line
+    private PlayerRecord appendRecord(List<PlayerRecord> spot, PlayerInfo player, PlayerPosition position) {
+        var record = new PlayerRecord(player, position);
+        var previous = spot.stream().filter(r -> samePlayer(r.getPlayer(), player)).findFirst();
+        if (previous.isPresent()) {
+            record.setStats(previous.get().getStats());
+        } else {
+            var matchStats = spot.getFirst().getStats();
+            record.getStats().init(matchStats.getMatchId(), matchStats.getMatchStr(), player.getPlayerId(),
+                String.format("%s, %s", player, position));
+        }
+        spot.add(record);
+        return record;
+    }
+
+    private boolean hasReEntered(List<PlayerRecord> spot) {
+        var starter = spot.getFirst().getPlayer();
+        boolean left = false;
+        for (var record : spot) {
+            boolean isStarter = samePlayer(record.getPlayer(), starter);
+            if (!isStarter) {
+                left = true;
+            } else if (left) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasAppeared(PlayerInfo player) {
+        for (var spot : positionPlayers) {
+            if (spot != null && spot.stream().anyMatch(r -> samePlayer(r.getPlayer(), player))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean samePlayer(PlayerInfo a, PlayerInfo b) {
+        return a != null && b != null && a.getPlayerId().equals(b.getPlayerId());
     }
 
 }

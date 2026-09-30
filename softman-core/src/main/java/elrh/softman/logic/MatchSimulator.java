@@ -1,9 +1,12 @@
 package elrh.softman.logic;
 
 import elrh.softman.logic.core.Lineup;
+import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.logic.core.data.PlayerRecord;
 import elrh.softman.logic.core.data.MatchPlayByPlay;
 import elrh.softman.logic.core.Match;
+import elrh.softman.logic.core.data.PlayerStats;
+import elrh.softman.logic.enums.PlayerPosition;
 import static elrh.softman.logic.enums.MatchStatus.*;
 import static elrh.softman.logic.enums.PlayerPosition.*;
 import static elrh.softman.logic.enums.StatsType.*;
@@ -11,7 +14,9 @@ import elrh.softman.logic.core.stats.BoxScore;
 import elrh.softman.logic.core.data.PlayerAttributes;
 import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.*;
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +28,10 @@ public class MatchSimulator {
 
     @Setter
     private boolean visualMode = false;
+
+    // substitutions of this team are made by the user, never randomly
+    @Setter
+    private UUID managedTeamId;
 
     private final IMatchReporter reporter;
     private final Match match;
@@ -102,6 +111,82 @@ public class MatchSimulator {
         }
     }
 
+    public boolean isBatting(Lineup lineup) {
+        return lineup == (top ? awayLineup : homeLineup);
+    }
+
+    // PH for the upcoming batter, PR for a runner, null when the spot cannot be replaced on offense
+    public PlayerPosition getOffensiveRole(Lineup lineup, int batOrder) {
+        if (!isBatting(lineup)) {
+            return null;
+        }
+        if (batOrder == (lineup == awayLineup ? awayBatter : homeBatter)) {
+            return PINCH_HITTER;
+        }
+        var current = lineup.getCurrentBatter(batOrder);
+        if (current != null && (current == base1 || current == base2 || current == base3)) {
+            return PINCH_RUNNER;
+        }
+        return null;
+    }
+
+    public Result substitute(Lineup lineup, int batOrder, PlayerInfo player, PlayerPosition defensivePosition) {
+        if (!match.isActive()) {
+            return new Result(false, "Substitutions are only possible during the game");
+        }
+        PlayerPosition position;
+        if (isBatting(lineup)) {
+            position = getOffensiveRole(lineup, batOrder);
+            if (position == null) {
+                return new Result(false, "On offense only the upcoming batter (PH) or a runner (PR) can be replaced");
+            }
+        } else {
+            position = defensivePosition;
+            if (position == null || !lineup.getDefensivePositions(batOrder).contains(position)) {
+                return new Result(false, String.format("Select a defensive position for batting order %d", batOrder));
+            }
+        }
+
+        var replaced = lineup.getCurrentBatter(batOrder);
+        var result = lineup.replacePlayer(batOrder, player, position);
+        if (result.ok()) {
+            var entering = lineup.getCurrentBatter(batOrder);
+            if (replaced == base1) {
+                base1 = entering;
+            } else if (replaced == base2) {
+                base2 = entering;
+            } else if (replaced == base3) {
+                base3 = entering;
+            }
+            appendText(String.format("SUBSTITUTION: %s (%s) FOR %s (%s)\n",
+                entering, entering.getPosition(), replaced, replaced.getPosition()));
+        }
+        return result;
+    }
+
+    public Result changePosition(Lineup lineup, int batOrder, PlayerPosition position) {
+        if (!match.isActive()) {
+            return new Result(false, "Position changes are only possible during the game");
+        }
+        if (isBatting(lineup)) {
+            return new Result(false, "Defensive positions can only be changed when the team is in the field");
+        }
+        var result = lineup.changePosition(batOrder, position);
+        if (result.ok()) {
+            var current = lineup.getCurrentBatter(batOrder);
+            appendText(String.format("DEFENSIVE CHANGE: %s MOVES TO %s\n", current, current.getPosition()));
+        }
+        return result;
+    }
+
+    // the defense only has to be complete when the team is about to field
+    public Result checkDefense(Lineup lineup) {
+        if (match.isActive() && !isBatting(lineup)) {
+            return lineup.checkDefense();
+        }
+        return Constants.RESULT_OK;
+    }
+
     ///////
     private void setUpMatch() {
         var matchId = match.getId();
@@ -142,6 +227,7 @@ public class MatchSimulator {
         } else {
             evaluateRandomSubstitution(15);
         }
+        ensureDefense();
 
         pitcher = fieldingLineup.getCurrentPositionPlayer(PITCHER);
         pitcherAttr = pitcher.getPlayer().getAttributes();
@@ -271,12 +357,22 @@ public class MatchSimulator {
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
             var players = lineup.getPositionPlayers()[i];
             if (Utils.listNotEmpty(players)) {
+                // records of one player share a stats line, print it once with all his positions
+                var lines = new ArrayList<PlayerStats>();
+                var names = new ArrayList<StringBuilder>();
                 players.forEach(playerRecord -> {
-                    var nameWithPos = String.format("%s, %s",
-                        playerRecord.getPlayer().getName(),
-                        playerRecord.getPosition());
-                    appendText(StringUtils.rightPad(nameWithPos, 30, " ") + " | ");
-                    var record = playerRecord.getStats();
+                    var stats = playerRecord.getStats();
+                    int idx = indexOfIdentity(lines, stats);
+                    if (idx < 0) {
+                        lines.add(stats);
+                        names.add(new StringBuilder(playerRecord.getPlayer().getName() + ", " + playerRecord.getPosition()));
+                    } else {
+                        names.get(idx).append("-").append(playerRecord.getPosition());
+                    }
+                });
+                for (int j = 0; j < lines.size(); j++) {
+                    appendText(StringUtils.rightPad(names.get(j).toString(), 30, " ") + " | ");
+                    var record = lines.get(j);
                     appendText(StringUtils.leftPad(String.valueOf(record.getBPA()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBAB()), 2) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getBH()), 2) + " | ");
@@ -285,10 +381,19 @@ public class MatchSimulator {
                     appendText(StatsUtils.getAVG(record.getBAB(), record.getBH()) + " | ");
                     appendText(StringUtils.leftPad(String.valueOf(record.getFPO()), 2) + " | ");
                     appendText(StatsUtils.getIP(record.getFIP()) + " | \n");
-                });
+                }
             }
         }
 
+    }
+
+    private static int indexOfIdentity(ArrayList<PlayerStats> list, PlayerStats stats) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) == stats) {
+                return i;
+            }
+        }
+        return -1;
     }
     
     private void appendText(String text) {
@@ -470,23 +575,26 @@ public class MatchSimulator {
     }
 
     private void evaluateRandomSubstitution(int probability) {
-        if (inning > 2) {
-            boolean performSubstitution = random.nextInt() % probability == 0;
-            if (performSubstitution) {
-                var lineup = random.nextBoolean() ? awayLineup : homeLineup;
-                var randomSubIndex = random.nextInt(Lineup.SUBSTITUTES);
-                var randomSub = lineup.getSubstitutes()[randomSubIndex];
-                if (randomSub != null) {
-                    var randomPlrIndex = random.nextInt(Lineup.POSITION_PLAYERS);
-                    var currentPlayer = lineup.getCurrentBatter(randomPlrIndex);
-                    if (currentPlayer != null) {
-                        var substitution = new PlayerRecord(randomSub.getPlayer(), currentPlayer.getPosition());
-                        substitution.getStats().initFrom(currentPlayer.getStats());
-                        appendText("SUBSTITUTION: " + substitution.getPlayer() + "(" + substitution.getPosition() + ") FOR " + currentPlayer.getPlayer() + "(" + currentPlayer.getPosition() + ")\n");
-                        lineup.substitutePlayer(randomPlrIndex, substitution);
-                    }
-                }
+        if (inning > 2 && random.nextInt(probability) == 0) {
+            var lineup = random.nextBoolean() ? awayLineup : homeLineup;
+            if (managedTeamId != null && managedTeamId.equals(lineup.getLineupInfo().getTeamId())) {
+                return;
             }
+            var batOrder = 1 + random.nextInt(Lineup.POSITION_PLAYERS);
+            var currentPlayer = lineup.getCurrentBatter(batOrder);
+            var candidates = lineup.getAvailableReplacements(batOrder);
+            if (currentPlayer != null && !candidates.isEmpty()) {
+                var randomSub = candidates.get(random.nextInt(candidates.size()));
+                // failures (e.g. offense spot that is neither batter nor runner) just mean no substitution
+                substitute(lineup, batOrder, randomSub, currentPlayer.getPosition());
+            }
+        }
+    }
+
+    private void ensureDefense() {
+        if (!fieldingLineup.checkDefense().ok()) {
+            fieldingLineup.settleDefense().forEach(record ->
+                appendText(String.format("DEFENSIVE CHANGE: %s MOVES TO %s\n", record, record.getPosition())));
         }
     }
 

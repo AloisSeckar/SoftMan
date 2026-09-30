@@ -154,4 +154,57 @@ public class LineupTest {
         assertTrue(lineup.useDP(), "DP shouldn't be set");
     }
 
+    private PlayerInfo[] fillDefense() {
+        var positions = PlayerPosition.getAvailablePositions(false, false);
+        var starters = new PlayerInfo[positions.size()];
+        for (int i = 0; i < positions.size(); i++) {
+            starters[i] = PlayerFactory.getRandomPlayer(PlayerGender.M, 2022, i + 10).getPlayerInfo();
+            lineup.initPositionPlayer(i + 1, new PlayerRecord(starters[i], positions.get(i)));
+        }
+        return starters;
+    }
+
+    @Test
+    @DisplayName("replacementRulesTest")
+    void replacementRulesTest() {
+        var starters = fillDefense();
+        lineup.initSubstitute(1, playerRecord1);
+
+        assertEquals(1, lineup.getAvailableReplacements(1).size(), "only the bench player should be available");
+
+        assertTrue(lineup.replacePlayer(1, player1, PlayerPosition.PINCH_HITTER).ok(), "sub should enter");
+        assertFalse(lineup.replacePlayer(2, player1, PlayerPosition.PINCH_HITTER).ok(), "sub cannot enter twice");
+
+        var available = lineup.getAvailableReplacements(1);
+        assertEquals(1, available.size(), "only the starter re-entry should be available");
+        assertEquals(starters[0], available.get(0), "starter should be able to re-enter");
+
+        assertTrue(lineup.replacePlayer(1, starters[0], PlayerPosition.PITCHER).ok(), "starter should re-enter");
+        assertTrue(lineup.getAvailableReplacements(1).isEmpty(), "removed sub and re-entered starter cannot come back");
+        assertSame(lineup.getPositionPlayers()[0].get(0).getStats(), lineup.getCurrentBatter(1).getStats(),
+            "re-entered starter keeps one stats line");
+    }
+
+    @Test
+    @DisplayName("defenseTest")
+    void defenseTest() {
+        fillDefense();
+        lineup.initSubstitute(1, playerRecord1);
+        assertTrue(lineup.checkDefense().ok(), "full defense should be valid");
+
+        lineup.replacePlayer(6, player1, PlayerPosition.PINCH_RUNNER);
+        assertFalse(lineup.checkDefense().ok(), "PR must get a defensive position");
+
+        var settled = lineup.settleDefense();
+        assertEquals(1, settled.size(), "only the PR should be settled");
+        assertEquals(PlayerPosition.SHORT_STOP, lineup.getCurrentBatter(6).getPosition(), "PR should take the open position");
+        assertTrue(lineup.checkDefense().ok(), "settled defense should be valid");
+
+        assertTrue(lineup.changePosition(1, PlayerPosition.CATCHER).ok(), "position change should be accepted");
+        assertFalse(lineup.checkDefense().ok(), "two catchers and no pitcher is invalid");
+        assertTrue(lineup.changePosition(2, PlayerPosition.PITCHER).ok(), "position change should be accepted");
+        assertTrue(lineup.checkDefense().ok(), "swapped defense should be valid");
+        assertEquals(PlayerPosition.PITCHER, lineup.getPositionPlayers()[0].get(0).getPosition(), "starter record stays untouched");
+    }
+
 }

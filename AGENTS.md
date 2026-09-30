@@ -63,3 +63,4 @@ Never speculate about how a change looks on screen.
 ## Other docs
 
 `PLAN.md` — long-term architecture (headless core, future server). Out of scope for GUI work.
+`BACKLOG.md` — deferred tasks and known issues.

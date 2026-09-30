@@ -3,20 +3,28 @@ package elrh.softman.utils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Lineup;
 import elrh.softman.logic.core.data.PlayerRecord;
+import elrh.softman.logic.core.data.PlayerStats;
 import elrh.softman.logic.enums.ActivityType;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.enums.StatsType;
 import static elrh.softman.logic.enums.StatsType.*;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Random;
 
 public class StatsUtils {
 
     public static void saveStats(Lineup lineup) {
+        // several records of one player share the same stats object
+        var saved = Collections.newSetFromMap(new IdentityHashMap<PlayerStats, Boolean>());
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
             var current = lineup.getPositionPlayers()[i];
             if (Utils.listNotEmpty(current)) {
                 current.forEach(data -> {
                     var stats = data.getStats();
+                    if (!saved.add(stats)) {
+                        return;
+                    }
                     // TODO this looks quite inefficient...
                     var player = AssociationManager.getInstance().getPlayerById(data.getPlayer().getPlayerId());
                     player.getStats().add(stats);

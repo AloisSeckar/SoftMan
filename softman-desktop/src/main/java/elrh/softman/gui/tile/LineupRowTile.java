@@ -60,6 +60,8 @@ public class LineupRowTile extends HBox {
             if (selectPosition) {
                 positionCB.setValue(current.getPosition());
             }
+        } else {
+            clear();
         }
     }
 
