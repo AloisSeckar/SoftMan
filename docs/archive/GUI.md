@@ -1,5 +1,7 @@
 # SoftMan GUI — Technology Decisions & Modernization Plan
 
+> **Archived 2026-10-02.** All tasks implemented
+
 ## Decisions (locked)
 
 | Question | Decision |

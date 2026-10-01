@@ -1,5 +1,8 @@
 # SoftMan — Architectural Plan
 
+> **Archived 2026-10-02.** Done: module split, JavaFX purged from core, snapshot save/load, UUID identity,
+> repository interface, AtlantaFX/Ikonli migration. Remaining items moved to [BACKLOG.md](../BACKLOG.md#architecture).
+>
 > Reframing note, 2026-07-30. Goal: finish a single-player desktop game first, but build the core so it can later back an asynchronous online multiplayer league (teams controlled by real players, matches resolved once a week in real time).
 
 Prompt (`Claude Opus 5` via `GitHub Copilot`):

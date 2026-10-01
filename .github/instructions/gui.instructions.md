@@ -2,7 +2,7 @@
 applyTo: "softman-desktop/**"
 ---
 
-# GUI rules (full plan in `docs/GUI.md`)
+# GUI rules (full plan in `docs/archive/GUI.md`)
 
 - Theme is AtlantaFX `NordLight` by default with a runtime `NordDark` toggle — every rule must read on both; never hardcode surface or text colours
 - Build UI through `elrh.softman.gui.kit` (`Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens`) — never ad-hoc

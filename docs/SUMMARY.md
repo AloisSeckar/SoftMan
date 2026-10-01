@@ -1,6 +1,6 @@
 # SoftMan — Current State Summary
 
-> Snapshot taken 2026-07-30, **refreshed 2026-08-04** against the code as it stands after the module split (`fc33b69`…`71ae445`), the JavaFX purge from core (`3197d29`) and persistent save/load (`1d8dce6`).
+> Snapshot taken 2026-07-30, **refreshed 2026-10-02** against the code as it stands after the module split (`fc33b69`…`71ae445`), the JavaFX purge from core (`3197d29`), persistent save/load (`1d8dce6`), in-game substitutions (`e3136ad`, `20d4080`) and the GUI rebuild (`ef9ec94`…`d7b987d`).
 <!---->
 > Purpose: map the existing codebase before resuming development.
 
@@ -11,11 +11,11 @@
 | Type | Desktop game — softball club/team management simulator |
 | Language / Build | Java 25, Maven multi-module (`elrh:softman:1.0-SNAPSHOT`, packaging `pom`) |
 | Modules | `softman-core` (logic) · `softman-db` (persistence) · `softman-desktop` (JavaFX client) |
-| UI | JavaFX 21.0.5 (programmatic, **no FXML files**) |
+| UI | JavaFX 25.0.4 (programmatic, **no FXML files**) on AtlantaFX, built through the `gui.kit` package |
 | Persistence | SQLite via OrmLite — snapshot save/load, not active record |
-| Source files | 86 main (46 core + 9 db + 31 desktop) + 11 test = 97 `.java` files |
-| Build status | ✅ `mvn clean test` → **BUILD SUCCESS**, 36 tests, 0 failures |
-| Last commits | `c01d17a` / `592993b` (GUI rewrite plan), preceded by `1d8dce6` persistent save/load |
+| Source files | 95 main (48 core + 9 db + 38 desktop) + 12 test = 107 `.java` files |
+| Build status | ✅ `mvn test` → **BUILD SUCCESS**, 45 tests (39 core + 6 TestFX), 0 failures |
+| Last commits | `25b857f` / `b595c04` / `d7b987d` (GUI rebuild phases 1–3), preceded by `e3136ad` / `20d4080` in-game substitutions |
 | Branch | `master` |
 
 ### Dependency stack
@@ -58,7 +58,8 @@ graph TD
 | --- | --- | --- |
 | desktop | `.` | `Softman` — JavaFX `Application` entry point, game setup/teardown |
 | desktop | `gui` | `MainLayout` (BorderPane root) |
-| desktop | `gui.frame` | `MenuFrame`, `FocusFrame`, `ContentFrame`, `ActionFrame` |
+| desktop | `gui.frame` | `MenuFrame`, `FocusFrame`, `ContentFrame` (+ `Screen` enum for navigation), `ActionFrame` |
+| desktop | `gui.kit` | `Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens` — the only sanctioned way to build UI |
 | desktop | `gui.tab` | `ClubTab`, `MatchTab`, `TeamTab`, `PlayerTab`, `LineupTab`, `TrainingTab`, `StandingsTab` |
 | desktop | `gui.tile` | `ClubInfoTile`, `CalendarTile`, `ScheduleRowTile`, `MatchHeaderTile`, `BoxScoreTile`, `LineupTile`, `LineupRowTile`, `DefenseTile`, `PlayerInfoTile`, `PlayerAttributesTile` |
 | desktop | `gui.table` | `LeagueStadingsTable`, `TeamPlayersTable` |
@@ -71,7 +72,8 @@ graph TD
 | core | `logic.core.stats` | `Standing`, `BoxScore` |
 | core | `logic.managers` | `ClockManager`, `UserManager` |
 | core | `logic.enums` | `PlayerPosition`, `PlayerLevel`, `PlayerGender`, `MatchStatus`, `StatsType`, `ActivityType` |
-| core | `logic.interfaces` | `IFocusedClubListener`, `IFocusedTeamListener`, `ISimulationRunner`, `IMatchReporter`, `IConfirmationPrompt`, `IGameRepository`, `INameSource` |
+| core | `logic.interfaces` | `IFocusedClubListener`, `IFocusedTeamListener`, `ISimulationRunner`, `IMatchReporter`, `IConfirmationPrompt`, `IGameRepository`, `INameSource`, `ISubstitutionStrategy` |
+| core | `logic.strategy` | `RandomSubstitutionStrategy` |
 | core | `utils` | `Constants`, `ErrorUtils`, `SimUtils`, `StatsUtils`, `Utils` |
 | core | `utils.factory` | `AssociationFactory`, `ClubFactory`, `TeamFactory`, `PlayerFactory` |
 
@@ -84,6 +86,7 @@ graph TD
 - **Schema lives outside the domain** — OrmLite `DatabaseTableConfig`s are built by hand in `softman-db/TableConfigs`, so no persistence annotations leak into core.
 - **UUID identity** — every entity is keyed by `UUID`; managers hold `LinkedHashMap<UUID, …>` to keep insertion order stable.
 - **Observer** — `UserManager` broadcasts focused-club/focused-team changes to registered tabs.
+- **GUI kit** — screens are composed from `gui.kit` factories on AtlantaFX `NordLight`/`NordDark` (runtime toggle via Show → Dark theme); tab navigation goes through `ContentFrame.switchTo(Screen)`.
 - **Lombok** — `@Data`, `@Getter/@Setter`, `@Slf4j` (log field renamed to `LOG` via `lombok.config`).
 - **Two databases** — read-only `softman.db` (name pools, seeded from `names.sql`) and the save file `sav/game-career.db`.
 
@@ -125,7 +128,7 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 2. `AssociationFactory.populateAssociation()` → registers 16 hardcoded clubs, creates **one** league ("1st League Men"), forms 8 teams (20 random players each), schedules the season, adds a spare CLUB01 "B" team, forces the user onto `CLUB01`.
 3. `AssociationManager.nextDay()` runs once during startup, then `MainLayout.setUp()` builds the UI.
 4. User advances time with **Next day** / **Simulate until** in `ActionFrame` → `SimulationController` → `SimulationService` (JavaFX `Service` + `ForkJoinPool` parallel match simulation) → progress spinner.
-5. Matches can also be watched play-by-play in `MatchTab` (S = simulate, P = single play, V = view).
+5. Matches can also be played in `MatchTab` — *Play game* (one play per click), *Simulate inning*, *Simulate game* — with manual substitutions / position changes for the user's team. `ScheduleRowTile` rows offer simulate / play / view icon buttons.
 6. `Softman.closeIfConfirmed()` (Esc key, or Game → Exit) → `saveGame("career")` writes the whole world in one transaction, then closes the stage.
 
 ### Season structure
@@ -141,6 +144,7 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 - Mercy rules implemented (15/10/7 run margins by inning, walk-off after 7).
 - Box score, hits, errors, and full batting/pitching/fielding stat lines are produced by `StatsUtils.saveStats()` into the in-memory model; nothing touches the database during simulation.
 - Play-by-play is always collected into `Match.playByPlay`; `visualMode` now only controls whether each line is also pushed to the `IMatchReporter` (the `MatchTab` text area).
+- In-game substitutions: an `ISubstitutionStrategy` (currently `RandomSubstitutionStrategy`) decides for AI teams and for the user's team during auto-simulation; otherwise the user substitutes manually. Defense is re-settled automatically if a lineup becomes invalid.
 - Fatigue increases per `ActivityType` after a match and recovers each new day.
 
 ---
@@ -156,10 +160,11 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 - League standings with promotion/relegation ordering helpers.
 - Player fatigue gain and daily recovery.
 - Lineup editor with validation (no duplicate players/positions), persisted per team.
-- Defensive field visualisation, player attribute gauges, roster tables, daily calendar/schedule.
-- Time control: next day, simulate-until-date, day/round browsing, spinner + background simulation.
+- Defensive field visualisation, player rating bars, roster tables, daily calendar/schedule.
+- Time control: next day, simulate-until-date, simulate single inning, day/round browsing, spinner + background simulation.
 - **Save / load / new game** — the entire world (clubs, leagues, teams, players, lineups, matches, box scores, play-by-play, standings, clock and user focus) round-trips through `SqliteGameRepository` in a single transaction, with a `GameMeta.SCHEMA_VERSION` guard. Auto-load on start, auto-save on exit, plus explicit menu items.
-- 36 unit tests covering entity identity, managers, clock, club, league, lineup, match, player, team, user.
+- Rebuilt GUI on AtlantaFX + Ikonli with a light/dark theme toggle.
+- 45 tests: 39 core unit tests (entity identity, managers, clock, club, league, lineup incl. substitutions, match, player, team, user) + 6 TestFX smoke tests.
 
 ### ⚠️ Partially implemented
 
@@ -177,8 +182,8 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 ### ❌ Not implemented
 
 - **Training** — `TrainingTab` is a dummy 30-cell `GridView` with empty listeners; no training logic, no attribute progression.
-- **Statistics centre** tab — a `Label` placeholder.
-- **Transfer market** tab — a `Label` placeholder; no contracts, wages, scouting or trading despite `money` existing on clubs.
+- **Statistics centre** tab — a "coming soon" placeholder.
+- **Transfer market** tab — a "coming soon" placeholder; no contracts, wages, scouting or trading despite `money` existing on clubs.
 - **Club selection** — user is force-assigned `CLUB01`.
 - **Player aging / development / retirement** — age is computed, but nothing changes attributes over time.
 - **Finance model** — `START_FUNDS` is set and displayed, never spent or earned.
@@ -202,7 +207,9 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 8. **`AssociationManager.testMode`** flag exists purely to bypass JavaFX during tests — smell that logic and UI are coupled.
 9. **`@SuppressWarnings("unchecked")`** in `GameDatabase.dao()` and `Lineup.positionPlayers` (generic array) — flagged TODOs.
 10. **JavaFX runs unmodularised** — there is no `module-info.java` in any module.
-11. **~52 open TODOs** across 22 files.
+11. **~48 open TODOs** across 19 main source files (plus 2 in tests).
+
+Deferred tasks and further known issues (match simulation, substitutions, GUI) are tracked in `BACKLOG.md`.
 
 ### TODO hot spots
 
@@ -225,20 +232,21 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 | Test class | Tests |
 | --- | --- |
 | `AbstractEntityTest` | 1 |
-| `AssociationManagerTest` | 10 |
+| `AssociationManagerTest` | 11 |
 | `ClockManagerTest` | 5 |
 | `ClubTest` | 4 |
 | `LeagueTest` | 3 |
-| `LineupTest` | 7 |
+| `LineupTest` | 9 |
 | `MatchTest` | 2 |
 | `PlayerTest` | 2 |
 | `TeamTest` | 1 |
 | `UserManagerTest` | 1 |
-| **Total** | **36** — all green |
+| `GuiSmokeTest` (desktop, TestFX) | 6 |
+| **Total** | **45** — all green |
 
-All tests live in `softman-core`; they are pure in-memory and no longer touch a database (the old `AbstractDBTest` + `softmanTest` SQLite file are gone). `softman-db` and `softman-desktop` have **no test sources at all**.
+Core tests live in `softman-core` and are pure in-memory; no test touches a database. `softman-desktop` has `GuiSmokeTest` (all tabs present and render, `switchTo` navigation, every tile constructs and loads, kit components, dark theme). `softman-db` has **no test sources**.
 
-**Not covered:** the entire persistence layer including the save/load round-trip, `MatchSimulator` and the `SimUtils` probability model, `StatsUtils` computations, all GUI classes, `SimulationService` concurrency, `AssociationFactory.recreateLeagues()`.
+**Not covered:** the entire persistence layer including the save/load round-trip, `MatchSimulator` and the `SimUtils` probability model, `StatsUtils` computations, GUI behaviour beyond smoke rendering, `SimulationService` concurrency, `AssociationFactory.recreateLeagues()`.
 
 ---
 
@@ -250,8 +258,9 @@ All tests live in `softman-core`; they are pure in-memory and no longer touch a 
 | `softman-desktop/src/main/resources/img/faces/` | 92 AI-generated portraits (`m00001`–`m00046`, `f00001`–`f00046`) |
 | `softman-desktop/src/main/resources/img/teams/` | 16 club logos |
 | `softman-desktop/src/main/resources/img/vecteezy/` | field, blank avatars |
+| `softman-desktop/src/main/resources/img/` | `ball.png` (menu brand), `stadium.jpg` (CSS background) |
 | `softman-desktop/src/main/resources/simplelogger.properties` | INFO level → `log/softman.log` (a test-scoped copy lives in `softman-core/src/test/resources`) |
 | `names.sql` | ~2 500 first/last names seeding `softman.db` |
 | `log/`, `sav/` | Runtime folders resolved against the repo root; `sav` is auto-created by `GameDatabase` |
 
-Companion documents: `AGENTS.md` (agent guide), `GUI.md` (locked GUI technology decisions and the phased rewrite plan), `PLAN.md` (long-term architecture).
+Companion documents: `AGENTS.md` (agent guide), `archive/GUI.md` (locked GUI technology decisions and the completed phased rewrite plan), `archive/PLAN.md` (long-term architecture).
