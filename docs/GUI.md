@@ -83,11 +83,11 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 - [x] 2.6 Lineup / Training / Standings tabs (plus `TeamTab`) — `GridPane`/`BorderPane`, club stripe replaces the club-coloured tab background
 - [x] 2.7 PlayerTab — pill toggles; season/career stats as `TableView`s with match hyperlinks
 - [x] 2.8 MatchTab — header/box score/play-by-play/controls cards; `InputGroup` for play/simulate
-- [ ] 2.9 Asset contrast pass — code side done (logos/faces rounded, field on a card); awaiting human check
-- [ ] Human review of Phase 2 screens against `docs/screenshots/baseline/`
-- [ ] 3.1 Drop old libs
-- [ ] 3.2 Light/dark toggle
-- [ ] 3.3 Dev tools (optional)
+- [x] 2.9 Asset contrast pass — logos/faces rounded, field on a card; human-approved
+- [x] Human review of Phase 2 screens — approved; minor follow-ups deferred
+- [x] 3.1 Drop old libs — BootstrapFX, FontAwesomeFX, Medusa removed from both poms
+- [x] 3.2 Light/dark toggle — Show → Dark theme (`Softman.setDarkTheme`); starts light, no OS seeding
+- [-] 3.3 Dev tools (optional) — skipped, moved to `BACKLOG.md`
 
 ### Phase -1 — Groundwork for AI-assisted work (do FIRST)
 

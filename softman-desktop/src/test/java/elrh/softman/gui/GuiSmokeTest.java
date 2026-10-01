@@ -169,4 +169,23 @@ class GuiSmokeTest {
         WaitForAsyncUtils.checkException();
         assertThat(rating.lookup("." + Tokens.RATING_ELITE), is(not(nullValue())));
     }
+
+    @Test
+    void darkThemeRendersEveryTab() throws Throwable {
+        var tabs = ContentFrame.getInstance();
+        try {
+            FxToolkit.setupFixture(() -> Softman.setDarkTheme(true));
+            assertThat(Softman.isDarkTheme(), is(true));
+            for (var screen : Screen.values()) {
+                FxToolkit.setupFixture(() -> {
+                    tabs.switchTo(screen);
+                    tabs.getScene().getRoot().applyCss();
+                    tabs.getScene().getRoot().layout();
+                });
+            }
+            WaitForAsyncUtils.checkException();
+        } finally {
+            FxToolkit.setupFixture(() -> Softman.setDarkTheme(false));
+        }
+    }
 }

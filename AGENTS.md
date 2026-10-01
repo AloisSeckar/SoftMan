@@ -48,12 +48,12 @@ No essays, no doc-comment boilerplate, no change-log or "what I changed" comment
 Summary of the locked decisions:
 
 - JavaFX, plain Java — **no FXML, no Scene Builder**, screens are data-driven
-- Theme: AtlantaFX `NordLight` (light!); accent Nord Frost `#5E81AC`; `NordDark` reserved for a later toggle
+- Theme: AtlantaFX `NordLight` (light!) by default, `NordDark` via Show → Dark theme; CSS must read on both; accent Nord Frost `#5E81AC`
 - Build UI through the `elrh.softman.gui.kit` package (`Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens`) — never ad-hoc
 - No hex literals in Java or CSS; use AtlantaFX looked-up vars and `-sm-*` tokens
 - No `setLayoutX/Y`, no `AnchorPane` pixel anchors, no fixed px sizes
 - Rewrite the view layer only — public methods (`setMatch`, `reload`, `refresh`, listener registration) stay
-- Being dropped: BootstrapFX, Medusa, FontAwesomeFX. Being adopted: AtlantaFX, Ikonli, more ControlsFX
+- UI libraries: AtlantaFX, Ikonli (Feather), ControlsFX. BootstrapFX, Medusa and FontAwesomeFX are gone — do not reintroduce
 
 ## Verification split
 

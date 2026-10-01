@@ -20,7 +20,7 @@
 
 ### Dependency stack
 
-`commons-lang3` · `sqlite-jdbc` · `ormlite-jdbc` · JavaFX (base/controls/fxml/graphics) · Lombok · SLF4J + slf4j-simple · BootstrapFX (CSS themes) · FontAwesomeFX (icons) · Medusa (gauges) · ControlsFX (GridView) · JUnit 5 + Hamcrest.
+`commons-lang3` · `sqlite-jdbc` · `ormlite-jdbc` · JavaFX (base/controls/fxml/graphics) · Lombok · SLF4J + slf4j-simple · AtlantaFX (NordLight/NordDark themes, `Card`) · Ikonli + Feather pack (icons) · ControlsFX (GridView) · JUnit + Hamcrest · TestFX.
 
 Dependencies are declared per module: core gets only commons-lang3 / Lombok / SLF4J, `softman-db` adds sqlite-jdbc + ormlite, all JavaFX and UI libraries live in `softman-desktop`.
 
@@ -246,7 +246,7 @@ All tests live in `softman-core`; they are pure in-memory and no longer touch a 
 
 | Path | Contents |
 | --- | --- |
-| `softman-desktop/src/main/resources/css/softman.css` | Custom theme layered on BootstrapFX |
+| `softman-desktop/src/main/resources/css/softman.css` | `sm-*` token layer over AtlantaFX NordLight/NordDark |
 | `softman-desktop/src/main/resources/img/faces/` | 92 AI-generated portraits (`m00001`–`m00046`, `f00001`–`f00046`) |
 | `softman-desktop/src/main/resources/img/teams/` | 16 club logos |
 | `softman-desktop/src/main/resources/img/vecteezy/` | field, blank avatars |

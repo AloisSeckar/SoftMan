@@ -1,5 +1,5 @@
 /*
- * SoftMan token layer over AtlantaFX NordLight.
+ * SoftMan token layer over AtlantaFX NordLight and NordDark; every rule must read on both.
  * Raw colour values are allowed only in the .root token block below.
  * Java-side constants for these classes live in elrh.softman.gui.kit.Tokens.
  */
@@ -15,6 +15,8 @@
     -sm-color-draw: #EBCB8B;
     -sm-color-home: -color-accent-5;
     -sm-color-away: -color-base-7;
+    /* fixed dark text: win/draw fills are light in both themes */
+    -sm-color-on-result: #2E3440;
 }
 
 /* ---------- Type scale ---------- */
@@ -73,7 +75,7 @@
     -fx-background-radius: 1em;
     -fx-padding: 0.15em 0.7em;
     -fx-font-weight: bold;
-    -fx-text-fill: -color-fg-default;
+    -fx-text-fill: -sm-color-on-result;
 }
 
 .sm-result-win  { -fx-background-color: -sm-color-win; }

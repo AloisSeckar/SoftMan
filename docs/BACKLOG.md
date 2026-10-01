@@ -37,3 +37,7 @@ Tasks deferred for later. Remove an entry once it is done.
   restyle on theme vars if a dimming overlay is wanted (the live spinner is in `Softman.setupStage`).
 - [ ] **`FocusFrame` goes stale after New/Load game** — its club/team combos are built once in the
   singleton constructor and are not refreshed by `MainLayout.setUp()`.
+- [ ] **Theme preference** — the dark-theme choice is not persisted and the app always starts light;
+  optionally seed from `Platform.getPreferences().getColorScheme()`.
+- [ ] **Dev tools (GUI plan 3.3, optional)** — dev-only DevToolsFX or Scenic View for live scene-graph inspection.
+- [ ] **Minor Phase 2 visual follow-ups** — noted by the owner at review, to be specified.

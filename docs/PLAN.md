@@ -227,9 +227,9 @@ More urgent than either question above — the current stack leans on several ef
 
 | Dependency | Version | Concern |
 | --- | --- | --- |
-| **FontAwesomeFX** | 9.1.2 | Hosted on Bitbucket, no releases in years; the README links a Bitbucket branch that may not survive. **Highest risk** |
-| **BootstrapFX** | 0.4.0 | No release in years; styling is dated |
-| **Medusa** | 16.0.0 | Sporadic maintenance, niche (gauges only) |
+| **FontAwesomeFX** | 9.1.2 | ✅ Removed — replaced by Ikonli (GUI Phase 3.1) |
+| **BootstrapFX** | 0.4.0 | ✅ Removed — replaced by AtlantaFX (GUI Phase 3.1) |
+| **Medusa** | 16.0.0 | ✅ Removed — replaced by flat rating bars (GUI Phase 3.1) |
 | **OrmLite** | 6.1 | Slow maintenance |
 | ControlsFX | 11.2.3 | ✅ Actively maintained — fine |
 | sqlite-jdbc | 3.51.1.0 | ✅ Actively maintained — fine |
@@ -242,7 +242,7 @@ These are far likelier to break a Java 26/27 upgrade than JavaFX or SQLite are. 
 
 1. **Keep JavaFX.** Revisit only if/when multiplayer becomes real — the module split makes that cheap.
 2. **Keep SQLite available, but stop simulating against it.** Move to an in-memory `World` + snapshot save file. This *is* step 5 of the order of work above, and it simplifies rather than complicates it.
-3. **Replace FontAwesomeFX with Ikonli**, and BootstrapFX with AtlantaFX. Small, contained, removes the two most fragile dependencies.
+3. ✅ **Replace FontAwesomeFX with Ikonli**, and BootstrapFX with AtlantaFX — done (see `GUI.md`).
 4. **Defer the OrmLite decision** — put repositories behind interfaces first (item 9), then swapping OrmLite for plain JDBC or dropping it entirely becomes a one-module change.
 
 Net effect: nothing in the stack needs replacing to reach a finished single-player game. The genuinely load-bearing change is *how* SQLite is used, not *whether*.

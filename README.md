@@ -26,9 +26,9 @@ Softball manager and simulator game in JavaFX.
 
 - Java 25 (OpenJDK)
 - [JavaFX](https://openjfx.io/)
-- [BootstrapFX](https://github.com/kordamp/bootstrapfx)
-- [FontAwesomeFX](https://bitbucket.org/Jerady/fontawesomefx/branch/fontawesomefx-9.1.2)
-- [Medusa GUI gauges](https://github.com/HanSolo/medusa)
+- [AtlantaFX](https://github.com/mkpaz/atlantafx) - Nord light/dark themes and controls
+- [Ikonli](https://kordamp.org/ikonli/) - Feather icons
+- [ControlsFX](https://controlsfx.github.io/)
 - [OrmLite](https://ormlite.com/) - database management for underlying SQLite DB
 
 ## Attributions

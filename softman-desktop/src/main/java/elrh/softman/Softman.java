@@ -1,6 +1,8 @@
 package elrh.softman;
 
+import atlantafx.base.theme.NordDark;
 import atlantafx.base.theme.NordLight;
+import atlantafx.base.theme.Theme;
 import elrh.softman.db.SqliteNameSource;
 import elrh.softman.db.SqliteGameRepository;
 import elrh.softman.gui.MainLayout;
@@ -82,8 +84,21 @@ public class Softman extends Application {
     }
 
     public static void applyTheme(Scene scene) {
-        Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
+        setDarkTheme(darkTheme);
         scene.getStylesheets().add(Softman.class.getResource("/css/softman.css").toExternalForm());
+    }
+
+    private static boolean darkTheme;
+
+    public static boolean isDarkTheme() {
+        return darkTheme;
+    }
+
+    // the user-agent stylesheet is global, so every open scene switches at once
+    public static void setDarkTheme(boolean dark) {
+        darkTheme = dark;
+        Theme theme = dark ? new NordDark() : new NordLight();
+        Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
     }
 
     private static SqliteNameSource nameSource;

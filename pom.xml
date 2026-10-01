@@ -105,32 +105,6 @@
                 <version>${slf4j.version}</version>
             </dependency>
 
-            <!-- for GUI enhancements -->
-            <dependency>
-                <groupId>org.kordamp.bootstrapfx</groupId>
-                <artifactId>bootstrapfx-core</artifactId>
-                <version>0.4.0</version>
-            </dependency>
-
-            <!-- for GUI enhancements -->
-            <dependency>
-                <groupId>de.jensd</groupId>
-                <artifactId>fontawesomefx-commons</artifactId>
-                <version>9.1.2</version>
-            </dependency>
-            <dependency>
-                <groupId>de.jensd</groupId>
-                <artifactId>fontawesomefx-fontawesome</artifactId>
-                <version>4.7.0-9.1.2</version>
-            </dependency>
-
-            <!-- for GUI enhancements - nice gauges -->
-            <dependency>
-                <groupId>eu.hansolo</groupId>
-                <artifactId>Medusa</artifactId>
-                <version>16.0.0</version>
-            </dependency>
-
             <!-- for GUI enhancements - https://controlsfx.github.io/ -->
             <dependency>
                 <groupId>org.controlsfx</groupId>
