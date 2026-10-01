@@ -1,15 +1,25 @@
 package elrh.softman.gui.frame;
 
+import atlantafx.base.theme.Styles;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
+import elrh.softman.gui.utils.FormatUtils;
 import elrh.softman.logic.AssociationManager;
 import java.time.LocalDate;
-import elrh.softman.gui.utils.FormatUtils;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import org.kordamp.ikonli.feather.Feather;
 
 public class ActionFrame extends HBox {
 
-    private final Label dateValueLabel;
+    private final Label dateValueLabel = new Label();
     private final DatePicker simUntilPicker = new DatePicker();
 
     private static ActionFrame INSTANCE;
@@ -22,26 +32,25 @@ public class ActionFrame extends HBox {
     }
 
     private ActionFrame() {
+        super(Space.S.getPx());
+        getStyleClass().add(Tokens.STATUS_BAR);
+        setAlignment(Pos.CENTER_LEFT);
 
-        var nextDayButton = new Button("Next day");
-        this.getChildren().add(nextDayButton);
-        nextDayButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> AssociationManager.getInstance().nextDay());
+        var dateCaption = new Label("Current date");
+        dateCaption.getStyleClass().add(Tokens.CAPTION);
+        dateValueLabel.getStyleClass().add(Styles.TEXT_BOLD);
 
-        var dateLabel = new Label("Current date: ");
-        dateLabel.setPadding(FormatUtils.TOPLEFT_5);
-        this.getChildren().add(dateLabel);
+        simUntilPicker.setPrefWidth(Layouts.em(9));
 
-        dateValueLabel = new Label();
-        dateValueLabel.getStyleClass().add("date-label");
-        this.getChildren().add(dateValueLabel);
+        var simUntilButton = new Button("Simulate until", Icons.of(Feather.FAST_FORWARD));
+        simUntilButton.setOnAction(e -> simulateIfConfirmed());
 
-        var simUntilButton = new Button("Simulate until");
-        this.getChildren().add(simUntilButton);
-        simUntilButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateIfConfirmed());
+        var nextDayButton = new Button("Next day", Icons.of(Feather.CHEVRONS_RIGHT));
+        nextDayButton.getStyleClass().add(Styles.ACCENT);
+        nextDayButton.setOnAction(e -> AssociationManager.getInstance().nextDay());
 
-        simUntilPicker.setPrefWidth(100d);
-        this.getChildren().add(simUntilPicker);
-
+        getChildren().addAll(Icons.of(Feather.CALENDAR), dateCaption, dateValueLabel,
+            Layouts.spacer(), simUntilPicker, simUntilButton, nextDayButton);
     }
 
     public void updateDateValue(LocalDate date) {

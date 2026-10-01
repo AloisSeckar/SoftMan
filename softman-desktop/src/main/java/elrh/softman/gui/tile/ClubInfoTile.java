@@ -3,6 +3,7 @@ package elrh.softman.gui.tile;
 import atlantafx.base.controls.Card;
 import atlantafx.base.theme.Styles;
 import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Images;
 import elrh.softman.gui.kit.Layouts;
 import elrh.softman.gui.kit.Layouts.Space;
 import elrh.softman.gui.kit.Tokens;
@@ -13,13 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
-import javafx.scene.shape.Rectangle;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.feather.Feather;
 
 public class ClubInfoTile extends Card {
 
-    private final ImageView logoView = new ImageView();
+    private final ImageView logoView = Images.rounded(4);
     private final Label nameLabel = new Label();
     private final Label ownerChip = new Label();
     private final Region colorStripe = new Region();
@@ -29,16 +29,6 @@ public class ClubInfoTile extends Card {
     private final Label statusValue = new Label();
 
     public ClubInfoTile() {
-        double logoSize = Layouts.em(4);
-        logoView.setFitWidth(logoSize);
-        logoView.setFitHeight(logoSize);
-        logoView.setPreserveRatio(true);
-        logoView.setSmooth(true);
-        var logoClip = new Rectangle(logoSize, logoSize);
-        logoClip.setArcWidth(Layouts.em(1));
-        logoClip.setArcHeight(Layouts.em(1));
-        logoView.setClip(logoClip);
-
         nameLabel.getStyleClass().add(Tokens.DISPLAY);
         nameLabel.setWrapText(true);
         ownerChip.getStyleClass().add(Tokens.CHIP);

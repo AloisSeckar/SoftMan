@@ -1,69 +1,37 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.utils.Constants;
+import atlantafx.base.controls.Card;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.logic.core.Match;
+import elrh.softman.utils.Constants;
 import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 
-public class BoxScoreTile extends VBox {
+public class BoxScoreTile extends Card {
 
-    private final HBox innings = new HBox();
-
-    private final Label awayTeam = new Label();
-    private final HBox awayPoints = new HBox();
-    private final Label awayRuns = new Label();
-    private final Label awayHits = new Label();
-    private final Label awayErrors = new Label();
-
-    private final Label homeTeam = new Label();
-    private final HBox homePoints = new HBox();
-    private final Label homeRuns = new Label();
-    private final Label homeHits = new Label();
-    private final Label homeErrors = new Label();
+    private final GridPane grid = new GridPane();
 
     public BoxScoreTile() {
-        var teamLabel = new Label("");
-        teamLabel.getStyleClass().add("box-score");
-        teamLabel.getStyleClass().add("box-score-team");
-        var hitsLabel = new Label("R");
-        hitsLabel.getStyleClass().add("box-score");
-        var runsLabel = new Label("H");
-        runsLabel.getStyleClass().add("box-score");
-        var errorsLabel = new Label("E");
-        errorsLabel.getStyleClass().add("box-score");
-        var labelRow = new HBox(teamLabel, innings, hitsLabel, runsLabel, errorsLabel);
-        super.getChildren().add(labelRow);
-
-        awayTeam.getStyleClass().add("box-score");
-        awayTeam.getStyleClass().add("box-score-team");
-        awayRuns.getStyleClass().add("box-score");
-        awayHits.getStyleClass().add("box-score");
-        awayErrors.getStyleClass().add("box-score");
-        var awayRow = new HBox(awayTeam, awayPoints, awayRuns, awayHits, awayErrors);
-        super.getChildren().add(awayRow);
-
-        homeTeam.getStyleClass().add("box-score");
-        homeTeam.getStyleClass().add("box-score-team");
-        homeRuns.getStyleClass().add("box-score");
-        homeHits.getStyleClass().add("box-score");
-        homeErrors.getStyleClass().add("box-score");
-        var homeRow = new HBox(homeTeam, homePoints, homeRuns, homeHits, homeErrors);
-        super.getChildren().add(homeRow);
+        grid.getStyleClass().add(Tokens.BOX_SCORE);
+        setBody(grid);
     }
 
     public void loadBoxScore(Match match) {
-        awayTeam.setText(match.getAwayLineup().getLineupInfo().getTeamName());
-        homeTeam.setText(match.getHomeLineup().getLineupInfo().getTeamName());
+        grid.getChildren().clear();
+
+        grid.add(cell("", Tokens.BOX_TEAM, Tokens.BOX_HEAD), 0, 0);
+        grid.add(cell(match.getAwayLineup().getLineupInfo().getTeamName(), Tokens.BOX_TEAM), 0, 1);
+        grid.add(cell(match.getHomeLineup().getLineupInfo().getTeamName(), Tokens.BOX_TEAM), 0, 2);
+
         var boxScore = match.getBoxScore();
-        if (boxScore != null) {
-            innings.getChildren().clear();
-            awayPoints.getChildren().clear();
-            homePoints.getChildren().clear();
-            int inningsPlayed = boxScore.getInnings();
-            for (int i = 1; i <= Math.max(inningsPlayed, Constants.INNINGS); i++) {
-                String awayScoreValue;
-                String homeScoreValue;
+        int inningsPlayed = boxScore != null ? boxScore.getInnings() : 0;
+        int innings = Math.max(inningsPlayed, Constants.INNINGS);
+
+        for (int i = 1; i <= innings; i++) {
+            String awayScoreValue = "";
+            String homeScoreValue = "";
+            if (boxScore != null) {
                 if (match.isFinished() && i > inningsPlayed) {
                     awayScoreValue = "X";
                     homeScoreValue = "X";
@@ -75,25 +43,34 @@ public class BoxScoreTile extends VBox {
                         homeScoreValue = String.valueOf(boxScore.getPointsInInning(i, false));
                     }
                 }
-
-                var inningLabel = new Label(String.valueOf(i));
-                inningLabel.getStyleClass().add("box-score");
-                innings.getChildren().add(inningLabel);
-
-                var awayScore = new Label(awayScoreValue);
-                awayScore.getStyleClass().add("box-score");
-                awayPoints.getChildren().add(awayScore);
-
-                var homeScore = new Label(homeScoreValue);
-                homeScore.getStyleClass().add("box-score");
-                homePoints.getChildren().add(homeScore);
             }
-            awayRuns.setText(String.valueOf(boxScore.getTotalPoints(true)));
-            awayHits.setText(String.valueOf(boxScore.getHits(true)));
-            awayErrors.setText(String.valueOf(boxScore.getErrors(true)));
-            homeRuns.setText(String.valueOf(boxScore.getTotalPoints(false)));
-            homeHits.setText(String.valueOf(boxScore.getHits(false)));
-            homeErrors.setText(String.valueOf(boxScore.getErrors(false)));
+            grid.add(cell(String.valueOf(i), Tokens.BOX_HEAD), i, 0);
+            grid.add(cell(awayScoreValue), i, 1);
+            grid.add(cell(homeScoreValue), i, 2);
         }
+
+        int col = innings + 1;
+        grid.add(cell("R", Tokens.BOX_HEAD, Tokens.BOX_TOTAL), col, 0);
+        grid.add(cell("H", Tokens.BOX_HEAD, Tokens.BOX_TOTAL), col + 1, 0);
+        grid.add(cell("E", Tokens.BOX_HEAD, Tokens.BOX_TOTAL), col + 2, 0);
+        if (boxScore != null) {
+            grid.add(cell(String.valueOf(boxScore.getTotalPoints(true)), Tokens.BOX_TOTAL), col, 1);
+            grid.add(cell(String.valueOf(boxScore.getHits(true)), Tokens.BOX_TOTAL), col + 1, 1);
+            grid.add(cell(String.valueOf(boxScore.getErrors(true)), Tokens.BOX_TOTAL), col + 2, 1);
+            grid.add(cell(String.valueOf(boxScore.getTotalPoints(false)), Tokens.BOX_TOTAL), col, 2);
+            grid.add(cell(String.valueOf(boxScore.getHits(false)), Tokens.BOX_TOTAL), col + 1, 2);
+            grid.add(cell(String.valueOf(boxScore.getErrors(false)), Tokens.BOX_TOTAL), col + 2, 2);
+        }
+    }
+
+    private static Label cell(String text, String... styleClasses) {
+        var label = new Label(text);
+        label.getStyleClass().add(Tokens.BOX_CELL);
+        label.getStyleClass().addAll(styleClasses);
+        label.setMaxWidth(Double.MAX_VALUE);
+        if (label.getStyleClass().contains(Tokens.BOX_TEAM)) {
+            GridPane.setHgrow(label, Priority.ALWAYS);
+        }
+        return label;
     }
 }

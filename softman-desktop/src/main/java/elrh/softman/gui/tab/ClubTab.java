@@ -10,7 +10,6 @@ import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.interfaces.IFocusedClubListener;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -48,12 +47,10 @@ public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedT
         add(infoTile, 0, 0, 1, 2);
 
         leagueTable = new LeagueStadingsTable();
-        leagueTable.setAlignment(Pos.CENTER_LEFT);
         add(Cards.titled("Standings", leagueTable), 1, 0);
 
         calendarTile = new CalendarTile();
-        calendarTile.setAlignment(Pos.CENTER_RIGHT);
-        add(Cards.titled("Schedule", calendarTile), 1, 1);
+        add(calendarTile, 1, 1);
 
         infoTile.reload(AssociationManager.getInstance().getUser().getFocusedClub());
         leagueTable.setLeague(AssociationManager.getInstance().getUser().getFocusedLeague());

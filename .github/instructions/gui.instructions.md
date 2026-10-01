@@ -5,8 +5,9 @@ applyTo: "softman-desktop/**"
 # GUI rules (full plan in `docs/GUI.md`)
 
 - Theme is AtlantaFX `NordLight` — **light** surfaces; never assume a dark background
-- Build UI through `elrh.softman.gui.kit` (`Cards`, `Tables`, `Ratings`, `Icons`, `Layouts`, `Tokens`) — never ad-hoc
-- Reference implementation: `ClubInfoTile` (a tile is a `Card`; header = identity, body = content)
+- Build UI through `elrh.softman.gui.kit` (`Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens`) — never ad-hoc
+- Reference implementation: `ClubInfoTile` (a tile is a `Card`; header = identity, body = content). Row items inside a card are plain rows, not cards
+- Navigation: `ContentFrame.getInstance().switchTo(Screen.X)`; new tabs get a `Screen` constant
 - No hex literals in Java or CSS; raw colours live only in the `.root` token block of `softman.css`. Elsewhere use AtlantaFX looked-up vars (`-color-*`) and `-sm-*` tokens
 - New style classes: define in `softman.css` with the `sm-` prefix and add a constant to `Tokens`
 - Spacing from `Layouts.Space` (4/8/12/16/24); sizes via `Layouts.em(...)`

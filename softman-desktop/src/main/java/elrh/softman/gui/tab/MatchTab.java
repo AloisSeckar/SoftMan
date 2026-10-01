@@ -1,5 +1,12 @@
 package elrh.softman.gui.tab;
 
+import atlantafx.base.layout.InputGroup;
+import atlantafx.base.theme.Styles;
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.tile.BoxScoreTile;
 import elrh.softman.gui.tile.LineupTile;
 import elrh.softman.gui.tile.MatchHeaderTile;
@@ -14,19 +21,18 @@ import elrh.softman.logic.core.data.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
 import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.ErrorUtils;
-import elrh.softman.gui.utils.FormatUtils;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
+import org.kordamp.ikonli.feather.Feather;
 
 public class MatchTab extends BorderPane {
 
@@ -70,40 +76,43 @@ public class MatchTab extends BorderPane {
     }
 
     private MatchTab() {
+        setPadding(Space.S.insets());
+        double gap = Space.S.getPx();
+
+        matchHeaderTile = new MatchHeaderTile();
+        BorderPane.setMargin(matchHeaderTile, new Insets(0, 0, gap, 0));
+        super.setTop(matchHeaderTile);
 
         awayLineup = new LineupTile(true);
-        awayLineup.setPadding(FormatUtils.PADDING_10);
+        awayLineup.setMaxHeight(Region.USE_PREF_SIZE);
+        BorderPane.setMargin(awayLineup, new Insets(0, gap, 0, 0));
         super.setLeft(awayLineup);
 
         homeLineup = new LineupTile(true);
-        homeLineup.setPadding(FormatUtils.PADDING_10);
+        homeLineup.setMaxHeight(Region.USE_PREF_SIZE);
+        BorderPane.setMargin(homeLineup, new Insets(0, 0, 0, gap));
         super.setRight(homeLineup);
 
-        matchHeaderTile = new MatchHeaderTile();
-        super.setTop(matchHeaderTile);
-
         boxScore = new BoxScoreTile();
-        boxScore.getStyleClass().add("framed");
 
         matchOverview = new TextArea();
-        matchOverview.getStyleClass().add("output-window");
-        matchOverview.setPadding(FormatUtils.PADDING_10);
+        matchOverview.getStyleClass().add(Tokens.MONO);
+        matchOverview.setEditable(false);
 
-        simButton = new Button("Simulate game");
-        simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
+        playButton = new Button("Play game", Icons.of(Feather.PLAY));
+        playButton.getStyleClass().add(Styles.ACCENT);
+        playButton.setOnAction(e -> playMatch());
 
-        simInningButton = new Button("Simulate inning");
-        simInningButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateInning());
+        simInningButton = new Button("Simulate inning", Icons.of(Feather.SKIP_FORWARD));
+        simInningButton.setOnAction(e -> simulateInning());
 
-        playButton = new Button("Play game");
-        playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> playMatch());
+        simButton = new Button("Simulate game", Icons.of(Feather.FAST_FORWARD));
+        simButton.setOnAction(e -> simulateMatch());
 
-        Button refreshButton = new Button("Refresh");
-        refreshButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> refreshMatch());
+        var refreshButton = Icons.button(Feather.REFRESH_CW, "Refresh");
+        refreshButton.setOnAction(e -> refreshMatch());
 
-        var buttonBar = new HBox(10, simButton, simInningButton, playButton, refreshButton);
-        buttonBar.getStyleClass().add("padding-5");
-        buttonBar.setAlignment(Pos.CENTER);
+        var buttonBar = Layouts.row(Space.S, new InputGroup(playButton, simInningButton, simButton), Layouts.spacer(), refreshButton);
 
         spotCB.setPromptText("Lineup spot");
         replacementCB.setPromptText("Substitute");
@@ -111,27 +120,19 @@ public class MatchTab extends BorderPane {
         spotCB.valueProperty().addListener((ov, oldValue, newValue) -> updateSubstitutionOptions());
         replacementCB.valueProperty().addListener((ov, oldValue, newValue) -> updateSubstitutionButtons());
         positionCB.valueProperty().addListener((ov, oldValue, newValue) -> updateSubstitutionButtons());
+        substituteButton.setGraphic(Icons.of(Feather.USER_PLUS));
         substituteButton.setOnAction(e -> substitute());
+        changePositionButton.setGraphic(Icons.of(Feather.MOVE));
         changePositionButton.setOnAction(e -> changePosition());
 
-        substitutionBar = new HBox(10, spotCB, replacementCB, positionCB, substituteButton, changePositionButton);
-        substitutionBar.setAlignment(Pos.CENTER);
+        substitutionBar = Layouts.row(Space.S, spotCB, replacementCB, positionCB, substituteButton, changePositionButton);
+        substitutionInfo.getStyleClass().add(Tokens.CAPTION);
 
-        var controls = new VBox(5, buttonBar, substitutionBar, substitutionInfo);
-        controls.setAlignment(Pos.CENTER);
+        var controls = Cards.plain(Layouts.column(Space.S, buttonBar, new Separator(), substitutionBar, substitutionInfo));
 
-        var centerLayout = new BorderPane();
+        var playByPlay = Cards.titled("Play-by-play", matchOverview);
 
-        BorderPane.setAlignment(boxScore, Pos.CENTER);
-        centerLayout.setTop(boxScore);
-
-        centerLayout.setCenter(matchOverview);
-
-        BorderPane.setAlignment(controls, Pos.CENTER);
-        BorderPane.setMargin(controls, new Insets(5));
-        centerLayout.setBottom(controls);
-
-        super.setCenter(centerLayout);
+        super.setCenter(Layouts.column(Space.S, boxScore, Layouts.grow(playByPlay), controls));
 
     }
 

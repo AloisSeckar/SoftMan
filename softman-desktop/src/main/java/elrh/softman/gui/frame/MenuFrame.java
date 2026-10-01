@@ -1,17 +1,28 @@
 package elrh.softman.gui.frame;
 
-import de.jensd.fx.glyphs.fontawesome.*;
 import elrh.softman.Softman;
 import elrh.softman.gui.MainLayout;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Images;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
+import elrh.softman.gui.utils.GUIUtils;
 import elrh.softman.gui.utils.InfoUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.AssociationFactory;
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.layout.HBox;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.feather.Feather;
 
-public class MenuFrame extends AnchorPane {
+// TODO custom title bar (title, minimize, close) before going live
+public class MenuFrame extends HBox {
 
     private static MenuFrame INSTANCE;
     
@@ -23,20 +34,23 @@ public class MenuFrame extends AnchorPane {
     }
     
     private MenuFrame() {
-        
-        super.getStyleClass().setAll("menu-frame");
-        
-        var newGame = new MenuItem("New game", new FontAwesomeIconView(FontAwesomeIcon.FILE_ALT));
-        newGame.setOnAction((ActionEvent t) -> {
+        super(Space.M.getPx());
+        setAlignment(Pos.CENTER_LEFT);
+
+        var logo = Images.rounded(1.75);
+        logo.setImage(GUIUtils.getImageOrDefault("/img/ball.png"));
+        var brand = new Label("SoftMan", logo);
+        brand.getStyleClass().add(Tokens.TITLE);
+
+        var newGame = item("New game", Feather.FILE_PLUS, () -> {
             if (InfoUtils.confirm("Start a new game? Unsaved progress will be lost.")) {
                 AssociationManager.getInstance().reset();
                 AssociationFactory.populateAssociation();
                 MainLayout.getInstance().setUp();
             }
         });
-        
-        var loadGame = new MenuItem("Load game", new FontAwesomeIconView(FontAwesomeIcon.FOLDER_OPEN_ALT));
-        loadGame.setOnAction((ActionEvent t) -> {
+
+        var loadGame = item("Load game", Feather.FOLDER, () -> {
             var world = AssociationManager.getInstance();
             if (!world.hasSaveFile(Constants.DEFAULT_GAME_ID)) {
                 InfoUtils.showMessage("No saved game found.");
@@ -52,63 +66,30 @@ public class MenuFrame extends AnchorPane {
                 }
             }
         });
-        
-        var saveGame = new MenuItem("Save game", new FontAwesomeIconView(FontAwesomeIcon.FLOPPY_ALT));
-        saveGame.setOnAction((ActionEvent t) -> {
+
+        var saveGame = item("Save game", Feather.SAVE, () -> {
             var result = AssociationManager.getInstance().saveGame(Constants.DEFAULT_GAME_ID);
             InfoUtils.showMessage(result.ok() ? "Game saved." : "Save failed: " + result.message());
         });
-        
-        var info = new MenuItem("About", new FontAwesomeIconView(FontAwesomeIcon.INFO));
-        info.setOnAction((ActionEvent t) -> {
+
+        var info = item("About", Feather.INFO, () -> {
             // TODO about
         });
-        
-        var exit = new MenuItem("Exit", new FontAwesomeIconView(FontAwesomeIcon.CLOSE));
-        exit.setOnAction((ActionEvent t) -> Softman.closeIfConfirmed());
-        
+
+        var exit = item("Exit", Feather.LOG_OUT, Softman::closeIfConfirmed);
+
         var menuGame = new Menu("Game");
-        menuGame.getItems().addAll(newGame, loadGame, saveGame, info, exit);
-        
+        menuGame.getItems().addAll(newGame, loadGame, saveGame, new SeparatorMenuItem(), info, new SeparatorMenuItem(), exit);
+
         var menuShow = new Menu("Show");
-        // menuShow.getItems().addAll();
 
-        var menu = new MenuBar();
-        menu.getMenus().addAll(menuGame, menuShow);
-        
-        menu.getStyleClass().setAll("menu-bar");
-        
-        super.getChildren().add(menu);
-        AnchorPane.setLeftAnchor(menu, 0d);
-        AnchorPane.setRightAnchor(menu, 0d);
-        AnchorPane.setTopAnchor(menu, 0d);
-
-        // TODO return this custom view control  before going live!
-        /*
-        AnchorPane.setTopAnchor(menu, 30d);
-        
-        var titleLabel = new Label("SOFTMAN 0.1");
-        titleLabel.getStyleClass().setAll("title-label");
-        super.getChildren().add(titleLabel);
-        AnchorPane.setLeftAnchor(titleLabel, 5d);
-        AnchorPane.setTopAnchor(titleLabel, 5d);
-
-        var minimizeButton = new Button("", new FontAwesomeIconView(FontAwesomeIcon.WINDOW_MINIMIZE));
-        minimizeButton.getStyleClass().setAll("action-button", "minimize-button");
-        minimizeButton.setOnAction(e -> {
-            ((Stage)((Button) e.getSource()).getScene().getWindow()).setIconified(true);
-        });
-        super.getChildren().add(minimizeButton);
-        AnchorPane.setRightAnchor(minimizeButton, 30d);
-        AnchorPane.setTopAnchor(minimizeButton, 0d);
-        
-        var closeButton = new Button("", new FontAwesomeIconView(FontAwesomeIcon.CLOSE));
-        closeButton.getStyleClass().setAll("action-button", "close-button");
-        closeButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Softman.closeIfConfirmed());
-        super.getChildren().add(closeButton);
-        AnchorPane.setRightAnchor(closeButton, 0d);
-        AnchorPane.setTopAnchor(closeButton, 0d);
-         */
+        getChildren().addAll(brand, new MenuBar(menuGame, menuShow));
     }
-    
+
+    private static MenuItem item(String text, Ikon icon, Runnable action) {
+        var item = new MenuItem(text, Icons.of(icon));
+        item.setOnAction(e -> action.run());
+        return item;
+    }
+
 }

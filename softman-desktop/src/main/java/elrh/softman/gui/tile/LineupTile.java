@@ -1,52 +1,51 @@
 package elrh.softman.gui.tile;
 
+import static elrh.softman.logic.core.Lineup.*;
+
+import atlantafx.base.controls.Card;
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Lineup;
-import static elrh.softman.logic.core.Lineup.*;
 import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.logic.core.data.PlayerRecord;
 import elrh.softman.logic.core.data.TeamInfo;
 import elrh.softman.logic.enums.PlayerPosition;
+import elrh.softman.utils.ErrorUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import elrh.softman.utils.ErrorUtils;
 import javafx.collections.FXCollections;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.layout.VBox;
 
-public class LineupTile extends VBox {
+public class LineupTile extends Card {
 
     private final LineupRowTile[] positionPlayersRows = new LineupRowTile[POSITION_PLAYERS];
     private final LineupRowTile[] substitutesRows = new LineupRowTile[SUBSTITUTES];
+    private final Label titleLabel = Cards.title("Lineup");
 
     private TeamInfo team;
 
     public LineupTile(boolean readOnly) {
-        super.setSpacing(5);
+        setHeader(titleLabel);
 
-        super.getChildren().add(new Label("POSITION PLAYERS"));
-
+        var body = Layouts.column(Space.XS, section("Position players"));
         for (int i = 0; i < POSITION_PLAYERS; i++) {
             var lineupRowTile = new LineupRowTile(this, i + 1, true);
             positionPlayersRows[i] = lineupRowTile;
-            super.getChildren().add(lineupRowTile);
+            body.getChildren().add(lineupRowTile);
         }
 
-        super.getChildren().add(new Separator());
-        super.getChildren().add(new Label("SUBSTITUTES"));
-
+        body.getChildren().addAll(new Separator(), section("Substitutes"));
         for (int i = 0; i < SUBSTITUTES; i++) {
             var lineupRowTile = new LineupRowTile(this, i + 1, false);
             substitutesRows[i] = lineupRowTile;
-            super.getChildren().add(lineupRowTile);
-            lineupRowTile.setAlignment(Pos.CENTER_LEFT);
+            body.getChildren().add(lineupRowTile);
         }
 
-        super.getChildren().add(new Separator());
-
+        setBody(body);
         setReadOnly(readOnly);
     }
 
@@ -55,6 +54,7 @@ public class LineupTile extends VBox {
             var lineupTeam = AssociationManager.getInstance().getTeamById(lineup.getLineupInfo().getTeamId());
             this.team = lineupTeam != null ? lineupTeam.getTeamInfo() : null;
             if (team != null) {
+                titleLabel.setText(lineup.getLineupInfo().getTeamName());
                 var players = lineupTeam.getPlayers();
                 var playerList = FXCollections.observableArrayList(players);
                 playerList.add(0, null);
@@ -124,5 +124,11 @@ public class LineupTile extends VBox {
         } else {
             substitutesRows[SUBSTITUTES - 1].setReadOnly(false);
         }
+    }
+
+    private static Label section(String text) {
+        var label = new Label(text.toUpperCase());
+        label.getStyleClass().add(Tokens.CAPTION);
+        return label;
     }
 }

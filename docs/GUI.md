@@ -74,16 +74,17 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 - [x] 1.1 `softman.css` token layer — legacy classes still used by unrewritten screens kept in a marked "Legacy" section, de-hexed
 - [x] 1.2 `gui.kit` package — plus `Tokens` (Java constants for the `sm-*` style classes)
 - [x] 1.x `bootstrapfx.css` dropped from the scene early: its `.text-muted`, `.small`, `.menu-item`, `.tool-bar`, `.separator` rules overrode AtlantaFX. `ClubTab` panels → `Cards`; `h3`/`h4` → `Tokens.TITLE`. The pom dependency goes in 3.1
-- [ ] Golden template: `ClubInfoTile` on the kit (implemented as a `Card`), awaiting human review
-- [ ] 2.1 Chrome
-- [ ] 2.2 Tiles
-- [ ] 2.3 PlayerAttributesTile
-- [ ] 2.4 Tables
-- [ ] 2.5 DefenseTile
-- [ ] 2.6 Lineup / Training / Standings tabs
-- [ ] 2.7 PlayerTab
-- [ ] 2.8 MatchTab
-- [ ] 2.9 Asset contrast pass
+- [x] Golden template: `ClubInfoTile` on the kit (implemented as a `Card`), human-approved
+- [x] 2.1 Chrome — app bar (`MenuFrame` + `FocusFrame` with club swatch), status bar `ActionFrame`, `ContentFrame.Screen` enum + `switchTo(Screen)`
+- [x] 2.2 Tiles — all on `Card` except row items (`ScheduleRowTile`, `LineupRowTile`); kit gained `Images.rounded`
+- [x] 2.3 PlayerAttributesTile — 4 `Ratings.group`s in a 2×2 grid; `PlayerInfoTile` also on `Ratings`
+- [x] 2.4 Tables — `Tables.rating()` tier-tinted cells, `Tables.fitRows()` for the standings
+- [x] 2.5 DefenseTile — `FieldPane` keeps the image aspect ratio and places markers at fractions
+- [x] 2.6 Lineup / Training / Standings tabs (plus `TeamTab`) — `GridPane`/`BorderPane`, club stripe replaces the club-coloured tab background
+- [x] 2.7 PlayerTab — pill toggles; season/career stats as `TableView`s with match hyperlinks
+- [x] 2.8 MatchTab — header/box score/play-by-play/controls cards; `InputGroup` for play/simulate
+- [ ] 2.9 Asset contrast pass — code side done (logos/faces rounded, field on a card); awaiting human check
+- [ ] Human review of Phase 2 screens against `docs/screenshots/baseline/`
 - [ ] 3.1 Drop old libs
 - [ ] 3.2 Light/dark toggle
 - [ ] 3.3 Dev tools (optional)

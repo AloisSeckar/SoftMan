@@ -8,8 +8,10 @@ import static org.hamcrest.Matchers.nullValue;
 
 import elrh.softman.Softman;
 import elrh.softman.gui.frame.ContentFrame;
+import elrh.softman.gui.frame.ContentFrame.Screen;
 import elrh.softman.gui.kit.Cards;
 import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Images;
 import elrh.softman.gui.kit.Layouts;
 import elrh.softman.gui.kit.Layouts.Space;
 import elrh.softman.gui.kit.Ratings;
@@ -68,7 +70,17 @@ class GuiSmokeTest {
 
     @Test
     void mainLayoutHasAllTabs() {
-        assertThat(ContentFrame.getInstance().getTabs().size(), is(9));
+        assertThat(ContentFrame.getInstance().getTabs().size(), is(Screen.values().length));
+    }
+
+    @Test
+    void switchToSelectsScreenTab() throws Throwable {
+        var frame = ContentFrame.getInstance();
+        for (var screen : Screen.values()) {
+            FxToolkit.setupFixture(() -> frame.switchTo(screen));
+            assertThat(frame.getSelectionModel().getSelectedItem().getText(), is(screen.getTitle()));
+        }
+        WaitForAsyncUtils.checkException();
     }
 
     @Test
@@ -107,7 +119,7 @@ class GuiSmokeTest {
             var header = new MatchHeaderTile();
             header.setMatch(match);
 
-            var scheduleRow = new ScheduleRowTile(true);
+            var scheduleRow = new ScheduleRowTile();
             scheduleRow.setMatch(match);
 
             var lineup = new LineupTile(true);
@@ -140,9 +152,12 @@ class GuiSmokeTest {
             var table = Tables.<String>table();
             table.getColumns().add(Tables.column("Name", (String s) -> s).width(10).build());
             table.getColumns().add(Tables.column("Length", String::length).numeric().build());
+            table.getColumns().add(Tables.column("Rating", (String s) -> s.length() * 20).rating().build());
             table.getItems().addAll("Alpha", "Beta");
+            Tables.fitRows(table);
 
             holder.getChildren().addAll(
+                Images.rounded(2),
                 Cards.titled("Card", Layouts.row(Space.S, Icons.of(Feather.STAR), Layouts.spacer(), Icons.button(Feather.X, "Close"))),
                 Ratings.group("Offense", rating, Ratings.bar("Power")),
                 table);

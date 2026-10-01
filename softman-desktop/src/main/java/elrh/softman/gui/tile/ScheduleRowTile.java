@@ -1,97 +1,72 @@
 package elrh.softman.gui.tile;
 
+import atlantafx.base.theme.Styles;
 import elrh.softman.gui.frame.ContentFrame;
+import elrh.softman.gui.frame.ContentFrame.Screen;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Images;
+import elrh.softman.gui.kit.Layouts;
 import elrh.softman.gui.kit.Layouts.Space;
 import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.tab.ClubTab;
 import elrh.softman.gui.tab.MatchTab;
+import elrh.softman.gui.utils.GUIUtils;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.core.Match;
 import elrh.softman.logic.MatchSimulator;
+import elrh.softman.logic.core.Match;
 import elrh.softman.logic.core.stats.BoxScore;
 import elrh.softman.utils.ErrorUtils;
-import elrh.softman.gui.utils.GUIUtils;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import org.kordamp.ikonli.feather.Feather;
 
-public class ScheduleRowTile extends BorderPane {
+public class ScheduleRowTile extends HBox {
 
-    private static final int LOGO_SIZE = 40;
+    private final ImageView awayImage = Images.rounded(2.5);
+    private final ImageView homeImage = Images.rounded(2.5);
+    private final Label awayLabel = new Label();
+    private final Label homeLabel = new Label();
+    private final Label titleLabel = new Label("Match");
+    private final Label detailLabel = new Label();
 
-    private final Label titleLabel;
-    private final ImageView awayImage;
-    private final ImageView homeImage;
-
-    private final Button simButton;
-    private final Button playButton;
+    private final Button simButton = Icons.button(Feather.ZAP, "Simulate match");
+    private final Button playButton = Icons.button(Feather.PLAY, "Play match");
 
     private Match match;
     private MatchSimulator sim;
 
+    public ScheduleRowTile() {
+        super(Space.M.getPx());
+        getStyleClass().add(Tokens.LIST_ROW);
+        setAlignment(Pos.CENTER_LEFT);
 
-    public ScheduleRowTile(boolean oddRow) {
-
-        super.setMaxWidth(600d);
-        super.getStyleClass().add(oddRow ? "odd-row" : "even-row");
-        super.setPadding(new Insets(5));
-
-        var infoBox = new BorderPane();
-
-        awayImage = new ImageView();
-        awayImage.setFitWidth(LOGO_SIZE);
-        awayImage.setFitHeight(LOGO_SIZE);
-        infoBox.setLeft(awayImage);
-        BorderPane.setAlignment(awayImage, Pos.CENTER);
-
-        titleLabel = new Label("Match");
+        awayLabel.getStyleClass().add(Styles.TEXT_BOLD);
+        homeLabel.getStyleClass().add(Styles.TEXT_BOLD);
         titleLabel.getStyleClass().add(Tokens.TITLE);
-        titleLabel.setPadding(Space.XS.insets());
-        infoBox.setCenter(titleLabel);
-        BorderPane.setAlignment(titleLabel, Pos.CENTER);
+        detailLabel.getStyleClass().add(Tokens.CAPTION);
 
-        homeImage = new ImageView();
-        homeImage.setFitWidth(LOGO_SIZE);
-        homeImage.setFitHeight(LOGO_SIZE);
-        infoBox.setRight(homeImage);
-        BorderPane.setAlignment(homeImage, Pos.CENTER);
+        var away = Layouts.row(Space.S, awayImage, awayLabel);
+        var home = Layouts.row(Space.S, homeLabel, homeImage);
+        home.setAlignment(Pos.CENTER_RIGHT);
+        // zero pref width + grow on both sides keeps the score centred
+        for (var side : new HBox[] {away, home}) {
+            Layouts.grow(side);
+            side.setPrefWidth(0);
+        }
 
-        super.setCenter(infoBox);
+        var center = Layouts.column(Space.XS, titleLabel, detailLabel);
+        center.setAlignment(Pos.CENTER);
+        center.setMinWidth(Layouts.em(8));
 
-        var buttonBar = new HBox(10);
-        buttonBar.setPadding(new Insets(2,5,2,25));
-        super.setRight(buttonBar);
-        BorderPane.setAlignment(buttonBar, Pos.CENTER);
-        BorderPane.setMargin(buttonBar, new Insets(5));
-        buttonBar.setAlignment(Pos.CENTER);
+        simButton.setOnAction(e -> simulateMatch());
+        playButton.setOnAction(e -> viewMatch());
+        var viewButton = Icons.button(Feather.EYE, "View match");
+        viewButton.setOnAction(e -> viewMatch());
 
-        simButton = new Button("S");
-        simButton.setTooltip(new Tooltip("Simulate match"));
-        simButton.setMinWidth(30d);
-        simButton.setMaxWidth(30d);
-        buttonBar.getChildren().add(simButton);
-        simButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> simulateMatch());
-
-        playButton = new Button("P");
-        playButton.setTooltip(new Tooltip("Play match"));
-        playButton.setMinWidth(30d);
-        playButton.setMaxWidth(30d);
-        buttonBar.getChildren().add(playButton);
-        playButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> viewMatch());
-
-        Button viewButton = new Button("V");
-        viewButton.setTooltip(new Tooltip("View match"));
-        viewButton.setMinWidth(30d);
-        viewButton.setMaxWidth(30d);
-        buttonBar.getChildren().add(viewButton);
-        viewButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> viewMatch());
-
+        getChildren().addAll(away, center, home, Layouts.row(Space.XS, simButton, playButton, viewButton));
     }
 
     public void setMatch(Match match) {
@@ -107,22 +82,31 @@ public class ScheduleRowTile extends BorderPane {
 
             sim = new MatchSimulator(match, MatchTab.getMatchReporter());
 
-            awayImage.setImage(GUIUtils.getImageOrDefault(match.getAwayLineup().getLineupInfo().getTeamLogo()));
-            Tooltip.install(awayImage, new Tooltip(match.getAwayLineup().getLineupInfo().getTeamName()));
+            var awayInfo = match.getAwayLineup().getLineupInfo();
+            awayImage.setImage(GUIUtils.getImageOrDefault(awayInfo.getTeamLogo()));
+            awayLabel.setText(awayInfo.getTeamName());
+
+            var homeInfo = match.getHomeLineup().getLineupInfo();
+            homeImage.setImage(GUIUtils.getImageOrDefault(homeInfo.getTeamLogo()));
+            homeLabel.setText(homeInfo.getTeamName());
 
             switch (match.getMatchInfo().getStatus()) {
-                case SCHEDULED -> titleLabel.setText(match.getMatchInfo().getMatchDay().toString() + " @ " + match.getMatchInfo().getStadium());
-                case ACTIVE -> titleLabel.setText("LIVE");
+                case SCHEDULED -> {
+                    titleLabel.setText("@");
+                    detailLabel.setText(match.getMatchInfo().getStadium());
+                }
+                case ACTIVE -> {
+                    titleLabel.setText("LIVE");
+                    detailLabel.setText(match.getMatchInfo().getStadium());
+                }
                 case FINISHED -> {
                     BoxScore score = match.getBoxScore();
-                    titleLabel.setText(score.getTotalPoints(true) + " : " + score.getTotalPoints(false) + " (" + score.getInnings() + " INN)");
+                    titleLabel.setText(score.getTotalPoints(true) + " : " + score.getTotalPoints(false));
+                    detailLabel.setText("Final, " + score.getInnings() + " inn");
                     simButton.setDisable(true);
                     playButton.setDisable(true);
                 }
             }
-
-            homeImage.setImage(GUIUtils.getImageOrDefault(match.getHomeLineup().getLineupInfo().getTeamLogo()));
-            Tooltip.install(homeImage, new Tooltip(match.getHomeLineup().getLineupInfo().getTeamName()));
 
         } else {
             sim = null;
@@ -140,7 +124,7 @@ public class ScheduleRowTile extends BorderPane {
 
     private void viewMatch() {
         MatchTab.getInstance().setMatch(match);
-        ContentFrame.getInstance().switchTo("Match");
+        ContentFrame.getInstance().switchTo(Screen.MATCH);
     }
 
 }

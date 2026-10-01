@@ -1,9 +1,13 @@
 package elrh.softman.gui;
 
-import elrh.softman.gui.frame.*;
-import elrh.softman.gui.utils.GUIUtils;
+import elrh.softman.gui.frame.ActionFrame;
+import elrh.softman.gui.frame.ContentFrame;
+import elrh.softman.gui.frame.FocusFrame;
+import elrh.softman.gui.frame.MenuFrame;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
 public class MainLayout extends BorderPane {
     
@@ -17,10 +21,10 @@ public class MainLayout extends BorderPane {
     }
     
     private MainLayout() {
-        this.setTop(new VBox(MenuFrame.getInstance(), FocusFrame.getInstance()));
-        this.setLeft(GUIUtils.createPadding(8d));
+        var appBar = Layouts.row(Space.M, MenuFrame.getInstance(), Layouts.spacer(), FocusFrame.getInstance());
+        appBar.getStyleClass().add(Tokens.APP_BAR);
+        this.setTop(appBar);
         this.setCenter(ContentFrame.getInstance());
-        this.setRight(GUIUtils.createPadding(8d));
         this.setBottom(ActionFrame.getInstance());
     }
 

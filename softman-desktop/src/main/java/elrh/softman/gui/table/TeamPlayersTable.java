@@ -1,128 +1,40 @@
 package elrh.softman.gui.table;
 
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Tables;
 import elrh.softman.gui.tab.PlayerTab;
-import elrh.softman.logic.core.data.PlayerInfo;
-
 import elrh.softman.gui.tile.PlayerInfoTile;
+import elrh.softman.logic.core.data.PlayerAttributes;
+import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.utils.Utils;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.*;
-import javafx.scene.layout.*;
-import javafx.scene.control.*;
-import javafx.collections.*;
-import lombok.extern.slf4j.Slf4j;
+import java.util.function.Function;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 
-@Slf4j
-public class TeamPlayersTable extends Pane {
+public class TeamPlayersTable extends VBox {
 
-    private static final double COLUMN_WIDTH = 100d;
-
-    private final TableView<PlayerInfo> table;
-    private final ObservableList<PlayerInfo> data;
+    private final TableView<PlayerInfo> table = Tables.table();
+    private final ObservableList<PlayerInfo> data = FXCollections.observableArrayList();
 
     private PlayerInfoTile playerInfo;
 
     public TeamPlayersTable() {
-        data = FXCollections.observableList(new ArrayList<>());
-
-        table = new TableView<>();
         table.setItems(data);
-
-        TableColumn<PlayerInfo, Integer> numberCol = new TableColumn<>("#");
-        numberCol.setMinWidth(COLUMN_WIDTH);
-        numberCol.setMaxWidth(COLUMN_WIDTH);
-        numberCol.getStyleClass().add("column-centered");
-        numberCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getNumber();
-            }
-        });
-
-        TableColumn<PlayerInfo, String> nameCol = new TableColumn<>("Name");
-        nameCol.setMinWidth(200d);
-        nameCol.setMaxWidth(200d);
-        nameCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public String getValue() {
-                return p.getValue().getName();
-            }
-        });
-
-        TableColumn<PlayerInfo, Integer> ageCol = new TableColumn<>("Age");
-        ageCol.setMinWidth(COLUMN_WIDTH);
-        ageCol.setMaxWidth(COLUMN_WIDTH);
-        ageCol.getStyleClass().add("column-centered");
-        ageCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getAge();
-            }
-        });
-
-        TableColumn<PlayerInfo, Integer> skillCol = new TableColumn<>("Skill");
-        skillCol.setMinWidth(COLUMN_WIDTH);
-        skillCol.setMaxWidth(COLUMN_WIDTH);
-        skillCol.getStyleClass().add("column-centered");
-        skillCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                PlayerInfo plr = p.getValue();
-                return plr.getAttributes().getTotal();
-            }
-        });
-
-        TableColumn<PlayerInfo, Integer> battingCol = new TableColumn<>("Batting");
-        battingCol.setMinWidth(COLUMN_WIDTH);
-        battingCol.setMaxWidth(COLUMN_WIDTH);
-        battingCol.getStyleClass().add("column-centered");
-        battingCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getAttributes().getBattingSkill();
-            }
-        });
-
-        TableColumn<PlayerInfo, Integer> pitchingCol = new TableColumn<>("Pitching");
-        pitchingCol.setMinWidth(COLUMN_WIDTH);
-        pitchingCol.setMaxWidth(COLUMN_WIDTH);
-        pitchingCol.getStyleClass().add("column-centered");
-        pitchingCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getAttributes().getPitchingSkill();
-            }
-        });
-
-        TableColumn<PlayerInfo, Integer> fieldingCol = new TableColumn<>("Fielding");
-        fieldingCol.setMinWidth(COLUMN_WIDTH);
-        fieldingCol.setMaxWidth(COLUMN_WIDTH);
-        fieldingCol.getStyleClass().add("column-centered");
-        fieldingCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getAttributes().getFieldingSkill();
-            }
-        });
-
-        TableColumn<PlayerInfo, Integer> physicalCol = new TableColumn<>("Physical");
-        physicalCol.setMinWidth(COLUMN_WIDTH);
-        physicalCol.setMaxWidth(COLUMN_WIDTH);
-        physicalCol.getStyleClass().add("column-centered");
-        physicalCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getAttributes().getPhysicalSkill();
-            }
-        });
-        
-        table.getColumns().setAll(Arrays.asList(numberCol, nameCol, ageCol, skillCol, battingCol, pitchingCol, fieldingCol, physicalCol));
-        
-        table.setFixedCellSize(25);
-        table.prefHeightProperty().bind(Bindings.size(table.getItems()).multiply(table.getFixedCellSize()).add(40));
+        table.getColumns().setAll(List.of(
+            Tables.column("#", PlayerInfo::getNumber).centered().width(3).build(),
+            Tables.column("Name", PlayerInfo::getName).width(14).build(),
+            Tables.column("Age", PlayerInfo::getAge).centered().width(4).build(),
+            rating("Overall", PlayerAttributes::getTotal),
+            rating("Batting", PlayerAttributes::getBattingSkill),
+            rating("Pitching", PlayerAttributes::getPitchingSkill),
+            rating("Fielding", PlayerAttributes::getFieldingSkill),
+            rating("Physical", PlayerAttributes::getPhysicalSkill)));
 
         var selectionModel = table.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
@@ -138,7 +50,7 @@ public class TeamPlayersTable extends Pane {
                 }
         );
 
-        super.getChildren().add(table);
+        getChildren().add(Layouts.grow(table));
     }
 
     public void reload(List<PlayerInfo> players) {
@@ -155,5 +67,9 @@ public class TeamPlayersTable extends Pane {
 
     public void setPlayerInfo(PlayerInfoTile playerDetail) {
         this.playerInfo = playerDetail;
+    }
+
+    private static TableColumn<PlayerInfo, Integer> rating(String title, Function<PlayerAttributes, Integer> attribute) {
+        return Tables.<PlayerInfo, Integer>column(title, player -> attribute.apply(player.getAttributes())).rating().width(5.5).build();
     }
 }

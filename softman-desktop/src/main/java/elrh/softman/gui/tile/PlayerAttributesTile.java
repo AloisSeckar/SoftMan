@@ -1,92 +1,70 @@
 package elrh.softman.gui.tile;
 
+import atlantafx.base.controls.Card;
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Ratings;
 import elrh.softman.logic.core.data.PlayerAttributes;
-import elrh.softman.gui.utils.FormatUtils;
-import elrh.softman.gui.utils.GUIUtils;
-import eu.hansolo.medusa.Gauge;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 
-public class PlayerAttributesTile extends VBox {
-    
-    public static final int BIG = 120;
-    public static final int SMALL = 85;
+public class PlayerAttributesTile extends Card {
 
-    private final Gauge battingGauge;
-    private final Gauge battingPowerGauge;
-    private final Gauge swingControlGauge;
-    private final Gauge pitchEvaluationGauge;
+    private final Ratings.Bar battingBar = Ratings.bar("Overall");
+    private final Ratings.Bar battingPowerBar = Ratings.bar("Power");
+    private final Ratings.Bar swingControlBar = Ratings.bar("Swing control");
+    private final Ratings.Bar pitchEvaluationBar = Ratings.bar("Pitch evaluation");
 
-    private final Gauge pitchingGauge;
-    private final Gauge pitchingSpeedGauge;
-    private final Gauge ballControlGauge;
-    private final Gauge pitchVarietyGauge;
+    private final Ratings.Bar pitchingBar = Ratings.bar("Overall");
+    private final Ratings.Bar pitchingSpeedBar = Ratings.bar("Speed");
+    private final Ratings.Bar ballControlBar = Ratings.bar("Ball control");
+    private final Ratings.Bar pitchVarietyBar = Ratings.bar("Variety");
 
-    private final Gauge fieldingGauge;
-    private final Gauge fieldingReachGauge;
-    private final Gauge gloveControlGauge;
-    private final Gauge throwControlGauge;
+    private final Ratings.Bar fieldingBar = Ratings.bar("Overall");
+    private final Ratings.Bar fieldingReachBar = Ratings.bar("Reach");
+    private final Ratings.Bar gloveControlBar = Ratings.bar("Glove control");
+    private final Ratings.Bar throwControlBar = Ratings.bar("Throw control");
 
-    private final Gauge physicalGauge;
-    private final Gauge strengthGauge;
-    private final Gauge speedGauge;
-    private final Gauge enduranceGauge;
+    private final Ratings.Bar physicalBar = Ratings.bar("Overall");
+    private final Ratings.Bar strengthBar = Ratings.bar("Strength");
+    private final Ratings.Bar speedBar = Ratings.bar("Speed");
+    private final Ratings.Bar enduranceBar = Ratings.bar("Endurance");
 
     public PlayerAttributesTile() {
+        var grid = new GridPane(Space.XL.getPx(), Space.L.getPx());
+        var half = new ColumnConstraints();
+        half.setPercentWidth(50);
+        grid.getColumnConstraints().addAll(half, half);
 
-        super.setPadding(FormatUtils.PADDING_10);
+        grid.add(Ratings.group("Batting", battingBar, battingPowerBar, swingControlBar, pitchEvaluationBar), 0, 0);
+        grid.add(Ratings.group("Pitching", pitchingBar, pitchingSpeedBar, ballControlBar, pitchVarietyBar), 1, 0);
+        grid.add(Ratings.group("Fielding", fieldingBar, fieldingReachBar, gloveControlBar, throwControlBar), 0, 1);
+        grid.add(Ratings.group("Physical", physicalBar, strengthBar, speedBar, enduranceBar), 1, 1);
 
-        battingGauge = GUIUtils.getGauge(BIG, Color.CRIMSON,"Batting");
-        battingPowerGauge = GUIUtils.getGauge(SMALL, Color.DARKRED,"Power");
-        swingControlGauge = GUIUtils.getGauge(SMALL, Color.DARKRED,"Control");
-        pitchEvaluationGauge = GUIUtils.getGauge(SMALL, Color.DARKRED,"Evaluation");
-        addGaugeRow(battingGauge, battingPowerGauge, swingControlGauge, pitchEvaluationGauge);
-
-        pitchingGauge = GUIUtils.getGauge(BIG, Color.GREEN,"Pitching");
-        pitchingSpeedGauge = GUIUtils.getGauge(SMALL, Color.SEAGREEN,"Speed");
-        ballControlGauge = GUIUtils.getGauge(SMALL, Color.SEAGREEN,"Control");
-        pitchVarietyGauge = GUIUtils.getGauge(SMALL, Color.SEAGREEN,"Variety");
-        addGaugeRow(pitchingGauge, pitchingSpeedGauge, ballControlGauge, pitchVarietyGauge);
-
-        fieldingGauge = GUIUtils.getGauge(BIG, Color.GOLD,"Fielding");
-        fieldingReachGauge = GUIUtils.getGauge(SMALL, Color.YELLOW,"Reach");
-        gloveControlGauge = GUIUtils.getGauge(SMALL, Color.YELLOW,"Glove");
-        throwControlGauge = GUIUtils.getGauge(SMALL, Color.YELLOW,"Throw");
-        addGaugeRow(fieldingGauge, fieldingReachGauge, gloveControlGauge, throwControlGauge);
-
-        physicalGauge = GUIUtils.getGauge(BIG, Color.VIOLET,"Physical");
-        strengthGauge = GUIUtils.getGauge(SMALL, Color.PURPLE,"Strength");
-        speedGauge = GUIUtils.getGauge(SMALL, Color.PURPLE,"Speed");
-        enduranceGauge = GUIUtils.getGauge(SMALL, Color.PURPLE,"Endurance");
-        addGaugeRow(physicalGauge, strengthGauge, speedGauge, enduranceGauge);
-    }
-
-    private void addGaugeRow(Gauge... gauges) {
-        var row = new HBox(10, gauges);
-        row.setPadding(FormatUtils.PADDING_10);
-        super.getChildren().add(row);
+        setHeader(Cards.title("Attributes"));
+        setBody(grid);
     }
 
     public void reload(PlayerAttributes attributes) {
-        battingGauge.setValue(attributes.getBattingSkill());
-        battingPowerGauge.setValue(attributes.getBattingPower());
-        swingControlGauge.setValue(attributes.getSwingControl());
-        pitchEvaluationGauge.setValue(attributes.getPitchEvaluation());
+        battingBar.setValue(attributes.getBattingSkill());
+        battingPowerBar.setValue(attributes.getBattingPower());
+        swingControlBar.setValue(attributes.getSwingControl());
+        pitchEvaluationBar.setValue(attributes.getPitchEvaluation());
 
-        pitchingGauge.setValue(attributes.getPitchingSkill());
-        pitchingSpeedGauge.setValue(attributes.getPitchingSpeed());
-        ballControlGauge.setValue(attributes.getBallControl());
-        pitchVarietyGauge.setValue(attributes.getPitchVariety());
+        pitchingBar.setValue(attributes.getPitchingSkill());
+        pitchingSpeedBar.setValue(attributes.getPitchingSpeed());
+        ballControlBar.setValue(attributes.getBallControl());
+        pitchVarietyBar.setValue(attributes.getPitchVariety());
 
-        fieldingGauge.setValue(attributes.getFieldingSkill());
-        fieldingReachGauge.setValue(attributes.getFieldingReach());
-        gloveControlGauge.setValue(attributes.getGloveControl());
-        throwControlGauge.setValue(attributes.getThrowControl());
+        fieldingBar.setValue(attributes.getFieldingSkill());
+        fieldingReachBar.setValue(attributes.getFieldingReach());
+        gloveControlBar.setValue(attributes.getGloveControl());
+        throwControlBar.setValue(attributes.getThrowControl());
 
-        physicalGauge.setValue(attributes.getPhysicalSkill());
-        strengthGauge.setValue(attributes.getStrength());
-        speedGauge.setValue(attributes.getSpeed());
-        enduranceGauge.setValue(attributes.getEndurance());
+        physicalBar.setValue(attributes.getPhysicalSkill());
+        strengthBar.setValue(attributes.getStrength());
+        speedBar.setValue(attributes.getSpeed());
+        enduranceBar.setValue(attributes.getEndurance());
     }
 
 }

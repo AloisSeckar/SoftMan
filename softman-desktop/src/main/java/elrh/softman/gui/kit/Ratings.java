@@ -36,7 +36,8 @@ public final class Ratings {
             setAlignment(Pos.CENTER_LEFT);
 
             var name = new Label(label);
-            name.setMinWidth(Layouts.em(7));
+            name.setMinWidth(Layouts.em(8));
+            name.setPrefWidth(Layouts.em(8));
             value.getStyleClass().add(Tokens.RATING_VALUE);
             value.setMinWidth(Layouts.em(2.5));
 
@@ -50,16 +51,16 @@ public final class Ratings {
             progress.getStyleClass().removeAll(Tokens.RATING_TIERS);
             progress.getStyleClass().add(tier(clamped));
         }
+    }
 
-        private static String tier(int rating) {
-            if (rating < 40) {
-                return Tokens.RATING_LOW;
-            } else if (rating < 60) {
-                return Tokens.RATING_MID;
-            } else if (rating < 80) {
-                return Tokens.RATING_GOOD;
-            }
-            return Tokens.RATING_ELITE;
+    public static String tier(int rating) {
+        if (rating < 40) {
+            return Tokens.RATING_LOW;
+        } else if (rating < 60) {
+            return Tokens.RATING_MID;
+        } else if (rating < 80) {
+            return Tokens.RATING_GOOD;
         }
+        return Tokens.RATING_ELITE;
     }
 }

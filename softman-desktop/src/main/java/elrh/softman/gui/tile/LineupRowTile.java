@@ -1,5 +1,8 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.logic.core.Lineup;
 import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.logic.core.data.PlayerRecord;
@@ -26,13 +29,17 @@ public class LineupRowTile extends HBox {
         this.row = row;
         this.selectPosition = selectPosition;
 
-        super.setSpacing(10);
-        super.setAlignment(Pos.CENTER);
+        super.setSpacing(Space.S.getPx());
+        super.setAlignment(Pos.CENTER_LEFT);
 
         var rowLabel = new Label(StringUtils.leftPad(row + ".", 3, "0"));
+        rowLabel.getStyleClass().addAll(Tokens.CAPTION, Tokens.MONO);
+        rowLabel.setMinWidth(Layouts.em(2));
         super.getChildren().add(rowLabel);
 
         playerCB = new ComboBox<>();
+        playerCB.getStyleClass().add(Tokens.READONLY);
+        playerCB.setPrefWidth(Layouts.em(14));
         super.getChildren().add(playerCB);
 
         if (selectPosition) {
@@ -41,6 +48,8 @@ public class LineupRowTile extends HBox {
         } else {
             positionCB = new ComboBox<>();
         }
+        positionCB.getStyleClass().add(Tokens.READONLY);
+        positionCB.setPrefWidth(Layouts.em(10));
 
         playerCB.valueProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) {
@@ -72,9 +81,7 @@ public class LineupRowTile extends HBox {
 
     public void setReadOnly(boolean readOnly) {
         playerCB.setDisable(readOnly);
-        playerCB.setStyle("-fx-opacity: 1");
         positionCB.setDisable(readOnly);
-        positionCB.setStyle("-fx-opacity: 1");
     }
 
     public PlayerRecord getCurrentSelection() {

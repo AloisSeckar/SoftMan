@@ -1,12 +1,15 @@
 package elrh.softman.gui.frame;
 
-import elrh.softman.logic.AssociationManager;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.utils.GUIUtils;
+import elrh.softman.logic.AssociationManager;
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 
 public class FocusFrame extends HBox {
 
@@ -19,27 +22,28 @@ public class FocusFrame extends HBox {
         return INSTANCE;
     }
 
+    private final Region clubSwatch = new Region();
+
     private FocusFrame() {
-        super.setAlignment(Pos.CENTER_RIGHT);
+        super(Space.S.getPx());
+        setAlignment(Pos.CENTER_RIGHT);
 
         var manager = AssociationManager.getInstance();
         var user = manager.getUser();
 
-        this.getChildren().add(new Label("Focused club: "));
+        clubSwatch.getStyleClass().add(Tokens.SWATCH);
+        GUIUtils.setBackgroundColor(clubSwatch, user.getFocusedClub().getColor());
+
         final var focusedClubCB = new ComboBox<>(FXCollections.observableList(manager.getClubs(true)));
         focusedClubCB.setValue(user.getFocusedClub());
-        GUIUtils.setBackgroundColor(FocusFrame.this, user.getFocusedClub().getColor());
-        this.getChildren().add(focusedClubCB);
 
-        this.getChildren().add(new Label(" Focused team: "));
         final var focusedTeamCB = new ComboBox<>(FXCollections.observableList(user.getFocusedClub().getTeams()));
         focusedTeamCB.setValue(user.getFocusedTeam());
-        this.getChildren().add(focusedTeamCB);
 
-        this.getChildren().add(GUIUtils.createPadding(15d));
+        getChildren().addAll(clubSwatch, caption("Club"), focusedClubCB, caption("Team"), focusedTeamCB);
 
         focusedClubCB.valueProperty().addListener((ov, oldValue, newValue) -> {
-            GUIUtils.setBackgroundColor(FocusFrame.this, newValue.getColor());
+            GUIUtils.setBackgroundColor(clubSwatch, newValue.getColor());
             AssociationManager.getInstance().getUser().setFocusedClub(newValue);
             focusedTeamCB.setItems(FXCollections.observableList(newValue.getTeams()));
             focusedTeamCB.setValue(newValue.getTeams().get(0));
@@ -49,5 +53,11 @@ public class FocusFrame extends HBox {
             AssociationManager.getInstance().getUser().setFocusedTeam(newValue);
         });
 
+    }
+
+    private static Label caption(String text) {
+        var label = new Label(text);
+        label.getStyleClass().add(Tokens.CAPTION);
+        return label;
     }
 }

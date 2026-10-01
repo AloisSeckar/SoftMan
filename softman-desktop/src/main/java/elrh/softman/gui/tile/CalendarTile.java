@@ -1,54 +1,43 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.logic.AssociationManager;
+import atlantafx.base.controls.Card;
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.utils.FormatUtils;
-import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import elrh.softman.logic.AssociationManager;
 import java.util.ArrayList;
+import java.util.UUID;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import org.kordamp.ikonli.feather.Feather;
 
-public class CalendarTile extends VBox {
+public class CalendarTile extends Card {
 
-    private final Label titleLabel;
-    private final VBox dailySchedule;
+    private final Label titleLabel = new Label("Today");
+    private final VBox dailySchedule = new VBox();
     private final ArrayList<ScheduleRowTile> dailyScheduleRows = new ArrayList<>();
 
-    private int rows = 0;
-
-    private java.util.UUID leagueId;
+    private UUID leagueId;
 
     public CalendarTile() {
+        titleLabel.getStyleClass().add(Tokens.CARD_TITLE);
 
-        var topRow = new HBox();
-        topRow.setSpacing(5d);
-        topRow.setAlignment(Pos.CENTER_LEFT);
+        var adjustButton = Icons.button(Feather.CALENDAR, "Back to current day");
+        adjustButton.setOnAction(e -> adjustDay());
+        var prevDayButton = Icons.button(Feather.CHEVRON_LEFT, "Previous day");
+        prevDayButton.setOnAction(e -> prevDay());
+        var nextDayButton = Icons.button(Feather.CHEVRON_RIGHT, "Next day");
+        nextDayButton.setOnAction(e -> nextDay());
 
-        var adjustButton = new Button("O");
-        adjustButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> adjustDay());
-        topRow.getChildren().add(adjustButton);
-
-        var prevDayButton = new Button("<");
-        prevDayButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> prevDay());
-        topRow.getChildren().add(prevDayButton);
-
-        titleLabel = new Label("Today");
-        titleLabel.getStyleClass().setAll("schedule-date");
-        topRow.getChildren().add(titleLabel);
-
-        var prevNextButton = new Button(">");
-        prevNextButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> nextDay());
-        topRow.getChildren().add(prevNextButton);
-
-        super.getChildren().add(topRow);
-
-        dailySchedule = new VBox();
-        super.getChildren().add(dailySchedule);
+        setHeader(Layouts.row(Space.S, Cards.title("Schedule"), Layouts.spacer(),
+            adjustButton, prevDayButton, titleLabel, nextDayButton));
+        setBody(dailySchedule);
     }
 
-    public void setDailySchedule(java.util.UUID leagueId) {
+    public void setDailySchedule(UUID leagueId) {
         this.leagueId = leagueId;
         var viewDate = AssociationManager.getInstance().getClock().getViewDate();
         titleLabel.setText(viewDate.format(FormatUtils.DF));
@@ -57,15 +46,16 @@ public class CalendarTile extends VBox {
         dailyScheduleRows.clear();
         var matches = AssociationManager.getInstance().getDailyMatchesForLeague(leagueId);
         if (matches.size() > 0) {
-            rows = 0;
             matches.forEach(match -> {
-                var row = new ScheduleRowTile(rows++ % 2 == 0);
+                var row = new ScheduleRowTile();
                 row.setMatch(match);
                 dailySchedule.getChildren().add(row);
                 dailyScheduleRows.add(row);
             });
         } else {
-            dailySchedule.getChildren().add(new Label("No matches scheduled today"));
+            var empty = new Label("No matches scheduled on this day");
+            empty.getStyleClass().add(Tokens.CAPTION);
+            dailySchedule.getChildren().add(empty);
         }
     }
 

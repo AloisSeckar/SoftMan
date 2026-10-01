@@ -1,5 +1,9 @@
 package elrh.softman.gui.tab;
 
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.interfaces.IFocusedClubListener;
@@ -7,10 +11,10 @@ import elrh.softman.logic.interfaces.IFocusedTeamListener;
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.GridView;
 
-public class TrainingTab extends AnchorPane implements IFocusedTeamListener, IFocusedClubListener {
+public class TrainingTab extends BorderPane implements IFocusedTeamListener, IFocusedClubListener {
 
     private static TrainingTab INSTANCE;
 
@@ -22,10 +26,10 @@ public class TrainingTab extends AnchorPane implements IFocusedTeamListener, IFo
     }
 
     private TrainingTab() {
-        var label = new Label("Manage yor player's training and progress");
-        super.getChildren().add(label);
-        AnchorPane.setLeftAnchor(label, 10d);
-        AnchorPane.setTopAnchor(label, 5d);
+        setPadding(Space.S.insets());
+
+        var label = new Label("Manage your players' training and progress");
+        label.getStyleClass().add(Tokens.CAPTION);
 
         var days = new ArrayList<Integer>(30);
         for (int i = 1; i <= 30; i++) {
@@ -33,14 +37,10 @@ public class TrainingTab extends AnchorPane implements IFocusedTeamListener, IFo
         }
 
         var calendar = new GridView<>(FXCollections.observableList(days));
-        calendar.getStyleClass().add("framed");
-        calendar.setPrefWidth(700);
-        calendar.setCellWidth(100);
-        calendar.setCellHeight(100);
+        calendar.setCellWidth(Layouts.em(6));
+        calendar.setCellHeight(Layouts.em(6));
 
-        super.getChildren().add(calendar);
-        AnchorPane.setLeftAnchor(calendar, 10d);
-        AnchorPane.setTopAnchor(calendar, 25d);
+        setCenter(Cards.titled("Training", Layouts.column(Space.M, label, Layouts.grow(calendar))));
     }
 
     @Override

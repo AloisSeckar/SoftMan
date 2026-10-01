@@ -33,3 +33,7 @@ Tasks deferred for later. Remove an entry once it is done.
 - [ ] **Migrate to AtlantaFX 3.0.0** — released 2026-09-24; GUI.md locks 2.1.0. Check the changelog for
   breaking changes (theme classes, `Styles` constants, looked-up `-color-*` vars), bump in root `pom.xml`,
   run `GuiSmokeTest`, then update the version in GUI.md.
+- [ ] **`ProgressIndicatorUtil` is unused** — third-party gist with inline black/white styles; delete it or
+  restyle on theme vars if a dimming overlay is wanted (the live spinner is in `Softman.setupStage`).
+- [ ] **`FocusFrame` goes stale after New/Load game** — its club/team combos are built once in the
+  singleton constructor and are not refreshed by `MainLayout.setUp()`.

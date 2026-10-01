@@ -1,127 +1,43 @@
 package elrh.softman.gui.table;
 
+import atlantafx.base.theme.Styles;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tables;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.logic.core.League;
 import elrh.softman.logic.core.stats.Standing;
-import java.util.ArrayList;
-import java.util.Arrays;
-import javafx.beans.value.*;
-import javafx.scene.layout.*;
-import javafx.scene.control.*;
-import javafx.collections.*;
+import java.util.List;
+import java.util.function.Function;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
 
 public class LeagueStadingsTable extends VBox {
 
-    private static final double WIDTH = 80d;
-
-    private final Label nameLabel;
-    private final TableView<Standing> table;
-    private final ObservableList<Standing> data;
+    private final Label nameLabel = new Label();
+    private final TableView<Standing> table = Tables.table();
+    private final ObservableList<Standing> data = FXCollections.observableArrayList();
 
     public LeagueStadingsTable() {
-        data = FXCollections.observableList(new ArrayList<>());
+        super(Space.S.getPx());
+        nameLabel.getStyleClass().add(Tokens.CAPTION);
 
-        nameLabel = new Label();
-        nameLabel.getStyleClass().add("league-name");
-        super.getChildren().add(nameLabel);
-        super.getStyleClass().setAll("padding-5");
-
-        table = new TableView<>();
-        table.setPrefWidth(820d);
-        table.setPrefHeight(225d);
         table.setItems(data);
+        table.getColumns().setAll(List.of(
+            Tables.<Standing, Integer>column("#", s -> data.indexOf(s) + 1).centered().width(3).sortable(false).build(),
+            Tables.column("Team", Standing::getTeam).width(14).sortable(false).build(),
+            stat("G", Standing::getGames),
+            stat("W", Standing::getWins),
+            stat("L", Standing::getLoses),
+            stat("RF", Standing::getRunsFor),
+            stat("RA", Standing::getRunsAgainst),
+            Tables.column("Pts", Standing::getPoints).centered().width(4).style(Styles.TEXT_BOLD).build()));
+        Tables.fitRows(table);
 
-        TableColumn<Standing, String> numberCol = new TableColumn<>("#");
-        numberCol.setMinWidth(WIDTH);
-        numberCol.setMaxWidth(WIDTH);
-        numberCol.getStyleClass().add("column-centered");
-        numberCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public String getValue() {
-                return String.valueOf(table.getItems().indexOf(p.getValue()) + 1);
-            }
-        });
-        numberCol.setSortable(false);
-
-        TableColumn<Standing, String> teamCol = new TableColumn<>("Team");
-        teamCol.setMinWidth(250d);
-        teamCol.setMaxWidth(250d);
-        teamCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public String getValue() {
-                return p.getValue().getTeam();
-            }
-        });
-        teamCol.setSortable(false);
-
-        TableColumn<Standing, Integer> gamesCol = new TableColumn<>("Games");
-        gamesCol.setMinWidth(WIDTH);
-        gamesCol.setMaxWidth(WIDTH);
-        gamesCol.getStyleClass().add("column-centered");
-        gamesCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getGames();
-            }
-        });
-
-        TableColumn<Standing, Integer> winsCol = new TableColumn<>("W");
-        winsCol.setMinWidth(WIDTH);
-        winsCol.setMaxWidth(WIDTH);
-        winsCol.getStyleClass().add("column-centered");
-        winsCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getWins();
-            }
-        });
-
-        TableColumn<Standing, Integer> losesCol = new TableColumn<>("L");
-        losesCol.setMinWidth(WIDTH);
-        losesCol.setMaxWidth(WIDTH);
-        losesCol.getStyleClass().add("column-centered");
-        losesCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getLoses();
-            }
-        });
-
-        TableColumn<Standing, Integer> runsForCol = new TableColumn<>("RF");
-        runsForCol.setMinWidth(WIDTH);
-        runsForCol.setMaxWidth(WIDTH);
-        runsForCol.getStyleClass().add("column-centered");
-        runsForCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getRunsFor();
-            }
-        });
-
-        TableColumn<Standing, Integer> runsAgainstCol = new TableColumn<>("RA");
-        runsAgainstCol.setMinWidth(WIDTH);
-        runsAgainstCol.setMaxWidth(WIDTH);
-        runsAgainstCol.getStyleClass().add("column-centered");
-        runsAgainstCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getRunsAgainst();
-            }
-        });
-
-        TableColumn<Standing, Integer> pointsCol = new TableColumn<>("Points");
-        pointsCol.setMinWidth(WIDTH);
-        pointsCol.setMaxWidth(WIDTH);
-        pointsCol.getStyleClass().add("column-centered");
-        pointsCol.setCellValueFactory((p) -> new ObservableValueBase<>() {
-            @Override
-            public Integer getValue() {
-                return p.getValue().getPoints();
-            }
-        });
-
-        table.getColumns().setAll(Arrays.asList(numberCol, teamCol, gamesCol, winsCol, losesCol, runsForCol, runsAgainstCol, pointsCol));
-
-        super.getChildren().add(table);
+        getChildren().addAll(nameLabel, table);
     }
 
     public void setLeague(League league) {
@@ -140,5 +56,9 @@ public class LeagueStadingsTable extends VBox {
     public void refresh() {
         FXCollections.sort(data);
         table.refresh();
+    }
+
+    private static TableColumn<Standing, Integer> stat(String title, Function<Standing, Integer> value) {
+        return Tables.column(title, value).centered().width(3.5).build();
     }
 }

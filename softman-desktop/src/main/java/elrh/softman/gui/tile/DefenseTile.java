@@ -2,97 +2,102 @@ package elrh.softman.gui.tile;
 
 import static elrh.softman.logic.enums.PlayerPosition.*;
 
+import atlantafx.base.controls.Card;
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Tokens;
+import elrh.softman.gui.utils.GUIUtils;
 import elrh.softman.logic.core.data.PlayerRecord;
 import elrh.softman.logic.enums.PlayerPosition;
+import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-public class DefenseTile extends Pane {
+public class DefenseTile extends Card {
 
-    private static final int W2 = 425; // bg width  = 850px
-    private static final int H2 = 300; // bg H2 = 600px
-
-    private final Label posP = createLabel(PITCHER);
-    private final Label posC = createLabel(CATCHER);
-    private final Label pos1B = createLabel(FIRST_BASE);
-    private final Label pos2B = createLabel(SECOND_BASE);
-    private final Label pos3B = createLabel(THIRD_BASE);
-    private final Label posSS = createLabel(SHORT_STOP);
-    private final Label posLF = createLabel(LEFT_FIELD);
-    private final Label posCF = createLabel(CENTER_FIELD);
-    private final Label posRF = createLabel(RIGHT_FIELD);
-    private final Label posDP = createLabel(DESIGNATED_PLAYER);
+    private final Map<PlayerPosition, Label> labels = new EnumMap<>(PlayerPosition.class);
 
     public DefenseTile() {
-        super.getStyleClass().add("framed");
-        super.getStyleClass().add("field");
+        var field = new FieldPane();
+        // marker centres as fractions of the field image
+        place(field, LEFT_FIELD, 0.18, 0.52);
+        place(field, CENTER_FIELD, 0.50, 0.47);
+        place(field, RIGHT_FIELD, 0.82, 0.52);
+        place(field, SHORT_STOP, 0.35, 0.64);
+        place(field, SECOND_BASE, 0.65, 0.64);
+        place(field, THIRD_BASE, 0.22, 0.72);
+        place(field, PITCHER, 0.50, 0.77);
+        place(field, FIRST_BASE, 0.78, 0.72);
+        place(field, CATCHER, 0.50, 0.93);
+        place(field, DESIGNATED_PLAYER, 0.15, 0.93);
 
-        posLF.setLayoutX(50);
-        posLF.setLayoutY(H2);
-        super.getChildren().add(posLF);
-
-        posCF.setLayoutX(W2 - 100);
-        posCF.setLayoutY(H2 - 30);
-        super.getChildren().add(posCF);
-
-        posRF.setLayoutX(W2 * 2 - 250);
-        posRF.setLayoutY(H2);
-        super.getChildren().add(posRF);
-
-        posSS.setLayoutX(W2 - 225);
-        posSS.setLayoutY(H2 + 70);
-        super.getChildren().add(posSS);
-        
-        pos2B.setLayoutX(W2 + 25);
-        pos2B.setLayoutY(H2 + 70);
-        super.getChildren().add(pos2B);
-
-        pos3B.setLayoutX(85);
-        pos3B.setLayoutY(H2 + 120);
-        super.getChildren().add(pos3B);
-
-        posP.setLayoutX(W2 - 100);
-        posP.setLayoutY(H2 + 145);
-        super.getChildren().add(posP);
-
-        pos1B.setLayoutX(W2 * 2 - 285);
-        pos1B.setLayoutY(H2 + 120);
-        super.getChildren().add(pos1B);
-
-        posC.setLayoutX(W2 - 100);
-        posC.setLayoutY(H2 + 240);
-        super.getChildren().add(posC);
-
-        posDP.setLayoutX(30);
-        posDP.setLayoutY(H2 + 240);
-        super.getChildren().add(posDP);
+        setHeader(Cards.title("Defense"));
+        setBody(field);
     }
 
     public void setPosition(PlayerRecord position) {
-        String text = position.getPlayer().toString();
-        switch (position.getPosition()) {
-            case PITCHER -> posP.setText(text);
-            case CATCHER -> posC.setText(text);
-            case FIRST_BASE -> pos1B.setText(text);
-            case SECOND_BASE -> pos2B.setText(text);
-            case THIRD_BASE -> pos3B.setText(text);
-            case SHORT_STOP -> posSS.setText(text);
-            case LEFT_FIELD -> posLF.setText(text);
-            case CENTER_FIELD -> posCF.setText(text);
-            case RIGHT_FIELD -> posRF.setText(text);
-            case DESIGNATED_PLAYER, OFFENSIVE_ONLY -> posDP.setText(text);
-            default -> { /* nothing */ }
+        var key = position.getPosition() == OFFENSIVE_ONLY ? DESIGNATED_PLAYER : position.getPosition();
+        var label = labels.get(key);
+        if (label != null) {
+            label.setText(position.getPlayer().toString());
         }
     }
 
-    private static Label createLabel(PlayerPosition pos) {
-        Label ret = new Label(pos.toString());
-        ret.setAlignment(Pos.CENTER);
-        ret.getStyleClass().add("framed");
-        ret.getStyleClass().add("field-position");
-        ret.getStyleClass().add("padding-5");
-        return ret;
+    private void place(FieldPane field, PlayerPosition pos, double x, double y) {
+        var label = new Label(pos.toString());
+        label.setAlignment(Pos.CENTER);
+        label.getStyleClass().add(Tokens.FIELD_POSITION);
+        labels.put(pos, label);
+        field.place(label, x, y);
+    }
+
+    // scales the field image with its aspect ratio and keeps markers on their fractional spots
+    private static final class FieldPane extends Pane {
+
+        private static final double MAX_LABEL_WIDTH = 0.24;
+
+        private final ImageView image = new ImageView(GUIUtils.getImageOrDefault("/img/vecteezy/field.png"));
+        private final Map<Label, Point2D> anchors = new LinkedHashMap<>();
+
+        private FieldPane() {
+            image.setPreserveRatio(true);
+            image.setSmooth(true);
+            getChildren().add(image);
+            setPrefSize(Layouts.em(40), Layouts.em(28));
+            setMinSize(Layouts.em(20), Layouts.em(14));
+        }
+
+        private void place(Label label, double x, double y) {
+            anchors.put(label, new Point2D(x, y));
+            getChildren().add(label);
+        }
+
+        @Override
+        protected void layoutChildren() {
+            var img = image.getImage();
+            double ratio = img.getWidth() / img.getHeight();
+            double width = Math.min(getWidth(), getHeight() * ratio);
+            double height = width / ratio;
+            double left = (getWidth() - width) / 2;
+            double top = (getHeight() - height) / 2;
+
+            image.setFitWidth(width);
+            image.relocate(left, top);
+
+            anchors.forEach((label, at) -> {
+                double labelWidth = Math.min(label.prefWidth(-1), width * MAX_LABEL_WIDTH);
+                double labelHeight = label.prefHeight(labelWidth);
+                label.resizeRelocate(
+                    left + at.getX() * width - labelWidth / 2,
+                    top + at.getY() * height - labelHeight / 2,
+                    labelWidth, labelHeight);
+            });
+        }
     }
 
 }

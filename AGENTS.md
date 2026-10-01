@@ -49,7 +49,7 @@ Summary of the locked decisions:
 
 - JavaFX, plain Java — **no FXML, no Scene Builder**, screens are data-driven
 - Theme: AtlantaFX `NordLight` (light!); accent Nord Frost `#5E81AC`; `NordDark` reserved for a later toggle
-- Build UI through the `elrh.softman.gui.kit` package (`Cards`, `Tables`, `Ratings`, `Icons`, `Layouts`, `Tokens`) — never ad-hoc
+- Build UI through the `elrh.softman.gui.kit` package (`Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens`) — never ad-hoc
 - No hex literals in Java or CSS; use AtlantaFX looked-up vars and `-sm-*` tokens
 - No `setLayoutX/Y`, no `AnchorPane` pixel anchors, no fixed px sizes
 - Rewrite the view layer only — public methods (`setMatch`, `reload`, `refresh`, listener registration) stay

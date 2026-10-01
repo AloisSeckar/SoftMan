@@ -1,6 +1,13 @@
 package elrh.softman.gui.tab;
 
+import atlantafx.base.theme.Styles;
 import elrh.softman.gui.frame.ContentFrame;
+import elrh.softman.gui.frame.ContentFrame.Screen;
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tables;
 import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.tile.PlayerAttributesTile;
 import elrh.softman.gui.tile.PlayerInfoTile;
@@ -10,29 +17,44 @@ import elrh.softman.logic.core.Team;
 import elrh.softman.logic.core.data.PlayerInfo;
 import elrh.softman.logic.core.data.PlayerStats;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
-import elrh.softman.gui.utils.FormatUtils;
 import elrh.softman.utils.StatsUtils;
 import java.util.ArrayList;
-import javafx.application.Platform;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
-import org.apache.commons.lang3.StringUtils;
+import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.feather.Feather;
 
 public class PlayerTab extends BorderPane implements IFocusedTeamListener {
+
+    private static final String SEASON_TOTAL = "Season total";
 
     private final ComboBox<PlayerInfo> selectPlayerCB;
     private final ObservableList<PlayerInfo> data;
     private final PlayerInfoTile playerInfo = new PlayerInfoTile(false);
     private final PlayerAttributesTile playerAttributesTA = new PlayerAttributesTile();
-    private final TextFlow seasonStatsTA = new TextFlow();
-    private final TextFlow careerStatsTA = new TextFlow();
+    private final TableView<StatsRow> seasonStatsTable = statsTable("Match");
+    private final TableView<StatsRow> careerStatsTable = statsTable("Season");
+
+    // one stats table line; matchId is set for single-game rows only
+    private record StatsRow(String label, UUID matchId, int games, PlayerStats stats) {
+    }
 
     private static PlayerTab INSTANCE;
     public static PlayerTab getInstance() {
@@ -43,35 +65,38 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
     }
 
     private PlayerTab() {
+        setPadding(Space.S.insets());
         data = FXCollections.observableList(new ArrayList<>());
 
-        var selectPlayerLabel = new Label(" Select player: ");
+        var selectPlayerLabel = new Label("Player");
+        selectPlayerLabel.getStyleClass().add(Tokens.CAPTION);
         selectPlayerCB = new ComboBox<>(data);
-        selectPlayerCB.setMinWidth(220d);
-        selectPlayerCB.setMaxWidth(220d);
         selectPlayerCB.valueProperty().addListener((ov, oldValue, newValue) -> reload(newValue));
 
-        seasonStatsTA.getStyleClass().add(Tokens.MONO);
-        seasonStatsTA.setPadding(FormatUtils.PADDING_5);
-        careerStatsTA.getStyleClass().add(Tokens.MONO);
-        careerStatsTA.setPadding(FormatUtils.PADDING_5);
+        var controlBox = Layouts.column(Space.S, Layouts.row(Space.S, selectPlayerLabel, Layouts.grow(selectPlayerCB)), playerInfo);
+        controlBox.setPrefWidth(Layouts.em(22));
+        BorderPane.setMargin(controlBox, new Insets(0, Space.S.getPx(), 0, 0));
 
-        var attributesButton = new Button("Attributes");
-        attributesButton.setAlignment(Pos.CENTER);
-        attributesButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Platform.runLater(() -> super.setCenter(playerAttributesTA)));
+        var content = new StackPane();
+        var group = new ToggleGroup();
+        var attributesToggle = toggle(group, "Attributes", Feather.SLIDERS, Styles.LEFT_PILL, playerAttributesTA);
+        toggle(group, "Season stats", Feather.CALENDAR, Styles.CENTER_PILL, Cards.titled("Season stats", seasonStatsTable));
+        toggle(group, "Career stats", Feather.AWARD, Styles.RIGHT_PILL, Cards.titled("Career stats", careerStatsTable));
+        group.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                // keep one view selected when the active toggle is clicked again
+                oldValue.setSelected(true);
+            } else {
+                content.getChildren().setAll((Node) newValue.getUserData());
+            }
+        });
+        attributesToggle.setSelected(true);
 
-        var seasonStatsButton = new Button("Season stats");
-        seasonStatsButton.setAlignment(Pos.CENTER);
-        seasonStatsButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Platform.runLater(() -> super.setCenter(seasonStatsTA)));
-
-        var carrierStatsButton = new Button("Carrier stats");
-        carrierStatsButton.setAlignment(Pos.CENTER);
-        carrierStatsButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> Platform.runLater(() -> super.setCenter(careerStatsTA)));
-
-        var controlBox = new VBox(new HBox(selectPlayerLabel, selectPlayerCB), playerInfo, attributesButton, seasonStatsButton, carrierStatsButton);
+        var switcher = new HBox();
+        group.getToggles().forEach(toggle -> switcher.getChildren().add((ToggleButton) toggle));
 
         super.setLeft(controlBox);
-        super.setCenter(playerAttributesTA);
+        super.setCenter(Layouts.column(Space.S, switcher, Layouts.grow(content)));
 
         var user = AssociationManager.getInstance().getUser();
         focusedTeamChanged(user.getFocusedTeam());
@@ -86,22 +111,19 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
 
             playerAttributesTA.reload(info.getAttributes());
 
-            seasonStatsTA.getChildren().clear();
-            var sHeader = new Text("MATCH           |   G |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
-            seasonStatsTA.getChildren().add(sHeader);
+            var seasonRows = new ArrayList<StatsRow>();
+            var careerRows = new ArrayList<StatsRow>();
             var player = AssociationManager.getInstance().getPlayerById(info.getPlayerId());
             if (player != null) {
-                player.getStats().forEach(record -> renderStatsRecord(seasonStatsTA, record, false, null));
-                renderStatsRecord(seasonStatsTA, player.getSeasonTotal(), false, null);
-            }
+                player.getStats().forEach(record -> seasonRows.add(seasonRow(record)));
+                seasonRows.add(seasonRow(player.getSeasonTotal()));
 
-            careerStatsTA.getChildren().clear();
-            var cHeader = new Text("SEASON |   G |  PA |  AB |   R |   H |  2B |  3B |  HR |  SH |  SF |  BB |  HP |  SB |  CS |   K | RBI |   AVG |   SLG |  PO |   A |   E |    IP | \n");
-            careerStatsTA.getChildren().add(cHeader);
-            if (player != null) {
-                renderStatsRecord(careerStatsTA, player.getSeasonTotal(), true, player.getStats().size());
+                // TODO make it variable for each year yet to come + make total career count
+                int year = AssociationManager.getInstance().getClock().getYear();
+                careerRows.add(new StatsRow(String.valueOf(year), null, player.getStats().size(), player.getSeasonTotal()));
             }
-            // TODO make it variable for each year yet to come + make total career count
+            seasonStatsTable.getItems().setAll(seasonRows);
+            careerStatsTable.getItems().setAll(careerRows);
         }
     }
 
@@ -117,58 +139,83 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         selectPlayerCB.setValue(selectPlayerCB.getItems().get(0));
     }
 
-    private void renderStatsRecord(TextFlow target, PlayerStats record, boolean careerStats, Integer totalGames) {
-        if (careerStats) {
-            int year = AssociationManager.getInstance().getClock().getYear();
-            target.getChildren().add(new Text(StringUtils.rightPad(String.valueOf(year), 6, " ") + " | "));
-            target.getChildren().add(new Text(StringUtils.leftPad(String.valueOf(totalGames), 3) + " | "));
-        } else {
-            if ("Season total".equals(record.getMatchStr())) {
-                target.getChildren().add(new Text(StringUtils.rightPad(record.getMatchStr(), 15, " ") + " | "));
+    private static StatsRow seasonRow(PlayerStats record) {
+        return SEASON_TOTAL.equals(record.getMatchStr())
+            ? new StatsRow(record.getMatchStr(), null, record.getGames(), record)
+            : new StatsRow(record.getMatchStr(), record.getMatchId(), 1, record);
+    }
+
+    private static ToggleButton toggle(ToggleGroup group, String text, Ikon icon, String pill, Node view) {
+        var toggle = new ToggleButton(text, Icons.of(icon));
+        toggle.getStyleClass().add(pill);
+        toggle.setToggleGroup(group);
+        toggle.setUserData(view);
+        return toggle;
+    }
+
+    private static TableView<StatsRow> statsTable(String labelTitle) {
+        var table = Tables.<StatsRow>table(Styles.DENSE);
+        // too many columns to squeeze; scroll horizontally instead
+        table.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+        table.getColumns().setAll(List.of(
+            Tables.<StatsRow, StatsRow>column(labelTitle, row -> row).width(12).sortable(false).cells(c -> new LabelCell()).build(),
+            Tables.<StatsRow, Integer>column("G", StatsRow::games).numeric().width(3.5).build(),
+            stat("PA", PlayerStats::getBPA),
+            stat("AB", PlayerStats::getBAB),
+            stat("R", PlayerStats::getBR),
+            stat("H", PlayerStats::getBH),
+            stat("2B", PlayerStats::getB2B),
+            stat("3B", PlayerStats::getB3B),
+            stat("HR", PlayerStats::getBHR),
+            stat("SH", PlayerStats::getBSH),
+            stat("SF", PlayerStats::getBSF),
+            stat("BB", PlayerStats::getBBB),
+            stat("HP", PlayerStats::getBHP),
+            stat("SB", PlayerStats::getBSB),
+            stat("CS", PlayerStats::getBCS),
+            stat("K", PlayerStats::getBK),
+            stat("RBI", PlayerStats::getBRB),
+            text("AVG", s -> StatsUtils.getAVG(s.getBAB(), s.getBH())),
+            text("SLG", s -> StatsUtils.getSLG(s.getBAB(), s.getBH(), s.getB2B(), s.getB3B(), s.getBHR())),
+            stat("PO", PlayerStats::getFPO),
+            stat("A", PlayerStats::getFA),
+            stat("E", PlayerStats::getFE),
+            text("IP", s -> StatsUtils.getIP(s.getFIP()))));
+        return table;
+    }
+
+    private static TableColumn<StatsRow, Integer> stat(String title, ToIntFunction<PlayerStats> value) {
+        return Tables.<StatsRow, Integer>column(title, row -> value.applyAsInt(row.stats())).numeric().width(3.5).build();
+    }
+
+    private static TableColumn<StatsRow, String> text(String title, Function<PlayerStats, String> value) {
+        return Tables.<StatsRow, String>column(title, row -> value.apply(row.stats())).numeric().width(4.5).build();
+    }
+
+    private static void openMatch(UUID matchId) {
+        MatchTab.getInstance().setMatch(Match.getMatchDetail(matchId));
+        ContentFrame.getInstance().switchTo(Screen.MATCH);
+    }
+
+    // single-game rows link to the match, total rows are bold text
+    private static final class LabelCell extends TableCell<StatsRow, StatsRow> {
+        @Override
+        protected void updateItem(StatsRow row, boolean empty) {
+            super.updateItem(row, empty);
+            setText(null);
+            setGraphic(null);
+            getStyleClass().remove(Styles.TEXT_BOLD);
+            if (empty || row == null) {
+                return;
+            }
+            if (row.matchId() != null) {
+                var link = new Hyperlink(row.label());
+                link.setOnAction(e -> openMatch(row.matchId()));
+                setGraphic(link);
             } else {
-                var matchLink = new Hyperlink(StringUtils.rightPad(record.getMatchStr(), 15, " "));
-                matchLink.setBorder(Border.EMPTY);
-                matchLink.setPadding(new Insets(4, 0, 4, 0));
-                matchLink.setOnAction(e -> {
-                    var match = Match.getMatchDetail(record.getMatchId());
-                    MatchTab.getInstance().setMatch(match);
-                    ContentFrame.getInstance().switchTo("Match");
-                });
-                target.getChildren().add(matchLink);
-                target.getChildren().add(new Text(" | "));
+                setText(row.label());
+                getStyleClass().add(Styles.TEXT_BOLD);
             }
         }
-
-        var sb = new StringBuilder();
-        if (!careerStats) {
-            if ("Season total".equals(record.getMatchStr())) {
-                sb.append(StringUtils.leftPad(String.valueOf(record.getGames()), 3)).append(" | ");
-            } else {
-                sb.append(StringUtils.leftPad("1", 3)).append(" | ");
-            }
-        }
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBPA()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBAB()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBR()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBH()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getB2B()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getB3B()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBHR()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBSH()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBSF()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBBB()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBHP()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBSB()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBCS()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBK()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getBRB()), 3)).append(" | ");
-        sb.append(StatsUtils.getAVG(record.getBAB(), record.getBH())).append(" | ");
-        sb.append(StatsUtils.getSLG(record.getBAB(), record.getBH(), record.getB2B(), record.getB3B(), record.getBHR())).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getFPO()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getFA()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(String.valueOf(record.getFE()), 3)).append(" | ");
-        sb.append(StringUtils.leftPad(StatsUtils.getIP(record.getFIP()), 5)).append(" | \n");
-        target.getChildren().add(new Text(sb.toString()));
-
     }
 }

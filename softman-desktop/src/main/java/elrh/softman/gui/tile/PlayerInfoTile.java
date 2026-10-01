@@ -1,113 +1,90 @@
 package elrh.softman.gui.tile;
 
-import elrh.softman.logic.core.data.PlayerInfo;
+import atlantafx.base.controls.Card;
+import elrh.softman.gui.kit.Images;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Ratings;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.utils.GUIUtils;
-import eu.hansolo.medusa.Gauge;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import elrh.softman.logic.core.data.PlayerInfo;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.image.Image;
+import javafx.scene.control.Separator;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
-public class PlayerInfoTile extends VBox {
+public class PlayerInfoTile extends Card {
 
-    private final Label nameLabel;
-    private final Label ageLabel;
+    private final Label nameLabel = new Label();
+    private final Label ageLabel = new Label();
 
     private final ImageView imgView;
 
-    private final ProgressBar fatigueBar;
-    private final Label fatigueLabel;
+    private final ProgressBar fatigueBar = new ProgressBar(0);
+    private final Label fatigueLabel = new Label();
 
-    private final Gauge overallGauge;
-    private final Gauge battingGauge;
-    private final Gauge pitchingGauge;
-    private final Gauge fieldingGauge;
-    private final Gauge physicalGauge;
+    private final Ratings.Bar overallBar = Ratings.bar("Overall");
+    private final Ratings.Bar battingBar;
+    private final Ratings.Bar pitchingBar;
+    private final Ratings.Bar fieldingBar;
+    private final Ratings.Bar physicalBar;
 
     private final boolean full;
 
     public PlayerInfoTile(boolean full) {
         this.full = full;
 
-        super.setAlignment(Pos.BASELINE_CENTER);
-        super.getStyleClass().add(full ? "info-full" : "info-brief");
-        super.setSpacing(15);
+        imgView = Images.rounded(full ? 6 : 4);
+        imgView.setImage(GUIUtils.getImageOrDefault("/img/ball.png"));
+        nameLabel.getStyleClass().add(full ? Tokens.DISPLAY : Tokens.TITLE);
+        nameLabel.setWrapText(true);
+        ageLabel.getStyleClass().add(Tokens.CAPTION);
+        setHeader(Layouts.row(Space.M, imgView, Layouts.column(Space.XS, nameLabel, ageLabel)));
 
-        nameLabel = new Label();
-        nameLabel.getStyleClass().add("player-name");
-        super.getChildren().add(nameLabel);
+        // same shape as a rating bar, but untiered: high fatigue is not "elite"
+        var fatigueName = new Label("Fatigue");
+        fatigueName.setMinWidth(Layouts.em(8));
+        fatigueName.setPrefWidth(Layouts.em(8));
+        fatigueLabel.getStyleClass().add(Tokens.RATING_VALUE);
+        fatigueLabel.setMinWidth(Layouts.em(2.5));
+        var fatigueRow = Layouts.row(Space.S, fatigueName, Layouts.grow(fatigueBar), fatigueLabel);
+        fatigueRow.getStyleClass().add(Tokens.RATING);
 
-        imgView = new ImageView();
-        imgView.setFitWidth(150);
-        imgView.setFitHeight(150);
-        imgView.getStyleClass().add("player-img");
-        super.getChildren().add(imgView);
-
-        Image defaultImg = GUIUtils.getImageOrDefault("/img/ball.png");
-        imgView.setImage(defaultImg);
-
-        ageLabel = new Label();
-        ageLabel.getStyleClass().add("player-age");
-        super.getChildren().add(ageLabel);
-
-        fatigueBar = new ProgressBar();
-        fatigueLabel = new Label();
-        var hBox = new HBox(new Label("Fatigue:"), fatigueBar, fatigueLabel);
-        hBox.setSpacing(5);
-        super.getChildren().add(hBox);
-        hBox.setAlignment(Pos.CENTER);
-
-        var size = full ? 150 : 100;
-        overallGauge = GUIUtils.getGauge(size, Color.BLUEVIOLET,"Overall");
-        super.getChildren().add(overallGauge);
+        var body = Layouts.column(Space.S, fatigueRow, overallBar);
 
         if (full) {
-            var statsRow = new HBox(10);
-            statsRow.setPadding(Insets.EMPTY);
-            statsRow.setAlignment(Pos.BASELINE_CENTER);
-            statsRow.getStyleClass().add("player-stats");
-            super.getChildren().add(statsRow);
-
-            battingGauge = GUIUtils.getGauge(80, Color.CRIMSON,"BAT");
-            statsRow.getChildren().add(battingGauge);
-
-            pitchingGauge = GUIUtils.getGauge(80, Color.CRIMSON,"PIT");
-            statsRow.getChildren().add(pitchingGauge);
-
-            fieldingGauge = GUIUtils.getGauge(80, Color.CRIMSON,"FLD");
-            statsRow.getChildren().add(fieldingGauge);
-
-            physicalGauge = GUIUtils.getGauge(80, Color.CRIMSON,"PHY");
-            statsRow.getChildren().add(physicalGauge);
+            battingBar = Ratings.bar("Batting");
+            pitchingBar = Ratings.bar("Pitching");
+            fieldingBar = Ratings.bar("Fielding");
+            physicalBar = Ratings.bar("Physical");
+            body.getChildren().addAll(new Separator(), battingBar, pitchingBar, fieldingBar, physicalBar);
         } else {
-            battingGauge = null;
-            pitchingGauge = null;
-            fieldingGauge = null;
-            physicalGauge = null;
+            battingBar = null;
+            pitchingBar = null;
+            fieldingBar = null;
+            physicalBar = null;
         }
+
+        setBody(body);
     }
 
     public void reload(PlayerInfo player) {
         if (player != null) {
             nameLabel.setText(player.getName());
-            ageLabel.setText(player.getAge() + " yrs");
+            ageLabel.setText("#" + player.getNumber() + ", " + player.getAge() + " yrs");
 
             imgView.setImage(GUIUtils.getImageOrDefault("/img/" + player.getImg()));
 
-            fatigueBar.setProgress(player.getAttributes().getFatigue() / 100d);
-            fatigueLabel.setText(String.valueOf(player.getAttributes().getFatigue()));
+            var attributes = player.getAttributes();
+            fatigueBar.setProgress(attributes.getFatigue() / 100d);
+            fatigueLabel.setText(String.valueOf(attributes.getFatigue()));
 
-            overallGauge.setValue(player.getAttributes().getTotal());
+            overallBar.setValue(attributes.getTotal());
             if (full) {
-                battingGauge.setValue(player.getAttributes().getBattingSkill());
-                pitchingGauge.setValue(player.getAttributes().getPitchingSkill());
-                fieldingGauge.setValue(player.getAttributes().getFieldingSkill());
-                physicalGauge.setValue(player.getAttributes().getPhysicalSkill());
+                battingBar.setValue(attributes.getBattingSkill());
+                pitchingBar.setValue(attributes.getPitchingSkill());
+                fieldingBar.setValue(attributes.getFieldingSkill());
+                physicalBar.setValue(attributes.getPhysicalSkill());
             }
         }
     }

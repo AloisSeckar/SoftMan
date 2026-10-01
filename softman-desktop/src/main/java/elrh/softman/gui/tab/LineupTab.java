@@ -1,28 +1,38 @@
 package elrh.softman.gui.tab;
 
+import atlantafx.base.theme.Styles;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.tile.DefenseTile;
 import elrh.softman.gui.tile.LineupTile;
+import elrh.softman.gui.utils.GUIUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
-import elrh.softman.logic.core.Team;
 import elrh.softman.logic.core.Lineup;
+import elrh.softman.logic.core.Team;
 import elrh.softman.logic.interfaces.IFocusedClubListener;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
-import elrh.softman.gui.utils.GUIUtils;
+import javafx.geometry.VPos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import org.apache.commons.lang3.StringUtils;
+import org.kordamp.ikonli.feather.Feather;
 
-public class LineupTab extends AnchorPane implements IFocusedTeamListener, IFocusedClubListener {
+public class LineupTab extends GridPane implements IFocusedTeamListener, IFocusedClubListener {
 
     private final LineupTile lineupTile;
 
     private final DefenseTile defenseTile;
 
     private final Button saveButton;
+
+    private final Region clubStripe = new Region();
 
     private static LineupTab INSTANCE;
 
@@ -34,21 +44,30 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener, IFocu
     }
 
     private LineupTab() {
-        lineupTile = new LineupTile(false);
-        super.getChildren().add(lineupTile);
-        AnchorPane.setLeftAnchor(lineupTile, 10d);
-        AnchorPane.setTopAnchor(lineupTile, 10d);
+        setPadding(Space.S.insets());
+        setHgap(Space.S.getPx());
+        setVgap(Space.S.getPx());
 
-        saveButton = new Button("Save lineup");
-        saveButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> saveLineup());
-        super.getChildren().add(saveButton);
-        AnchorPane.setLeftAnchor(saveButton, 50d);
-        AnchorPane.setTopAnchor(saveButton, 585d);
+        var column1 = new ColumnConstraints();
+        var column2 = new ColumnConstraints();
+        column2.setHgrow(Priority.ALWAYS);
+        getColumnConstraints().addAll(column1, column2);
+
+        clubStripe.getStyleClass().add(Tokens.CLUB_STRIPE);
+        add(clubStripe, 0, 0, 2, 1);
+
+        saveButton = new Button("Save lineup", Icons.of(Feather.SAVE));
+        saveButton.getStyleClass().add(Styles.ACCENT);
+        saveButton.setOnAction(e -> saveLineup());
+
+        lineupTile = new LineupTile(false);
+        lineupTile.setFooter(saveButton);
+        lineupTile.setMaxHeight(Region.USE_PREF_SIZE);
+        GridPane.setValignment(lineupTile, VPos.TOP);
+        add(lineupTile, 0, 1);
 
         defenseTile = new DefenseTile();
-        super.getChildren().add(defenseTile);
-        AnchorPane.setRightAnchor(defenseTile, 10d);
-        AnchorPane.setTopAnchor(defenseTile, 10d);
+        add(Layouts.grow(defenseTile), 1, 1);
 
         var user = AssociationManager.getInstance().getUser();
 
@@ -62,9 +81,9 @@ public class LineupTab extends AnchorPane implements IFocusedTeamListener, IFocu
     @Override
     public void focusedClubChanged(Club newlyFocusedClub) {
         if (newlyFocusedClub != null) {
-            GUIUtils.setBackgroundColor(LineupTab.this, newlyFocusedClub.getColor());
+            GUIUtils.setBackgroundColor(clubStripe, newlyFocusedClub.getColor());
         } else {
-            GUIUtils.setBackgroundColor(LineupTab.this, Color.GRAY);
+            clubStripe.setBackground(null);
         }
     }
 

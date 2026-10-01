@@ -1,18 +1,26 @@
 package elrh.softman.gui.tab;
 
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.table.LeagueStadingsTable;
+import elrh.softman.gui.utils.InfoUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.League;
 import elrh.softman.utils.Constants;
-import elrh.softman.gui.utils.InfoUtils;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import lombok.extern.slf4j.Slf4j;
+import org.kordamp.ikonli.feather.Feather;
 
 @Slf4j
-public class StandingsTab extends AnchorPane {
+public class StandingsTab extends GridPane {
     
     private final League testLeague;
     
@@ -29,35 +37,38 @@ public class StandingsTab extends AnchorPane {
     }
     
     private StandingsTab() {
+        setPadding(Space.S.insets());
+        setHgap(Space.S.getPx());
+        setVgap(Space.S.getPx());
+
+        var column1 = new ColumnConstraints();
+        column1.setPercentWidth(45);
+        var column2 = new ColumnConstraints();
+        column2.setPercentWidth(55);
+        getColumnConstraints().addAll(column1, column2);
 
         // TODO change dynamically according to User selection
         testLeague = AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0);
         
-        var testButton = new Button("MOCK Play league");
-        testButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> mockLeague());
-        super.getChildren().add(testButton);
-        AnchorPane.setLeftAnchor(testButton, 5d);
-        AnchorPane.setTopAnchor(testButton, 5d);
+        var testButton = new Button("MOCK Play league", Icons.of(Feather.FAST_FORWARD));
+        testButton.setOnAction(e -> mockLeague());
         
-        var testRoundButton = new Button("MOCK Play round");
-        testRoundButton.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent me) -> mockRound());
-        super.getChildren().add(testRoundButton);
-        AnchorPane.setLeftAnchor(testRoundButton, 5d);
-        AnchorPane.setTopAnchor(testRoundButton, 45d);
+        var testRoundButton = new Button("MOCK Play round", Icons.of(Feather.SKIP_FORWARD));
+        testRoundButton.setOnAction(e -> mockRound());
         
         testTextArea = new TextArea();
-        testTextArea.getStyleClass().setAll("output-window");
-        testTextArea.setPrefWidth(700d);
-        testTextArea.setPrefHeight(500d);
-        super.getChildren().add(testTextArea);
-        AnchorPane.setLeftAnchor(testTextArea, 5d);
-        AnchorPane.setTopAnchor(testTextArea, 85d);
+        testTextArea.getStyleClass().add(Tokens.MONO);
+
+        var mockCard = Cards.titled("League simulation",
+            Layouts.column(Space.S, Layouts.row(Space.S, testButton, testRoundButton), Layouts.grow(testTextArea)));
+        add(Layouts.grow(mockCard), 0, 0);
         
         leagueTable = new LeagueStadingsTable();
         leagueTable.setLeague(testLeague); // TODO get rid of this mock
-        super.getChildren().add(leagueTable);
-        AnchorPane.setRightAnchor(leagueTable, 5d);
-        AnchorPane.setTopAnchor(leagueTable, 85d);
+        var standingsCard = Cards.titled("Standings", leagueTable);
+        standingsCard.setMaxHeight(Region.USE_PREF_SIZE);
+        GridPane.setValignment(standingsCard, VPos.TOP);
+        add(standingsCard, 1, 0);
     }
 
     // TODO delete mock and connect real leagues
