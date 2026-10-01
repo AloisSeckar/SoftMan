@@ -4,9 +4,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 import elrh.softman.Softman;
 import elrh.softman.gui.frame.ContentFrame;
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Ratings;
+import elrh.softman.gui.kit.Tables;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.tile.BoxScoreTile;
 import elrh.softman.gui.tile.CalendarTile;
 import elrh.softman.gui.tile.ClubInfoTile;
@@ -26,6 +34,7 @@ import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kordamp.ikonli.feather.Feather;
 import org.testfx.api.FxToolkit;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.Start;
@@ -120,5 +129,29 @@ class GuiSmokeTest {
         });
         WaitForAsyncUtils.checkException();
         assertThat(holder.getChildren(), is(not(empty())));
+    }
+
+    @Test
+    void kitComponentsConstruct() throws Throwable {
+        var holder = new VBox();
+        var rating = Ratings.bar("Batting");
+        FxToolkit.setupFixture(() -> {
+            rating.setValue(85);
+            var table = Tables.<String>table();
+            table.getColumns().add(Tables.column("Name", (String s) -> s).width(10).build());
+            table.getColumns().add(Tables.column("Length", String::length).numeric().build());
+            table.getItems().addAll("Alpha", "Beta");
+
+            holder.getChildren().addAll(
+                Cards.titled("Card", Layouts.row(Space.S, Icons.of(Feather.STAR), Layouts.spacer(), Icons.button(Feather.X, "Close"))),
+                Ratings.group("Offense", rating, Ratings.bar("Power")),
+                table);
+            var scene = new Scene(holder);
+            Softman.applyTheme(scene);
+            scene.getRoot().applyCss();
+            holder.layout();
+        });
+        WaitForAsyncUtils.checkException();
+        assertThat(rating.lookup("." + Tokens.RATING_ELITE), is(not(nullValue())));
     }
 }

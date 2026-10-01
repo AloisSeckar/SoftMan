@@ -71,9 +71,10 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 - [x] 0.2 AtlantaFX 2.1.0, Ikonli 12.4.0 (+ Feather pack), ControlsFX 11.2.4
 - [x] 0.3 `NordLight` user-agent stylesheet via `Softman.applyTheme(Scene)`; `softman.css` + BootstrapFX still layered on top
 - [x] 0.4 Human: run the app, screenshot the baseline (`docs/screenshots/baseline/`)
-- [ ] 1.1 `softman.css` token layer
-- [ ] 1.2 `gui.kit` package
-- [ ] Golden template: `ClubInfoTile` on the kit, human-reviewed
+- [x] 1.1 `softman.css` token layer — legacy classes still used by unrewritten screens kept in a marked "Legacy" section, de-hexed
+- [x] 1.2 `gui.kit` package — plus `Tokens` (Java constants for the `sm-*` style classes)
+- [x] 1.x `bootstrapfx.css` dropped from the scene early: its `.text-muted`, `.small`, `.menu-item`, `.tool-bar`, `.separator` rules overrode AtlantaFX. `ClubTab` panels → `Cards`; `h3`/`h4` → `Tokens.TITLE`. The pom dependency goes in 3.1
+- [ ] Golden template: `ClubInfoTile` on the kit (implemented as a `Card`), awaiting human review
 - [ ] 2.1 Chrome
 - [ ] 2.2 Tiles
 - [ ] 2.3 PlayerAttributesTile

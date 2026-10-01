@@ -1,98 +1,157 @@
+/*
+ * SoftMan token layer over AtlantaFX NordLight.
+ * Raw colour values are allowed only in the .root token block below.
+ * Java-side constants for these classes live in elrh.softman.gui.kit.Tokens.
+ */
+
+/* ---------- Tokens ---------- */
+
+.root {
+    /* Nord Frost as the accent instead of NordLight's darker default */
+    -color-accent-emphasis: -color-accent-5;
+
+    -sm-color-win: #A3BE8C;
+    -sm-color-loss: -color-danger-4;
+    -sm-color-draw: #EBCB8B;
+    -sm-color-home: -color-accent-5;
+    -sm-color-away: -color-base-7;
+}
+
+/* ---------- Type scale ---------- */
+
+.sm-caption {
+    -fx-font-size: 0.85em;
+    -fx-text-fill: -color-fg-muted;
+}
+
+.sm-body {
+    -fx-font-size: 1em;
+}
+
+.sm-title {
+    -fx-font-size: 1.25em;
+    -fx-font-weight: bold;
+}
+
+.sm-display {
+    -fx-font-size: 1.75em;
+    -fx-font-weight: bold;
+}
+
+.sm-mono {
+    -fx-font-family: monospace;
+}
+
+/* ---------- Spacing scale (4 / 8 / 12 / 16 / 24) ---------- */
+
+.sm-pad-xs { -fx-padding: 4; }
+.sm-pad-s  { -fx-padding: 8; }
+.sm-pad-m  { -fx-padding: 12; }
+.sm-pad-l  { -fx-padding: 16; }
+.sm-pad-xl { -fx-padding: 24; }
+
+/* ---------- Chips ---------- */
+
+.sm-chip {
+    -fx-background-color: -color-neutral-subtle;
+    -fx-border-color: -color-border-muted;
+    -fx-background-radius: 1em;
+    -fx-border-radius: 1em;
+    -fx-padding: 0.15em 0.7em;
+    -fx-font-size: 0.85em;
+}
+
+.sm-chip.accent {
+    -fx-background-color: -color-accent-subtle;
+    -fx-border-color: -color-accent-muted;
+    -fx-text-fill: -color-accent-fg;
+}
+
+.sm-result-win,
+.sm-result-loss,
+.sm-result-draw {
+    -fx-background-radius: 1em;
+    -fx-padding: 0.15em 0.7em;
+    -fx-font-weight: bold;
+    -fx-text-fill: -color-fg-default;
+}
+
+.sm-result-win  { -fx-background-color: -sm-color-win; }
+.sm-result-loss { -fx-background-color: -sm-color-loss; -fx-text-fill: -color-fg-emphasis; }
+.sm-result-draw { -fx-background-color: -sm-color-draw; }
+
+/* ---------- Cards ---------- */
+
+.sm-card-title {
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+}
+
+/* ---------- Ratings ---------- */
+
+.sm-rating > .progress-bar {
+    -fx-pref-height: 0.6em;
+}
+
+.sm-rating-low   > .bar { -fx-background-color: -color-danger-emphasis; }
+.sm-rating-mid   > .bar { -fx-background-color: -color-warning-emphasis; }
+.sm-rating-good  > .bar { -fx-background-color: -color-accent-emphasis; }
+.sm-rating-elite > .bar { -fx-background-color: -color-success-emphasis; }
+
+.sm-rating-value {
+    -fx-font-weight: bold;
+    -fx-alignment: center-right;
+}
+
+/* ---------- Club info tile ---------- */
+
+.sm-club-banner {
+    -fx-background-image: url("/img/stadium.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+    -fx-background-repeat: no-repeat;
+    -fx-min-height: 9em;
+    -fx-pref-height: 12em;
+}
+
+.sm-club-stripe {
+    -fx-min-height: 0.3em;
+    -fx-pref-height: 0.3em;
+    -fx-max-height: 0.3em;
+}
+
+.sm-club-facts .ikonli-font-icon {
+    -fx-icon-color: -color-fg-muted;
+}
+
+/* ---------- Legacy: still referenced by screens not yet rewritten (Phase 2) ---------- */
+
 .menu-frame {
-    -fx-background-color: #228B22;
+    -fx-background-color: -color-bg-subtle;
+    -fx-border-color: -color-border-default;
+    -fx-border-width: 0 0 1 0;
 }
 
-.menu-bar {
-    -fx-background-color: #9ACD32;
-}
-
-.title-label {
-    -fx-font: bold 16px "Arial";
+.menu-frame > .menu-bar {
+    -fx-background-color: transparent;
 }
 
 .date-label {
     -fx-padding: 5 15 0 0;
-    -fx-font: bold 12px "Arial";
-}
-
-
-.action-button {
-    -fx-pref-width: 30px;
-    -fx-pref-height: 30px;
-    -fx-background-color: red;
-    -fx-border-color: black;
-    -fx-border-width: 1px;
-    -fx-padding: 5;
-    -fx-font: 16px "Arial";
-    -fx-alignment: CENTER;
-}
-
-.action-button:hover {
-    -fx-background-color: #ff3333;
-    -fx-border-color: white;
-}
-
-.action-button:hover > .glyph-icon {
-    -fx-fill: white;
-}
-
-.minimize-button {
-    -fx-background-color: #f0bf46;
-}
-
-.close-button {
-    -fx-background-color: red;
+    -fx-font-weight: bold;
 }
 
 .output-window {
-    -fx-font: 14px "Courier New";
-    -fx-pref-width: 100%;
-    -fx-pref-height: 100%;
+    -fx-font-family: monospace;
 }
 
-.table-view {
-    -fx-base: #1d1d1d;
-    -fx-control-inner-background: #1d1d1d;
-    -fx-background-color: #1d1d1d;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-    -fx-padding: 5;
-}
-
-.column-centered { 
-  -fx-alignment: center; 
-}
-
-.info-full {
-    -fx-background-color: #5F9EA0;
-    -fx-border-color: black;
-    -fx-border-width: 3px;
-    -fx-min-width: 400px;
-    -fx-max-width: 400px;
-    -fx-padding: 15px;
-}
-
-.info-brief {
-    -fx-background-color: #29CD6F;
-    -fx-border-color: black;
-    -fx-border-width: 2px;
-    -fx-min-width: 300px;
-    -fx-max-width: 300px;
-    -fx-min-height: 450px;
-    -fx-max-height: 450px;
-    -fx-padding: 10px;
-}
-
-.player-name {
-    -fx-font-size: 30;
+.column-centered {
+    -fx-alignment: center;
 }
 
 .player-img {
-    -fx-border-color: black;
+    -fx-border-color: -color-border-default;
     -fx-border-width: 1px;
-}
-
-.player-age {
 }
 
 .player-stats {
@@ -101,30 +160,13 @@
     -fx-max-height: 100px;
 }
 
-.padding-5 {
-    -fx-padding: 5px;
-}
-
-.framed {
-    -fx-border-color: black;
-    -fx-border-width: 2px;
-}
-
-.odd-row {
-    -fx-background-color: lightgreen;
-}
-
-.even-row {
-    -fx-background-color: mediumseagreen;
-}
-
 .box-score {
     -fx-font-size: 15;
     -fx-padding: 5px;
     -fx-min-width: 30px;
     -fx-pref-width: 30px;
     -fx-max-width: 30px;
-    -fx-border-color: black;
+    -fx-border-color: -color-border-default;
     -fx-border-width: 1px;
     -fx-alignment: center;
 }
@@ -136,18 +178,10 @@
     -fx-alignment: center-left;
 }
 
-.club-info {
-    -fx-padding: 5px;
-    -fx-pref-height: 100%;
-}
-
-.league-name {
-    -fx-font: bold 20px "Arial";
-    -fx-padding: 2;
-}
-
+.league-name,
 .schedule-date {
-    -fx-font: bold 20px "Arial";
+    -fx-font-size: 1.4em;
+    -fx-font-weight: bold;
     -fx-padding: 2;
 }
 
@@ -162,16 +196,11 @@
     -fx-background-repeat: stretch;
     -fx-background-size: 850px 600px;
     -fx-background-position: center center;
-    -fx-padding-top: 1000px;
 }
 
 .field-position {
     -fx-min-width: 200px;
     -fx-pref-width: 200px;
     -fx-max-width: 200px;
-    -fx-background-color: white;
-}
-
-.font-courier-12 {
-    -fx-font: 12px 'Courier New';
+    -fx-background-color: -color-bg-default;
 }

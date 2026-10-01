@@ -1,5 +1,6 @@
 package elrh.softman.gui.tab;
 
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.table.TeamPlayersTable;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
@@ -29,7 +30,7 @@ public class TeamTab extends AnchorPane implements IFocusedTeamListener, IFocuse
     private TeamTab() {
 
         nameLabel = new Label();
-        nameLabel.getStyleClass().setAll("h3");
+        nameLabel.getStyleClass().add(Tokens.TITLE);
         super.getChildren().add(nameLabel);
         AnchorPane.setLeftAnchor(nameLabel, 10d);
         AnchorPane.setTopAnchor(nameLabel, 10d);

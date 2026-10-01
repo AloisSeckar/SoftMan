@@ -1,5 +1,7 @@
 package elrh.softman.gui.tab;
 
+import elrh.softman.gui.kit.Cards;
+import elrh.softman.gui.kit.Layouts.Space;
 import elrh.softman.gui.table.LeagueStadingsTable;
 import elrh.softman.gui.tile.CalendarTile;
 import elrh.softman.gui.tile.ClubInfoTile;
@@ -8,12 +10,11 @@ import elrh.softman.logic.core.Club;
 import elrh.softman.logic.core.Team;
 import elrh.softman.logic.interfaces.IFocusedClubListener;
 import elrh.softman.logic.interfaces.IFocusedTeamListener;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import org.kordamp.bootstrapfx.scene.layout.Panel;
+import javafx.scene.layout.Region;
 
 public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedTeamListener {
 
@@ -31,38 +32,28 @@ public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedT
     }
 
     private ClubTab() {
-        setPadding(new Insets(5, 5, 5, 5));
-        setHgap(5);
-        setVgap(5);
+        setPadding(Space.S.insets());
+        setHgap(Space.S.getPx());
+        setVgap(Space.S.getPx());
 
         ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPercentWidth(30);
         ColumnConstraints column2 = new ColumnConstraints();
-        column2.setHgrow(Priority.ALWAYS);
+        column2.setPercentWidth(70);
         getColumnConstraints().addAll(column1, column2);
 
         infoTile = new ClubInfoTile();
-        infoTile.setAlignment(Pos.CENTER);
-
-        var infoPanel = new Panel("Club info");
-        infoPanel.setMinWidth(450);
-        infoPanel.setMaxWidth(450);
-        infoPanel.getStyleClass().add("panel-info");
-        infoPanel.setBody(infoTile);
-        add(infoPanel, 0, 0, 1, 2);
+        infoTile.setMaxHeight(Region.USE_PREF_SIZE);
+        GridPane.setValignment(infoTile, VPos.TOP);
+        add(infoTile, 0, 0, 1, 2);
 
         leagueTable = new LeagueStadingsTable();
         leagueTable.setAlignment(Pos.CENTER_LEFT);
-        var standingsPanel = new Panel("Standings");
-        standingsPanel.getStyleClass().add("panel-info");
-        standingsPanel.setBody(leagueTable);
-        add(standingsPanel, 1, 0);
+        add(Cards.titled("Standings", leagueTable), 1, 0);
 
         calendarTile = new CalendarTile();
         calendarTile.setAlignment(Pos.CENTER_RIGHT);
-        var schedulePanel = new Panel("Schedule");
-        schedulePanel.getStyleClass().add("panel-info");
-        schedulePanel.setBody(calendarTile);
-        add(schedulePanel, 1, 1);
+        add(Cards.titled("Schedule", calendarTile), 1, 1);
 
         infoTile.reload(AssociationManager.getInstance().getUser().getFocusedClub());
         leagueTable.setLeague(AssociationManager.getInstance().getUser().getFocusedLeague());

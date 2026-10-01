@@ -1,6 +1,8 @@
 package elrh.softman.gui.tile;
 
 import elrh.softman.gui.frame.ContentFrame;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.tab.ClubTab;
 import elrh.softman.gui.tab.MatchTab;
 import elrh.softman.logic.AssociationManager;
@@ -49,8 +51,8 @@ public class ScheduleRowTile extends BorderPane {
         BorderPane.setAlignment(awayImage, Pos.CENTER);
 
         titleLabel = new Label("Match");
-        titleLabel.getStyleClass().setAll("h4");
-        titleLabel.getStyleClass().add("padding-5");
+        titleLabel.getStyleClass().add(Tokens.TITLE);
+        titleLabel.setPadding(Space.XS.insets());
         infoBox.setCenter(titleLabel);
         BorderPane.setAlignment(titleLabel, Pos.CENTER);
 

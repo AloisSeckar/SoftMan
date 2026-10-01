@@ -1,79 +1,102 @@
 package elrh.softman.gui.tile;
 
+import atlantafx.base.controls.Card;
+import atlantafx.base.theme.Styles;
+import elrh.softman.gui.kit.Icons;
+import elrh.softman.gui.kit.Layouts;
+import elrh.softman.gui.kit.Layouts.Space;
+import elrh.softman.gui.kit.Tokens;
+import elrh.softman.gui.utils.GUIUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.core.Club;
-import elrh.softman.gui.utils.GUIUtils;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.shape.Rectangle;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.feather.Feather;
 
-public class ClubInfoTile extends VBox {
+public class ClubInfoTile extends Card {
 
-    private final Label nameLabel = new Label();
-    private final Label stadiumLabel = new Label();
-    private final Label moneyLabel = new Label();
-    private final Label registeredLabel = new Label();
-    private final Label ownerLabel = new Label();
     private final ImageView logoView = new ImageView();
+    private final Label nameLabel = new Label();
+    private final Label ownerChip = new Label();
+    private final Region colorStripe = new Region();
+    private final Label stadiumValue = new Label();
+    private final Label moneyValue = new Label();
+    private final Label teamsValue = new Label();
+    private final Label statusValue = new Label();
 
     public ClubInfoTile() {
-        super.getStyleClass().addAll("club-info", "framed");
+        double logoSize = Layouts.em(4);
+        logoView.setFitWidth(logoSize);
+        logoView.setFitHeight(logoSize);
+        logoView.setPreserveRatio(true);
+        logoView.setSmooth(true);
+        var logoClip = new Rectangle(logoSize, logoSize);
+        logoClip.setArcWidth(Layouts.em(1));
+        logoClip.setArcHeight(Layouts.em(1));
+        logoView.setClip(logoClip);
 
-        ImageView stadiumView = new ImageView();
-        stadiumView.setFitWidth(400);
-        stadiumView.setFitHeight(250);
-        stadiumView.getStyleClass().addAll("framed", "padding-5");
+        nameLabel.getStyleClass().add(Tokens.DISPLAY);
+        nameLabel.setWrapText(true);
+        ownerChip.getStyleClass().add(Tokens.CHIP);
 
-        Image stadiumImg = GUIUtils.getImageOrDefault("/img/stadium.jpg");
-        stadiumView.setImage(stadiumImg);
+        setHeader(Layouts.row(Space.M, logoView, Layouts.column(Space.XS, nameLabel, ownerChip)));
 
-        super.getChildren().add(stadiumView);
+        colorStripe.getStyleClass().add(Tokens.CLUB_STRIPE);
 
-        nameLabel.getStyleClass().addAll("h3", "padding-5");
+        var banner = new Region();
+        banner.getStyleClass().add(Tokens.CLUB_BANNER);
 
-        logoView.setFitWidth(100);
-        logoView.setFitHeight(100);
-        logoView.getStyleClass().add("framed");
+        var facts = new GridPane(Space.M.getPx(), Space.S.getPx());
+        facts.getStyleClass().add(Tokens.CLUB_FACTS);
+        addFact(facts, 0, Feather.MAP_PIN, "Stadium", stadiumValue);
+        addFact(facts, 1, Feather.DOLLAR_SIGN, "Budget", moneyValue);
+        addFact(facts, 2, Feather.USERS, "Teams", teamsValue);
+        addFact(facts, 3, Feather.CHECK_CIRCLE, "Status", statusValue);
 
-        var box = new VBox();
-        box.getStyleClass().add("framed");
-        box.setAlignment(Pos.CENTER);
-        box.setMinWidth(300);
-        box.setMaxWidth(300);
-        GUIUtils.setBackgroundColor(box, Color.CORNSILK);
-        box.getChildren().addAll(nameLabel, logoView, stadiumLabel, moneyLabel, registeredLabel, ownerLabel);
-
-        super.getChildren().add(box);
+        setBody(Layouts.column(Space.M, colorStripe, banner, facts));
     }
 
     public void reload(Club club) {
-
         if (club != null) {
-            nameLabel.setText(club.getClubInfo().getName());
-            stadiumLabel.setText(club.getClubInfo().getStadium());
-            moneyLabel.setText("$ " + club.getClubInfo().getMoney());
-            registeredLabel.setText(club.isActive() ? "Active" : "Inactive");
-            ownerLabel.setText(AssociationManager.getInstance().getUser().getActiveClub() == club ? "Player" : "PC");
-
-            Image defaultImg = GUIUtils.getImageOrDefault(club.getClubInfo().getLogo());
-            logoView.setImage(defaultImg);
-
-            GUIUtils.setBackgroundColor(ClubInfoTile.this, club.getColor());
+            var info = club.getClubInfo();
+            nameLabel.setText(info.getName());
+            stadiumValue.setText(info.getStadium());
+            moneyValue.setText(String.format("$ %,d", info.getMoney()));
+            teamsValue.setText(String.valueOf(club.getTeams().size()));
+            statusValue.setText(club.isActive() ? "Active" : "Inactive");
+            setOwner(AssociationManager.getInstance().getUser().getActiveClub() == club);
+            logoView.setImage(GUIUtils.getImageOrDefault(info.getLogo()));
+            GUIUtils.setBackgroundColor(colorStripe, club.getColor());
         } else {
             nameLabel.setText("No club selected");
-            stadiumLabel.setText("");
-            moneyLabel.setText("");
-            registeredLabel.setText("");
-            ownerLabel.setText("");
-
-            Image defaultImg = GUIUtils.getImageOrDefault("/img/ball.png");
-            logoView.setImage(defaultImg);
-
-            GUIUtils.setBackgroundColor(ClubInfoTile.this, Color.GRAY);
+            stadiumValue.setText("");
+            moneyValue.setText("");
+            teamsValue.setText("");
+            statusValue.setText("");
+            ownerChip.setVisible(false);
+            logoView.setImage(GUIUtils.getImageOrDefault("/img/ball.png"));
+            colorStripe.setBackground(null);
         }
+    }
+
+    private void setOwner(boolean managedByUser) {
+        ownerChip.setVisible(true);
+        ownerChip.setText(managedByUser ? "Your club" : "Computer");
+        ownerChip.getStyleClass().remove(Styles.ACCENT);
+        if (managedByUser) {
+            ownerChip.getStyleClass().add(Styles.ACCENT);
+        }
+    }
+
+    private static void addFact(GridPane grid, int row, Ikon icon, String caption, Label value) {
+        var captionLabel = new Label(caption);
+        captionLabel.getStyleClass().add(Tokens.CAPTION);
+        value.getStyleClass().add(Styles.TEXT_BOLD);
+        grid.addRow(row, Icons.of(icon), captionLabel, value);
     }
 
 }

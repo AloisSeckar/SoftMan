@@ -1,6 +1,7 @@
 package elrh.softman.gui.tab;
 
 import elrh.softman.gui.frame.ContentFrame;
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.tile.PlayerAttributesTile;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.logic.AssociationManager;
@@ -50,9 +51,9 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
         selectPlayerCB.setMaxWidth(220d);
         selectPlayerCB.valueProperty().addListener((ov, oldValue, newValue) -> reload(newValue));
 
-        seasonStatsTA.getStyleClass().add("font-courier-12");
+        seasonStatsTA.getStyleClass().add(Tokens.MONO);
         seasonStatsTA.setPadding(FormatUtils.PADDING_5);
-        careerStatsTA.getStyleClass().add("font-courier-12");
+        careerStatsTA.getStyleClass().add(Tokens.MONO);
         careerStatsTA.setPadding(FormatUtils.PADDING_5);
 
         var attributesButton = new Button("Attributes");

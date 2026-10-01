@@ -1,5 +1,6 @@
 package elrh.softman.gui.tile;
 
+import elrh.softman.gui.kit.Tokens;
 import elrh.softman.logic.core.Match;
 import elrh.softman.gui.utils.FormatUtils;
 import elrh.softman.gui.utils.GUIUtils;
@@ -26,7 +27,7 @@ public class MatchHeaderTile extends BorderPane {
         super.setLeft(awayImage);
 
         titleLabel = new Label(" @ ");
-        titleLabel.getStyleClass().setAll("h3");
+        titleLabel.getStyleClass().add(Tokens.TITLE);
         super.setCenter(titleLabel);
 
         homeImage = new ImageView();

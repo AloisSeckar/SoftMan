@@ -84,7 +84,6 @@ public class Softman extends Application {
     public static void applyTheme(Scene scene) {
         Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
         scene.getStylesheets().add(Softman.class.getResource("/css/softman.css").toExternalForm());
-        scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css");
     }
 
     private static SqliteNameSource nameSource;
