@@ -2,7 +2,7 @@
 applyTo: "softman-desktop/**"
 ---
 
-# GUI rules (full plan in `GUI.md`)
+# GUI rules (full plan in `docs/GUI.md`)
 
 - Theme is AtlantaFX `NordLight` — **light** surfaces; never assume a dark background
 - Build UI through `elrh.softman.gui.kit` (`Cards`, `Tables`, `Ratings`, `Icons`, `Layouts`) — never ad-hoc

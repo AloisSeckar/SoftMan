@@ -43,7 +43,7 @@ No essays, no doc-comment boilerplate, no change-log or "what I changed" comment
 
 ## GUI work
 
-**Read `GUI.md` before touching anything under `softman-desktop`.** It holds the locked-in technology decisions and the phased modernization plan.
+**Read `docs/GUI.md` before touching anything under `softman-desktop`.** It holds the locked-in technology decisions and the phased modernization plan.
 
 Summary of the locked decisions:
 
@@ -62,5 +62,6 @@ Never speculate about how a change looks on screen.
 
 ## Other docs
 
-`PLAN.md` — long-term architecture (headless core, future server). Out of scope for GUI work.
-`BACKLOG.md` — deferred tasks and known issues.
+`docs/PLAN.md` — long-term architecture (headless core, future server). Out of scope for GUI work.
+`docs/BACKLOG.md` — deferred tasks and known issues.
+`docs/SUMMARY.md` — snapshot map of the codebase.

@@ -70,7 +70,7 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 - [x] 0.1 JavaFX 25.0.4
 - [x] 0.2 AtlantaFX 2.1.0, Ikonli 12.4.0 (+ Feather pack), ControlsFX 11.2.4
 - [x] 0.3 `NordLight` user-agent stylesheet via `Softman.applyTheme(Scene)`; `softman.css` + BootstrapFX still layered on top
-- [ ] 0.4 Human: run the app, screenshot the baseline
+- [x] 0.4 Human: run the app, screenshot the baseline (`docs/screenshots/baseline/`)
 - [ ] 1.1 `softman.css` token layer
 - [ ] 1.2 `gui.kit` package
 - [ ] Golden template: `ClubInfoTile` on the kit, human-reviewed
@@ -132,7 +132,7 @@ Purpose: stop every session re-deriving the same facts, and cap token burn.
 **-1g. Working discipline** (process, not code):
 
 - Branch per phase; commit after each verified step — `git reset` is free, agent undo is not
-- **One phase per session.** Open each session with "read `GUI.md` + `AGENTS.md`, execute Phase X step N"
+- **One phase per session.** Open each session with "read `docs/GUI.md` + `AGENTS.md`, execute Phase X step N"
 - Phase 1 plus exactly one tile (`ClubInfoTile`), human-reviewed, becomes the **golden template**;
      every later tile references it instead of open-ended design. Single biggest token saver
 

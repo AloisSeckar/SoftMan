@@ -18,7 +18,9 @@ Softball manager and simulator game in JavaFX.
 
 ## Status
 
-Check implementation info and status at [wiki page](https://github.com/AloisSeckar/SoftMan/wiki)
+(**OUTDATED**) Check implementation info and status at [wiki page](https://github.com/AloisSeckar/SoftMan/wiki)
+
+**CURRENT:** See [`docs` folder](./docs/README.md)
 
 ## Technologies
 
