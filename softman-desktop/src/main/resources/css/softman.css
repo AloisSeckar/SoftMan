@@ -184,6 +184,12 @@
 .sm-rating-cell.sm-rating-good  { -fx-text-fill: -color-accent-fg; }
 .sm-rating-cell.sm-rating-elite { -fx-text-fill: -color-success-fg; }
 
+/* ---------- Tables ---------- */
+
+/* AtlantaFX alignment tweaks only reach the cells; column headers inherit the column's style classes */
+.table-view .column-header.align-center > .label { -fx-alignment: center; }
+.table-view .column-header.align-right  > .label { -fx-alignment: center-right; }
+
 /* ---------- Box score ---------- */
 
 .sm-box-cell {
