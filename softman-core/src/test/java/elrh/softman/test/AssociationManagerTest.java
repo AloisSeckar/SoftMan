@@ -1,8 +1,10 @@
 package elrh.softman.test;
 
 import elrh.softman.logic.AssociationManager;
+import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
+import elrh.softman.logic.core.data.MatchInfo;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
@@ -10,6 +12,8 @@ import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.PlayerFactory;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.UUID;
 import elrh.softman.utils.factory.TeamFactory;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
@@ -191,6 +195,56 @@ public class AssociationManagerTest {
         result = manager.nextDay();
         assertTrue(result.ok(), "advancing to next day should be successful");
         assertTrue(match.isScheduled(), "match on the viewed date must not be simulated before its day");
+    }
+
+    @Test
+    @DisplayName("substitutesEnterOnlyOnceTest")
+    void substitutesEnterOnlyOnceTest() {
+        initMatches();
+        var scheduled = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
+        int substitutions = 0;
+        for (int i = 0; i < 300; i++) {
+            var info = new MatchInfo();
+            info.setLeagueId(scheduled.getMatchInfo().getLeagueId());
+            info.setMatchDay(scheduled.getMatchInfo().getMatchDay());
+            var match = new Match(info, scheduled.getAwayLineup(), scheduled.getHomeLineup());
+            new MatchSimulator(match, null).simulateMatch();
+            substitutions += assertSubstitutionRules(match.getAwayLineup());
+            substitutions += assertSubstitutionRules(match.getHomeLineup());
+        }
+        assertTrue(substitutions > 0, "some substitutions should have happened");
+    }
+
+    // returns number of players who entered from the bench
+    private int assertSubstitutionRules(Lineup lineup) {
+        int entered = 0;
+        var spotOfPlayer = new HashMap<UUID, Integer>();
+        for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
+            var spot = lineup.getPositionPlayers()[i];
+            if (spot == null || spot.isEmpty()) {
+                continue;
+            }
+            var starterId = spot.getFirst().getPlayer().getPlayerId();
+            var entries = new HashMap<UUID, Integer>();
+            UUID previousId = null;
+            for (var record : spot) {
+                var playerId = record.getPlayer().getPlayerId();
+                var otherSpot = spotOfPlayer.putIfAbsent(playerId, i);
+                assertTrue(otherSpot == null || otherSpot == i, record + " appeared in two lineup spots");
+                if (!playerId.equals(previousId)) {
+                    entries.merge(playerId, 1, Integer::sum);
+                }
+                previousId = playerId;
+            }
+            for (var entry : entries.entrySet()) {
+                int allowed = entry.getKey().equals(starterId) ? 2 : 1;
+                assertTrue(entry.getValue() <= allowed, "player entered spot " + (i + 1) + " too many times");
+                if (!entry.getKey().equals(starterId)) {
+                    entered++;
+                }
+            }
+        }
+        return entered;
     }
 
     @Test
