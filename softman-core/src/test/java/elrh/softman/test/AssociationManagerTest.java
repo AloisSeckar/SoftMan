@@ -5,6 +5,7 @@ import elrh.softman.logic.MatchSimulator;
 import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.core.data.MatchInfo;
+import elrh.softman.logic.core.data.MatchPlayByPlay;
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
@@ -213,6 +214,41 @@ public class AssociationManagerTest {
             substitutions += assertSubstitutionRules(match.getHomeLineup());
         }
         assertTrue(substitutions > 0, "some substitutions should have happened");
+    }
+
+    @Test
+    @DisplayName("walkOffEndsOnDecidingRunTest")
+    void walkOffEndsOnDecidingRunTest() {
+        initMatches();
+        var scheduled = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
+        int walkOffs = 0;
+        for (int i = 0; i < 2000; i++) {
+            var info = new MatchInfo();
+            info.setLeagueId(scheduled.getMatchInfo().getLeagueId());
+            info.setMatchDay(scheduled.getMatchInfo().getMatchDay());
+            var match = new Match(info, scheduled.getAwayLineup(), scheduled.getHomeLineup());
+            var simulator = new MatchSimulator(match, null);
+            simulator.simulateMatch();
+
+            var plays = match.getPlayByPlay().stream().map(MatchPlayByPlay::getPlay).toList();
+            int end = plays.indexOf("\n\nGAME OVER\n\n");
+            int start = end;
+            while (!plays.get(start).startsWith("PITCHER:")) {
+                start--;
+            }
+            var lastPlay = plays.subList(start, end);
+            boolean scored = lastPlay.stream().anyMatch(play -> play.endsWith(" SCORED\n"));
+            boolean homeRun = lastPlay.stream().anyMatch(play -> play.contains("HOMERUN"));
+            if (scored && !homeRun) {
+                int inning = simulator.getInning();
+                int required = inning >= 7 ? 1 : inning >= 5 ? 7 : inning >= 4 ? 10 : 15;
+                var boxScore = match.getBoxScore();
+                int lead = boxScore.getTotalPoints(false) - boxScore.getTotalPoints(true);
+                assertEquals(required, lead, "game must end with the deciding run unless it was a home run");
+                walkOffs++;
+            }
+        }
+        assertTrue(walkOffs > 0, "some games should have ended with a walk-off");
     }
 
     // returns number of players who entered from the bench

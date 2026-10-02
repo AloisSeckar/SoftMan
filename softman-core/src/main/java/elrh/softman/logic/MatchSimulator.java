@@ -346,18 +346,74 @@ public class MatchSimulator {
             }
         } else {
             // match can end anytime homeLineup gets in the lead or triggers mercy rule
-            if (inning >= 3 && homePoints - awayPoints >= 15) {
-                ret = false;
-            } else if (inning >= 4 && homePoints - awayPoints >= 10) {
-                ret = false;
-            } else if (inning >= 5 && homePoints - awayPoints >= 7) {
-                ret = false;
-            } else if (inning >= 7 && homePoints - awayPoints > 0) {
-                ret = false;
-            }
+            ret = homePoints - awayPoints < getHomeLeadToEndGame();
         }
 
         return ret;
+    }
+
+    private int getHomeLeadToEndGame() {
+        if (inning >= 7) {
+            return 1;
+        } else if (inning >= 5) {
+            return 7;
+        } else if (inning >= 4) {
+            return 10;
+        } else if (inning >= 3) {
+            return 15;
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    // runs this hit counts before the game ends on it, 0 when it doesn't end the game
+    private int getWalkOffRuns(int bases) {
+        if (top || bases >= 4) {
+            return 0; // over-the-fence home run counts every run
+        }
+        int lead = getHomeLeadToEndGame();
+        if (lead == Integer.MAX_VALUE) {
+            return 0;
+        }
+        int needed = lead - (boxScore.getTotalPoints(false) - boxScore.getTotalPoints(true));
+        int runs = 0;
+        if (base3 != null) {
+            runs++;
+        }
+        if (base2 != null && bases >= 2) {
+            runs++;
+        }
+        if (base1 != null && bases >= 3) {
+            runs++;
+        }
+        return runs >= needed ? needed : 0;
+    }
+
+    // the game ends as the deciding runner scores, so the batter only gets the bases needed for that
+    private int getWalkOffBases(int walkOffRuns) {
+        int count = 0;
+        for (var runner : new PlayerRecord[] {base3, base2}) {
+            if (runner != null && ++count == walkOffRuns) {
+                return 1;
+            }
+        }
+        return 2;
+    }
+
+    private void advanceOnHit(int bases, int walkOffRuns) {
+        if (walkOffRuns > 0) {
+            int scored = 0;
+            for (var runner : new PlayerRecord[] {base3, base2, base1}) {
+                if (runner != null && scored < walkOffRuns) {
+                    scoreRun(runner);
+                    scored++;
+                }
+            }
+            base1 = null;
+            base2 = null;
+            base3 = null;
+        } else {
+            handleAdvances(bases, false);
+        }
     }
     private void swapLineups() {
         outs = 0;
@@ -489,6 +545,14 @@ public class MatchSimulator {
 
             String hitString;
             int bases = SimUtils.getPseudoRandomTotalBases(qualityFactor);
+            int walkOffRuns = getWalkOffRuns(bases);
+            if (walkOffRuns > 0) {
+                int credited = Math.min(bases, getWalkOffBases(walkOffRuns));
+                if (credited < bases) {
+                    appendText(String.format("WALK-OFF: hit for %d bases credited as %d\n", bases, credited));
+                    bases = credited;
+                }
+            }
             switch (bases) {
                 case 4 -> {
                     hitString = "HOMERUN";
@@ -502,19 +566,19 @@ public class MatchSimulator {
                     hitString = "TRIPLE";
                     batter.getStats().inc(B3B);
                     pitcher.getStats().inc(P3B);
-                    handleAdvances(3, false);
+                    advanceOnHit(3, walkOffRuns);
                     base3 = batter;
                 }
                 case 2 -> {
                     hitString = "DOUBLE";
                     batter.getStats().inc(B2B);
                     pitcher.getStats().inc(P2B);
-                    handleAdvances(2, false);
+                    advanceOnHit(2, walkOffRuns);
                     base2 = batter;
                 }
                 default -> {
                     hitString = "SINGLE";
-                    handleAdvances(1, false);
+                    advanceOnHit(1, walkOffRuns);
                     base1 = batter;
                 }
             }

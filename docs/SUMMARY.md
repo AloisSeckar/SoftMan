@@ -14,7 +14,7 @@
 | UI | JavaFX 27 (programmatic, **no FXML files**) on AtlantaFX, built through the `gui.kit` package |
 | Persistence | SQLite via OrmLite — snapshot save/load, not active record |
 | Source files | 95 main (48 core + 9 db + 38 desktop) + 12 test = 107 `.java` files |
-| Build status | ✅ `mvn test` → **BUILD SUCCESS**, 45 tests (39 core + 6 TestFX), 0 failures |
+| Build status | ✅ `mvn test` → **BUILD SUCCESS**, 47 tests (41 core + 6 TestFX), 0 failures |
 | Last commits | `25b857f` / `b595c04` / `d7b987d` (GUI rebuild phases 1–3), preceded by `e3136ad` / `20d4080` in-game substitutions |
 | Branch | `master` |
 
@@ -141,7 +141,7 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 
 - Loop: pitch outcome → play outcome → total bases / fielding outcome, driven by `qualityFactor = (batterSkill + rnd100) - (pitcherSkill + rnd100)`.
 - Outcome tiers: `O_K` strikeout / `O_W` walk-or-HBP / `O_P` ball in play; then `P_H` hit / `P_F` fielded; then out vs. error.
-- Mercy rules implemented (15/10/7 run margins by inning, walk-off after 7).
+- Mercy rules implemented (15/10/7 run margins by inning, walk-off after 7). A walk-off ends on the deciding run: extra runs don't count, and the batter is credited with a single (deciding runner from 2nd/3rd) or at most a double (from 1st). Over-the-fence home runs count every run.
 - Box score, hits, errors, and full batting/pitching/fielding stat lines are produced by `StatsUtils.saveStats()` into the in-memory model; nothing touches the database during simulation.
 - Play-by-play is always collected into `Match.playByPlay`; `visualMode` now only controls whether each line is also pushed to the `IMatchReporter` (the `MatchTab` text area).
 - In-game substitutions: an `ISubstitutionStrategy` (currently `RandomSubstitutionStrategy`) decides for AI teams and for the user's team during auto-simulation; otherwise the user substitutes manually. Defense is re-settled automatically if a lineup becomes invalid.
@@ -164,7 +164,7 @@ The last four have no domain counterpart — they are join/snapshot rows (`TeamP
 - Time control: next day, simulate-until-date, simulate single inning, day/round browsing, spinner + background simulation.
 - **Save / load / new game** — the entire world (clubs, leagues, teams, players, lineups, matches, box scores, play-by-play, standings, clock and user focus) round-trips through `SqliteGameRepository` in a single transaction, with a `GameMeta.SCHEMA_VERSION` guard. Auto-load on start, auto-save on exit, plus explicit menu items.
 - Rebuilt GUI on AtlantaFX + Ikonli with a light/dark theme toggle.
-- 45 tests: 39 core unit tests (entity identity, managers, clock, club, league, lineup incl. substitutions, match, player, team, user) + 6 TestFX smoke tests.
+- 47 tests: 41 core unit tests (entity identity, managers, clock, club, league, lineup incl. substitutions, walk-off rule, match, player, team, user) + 6 TestFX smoke tests.
 
 ### ⚠️ Partially implemented
 
@@ -232,7 +232,7 @@ Deferred tasks and further known issues (match simulation, substitutions, GUI) a
 | Test class | Tests |
 | --- | --- |
 | `AbstractEntityTest` | 1 |
-| `AssociationManagerTest` | 11 |
+| `AssociationManagerTest` | 13 |
 | `ClockManagerTest` | 5 |
 | `ClubTest` | 4 |
 | `LeagueTest` | 3 |
@@ -242,11 +242,11 @@ Deferred tasks and further known issues (match simulation, substitutions, GUI) a
 | `TeamTest` | 1 |
 | `UserManagerTest` | 1 |
 | `GuiSmokeTest` (desktop, TestFX, JavaFX `Headless` glass platform — no window; `-Dtest.glass.platform=Win` shows it) | 6 |
-| **Total** | **45** — all green |
+| **Total** | **47** — all green |
 
 Core tests live in `softman-core` and are pure in-memory; no test touches a database. `softman-desktop` has `GuiSmokeTest` (all tabs present and render, `switchTo` navigation, every tile constructs and loads, kit components, dark theme). `softman-db` has **no test sources**.
 
-**Not covered:** the entire persistence layer including the save/load round-trip, `MatchSimulator` and the `SimUtils` probability model, `StatsUtils` computations, GUI behaviour beyond smoke rendering, `SimulationService` concurrency, `AssociationFactory.recreateLeagues()`.
+**Not covered:** the entire persistence layer including the save/load round-trip, `MatchSimulator` and the `SimUtils` probability model (only the walk-off rule is checked statistically), `StatsUtils` computations, GUI behaviour beyond smoke rendering, `SimulationService` concurrency, `AssociationFactory.recreateLeagues()`.
 
 ---
 
