@@ -24,7 +24,7 @@ Softball manager and simulator game in JavaFX.
 
 ## Technologies
 
-- Java 25 (OpenJDK)
+- Java 27 (OpenJDK)
 - [JavaFX](https://openjfx.io/)
 - [AtlantaFX](https://github.com/mkpaz/atlantafx) - Nord light/dark themes and controls
 - [Ikonli](https://kordamp.org/ikonli/) - Feather icons

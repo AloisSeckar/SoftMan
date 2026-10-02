@@ -9,9 +9,9 @@
 | Item | Value |
 | --- | --- |
 | Type | Desktop game — softball club/team management simulator |
-| Language / Build | Java 25, Maven multi-module (`elrh:softman:1.0-SNAPSHOT`, packaging `pom`) |
+| Language / Build | Java 27, Maven multi-module (`elrh:softman:1.0-SNAPSHOT`, packaging `pom`) |
 | Modules | `softman-core` (logic) · `softman-db` (persistence) · `softman-desktop` (JavaFX client) |
-| UI | JavaFX 25.0.4 (programmatic, **no FXML files**) on AtlantaFX, built through the `gui.kit` package |
+| UI | JavaFX 27 (programmatic, **no FXML files**) on AtlantaFX, built through the `gui.kit` package |
 | Persistence | SQLite via OrmLite — snapshot save/load, not active record |
 | Source files | 95 main (48 core + 9 db + 38 desktop) + 12 test = 107 `.java` files |
 | Build status | ✅ `mvn test` → **BUILD SUCCESS**, 45 tests (39 core + 6 TestFX), 0 failures |
@@ -24,7 +24,7 @@
 
 Dependencies are declared per module: core gets only commons-lang3 / Lombok / SLF4J, `softman-db` adds sqlite-jdbc + ormlite, all JavaFX and UI libraries live in `softman-desktop`.
 
-> ⚠️ README is up to date on Java 25, but its module table lists only two modules and still attributes persistence to `softman-core`.
+> ⚠️ README is up to date on Java 27, but its module table lists only two modules and still attributes persistence to `softman-core`.
 
 ---
 
@@ -241,7 +241,7 @@ Deferred tasks and further known issues (match simulation, substitutions, GUI) a
 | `PlayerTest` | 2 |
 | `TeamTest` | 1 |
 | `UserManagerTest` | 1 |
-| `GuiSmokeTest` (desktop, TestFX) | 6 |
+| `GuiSmokeTest` (desktop, TestFX, JavaFX `Headless` glass platform — no window; `-Dtest.glass.platform=Win` shows it) | 6 |
 | **Total** | **45** — all green |
 
 Core tests live in `softman-core` and are pure in-memory; no test touches a database. `softman-desktop` has `GuiSmokeTest` (all tabs present and render, `switchTo` navigation, every tile constructs and loads, kit components, dark theme). `softman-db` has **no test sources**.

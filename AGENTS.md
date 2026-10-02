@@ -1,6 +1,6 @@
 # SoftMan — Agent Guide
 
-Java 25 / JavaFX desktop softball manager game. Maven multi-module.
+Java 27 / JavaFX 27 desktop softball manager game. Maven multi-module.
 
 ## Modules
 
@@ -15,7 +15,8 @@ Java 25 / JavaFX desktop softball manager game. Maven multi-module.
 ```bash
 mvn clean install                          # full build from root
 mvn -pl softman-desktop -am compile        # fast desktop compile check
-mvn -pl softman-desktop -am test           # tests (incl. TestFX smoke test)
+mvn -pl softman-desktop -am test           # tests (TestFX smoke test runs headless)
+mvn -pl softman-desktop -am test "-Dtest.glass.platform=Win"  # same, with a visible window
 mvn -pl softman-desktop -am javafx:run     # run the app
 ```
 
@@ -24,7 +25,7 @@ Working directory for run/test is the repo root — `softman.db`, `sav/` and `lo
 
 ## Conventions
 
-- Java 25 source/target; modern language features (records, sealed, pattern matching) welcome
+- Java 27 source/target; modern language features (records, sealed, pattern matching) welcome
 - Lombok everywhere, incl. `@Slf4j` — log via the generated `LOG` field (wildcard `import lombok.*` is not possible, all must be explicit)
 - Errors: `ErrorUtils.handleException(source, ex)` / `ErrorUtils.raise(msg)`; operations return `Result`
 - Singletons use the `getInstance()` pattern — keep it, do not introduce DI
