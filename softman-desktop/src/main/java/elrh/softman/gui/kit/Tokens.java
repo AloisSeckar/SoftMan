@@ -14,6 +14,8 @@ public final class Tokens {
     public static final String DISPLAY = "sm-display";
     public static final String MONO = "sm-mono";
 
+    public static final String COMPACT = "sm-compact";
+
     public static final String CHIP = "sm-chip";
     public static final String RESULT_WIN = "sm-result-win";
     public static final String RESULT_LOSS = "sm-result-loss";

@@ -52,6 +52,20 @@
 .sm-pad-l  { -fx-padding: 16; }
 .sm-pad-xl { -fx-padding: 24; }
 
+/* ---------- Density ---------- */
+
+/* AtlantaFX's 8px/12px control padding is too roomy for the data-dense screens */
+.sm-compact .button,
+.sm-compact .toggle-button,
+.sm-compact .combo-box > .list-cell,
+.sm-compact .combo-box-base > .arrow-button {
+    -fx-padding: 0.3em 0.6em;
+}
+
+.sm-compact .button.button-icon {
+    -fx-padding: 0.3em;
+}
+
 /* ---------- Chips ---------- */
 
 .sm-chip {

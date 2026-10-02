@@ -49,7 +49,7 @@ public class LineupRowTile extends HBox {
             positionCB = new ComboBox<>();
         }
         positionCB.getStyleClass().add(Tokens.READONLY);
-        positionCB.setPrefWidth(Layouts.em(10));
+        positionCB.setPrefWidth(Layouts.em(6));
 
         playerCB.valueProperty().addListener((ov, oldValue, newValue) -> {
             if (newValue == null) {

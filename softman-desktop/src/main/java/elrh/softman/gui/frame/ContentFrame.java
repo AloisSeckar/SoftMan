@@ -19,6 +19,7 @@ import java.util.Map;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import lombok.Getter;
@@ -85,8 +86,12 @@ public class ContentFrame extends TabPane {
         getSelectionModel().select(tabs.get(screen));
     }
 
+    // fit-to-viewport still respects the content's min size, so scrollbars appear only on small screens
     private void addTab(Screen screen, Node content) {
-        var tab = new Tab(screen.getTitle(), content);
+        var scroller = new ScrollPane(content);
+        scroller.setFitToWidth(true);
+        scroller.setFitToHeight(true);
+        var tab = new Tab(screen.getTitle(), scroller);
         tab.setGraphic(Icons.of(screen.getIcon()));
         tabs.put(screen, tab);
         getTabs().add(tab);

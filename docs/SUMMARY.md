@@ -86,7 +86,7 @@ graph TD
 - **Schema lives outside the domain** — OrmLite `DatabaseTableConfig`s are built by hand in `softman-db/TableConfigs`, so no persistence annotations leak into core.
 - **UUID identity** — every entity is keyed by `UUID`; managers hold `LinkedHashMap<UUID, …>` to keep insertion order stable.
 - **Observer** — `UserManager` broadcasts focused-club/focused-team changes to registered tabs.
-- **GUI kit** — screens are composed from `gui.kit` factories on AtlantaFX `NordLight`/`NordDark` (runtime toggle via Show → Dark theme); tab navigation goes through `ContentFrame.switchTo(Screen)`.
+- **GUI kit** — screens are composed from `gui.kit` factories on AtlantaFX `NordLight`/`NordDark` (runtime toggle via Show → Dark theme); tab navigation goes through `ContentFrame.switchTo(Screen)`. Every tab sits in a fit-to-size `ScrollPane` (scrollbars only below the content's min size); `MainLayout` carries `sm-compact`, a tighter control density.
 - **Lombok** — `@Data`, `@Getter/@Setter`, `@Slf4j` (log field renamed to `LOG` via `lombok.config`).
 - **Two databases** — read-only `softman.db` (name pools, seeded from `names.sql`) and the save file `sav/game-career.db`.
 

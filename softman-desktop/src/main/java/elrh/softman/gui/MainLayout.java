@@ -21,6 +21,7 @@ public class MainLayout extends BorderPane {
     }
     
     private MainLayout() {
+        getStyleClass().add(Tokens.COMPACT);
         var appBar = Layouts.row(Space.M, MenuFrame.getInstance(), Layouts.spacer(), FocusFrame.getInstance());
         appBar.getStyleClass().add(Tokens.APP_BAR);
         this.setTop(appBar);
