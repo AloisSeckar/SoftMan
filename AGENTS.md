@@ -29,7 +29,7 @@ Working directory for run/test is the repo root — `softman.db`, `sav/` and `lo
 - Errors: `ErrorUtils.handleException(source, ex)` / `ErrorUtils.raise(msg)`; operations return `Result`
 - Singletons use the `getInstance()` pattern — keep it, do not introduce DI
 - Logging: SLF4J API + `slf4j-simple` (`simplelogger.properties` per module)
-- Tests: JUnit 5 + Hamcrest
+- Tests: JUnit 6 + Hamcrest
 
 ## Off-limits
 
