@@ -62,6 +62,19 @@ server). Rationale and the "what not to do now" list live there.
   `LineupTab` after the game until the next game's `setUp`, and past matches don't keep their own lineups.
 - [ ] **Starter stats written into default lineup records** — `Lineup.setUp` sets the match stats on the
   default lineup's `PlayerRecord`s (consequence of the shared lineup above).
+- [ ] **`Team.randomizeLineup` can put the DP into spot 10** — positions are drawn at random for all
+  batting spots incl. the FLEX spot, so the DP may land in spot 10 and never bat. DP must be in spots
+  1–9 and spot 10 must hold a defensive position (the FLEX).
+- [ ] **`Team.randomizeLineup` crashes on small rosters** — the substitutes loop calls
+  `availablePlayers.remove(rand.nextInt(size))` without checking the list is non-empty, so a roster too
+  small to fill the bench throws `IllegalArgumentException`. The loop condition
+  (`i <= SUBSTITUTES || i < availablePlayers.size()`) is also off and keeps drawing past spot 8.
+- [ ] **`LineupTile.checkLineup` misses bench duplicates** — it only checks position players against each
+  other; a starter also listed as a substitute, or one player listed twice on the bench, is accepted.
+  Harmless in-game (`Lineup.getAvailableReplacements` filters them) but the lineup is wrong.
+- [ ] **Old saves may contain duplicate in-game players** — produced by the removed
+  `evaluateRandomSubstitution` (same bench player picked twice). `Lineup.substitutePlayer` replays them
+  unchecked on load; finished games keep the old box scores.
 
 ## GUI
 
