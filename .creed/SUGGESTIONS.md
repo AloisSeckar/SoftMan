@@ -4,9 +4,7 @@
 
 This file is used to collect Agentic AI suggestions discovered during development.
 
-Once the suggestion is resolved, it should be removed from here.
-
-Because the suggestions may vary based on the personalised way of interacting with AI, it is located inside gitignored `.creed` folder and is not meant to be versioned.
+This file holds pending suggestions only. Resolved items are deleted, never marked as done.
 
 <!-- ↑↑↑ agentcreed ↑↑↑ -->
 
