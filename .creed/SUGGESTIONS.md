@@ -17,4 +17,3 @@ Following points are noted. Will be solved in next AgentCreed version and delive
 ## Possible improvements
 
 - Move JDBC URLs (`SOURCES_DB`, `GAME_DB`) from core `Constants` to `softman-db`; `GAME_DB` hardcodes a Windows `\` separator.
-- Update `README.md` module table (three modules; persistence is in `softman-db`).

@@ -13,7 +13,8 @@ Softball manager and simulator game in JavaFX.
 
 | Module | Contents |
 | --- | --- |
-| `softman-core` | domain, rules, simulation, persistence (`logic`, `utils`) |
+| `softman-core` | domain, rules, simulation (`logic`, `utils`); no JavaFX or JDBC |
+| `softman-db` | ORMLite + SQLite persistence (`db`) |
 | `softman-desktop` | JavaFX client (`Softman`, `gui`) and application resources |
 
 ## Status
