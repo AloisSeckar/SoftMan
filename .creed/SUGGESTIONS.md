@@ -8,12 +8,6 @@ This file holds pending suggestions only. Resolved items are deleted, never mark
 
 <!-- ↑↑↑ agentcreed ↑↑↑ -->
 
-## Rule conflicts
-
-Following points are noted. Will be solved in next AgentCreed version and delivered here via an update script. No need to report again or fixing in this repository.
-
-- `SECURITY.md` is empty — no project-specific boundaries defined yet.
-
 ## TODO LIST
 
 Pending work, known bugs and deferred tasks. Entries marked **ARCHITECTURE.md:** name the sections to update once the item is done. Open `TODO` comments in the code are further pending work.
@@ -105,9 +99,6 @@ server). Rationale and the "what not to do now" list live there.
 - **`LineupTile.checkLineup` misses bench duplicates** — it only checks position players against each
   other; a starter also listed as a substitute, or one player listed twice on the bench, is accepted.
   Harmless in-game (`Lineup.getAvailableReplacements` filters them) but the lineup is wrong.
-- **Old saves may contain duplicate in-game players** — produced by the removed
-  `evaluateRandomSubstitution` (same bench player picked twice). `Lineup.substitutePlayer` replays them
-  unchecked on load; finished games keep the old box scores.
 
 ### GUI
 
@@ -122,8 +113,8 @@ server). Rationale and the "what not to do now" list live there.
   patterns (GUI kit); also the "`NordLight` by default" theme bullet in `gui.instructions.md`.
 - **Dev tools (GUI plan 3.3, optional)** — dev-only DevToolsFX or Scenic View for live scene-graph inspection.
   **ARCHITECTURE.md:** Tech Stack (UI and Run plugin rows), Quick Commands if it adds a launch profile.
-- **Minor Phase 2 visual follow-ups** — noted by the owner at review, to be specified.
 
 ### Agent instructions
 
+- `SECURITY.md` is empty — no project-specific boundaries defined yet.
 - Comment rules conflict: `creed-dev` says to describe every exported constant and function with a comment (purpose, behavior, parameters, return values), while the `ARCHITECTURE.md` Comments convention forbids doc-comment boilerplate. Decide which one wins.
