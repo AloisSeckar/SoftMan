@@ -62,6 +62,7 @@ server). Rationale and the "what not to do now" list live there.
   **ARCHITECTURE.md:** Tech Stack (Language row), module table, Conventions.
 - **Manager pillars** — training, transfer market, finances; build on top of the items above.
   **ARCHITECTURE.md:** Feature Status.
+- The `javafx:run@debug` invocation is inferred from the plugin's `debug` execution id, not documented elsewhere.
 
 ### Match substitutions
 
@@ -117,4 +118,3 @@ server). Rationale and the "what not to do now" list live there.
 ### Agent instructions
 
 - `SECURITY.md` is empty — no project-specific boundaries defined yet.
-- Comment rules conflict: `creed-dev` says to describe every exported constant and function with a comment (purpose, behavior, parameters, return values), while the `ARCHITECTURE.md` Comments convention forbids doc-comment boilerplate. Decide which one wins.

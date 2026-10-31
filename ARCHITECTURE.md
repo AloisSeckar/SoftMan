@@ -101,14 +101,13 @@ graph TD
 
 ## Conventions
 
-- **Language** — Java 27 source/target; modern features (records, sealed types, pattern matching) welcome.
+- **Language** — Java 27 source/target; modern features (records, sealed types, pattern matching) should be used.
 - **Naming** — interfaces prefixed `I` (`IGameRepository`); GUI classes suffixed by role (`*Tab`, `*Tile`, `*Frame`, `*Table`); factories in `utils.factory`; utility classes `*Utils`.
 - **Singletons** — managers, frames and tabs expose `getInstance()`; keep the pattern, no DI.
 - **Errors** — mutating operations return `Result(ok, message)`; exceptions are converted via `ErrorUtils.handleException(source, ex)`, assertions via `ErrorUtils.raise(msg)`.
 - **Lombok** — explicit imports only (never `import lombok.*`, it breaks javac 27 on `var`); log through `@Slf4j`'s `LOG`.
 - **Core purity** — no JavaFX/JDBC in `softman-core`; persistence annotations never leak into domain classes (schema lives in `TableConfigs`).
 - **GUI** — plain Java, no FXML; build via `gui.kit`; no hex colours outside the `.root` token block of `softman.css`; `sm-` prefixed style classes mirrored in `Tokens`; no pixel layout. Full rules: [.github/instructions/gui.instructions.md](./.github/instructions/gui.instructions.md) (history: [docs/archive/2026-javafx-gui-update.md](./docs/archive/2026-javafx-gui-update.md)).
-- **Comments** — one short "why" line only when the code cannot show it; no essays, no doc-comment boilerplate, no change-log or "what I changed" comments.
 - **Tests** — JUnit Jupiter + Hamcrest matchers; GUI covered only by a TestFX smoke test (see Tests).
 - **Working directory** — run/test from repo root (surefire and javafx plugin set `workingDirectory` to `${project.basedir}/..`).
 - No linters/formatters, git hooks, CI or containers are configured.
@@ -240,7 +239,7 @@ SoftMan/
 ├── pom.xml                 # parent POM: modules, dependencyManagement, plugin config
 ├── lombok.config           # log field renamed to LOG
 ├── names.sql               # seed data for the softman.db name pool
-├── softman.db              # read-only name-pool DB (off-limits)
+├── softman.db              # read-only name-pool DB
 ├── softman-core/           # src/main (see Package map), src/test (pure in-memory JUnit, elrh.softman.test)
 ├── softman-db/             # src/main only, package elrh.softman.db
 ├── softman-desktop/        # src/main (Softman + gui.*, resources below), src/test (GuiSmokeTest)
@@ -248,8 +247,8 @@ SoftMan/
 ├── .github/instructions/   # gui.instructions.md (applies to softman-desktop/**)
 ├── .agents/skills/         # AgentCreed skills
 ├── .creed/                 # SUGGESTIONS.md — pending work, known bugs, backlog
-├── sav/, log/              # runtime output, gitignored (off-limits)
-└── */target/               # build output (off-limits)
+├── sav/, log/              # runtime output, gitignored
+└── */target/               # build output
 ```
 
 | Path | Contents |
@@ -262,8 +261,3 @@ SoftMan/
 | `softman-desktop/src/main/resources/simplelogger.properties` | INFO level → `log/softman.log` (a test-scoped copy lives in `softman-core/src/test/resources`) |
 | `names.sql` | first/last names seeding `softman.db` |
 | `log/`, `sav/` | Runtime folders resolved against the repo root; `sav` is auto-created by `GameDatabase` |
-
-## Needs Clarification
-
-- [ ] `SECURITY.md` has no project-specific rules yet.
-- [ ] The `javafx:run@debug` invocation is inferred from the plugin's `debug` execution id, not documented elsewhere.
