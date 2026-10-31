@@ -1,6 +1,7 @@
 # SoftMan GUI — Technology Decisions & Modernization Plan
 
-> **Archived 2026-10-02.** All tasks implemented
+> **Archived 2026-10-02.** All tasks implemented. Versions and "locked" decisions below are historical — current
+> rules are in `.github/instructions/gui.instructions.md`, the current stack in `ARCHITECTURE.md`.
 
 ## Decisions (locked)
 
@@ -72,7 +73,7 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 - [x] 0.1 JavaFX 25.0.4
 - [x] 0.2 AtlantaFX 2.1.0, Ikonli 12.4.0 (+ Feather pack), ControlsFX 11.2.4
 - [x] 0.3 `NordLight` user-agent stylesheet via `Softman.applyTheme(Scene)`; `softman.css` + BootstrapFX still layered on top
-- [x] 0.4 Human: run the app, screenshot the baseline (`docs/screenshots/baseline/`)
+- [x] 0.4 Human: run the app, screenshot the baseline (`docs/screenshots/old/`)
 - [x] 1.1 `softman.css` token layer — legacy classes still used by unrewritten screens kept in a marked "Legacy" section, de-hexed
 - [x] 1.2 `gui.kit` package — plus `Tokens` (Java constants for the `sm-*` style classes)
 - [x] 1.x `bootstrapfx.css` dropped from the scene early: its `.text-muted`, `.small`, `.menu-item`, `.tool-bar`, `.separator` rules overrode AtlantaFX. `ClubTab` panels → `Cards`; `h3`/`h4` → `Tokens.TITLE`. The pom dependency goes in 3.1
@@ -89,7 +90,7 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 - [x] Human review of Phase 2 screens — approved; minor follow-ups deferred
 - [x] 3.1 Drop old libs — BootstrapFX, FontAwesomeFX, Medusa removed from both poms
 - [x] 3.2 Light/dark toggle — Show → Dark theme (`Softman.setDarkTheme`); starts light, no OS seeding
-- [-] 3.3 Dev tools (optional) — skipped, moved to `BACKLOG.md`
+- [-] 3.3 Dev tools (optional) — skipped, moved to `.creed/SUGGESTIONS.md`
 
 ### Phase -1 — Groundwork for AI-assisted work (do FIRST)
 
@@ -104,7 +105,7 @@ Purpose: stop every session re-deriving the same facts, and cap token burn.
 - Conventions: Java 25 source/target, Lombok, SLF4J (+simple), `getInstance()` singleton pattern
 - Off-limits: `target/`, `sav/`, `log/`, generated sources
 - Comment policy: one short line, only when the code cannot show it. No essays, no change-log comments
-- Pointer: "read `GUI.md` before any GUI work"
+- Pointer: "read `2026-javafx-gui-update.md` before any GUI work"
 
 **-1b. `.github/instructions/gui.instructions.md`** with frontmatter `applyTo: "softman-desktop/**"`
    so these apply automatically without restating them each session:
@@ -136,7 +137,7 @@ Purpose: stop every session re-deriving the same facts, and cap token burn.
 **-1g. Working discipline** (process, not code):
 
 - Branch per phase; commit after each verified step — `git reset` is free, agent undo is not
-- **One phase per session.** Open each session with "read `docs/GUI.md` + `AGENTS.md`, execute Phase X step N"
+- **One phase per session.** Open each session with "read `docs/archive/2026-javafx-gui-update.md` + `AGENTS.md`, execute Phase X step N"
 - Phase 1 plus exactly one tile (`ClubInfoTile`), human-reviewed, becomes the **golden template**;
      every later tile references it instead of open-ended design. Single biggest token saver
 
@@ -199,7 +200,7 @@ and listener registrations so wiring is untouched.
 ## Out of scope
 
 FXML/Scene Builder; changes to `softman-core` or `softman-db`; the JavaFX-types-in-core coupling
-documented in `PLAN.md`; new features (Save/Load, Training, Market, Stats); navigation architecture
+documented in `2026-architecture-changes.md`; new features (Save/Load, Training, Market, Stats); navigation architecture
 beyond the enum swap.
 
 ## Verification

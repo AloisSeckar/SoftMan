@@ -5,23 +5,15 @@ Softball manager and simulator game in JavaFX.
 ## Usage
 
 - Clone repo from github
-- create local `log` and `sav` folders
+- create local `log` folder (`sav` is created automatically)
 - `mvn clean install` to re-compile the project
 - `mvn -pl softman-desktop javafx:run` to run the application
-
-## Modules
-
-| Module | Contents |
-| --- | --- |
-| `softman-core` | domain, rules, simulation (`logic`, `utils`); no JavaFX or JDBC |
-| `softman-db` | ORMLite + SQLite persistence (`db`) |
-| `softman-desktop` | JavaFX client (`Softman`, `gui`) and application resources |
 
 ## Status
 
 (**OUTDATED**) Check implementation info and status at [wiki page](https://github.com/AloisSeckar/SoftMan/wiki)
 
-**CURRENT:** See [`docs` folder](./docs/README.md)
+**CURRENT:** See [ARCHITECTURE.md](./ARCHITECTURE.md) for the current state and [.creed/SUGGESTIONS.md](./.creed/SUGGESTIONS.md) for pending work
 
 ## Technologies
 

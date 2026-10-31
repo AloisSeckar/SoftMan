@@ -1,7 +1,8 @@
 # SoftMan — Architectural Plan
 
 > **Archived 2026-10-02.** Done: module split, JavaFX purged from core, snapshot save/load, UUID identity,
-> repository interface, AtlantaFX/Ikonli migration. Remaining items moved to [BACKLOG.md](../BACKLOG.md#architecture).
+> repository interface, AtlantaFX/Ikonli migration. Remaining items moved to [SUGGESTIONS.md](../../.creed/SUGGESTIONS.md#architecture).
+> Code references below describe the codebase as of 2026-07-30; the current state is in [ARCHITECTURE.md](../../ARCHITECTURE.md).
 >
 > Reframing note, 2026-07-30. Goal: finish a single-player desktop game first, but build the core so it can later back an asynchronous online multiplayer league (teams controlled by real players, matches resolved once a week in real time).
 
@@ -245,7 +246,7 @@ These are far likelier to break a Java 26/27 upgrade than JavaFX or SQLite are. 
 
 1. **Keep JavaFX.** Revisit only if/when multiplayer becomes real — the module split makes that cheap.
 2. **Keep SQLite available, but stop simulating against it.** Move to an in-memory `World` + snapshot save file. This *is* step 5 of the order of work above, and it simplifies rather than complicates it.
-3. ✅ **Replace FontAwesomeFX with Ikonli**, and BootstrapFX with AtlantaFX — done (see `GUI.md`).
+3. ✅ **Replace FontAwesomeFX with Ikonli**, and BootstrapFX with AtlantaFX — done (see `2026-javafx-gui-update.md`).
 4. **Defer the OrmLite decision** — put repositories behind interfaces first (item 9), then swapping OrmLite for plain JDBC or dropping it entirely becomes a one-module change.
 
 Net effect: nothing in the stack needs replacing to reach a finished single-player game. The genuinely load-bearing change is *how* SQLite is used, not *whether*.
