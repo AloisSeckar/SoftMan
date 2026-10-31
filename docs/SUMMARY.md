@@ -1,6 +1,6 @@
 # SoftMan — Current State Summary
 
-> Snapshot taken 2026-07-30, **refreshed 2026-10-02** against the code as it stands after the module split (`fc33b69`…`71ae445`), the JavaFX purge from core (`3197d29`), persistent save/load (`1d8dce6`), in-game substitutions (`e3136ad`, `20d4080`) and the GUI rebuild (`ef9ec94`…`d7b987d`).
+> Snapshot taken 2026-07-30, **refreshed 2026-10-31** against the code as it stands after the module split (`fc33b69`…`71ae445`), the JavaFX purge from core (`3197d29`), persistent save/load (`1d8dce6`), in-game substitutions (`e3136ad`, `20d4080`) and the GUI rebuild (`ef9ec94`…`d7b987d`).
 <!---->
 > Purpose: map the existing codebase before resuming development.
 
@@ -20,7 +20,7 @@
 
 ### Dependency stack
 
-`commons-lang3` · `sqlite-jdbc` · `ormlite-jdbc` · JavaFX (base/controls/fxml/graphics) · Lombok · SLF4J + slf4j-simple · AtlantaFX (NordLight/NordDark themes, `Card`) · Ikonli + Feather pack (icons) · ControlsFX (GridView) · JUnit + Hamcrest · TestFX.
+`commons-lang3` · `sqlite-jdbc` · `ormlite-jdbc` · JavaFX (base/controls/graphics) · Lombok · SLF4J + slf4j-simple · AtlantaFX (NordLight/NordDark themes, `Card`) · Ikonli + Feather pack (icons) · ControlsFX (GridView) · JUnit + Hamcrest · TestFX.
 
 Dependencies are declared per module: core gets only commons-lang3 / Lombok / SLF4J, `softman-db` adds sqlite-jdbc + ormlite, all JavaFX and UI libraries live in `softman-desktop`.
 

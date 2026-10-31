@@ -141,7 +141,6 @@ On Windows PowerShell 5.1, redirect Maven output to a file (`*> out.txt`) instea
 
 - [ ] `SECURITY.md` has no project-specific rules yet.
 - [ ] `softman-core` `Constants` holds JDBC URLs (`jdbc:sqlite:...`) — strings only, but persistence details live in core. `GAME_DB` uses a Windows `\` path separator.
-- [ ] `javafx-fxml` is still a desktop dependency although FXML is banned and no source imports `javafx.fxml` — likely removable.
 - [ ] No `module-info.java` in any module; JavaFX runs on the classpath.
 - [ ] `README.md` module table lists two modules and attributes persistence to core — outdated.
 - [ ] The `javafx:run@debug` invocation is inferred from the plugin's `debug` execution id, not documented elsewhere.
