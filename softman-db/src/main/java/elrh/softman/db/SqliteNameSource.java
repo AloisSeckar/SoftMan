@@ -2,12 +2,13 @@ package elrh.softman.db;
 
 import elrh.softman.logic.enums.PlayerGender;
 import elrh.softman.logic.interfaces.INameSource;
-import elrh.softman.utils.Constants;
 import java.sql.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SqliteNameSource implements INameSource, AutoCloseable {
+
+    private static final String SOURCES_DB = "jdbc:sqlite:softman.db";
 
     private final Connection conn;
 
@@ -41,7 +42,7 @@ public class SqliteNameSource implements INameSource, AutoCloseable {
         Connection newConnection = null;
 
         try {
-            newConnection = DriverManager.getConnection(Constants.SOURCES_DB);
+            newConnection = DriverManager.getConnection(SOURCES_DB);
             if (newConnection.isValid(5)) {
                 LOG.info("DB connection to 'SOURCES' successful");
             } else {

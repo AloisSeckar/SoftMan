@@ -15,5 +15,3 @@ Following points are noted. Will be solved in next AgentCreed version and delive
 - `SECURITY.md` is empty — no project-specific boundaries defined yet.
 
 ## Possible improvements
-
-- Move JDBC URLs (`SOURCES_DB`, `GAME_DB`) from core `Constants` to `softman-db`; `GAME_DB` hardcodes a Windows `\` separator.

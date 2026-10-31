@@ -140,6 +140,5 @@ On Windows PowerShell 5.1, redirect Maven output to a file (`*> out.txt`) instea
 ## Needs Clarification
 
 - [ ] `SECURITY.md` has no project-specific rules yet.
-- [ ] `softman-core` `Constants` holds JDBC URLs (`jdbc:sqlite:...`) — strings only, but persistence details live in core. `GAME_DB` uses a Windows `\` path separator.
 - [ ] No `module-info.java` in any module; JavaFX runs on the classpath.
 - [ ] The `javafx:run@debug` invocation is inferred from the plugin's `debug` execution id, not documented elsewhere.

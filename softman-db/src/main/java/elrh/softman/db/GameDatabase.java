@@ -5,7 +5,6 @@ import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTableConfig;
 import com.j256.ormlite.table.TableUtils;
-import elrh.softman.utils.Constants;
 import elrh.softman.utils.ErrorUtils;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,7 +32,7 @@ class GameDatabase implements AutoCloseable {
         }
         Files.createDirectories(Path.of(SAVE_DIR));
 
-        var url = Constants.GAME_DB.replace("$id$", gameId);
+        var url = "jdbc:sqlite:" + saveFile(gameId);
         var database = new GameDatabase(new JdbcPooledConnectionSource(url));
         database.initTables(recreateTables);
         LOG.info("Save file for game '{}' opened", gameId);

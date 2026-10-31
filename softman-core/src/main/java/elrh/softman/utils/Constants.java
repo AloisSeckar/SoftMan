@@ -17,9 +17,6 @@ public class Constants {
     public static final LocalDate START_DATE = LocalDate.of(Constants.START_YEAR, 3, 31);
 
     public static final int START_FUNDS = 100000;
-    
-    public static final String SOURCES_DB = "jdbc:sqlite:softman.db";
-    public static final String GAME_DB = "jdbc:sqlite:sav\\game-$id$.db";
 
     // single fixed save slot for now; revisit if/when multiple save games are supported
     public static final String DEFAULT_GAME_ID = "career";
