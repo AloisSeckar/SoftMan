@@ -13,16 +13,15 @@ Pending work, known bugs and deferred tasks. Entries marked **ARCHITECTURE.md:**
 ## Bugs
 
 1. Unexplained stats bug, observed once (2026-10-31): after a simulated match with a substitution (starter replaced by a bench player in the same spot), the saved and reloaded game credited both stats lines of that match to the starter; the substitute had none. The play-by-play stats printout was correct. Not reproducible: tests of a single match, 30 full simulated games, and a save/load round trip all credited stats correctly. The user will start a new simulation and watch whether it recurs. If it does, capture the save before and after loading, and check whether the starter's `PlayerStats` rows carry the substitute's `playerId`.
-2. Starting or loading a game has no single routine (existing `TODO unify actions performed upon starting new game` in `Softman.setupStage` and `MainLayout.setUp`). After New game or Load game, the "Current date" label (`ActionFrame`), the `FocusFrame` club and team selectors (built once in the singleton constructor), the `ClubTab` league table and the schedule are not refreshed. Fix: one routine used by startup, New game and Load game.
-3. `Softman.setupStage` calls `AssociationManager.nextDay()` at startup. This simulates the first day (after a confirmation prompt) and is also the only thing that initializes the "Current date" label. Decide whether startup should keep simulating day 1 or just set the date label.
-4. Autosave is bypassed by the window close button — saving happens only in `Softman.closeIfConfirmed()` (Esc / Game → Exit). There is no `setOnCloseRequest` and no `Application.stop()` override, so closing via the title bar loses the session.
-5. Second season is scheduled in the past — `League.scheduleMatches()` always starts from the constant `LEAGUE_START = LocalDate.of(START_YEAR, 4, 1)`, so leagues created by `recreateLeagues()` in year N+1 get 2025 match dates.
-6. `League.includeMatchIntoStandings()` uses a `do/while` with an `index > 9` guard that can throw `IndexOutOfBounds` for leagues with >10 teams and never short-circuits correctly.
-7. `League.mockPlayLeague/mockPlayRound/mockPreviewCurrentRound` just append `"MOCK BROKEN AND HOPEFULLY DEAD"`; still reachable from `StandingsTab` buttons.
-8. Likely attribute bug — `PlayerAttributes.getFieldingSkill()` averages `fieldingReach + gloveControl + pitchVariety`; `pitchVariety` looks like a copy/paste error (probably `throwControl`, which is instead used in `getPitchingSkill()`).
-9. Broken format string on an error path — `MatchSimulator.wrapUpMatch()` calls `ErrorUtils.raise(String.format("Unknown leagueId %d", leagueId))` with a `UUID`, which throws `IllegalFormatConversionException` instead of the intended assertion.
-10. Table name concatenated into SQL in `SqliteNameSource.getRandomName()` — internal constants today, but the pattern is injection-prone.
-11. `@SuppressWarnings("unchecked")` in `GameDatabase.dao()` and `Lineup.positionPlayers` (generic array) — flagged TODOs.
+2. `Softman.setupStage` calls `AssociationManager.nextDay()` at startup, which simulates the first day (after a confirmation prompt). Decide whether startup should keep simulating day 1 or stay on the initial/loaded date (the "Current date" label is now initialized by `MainLayout.setUp()`).
+3. Autosave is bypassed by the window close button — saving happens only in `Softman.closeIfConfirmed()` (Esc / Game → Exit). There is no `setOnCloseRequest` and no `Application.stop()` override, so closing via the title bar loses the session.
+4. Second season is scheduled in the past — `League.scheduleMatches()` always starts from the constant `LEAGUE_START = LocalDate.of(START_YEAR, 4, 1)`, so leagues created by `recreateLeagues()` in year N+1 get 2025 match dates.
+5. `League.includeMatchIntoStandings()` uses a `do/while` with an `index > 9` guard that can throw `IndexOutOfBounds` for leagues with >10 teams and never short-circuits correctly.
+6. `League.mockPlayLeague/mockPlayRound/mockPreviewCurrentRound` just append `"MOCK BROKEN AND HOPEFULLY DEAD"`; still reachable from `StandingsTab` buttons.
+7. Likely attribute bug — `PlayerAttributes.getFieldingSkill()` averages `fieldingReach + gloveControl + pitchVariety`; `pitchVariety` looks like a copy/paste error (probably `throwControl`, which is instead used in `getPitchingSkill()`).
+8. Broken format string on an error path — `MatchSimulator.wrapUpMatch()` calls `ErrorUtils.raise(String.format("Unknown leagueId %d", leagueId))` with a `UUID`, which throws `IllegalFormatConversionException` instead of the intended assertion.
+9. Table name concatenated into SQL in `SqliteNameSource.getRandomName()` — internal constants today, but the pattern is injection-prone.
+10. `@SuppressWarnings("unchecked")` in `GameDatabase.dao()` and `Lineup.positionPlayers` (generic array) — flagged TODOs.
 
 ## Architecture
 

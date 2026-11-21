@@ -77,6 +77,13 @@ public class ClubTab extends GridPane implements IFocusedClubListener, IFocusedT
         leagueTable.refresh();
     }
 
+    public void refresh() {
+        var user = AssociationManager.getInstance().getUser();
+        infoTile.reload(user.getFocusedClub());
+        leagueTable.setLeague(user.getFocusedLeague());
+        setDailySchedule();
+    }
+
     public void refreshSchedule() {
         calendarTile.refreshSchedule();
         leagueTable.refresh();

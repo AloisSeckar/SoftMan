@@ -7,8 +7,10 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 import elrh.softman.Softman;
+import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.frame.ContentFrame;
 import elrh.softman.gui.frame.ContentFrame.Screen;
+import elrh.softman.gui.frame.FocusFrame;
 import elrh.softman.gui.kit.Cards;
 import elrh.softman.gui.kit.Icons;
 import elrh.softman.gui.kit.Images;
@@ -29,10 +31,13 @@ import elrh.softman.gui.tile.MatchHeaderTile;
 import elrh.softman.gui.tile.PlayerAttributesTile;
 import elrh.softman.gui.tile.PlayerInfoTile;
 import elrh.softman.gui.tile.ScheduleRowTile;
+import elrh.softman.gui.utils.FormatUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.AssociationFactory;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
@@ -206,5 +211,38 @@ class GuiSmokeTest {
                 LineupTab.getInstance().focusedTeamChanged(team);
             });
         }
+    }
+
+    @Test
+    void setUpRefreshesFramesAfterNewGame() throws Throwable {
+        var manager = AssociationManager.getInstance();
+        var oldClub = manager.getUser().getFocusedClub();
+
+        FxToolkit.setupFixture(() -> {
+            ContentFrame.getInstance().switchTo(Screen.TEAM);
+            manager.reset();
+            AssociationFactory.populateAssociation();
+            MainLayout.getInstance().setUp();
+        });
+        WaitForAsyncUtils.checkException();
+
+        var newClub = manager.getUser().getFocusedClub();
+        var newTeam = manager.getUser().getFocusedTeam();
+        assertThat(newClub, is(not(oldClub)));
+
+        var combos = FocusFrame.getInstance().getChildren().stream()
+            .filter(ComboBox.class::isInstance)
+            .map(ComboBox.class::cast)
+            .toList();
+        assertThat(combos.get(0).getValue(), is(newClub));
+        assertThat(combos.get(1).getValue(), is(newTeam));
+
+        var expectedDate = manager.getClock().getCurrentDate().format(FormatUtils.DF);
+        var dateDisplayed = ActionFrame.getInstance().getChildren().stream()
+            .filter(Label.class::isInstance)
+            .map(Label.class::cast)
+            .anyMatch(label -> expectedDate.equals(label.getText()));
+        assertThat(dateDisplayed, is(true));
+        assertThat(ContentFrame.getInstance().getSelectionModel().getSelectedItem().getText(), is(Screen.CLUB.getTitle()));
     }
 }

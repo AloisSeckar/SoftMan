@@ -61,7 +61,6 @@ public class Softman extends Application {
         var scene = new Scene(wrappingLayout, 0, 0);
         applyTheme(scene);
 
-        // TODO unify actions performed upon starting new game
         AssociationManager.getInstance().setSimulationRunner(new SimulationController(spinner));
         AssociationManager.getInstance().setConfirmationPrompt(InfoUtils::confirm);
         AssociationManager.getInstance().nextDay();
