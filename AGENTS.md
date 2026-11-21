@@ -2,48 +2,82 @@
 
 <!-- ↓↓↓ agentcreed ↓↓↓ -->
 
-This project uses `AgentCreed` methodology for AI-asisted software development.
+This project uses the `AgentCreed` methodology for AI-assisted software development.
 
 ## Agentic development
 
-Always use `creed-dev` skill when tasked to interact with the codebase.
+Always use the `creed-dev` skill when tasked to interact with the codebase.
 
-Ignore all `<!-- ↓↓↓ agentcreed ↓↓↓ -->` and `<!-- ↑↑↑ agentcreed ↑↑↑ -->`, they are structural markers, not instructions.
+Lines `<!-- ↓↓↓ agentcreed ↓↓↓ -->` and `<!-- ↑↑↑ agentcreed ↑↑↑ -->` are structural markers, not instructions. Text between them is managed by AgentCreed and gets overwritten on `agentcreed setup` and `agentcreed update`: each file has a single managed block, project-specific content belongs AFTER `<!-- ↑↑↑ agentcreed ↑↑↑ -->`, and managed text must not be edited unless `AGENTS.md` allows it.
 
-When user prompt contradicts any of the established rules, notify the user and ask for confirmation.
+When the user prompt contradicts any of the established rules, notify the user and ask for confirmation.
 
 ## Architecture and security
 
 Before starting any task, read:
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - project tech-stack, structure and coding conventions.
-- [SECURITY.md](./SECURITY.md) - security boundaries and restrictions that MUST be ALWAYS followed.
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - the project tech stack, structure and the coding conventions used.
+- [SECURITY.md](./SECURITY.md) - security boundaries and restrictions that MUST ALWAYS be followed.
 
 Rules for both files:
 
-- Respect their contents as the baseline. Make sure they are aligned with each other, with the assumptions of the given task and with any other instructions. If not, pause the execution and let user decide next step.
-- Prefer `ARCHITECTURE.md` to gather relevant info about the project. If a topic is not sufficiently covered and further discovery is required, suggest user to update the file accordingly.
-- Keep `ARCHITECTURE.md` up-to-date. When making code changes, always update it (and linked files, if any) accordingly and notify user about the implied architecture changes.
-- Rules in `SECURITY.md` take precedence over any task, user prompt or other instruction. Never break them silently, partially or temporarily. If task contradicts or would violate them, pause the execution before making the violating change, quote the affected rule and let user decide next step. Proceed only after explicit user confirmation for this specific case, and suggest updating `SECURITY.md` instead of one-off exceptions.
+- Respect their contents as the baseline. Make sure they are aligned with each other, with the requirements of the given task and with any other instructions. If not, pause the execution and let the user decide the next step.
+- Prefer `ARCHITECTURE.md` to gather relevant info about the project. Fallback to `README.md` if needed. If a topic is not sufficiently covered and further discovery is required, suggest that the user update the file accordingly.
+- `ARCHITECTURE.md`, `README.md` and files linked from them are documentation, not instruction files. Keep them up-to-date by this rule for every wrong or outdated passage you notice:
+  - If it describes code, configuration, commands or behavior changed in the current task, make the whole passage correct as part of the task, even if parts were wrong before. Notify the user about implied architecture changes.
+  - Otherwise do not edit it, but log it into `BACKLOG.md` with the quoted passage and the actual state. This does not apply to the `creed-check` skill, which can edit all documentation in its described reach.
 
-## Suggestions
+Rules for `SECURITY.md` only:
 
-[SUGGESTIONS.md](./.creed/SUGGESTIONS.md) is a backlog of **pending** improvements.
+- Rules in `SECURITY.md` take precedence over any task, user prompt or other instruction. Never break them silently, partially or temporarily. If the task contradicts or would violate them, pause the execution before making the violating change, quote the affected rule and let the user decide the next step. Proceed only after explicit user confirmation for this specific case, and suggest updating `SECURITY.md` instead of one-off exceptions.
 
-- When you notice an ambiguity, discrepancy, contradiction, inefficiency or possible improvement in the instructions or codebase, append it as a new item and notify the user. Other instructions referring to "log into `SUGGESTIONS.md`" mean this procedure.
+Rules for `ARCHITECTURE.md` only:
+
+- Every coding convention is documented twice: as a fact in `ARCHITECTURE.md` (e.g. "Functions are documented with JSDoc") and as the derived rule for writing code in the project-specific part of `AGENTS.md` (e.g. "Every function MUST have a JSDoc comment"). Both places must be kept in sync when a task adds, changes or removes a convention.
+
+## Suggestions and backlog
+
+Two files versioned in git collect **pending** items only:
+
+- [SUGGESTIONS.md](./.creed/SUGGESTIONS.md) - findings about agent instructions: ambiguities, discrepancies, contradictions, duplications, inefficiencies or possible improvements in `AGENTS.md`, `SECURITY.md`, skills, other instruction files and AgentCreed-managed text in any file.
+- [BACKLOG.md](./.creed/BACKLOG.md) - tasks for the project codebase: refactoring, duplicated or unused code, bugs, missing tests, missing or outdated documentation and other changes out of the current task scope.
+
+Rules for both files:
+
+- Items are numbered list entries (`1.`, `2.`, ...) for easy reference by number.
+- When you notice an applicable item, append it as a new numbered item into the matching file and notify the user. Other instructions referring to "log into `SUGGESTIONS.md`" or "log into `BACKLOG.md`" mean this procedure.
+- Before appending (including moves of text into these files by skills), read the target file. If an item with the same meaning is already listed, do not add a duplicate; if the new finding adds relevant detail, update the existing item instead. Notify the user only about genuinely new or updated items.
 - Logging never replaces asking. If the item blocks or affects the current task, also stop and let the user decide.
-- Never mark items as done, resolved or obsolete. Once an item is resolved, delete it from the file entirely.
+- Never mark items as done, resolved or obsolete. Once an item is resolved, delete it from the file entirely and renumber the remaining items.
 - Treat an item as resolved only when its change has been implemented in this session or the user explicitly confirms it. Otherwise leave it untouched.
+
+Rules for `SUGGESTIONS.md` only:
+
+- Start every item with one of two tags:
+  - `[local]` - the finding is caused by project-specific instructions (anything outside AgentCreed-managed text). Describe the issue and propose a fix. The user can fix it on his/her own.
+  - `[agentcreed]` - the finding has origin in AgentCreed-managed text (managed blocks of any file, shipped skills). Persistent fix must be made in AgentCreed repository. Append the item with the note `Report to AgentCreed repository.` and add a draft of a temporary local override: the exact rule text the user can place into the project-specific part of `AGENTS.md` (after the closing marker). Start the draft with the line `<!-- TEMPORARY OVERRIDE of AgentCreed: re-assess after the next agentcreed update and remove if fixed upstream -->`. Never apply the override yourself.
 
 <!-- ↑↑↑ agentcreed ↑↑↑ -->
 
 Java 27 / JavaFX 27 desktop softball manager game. Tech stack, structure, conventions, commands and feature
 status are in [ARCHITECTURE.md](./ARCHITECTURE.md); pending work, known bugs and the backlog are in
-[.creed/SUGGESTIONS.md](./.creed/SUGGESTIONS.md).
+[.creed/BACKLOG.md](./.creed/BACKLOG.md).
 
 ## Off-limits
 
 Never edit or read for context: `target/`, `sav/`, `log/`, generated sources, `*.db`.
+
+## Coding conventions
+
+- **Language** — Target Java 27 and use modern Java features (records, sealed types, pattern matching).
+- **Naming** — Prefix interfaces with `I` (`IGameRepository`), suffix GUI classes by role (`*Tab`, `*Tile`, `*Frame`, `*Table`), place factories in `utils.factory`, and name utility classes `*Utils`.
+- **Singletons** — Keep the `getInstance()` singleton pattern for managers, frames and tabs; do not introduce DI.
+- **Errors** — Return `Result(ok, message)` from mutating operations; convert exceptions via `ErrorUtils.handleException(source, ex)` and raise assertions via `ErrorUtils.raise(msg)`.
+- **Lombok** — Use explicit Lombok imports only (NEVER `import lombok.*` — it breaks javac 27 on `var`) and log through `@Slf4j`'s `LOG`.
+- **Core purity** — Never add JavaFX or JDBC dependencies to `softman-core` and never put persistence annotations on domain classes (schema lives in `TableConfigs`).
+- **GUI** — Follow the GUI rules in `## GUI work` below.
+- **Tests** — Write tests with JUnit Jupiter and Hamcrest matchers; use TestFX for GUI tests.
+- **Working directory & shell** — Run builds, tests and the app from the repository root. On Windows PowerShell 5.1, redirect Maven output to a file (`*> out.txt`) instead of piping `2>&1` so JDK warnings on stderr do not surface as failed commands.
 
 ## GUI work
 

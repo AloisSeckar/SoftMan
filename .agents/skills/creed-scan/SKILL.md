@@ -11,7 +11,11 @@ description: Skill for structured exploration of codebases to understand structu
 
 Use this approach to systematically explore and understand a codebase.
 
-If `ARCHITECTURE.md` file already exists in project root and contains content after `<!-- ↑↑↑ agentcreed ↑↑↑ -->`, treat it as a source of truth. Otherwise, look directly into the code.
+If the `ARCHITECTURE.md` file already exists in the project root, treat it as a source of truth. Otherwise, fall back to `README.md`. Verify available claims against the code and look directly into the code for anything it does not cover.
+
+## Preparation
+
+If and only if `.creed/.check` is not present in `project root` yet (the first run after installation), skip the `git status` and `git pull --ff-only` check required by `creed-dev` and continue right away.
 
 ## Project Analysis Workflows
 
@@ -83,6 +87,8 @@ Look for and report:
 - **Authentication**: JWT, OAuth, Sessions
 - **Testing**: Jest, Pytest, Go test, etc.
 
+Check each pattern before listing it under Conventions. Do not list patterns that break `creed-dev` rules (e.g. repeated code) or boundaries imposed by `SECURITY.md`; log them as findings into `.creed/BACKLOG.md` instead.
+
 ## Step 5: Development Workflow
 
 Check for:
@@ -90,7 +96,7 @@ Check for:
 - `.eslintrc`, `.prettierrc` → Linting/Formatting
 - `.husky/` → Git hooks
 - `Makefile` → Build commands
-- `scripts/` in package.json → NPM scripts
+- `scripts` in `package.json` → NPM scripts
 
 ## Step 6: Output Format
 
@@ -139,10 +145,6 @@ Generate a summary using this template:
 | Dev     | `npm run dev`   |
 | Test    | `npm test`      |
 | Build   | `npm run build` |
-
-## Needs Clarification
-
-- [ ] Any assumptions made without evidence are noted
 ```
 
 ## Analysis Validation
@@ -158,14 +160,18 @@ Analysis Validation:
 - [ ] No assumptions made without evidence
 ```
 
-If any items cannot be verified, note them as "needs clarification" in the report.
+If any items cannot be verified, ask the user in the chat while offering to log them into `.creed/BACKLOG.md` if the user cannot answer right away. Never persist open questions or assumptions into `ARCHITECTURE.md`.
 
 ## Persisting Analysis
 
-If `ARCHITECTURE.md` exists in project root, and already contains the analysis, update it to align with the current state.
+If `ARCHITECTURE.md` exists in the project root and ends with `<!-- ↑↑↑ agentcreed ↑↑↑ -->`, append the analysis after this marker.
 
-If `ARCHITECTURE.md` exists in project root, but ends with `<!-- ↑↑↑ agentcreed ↑↑↑ -->`, append the analysis after this marker.
+If `ARCHITECTURE.md` exists in the project root and has any other content (with or without `<!-- ↑↑↑ agentcreed ↑↑↑ -->` marker), merge the findings into its existing text instead.
 
-If `ARCHITECTURE.md` does not exist in project root, create the file, use project name as a H1 headline and insert the analysis afterwards.
+If `ARCHITECTURE.md` does not exist in the project root, create the file, use the project name as an H1 headline and insert the analysis afterwards.
+
+## Final Check
+
+Run a `creed-check` skill session to ensure consistency of all the newly documented facts.
 
 <!-- ↑↑↑ agentcreed ↑↑↑ -->

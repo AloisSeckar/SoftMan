@@ -2,7 +2,7 @@
 
 <!-- ↓↓↓ agentcreed ↓↓↓ -->
 
-This file describes project tech-stack, structure and coding conventions. Rules for handling this file are defined in [AGENTS.md](./AGENTS.md).
+This file describes the project tech stack, structure and the coding conventions used. Rules for handling this file are defined in [AGENTS.md](./AGENTS.md).
 
 <!-- ↑↑↑ agentcreed ↑↑↑ -->
 
@@ -11,7 +11,7 @@ This file describes project tech-stack, structure and coding conventions. Rules 
 SoftMan is a single-player desktop softball club/team management simulator. It is a Maven multi-module monolith:
 a framework-free game core, an SQLite persistence adapter and a JavaFX client. Local desktop app only.
 
-This file describes the current state. Pending work, known bugs and the backlog are in [.creed/SUGGESTIONS.md](./.creed/SUGGESTIONS.md).
+This file describes the current state. Pending work, known bugs and the backlog are in [.creed/BACKLOG.md](./.creed/BACKLOG.md).
 
 ## Tech Stack
 
@@ -67,7 +67,7 @@ graph TD
 | desktop | `.` | `Softman` — JavaFX `Application` entry point, game setup/teardown, theme switch |
 | desktop | `gui` | `MainLayout` (BorderPane root) |
 | desktop | `gui.frame` | `MenuFrame`, `FocusFrame`, `ContentFrame` (+ `Screen` enum for navigation), `ActionFrame` |
-| desktop | `gui.kit` | `Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens` — the only sanctioned way to build UI |
+| desktop | `gui.kit` | `Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens` — shared UI component and styling factories |
 | desktop | `gui.tab` | `ClubTab`, `MatchTab`, `TeamTab`, `PlayerTab`, `LineupTab`, `TrainingTab`, `StandingsTab` |
 | desktop | `gui.tile` | `ClubInfoTile`, `CalendarTile`, `ScheduleRowTile`, `MatchHeaderTile`, `BoxScoreTile`, `LineupTile`, `LineupRowTile`, `DefenseTile`, `PlayerInfoTile`, `PlayerAttributesTile` |
 | desktop | `gui.table` | `LeagueStadingsTable`, `TeamPlayersTable` |
@@ -101,15 +101,15 @@ graph TD
 
 ## Conventions
 
-- **Language** — Java 27 source/target; modern features (records, sealed types, pattern matching) should be used.
-- **Naming** — interfaces prefixed `I` (`IGameRepository`); GUI classes suffixed by role (`*Tab`, `*Tile`, `*Frame`, `*Table`); factories in `utils.factory`; utility classes `*Utils`.
-- **Singletons** — managers, frames and tabs expose `getInstance()`; keep the pattern, no DI.
-- **Errors** — mutating operations return `Result(ok, message)`; exceptions are converted via `ErrorUtils.handleException(source, ex)`, assertions via `ErrorUtils.raise(msg)`.
-- **Lombok** — explicit imports only (never `import lombok.*`, it breaks javac 27 on `var`); log through `@Slf4j`'s `LOG`.
-- **Core purity** — no JavaFX/JDBC in `softman-core`; persistence annotations never leak into domain classes (schema lives in `TableConfigs`).
-- **GUI** — plain Java, no FXML; build via `gui.kit`; no hex colours outside the `.root` token block of `softman.css`; `sm-` prefixed style classes mirrored in `Tokens`; no pixel layout. Full rules: [.github/instructions/gui.instructions.md](./.github/instructions/gui.instructions.md) (history: [docs/archive/2026-javafx-gui-update.md](./docs/archive/2026-javafx-gui-update.md)).
-- **Tests** — JUnit Jupiter + Hamcrest matchers; GUI covered only by a TestFX smoke test (see Tests).
-- **Working directory** — run/test from repo root (surefire and javafx plugin set `workingDirectory` to `${project.basedir}/..`).
+- **Language** — Java 27 source/target; modern Java features (records, sealed types, pattern matching) are used.
+- **Naming** — Interfaces are prefixed `I` (`IGameRepository`); GUI classes are suffixed by role (`*Tab`, `*Tile`, `*Frame`, `*Table`); factories live in `utils.factory`; utility classes are named `*Utils`.
+- **Singletons** — Managers, frames and tabs expose `getInstance()`; no DI framework is used.
+- **Errors** — Mutating operations return `Result(ok, message)`; exceptions are converted via `ErrorUtils.handleException(source, ex)` and assertions via `ErrorUtils.raise(msg)`.
+- **Lombok** — Explicit imports only (`import lombok.*` breaks javac 27 on `var`); logging uses `@Slf4j` with the logger field renamed to `LOG` in `lombok.config`.
+- **Core purity** — `softman-core` has no JavaFX or JDBC dependencies; domain classes carry no persistence annotations (schema lives in `TableConfigs`).
+- **GUI** — Plain Java with no FXML; UI is built via `gui.kit`, hex colours live only in the `.root` token block of `softman.css`, `sm-` prefixed style classes are mirrored in `Tokens`, and layout avoids pixel positioning (history: [docs/archive/2026-javafx-gui-update.md](./docs/archive/2026-javafx-gui-update.md)).
+- **Tests** — JUnit Jupiter + Hamcrest matchers; GUI is covered by a TestFX smoke test (see Tests).
+- **Working directory** — Runtime paths (`softman.db`, `sav/`, `log/`) resolve relative to the repo root; surefire and `javafx-maven-plugin` set `workingDirectory` to `${project.basedir}/..`.
 - No linters/formatters, git hooks, CI or containers are configured.
 
 ## Quick Commands
@@ -123,7 +123,7 @@ graph TD
 | Run | `mvn -pl softman-desktop -am javafx:run` |
 | Debug (JDWP :8000, waits for the debugger) | `mvn -pl softman-desktop -am javafx:run@debug` |
 
-On Windows PowerShell 5.1, redirect Maven output to a file (`*> out.txt`) instead of piping `2>&1`; JDK warnings on stderr otherwise surface as a failed command.
+On Windows PowerShell 5.1, JDK warnings on stderr cause `2>&1` pipes to surface as failed commands; redirecting Maven output to a file (`*> out.txt`) avoids this.
 
 ## Data Model
 
@@ -182,7 +182,7 @@ Entry points: `Softman` (JavaFX `Application`), `AssociationFactory.populateAsso
 
 ## Feature Status
 
-Known bugs in the features below are tracked in [.creed/SUGGESTIONS.md](./.creed/SUGGESTIONS.md).
+Known bugs in the features below are tracked in [.creed/BACKLOG.md](./.creed/BACKLOG.md).
 
 ### Implemented
 
@@ -246,7 +246,7 @@ SoftMan/
 ├── docs/                   # archive/ (2026-javafx-gui-update.md, 2026-architecture-changes.md), screenshots/old
 ├── .github/instructions/   # gui.instructions.md (applies to softman-desktop/**)
 ├── .agents/skills/         # AgentCreed skills
-├── .creed/                 # SUGGESTIONS.md — pending work, known bugs, backlog
+├── .creed/                 # BACKLOG.md (pending work, known bugs), SUGGESTIONS.md (agent instruction findings)
 ├── sav/, log/              # runtime output, gitignored
 └── */target/               # build output
 ```
