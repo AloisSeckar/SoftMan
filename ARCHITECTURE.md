@@ -159,7 +159,7 @@ Entry points: `Softman` (JavaFX `Application`), `AssociationFactory.populateAsso
 
 1. `Softman.setupGame()` → installs `SqliteNameSource` and `SqliteGameRepository`, then **loads `sav/game-career.db` if it exists**; only when there is no save file does it fall back to world generation.
 2. `AssociationFactory.populateAssociation()` → registers 16 hardcoded clubs, creates **one** league ("1st League Men"), forms 8 teams (20 random players each), schedules the season, adds a spare CLUB01 "B" team, forces the user onto `CLUB01`.
-3. `Softman.setupStage()` wires the simulation runner and confirmation prompt, runs `AssociationManager.nextDay()` once, then `MainLayout.setUp()` builds the UI.
+3. `Softman.setupStage()` wires the simulation runner and confirmation prompt, then `MainLayout.setUp()` builds the UI. The game starts on the initial or loaded date.
 4. User advances time with **Next day** / **Simulate until** in `ActionFrame` → `SimulationController` → `SimulationService` (JavaFX `Service` + `ForkJoinPool` parallel match simulation) → progress spinner.
 5. Matches can also be played in `MatchTab` — *Play game* (one play per click), *Simulate inning*, *Simulate game* — with manual substitutions / position changes for the user's team. `ScheduleRowTile` rows offer simulate / play / view icon buttons.
 6. `Softman.closeIfConfirmed()` (Esc key, or Game → Exit) → `saveGame("career")` writes the whole world in one transaction, then closes the stage.

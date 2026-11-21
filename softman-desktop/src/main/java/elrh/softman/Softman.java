@@ -56,6 +56,8 @@ public class Softman extends Application {
     ////////////////////////////////////////////////////////////////////////////
     private void setupStage() {
         var spinner = new ProgressIndicator();
+        spinner.setVisible(false);
+
         var wrappingLayout = new StackPane(MainLayout.getInstance(), spinner);
 
         var scene = new Scene(wrappingLayout, 0, 0);
@@ -63,7 +65,6 @@ public class Softman extends Application {
 
         AssociationManager.getInstance().setSimulationRunner(new SimulationController(spinner));
         AssociationManager.getInstance().setConfirmationPrompt(InfoUtils::confirm);
-        AssociationManager.getInstance().nextDay();
         MainLayout.getInstance().setUp();
         
         primaryStage.setTitle("SOFTMAN 0.1");
