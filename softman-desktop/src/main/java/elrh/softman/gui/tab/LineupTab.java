@@ -89,6 +89,11 @@ public class LineupTab extends GridPane implements IFocusedTeamListener, IFocuse
 
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
+        if (newlyFocusedTeam == null) {
+            lineupTile.setReadOnly(true);
+            saveButton.setDisable(true);
+            return;
+        }
         lineupTile.fillLineup(newlyFocusedTeam.getDefaultLineup());
         saveLineup();
 

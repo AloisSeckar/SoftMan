@@ -130,13 +130,15 @@ public class PlayerTab extends BorderPane implements IFocusedTeamListener {
     @Override
     public void focusedTeamChanged(Team newlyFocusedTeam) {
         data.clear();
-        var players = newlyFocusedTeam.getPlayers();
-        if (players != null) {
-            data.addAll(players);
+        if (newlyFocusedTeam != null) {
+            var players = newlyFocusedTeam.getPlayers();
+            if (players != null) {
+                data.addAll(players);
+            }
+            FXCollections.sort(data);
         }
-        FXCollections.sort(data);
 
-        selectPlayerCB.setValue(selectPlayerCB.getItems().get(0));
+        selectPlayerCB.setValue(data.isEmpty() ? null : data.getFirst());
     }
 
     private static StatsRow seasonRow(PlayerStats record) {

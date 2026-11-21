@@ -17,6 +17,8 @@ import elrh.softman.gui.kit.Layouts.Space;
 import elrh.softman.gui.kit.Ratings;
 import elrh.softman.gui.kit.Tables;
 import elrh.softman.gui.kit.Tokens;
+import elrh.softman.gui.tab.LineupTab;
+import elrh.softman.gui.tab.PlayerTab;
 import elrh.softman.gui.tile.BoxScoreTile;
 import elrh.softman.gui.tile.CalendarTile;
 import elrh.softman.gui.tile.ClubInfoTile;
@@ -186,6 +188,23 @@ class GuiSmokeTest {
             WaitForAsyncUtils.checkException();
         } finally {
             FxToolkit.setupFixture(() -> Softman.setDarkTheme(false));
+        }
+    }
+
+    @Test
+    void teamListenersHandleNullFocus() throws Throwable {
+        var team = AssociationManager.getInstance().getUser().getFocusedTeam();
+        try {
+            FxToolkit.setupFixture(() -> {
+                PlayerTab.getInstance().focusedTeamChanged(null);
+                LineupTab.getInstance().focusedTeamChanged(null);
+            });
+            WaitForAsyncUtils.checkException();
+        } finally {
+            FxToolkit.setupFixture(() -> {
+                PlayerTab.getInstance().focusedTeamChanged(team);
+                LineupTab.getInstance().focusedTeamChanged(team);
+            });
         }
     }
 }
