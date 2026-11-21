@@ -18,6 +18,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class Softman extends Application {
     
@@ -40,17 +41,27 @@ public class Softman extends Application {
         launch(args);
     }
     
-    public static void closeIfConfirmed() {
+    /** Requests closing the GUI window; the close-request handler may still abort it. */
+    public static void requestClose() {
+        primaryStage.fireEvent(new WindowEvent(primaryStage, WindowEvent.WINDOW_CLOSE_REQUEST));
+    }
+
+    /** Interceptor that can still abort closing the GUI window */
+    private static void onCloseRequest(WindowEvent event) {
         /* TODO enable confirmation before going live!
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Really quit?", ButtonType.YES, ButtonType.NO);
         alert.initOwner(primaryStage);
         alert.showAndWait();
-        if (alert.getResult() == ButtonType.YES) {
-             
+        if (alert.getResult() != ButtonType.YES) {
+            event.consume();
         }
         */
+    }
+
+    /** Runs after the window closed, on every exit path (title bar, Esc, Game → Exit), and saves the game. */
+    @Override
+    public void stop() {
         tearDownGame();
-        primaryStage.close();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -75,10 +86,11 @@ public class Softman extends Application {
         // TODO switch to full screen before going live!
         // primaryStage.setFullScreen(true);
         primaryStage.setMaximized(true);
+        primaryStage.setOnCloseRequest(Softman::onCloseRequest);
 
         primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
             if (KeyCode.ESCAPE == event.getCode()) {
-                closeIfConfirmed();
+                requestClose();
             }
         });
     }

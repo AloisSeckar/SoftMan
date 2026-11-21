@@ -162,7 +162,7 @@ Entry points: `Softman` (JavaFX `Application`), `AssociationFactory.populateAsso
 3. `Softman.setupStage()` wires the simulation runner and confirmation prompt, then `MainLayout.setUp()` builds the UI. The game starts on the initial or loaded date.
 4. User advances time with **Next day** / **Simulate until** in `ActionFrame` → `SimulationController` → `SimulationService` (JavaFX `Service` + `ForkJoinPool` parallel match simulation) → progress spinner.
 5. Matches can also be played in `MatchTab` — *Play game* (one play per click), *Simulate inning*, *Simulate game* — with manual substitutions / position changes for the user's team. `ScheduleRowTile` rows offer simulate / play / view icon buttons.
-6. `Softman.closeIfConfirmed()` (Esc key, or Game → Exit) → `saveGame("career")` writes the whole world in one transaction, then closes the stage.
+6. Closing the window by any route (title bar, Esc key, or Game → Exit via `Softman.requestClose()`) passes through the stage's close-request handler (`Softman.onCloseRequest`, where the quit confirmation belongs; currently disabled) and ends in `Softman.stop()` → `saveGame("career")`, which writes the whole world in one transaction.
 
 ### Season structure
 

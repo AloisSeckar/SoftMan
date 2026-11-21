@@ -77,7 +77,7 @@ public class MenuFrame extends HBox {
             // TODO about
         });
 
-        var exit = item("Exit", Feather.LOG_OUT, Softman::closeIfConfirmed);
+        var exit = item("Exit", Feather.LOG_OUT, Softman::requestClose);
 
         var menuGame = new Menu("Game");
         menuGame.getItems().addAll(newGame, loadGame, saveGame, new SeparatorMenuItem(), info, new SeparatorMenuItem(), exit);
