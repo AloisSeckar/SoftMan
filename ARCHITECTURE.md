@@ -22,7 +22,7 @@ This file describes the current state. Pending work, known bugs and the backlog 
 | UI | JavaFX 27 (base/controls/graphics; programmatic, **no FXML**, built through `gui.kit`), AtlantaFX 2.1.0 (`NordLight` / `NordDark`, `Card`), Ikonli 12.4.0 + Feather pack, ControlsFX 11.2.4 (`GridView`) |
 | Persistence | SQLite (`sqlite-jdbc` 3.51.1.0) via `ormlite-jdbc` 6.1 — snapshot save/load, not active record |
 | Utilities | Lombok 1.18.48 (`LOG` field via `lombok.config`), commons-lang3 3.20.0 |
-| Logging | SLF4J 2.0.17 API + `slf4j-simple` (see Repository Layout and Resources) |
+| Logging | SLF4J 2.0.17 API + Logback 1.6.8 (`logback-classic`, see Repository Layout and Resources) |
 | Testing | JUnit 6.0.2 (Jupiter), Hamcrest 3.0, TestFX 4.0.18 (`Headless` glass platform by default) |
 | Run plugin | `javafx-maven-plugin` 0.0.8 — main class `elrh.softman.Softman`, extra `debug` execution (JDWP on `*:8000`, `suspend=y`) |
 | CI / infra | None — no CI workflows, no containers |
@@ -258,6 +258,6 @@ SoftMan/
 | `softman-desktop/src/main/resources/img/teams/` | club logos |
 | `softman-desktop/src/main/resources/img/vecteezy/` | field, blank avatars |
 | `softman-desktop/src/main/resources/img/` | `ball.png` (menu brand), `stadium.jpg` (CSS background) |
-| `softman-desktop/src/main/resources/simplelogger.properties` | INFO level → `log/softman.log` (a test-scoped copy lives in `softman-core/src/test/resources`) |
+| `softman-desktop/src/main/resources/logback.xml` | INFO level → console + `log/softman.log` (a test-scoped `logback-test.xml` lives in `softman-core/src/test/resources`) |
 | `names.sql` | first/last names seeding `softman.db` |
-| `log/`, `sav/` | Runtime folders resolved against the repo root; `sav` is auto-created by `GameDatabase` |
+| `log/`, `sav/` | Runtime folders resolved against the repo root; `log` is auto-created by Logback and `sav` by `GameDatabase` |

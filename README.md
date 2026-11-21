@@ -5,7 +5,6 @@ Softball manager and simulator game in JavaFX.
 ## Usage
 
 - Clone repo from GitHub
-- Create local `log` folder (`sav` is created automatically)
 - `mvn clean install` to re-compile the project
 - `mvn -pl softman-desktop -am javafx:run` to run the application
 
@@ -23,6 +22,7 @@ Softball manager and simulator game in JavaFX.
 - [Ikonli](https://kordamp.org/ikonli/) - Feather icons
 - [ControlsFX](https://controlsfx.github.io/)
 - [OrmLite](https://ormlite.com/) - database management for underlying SQLite DB
+- [Logback](https://logback.qos.ch/) - logging framework
 
 ## Attributions
 
