@@ -115,6 +115,7 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
+                    <skip>false</skip>
                     <mainClass>elrh.softman.Softman</mainClass>
                     <workingDirectory>${project.basedir}/..</workingDirectory>
                 </configuration>
