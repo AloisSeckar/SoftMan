@@ -57,6 +57,7 @@ public class UserManager {
         activeClub = null;
         focusedClub = null;
         focusedTeam = null;
+        focusedLeague = null;
         focusedClubListeners.forEach(l -> l.focusedClubChanged(null));
         focusedTeamListeners.forEach(l -> l.focusedTeamChanged(null));
     }

@@ -1,8 +1,10 @@
 package elrh.softman.test;
 
+import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.logic.managers.UserManager;
 import elrh.softman.test.utils.TestUtils;
+import elrh.softman.utils.Constants;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +31,31 @@ public class UserManagerTest {
 
         user.setActiveClub(club);
         assertTrue(user.userManagesTeam(teamId), "team should be managed by the user now");
+    }
+
+    @Test
+    @DisplayName("resetClearsFocusAndLeagueTest")
+    void resetClearsFocusAndLeagueTest() {
+        var manager = AssociationManager.getInstance();
+        manager.reset();
+        manager.createNewLeague(TestUtils.ELEMENT_NAME, PlayerLevel.MSEN, 1);
+        var league = manager.getLeagues(Constants.START_YEAR).getFirst();
+
+        var club = TestUtils.getTestClub();
+        club.formTeam(PlayerLevel.MSEN);
+        var team = club.getTeams().getFirst();
+        manager.registerTeamIntoLeague(league.getId(), team);
+
+        user.setActiveClub(club);
+        user.setFocusedClub(club);
+        user.setFocusedTeam(team);
+        assertNotNull(user.getFocusedLeague(), "focused league should be set from team");
+
+        user.reset();
+        assertNull(user.getActiveClub(), "active club should be cleared");
+        assertNull(user.getFocusedClub(), "focused club should be cleared");
+        assertNull(user.getFocusedTeam(), "focused team should be cleared");
+        assertNull(user.getFocusedLeague(), "focused league should be cleared");
     }
 
 }

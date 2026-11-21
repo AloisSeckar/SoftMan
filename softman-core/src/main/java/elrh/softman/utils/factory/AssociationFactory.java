@@ -8,57 +8,53 @@ import java.util.*;
 
 public class AssociationFactory {
 
-    private static final Club CLUB01 = ClubFactory.getClub("PALADINS", "PAL", "Dalton", "paladins", "The Arena", "#ADD8E6");
-    private static final Club CLUB02 = ClubFactory.getClub("SMOKIN' COWBOYS", "COW", "Oxnard", "smokin-cowboys", "Smokin' Range", "#800080");
-    private static final Club CLUB03 = ClubFactory.getClub("GREEN MARES", "GMR", "Willburn", "green-mares", "Horse pen", "#228B22");
-    private static final Club CLUB04 = ClubFactory.getClub("KING COBRAS", "CBR", "Turlock", "king-cobras", "The Nest", "#FFFF00");
-    private static final Club CLUB05 = ClubFactory.getClub("MINOTAURS", "MIN", "Cape Horn", "minotaurs", "Labyrinth", "#EE82EE");
-    private static final Club CLUB06 = ClubFactory.getClub("PIRATES", "PIR", "Blackwell", "pirates", "Black Pearl Cove", "#FFA500");
-    private static final Club CLUB07 = ClubFactory.getClub("SPARTANS", "SPA", "Cliff Rose", "spartans", "Sparta Field", "#8B0000");
-    private static final Club CLUB08 = ClubFactory.getClub("STEEL FALCONS", "FAL", "Nampa", "steel-falcons", "Steelwings Stadium", "#FFD700");
-    private static final Club CLUB09 = ClubFactory.getClub("SHARX", "SHX", "Lawton", "sharx", "Sharx Bay", "#000080");
-    private static final Club CLUB10 = ClubFactory.getClub("ASSASSINS", "ASA", "Melstone", "assassins", "Dark House", "#006400");
-    private static final Club CLUB11 = ClubFactory.getClub("RAGING BULLS", "BUL", "Barling", "raging-bulls", "Bull Ridge", "#D3D3D3");
-    private static final Club CLUB12 = ClubFactory.getClub("RAVENS", "RAV", "Andrews", "ravens", "Black Feather Field", "#A9A9A9");
-    private static final Club CLUB13 = ClubFactory.getClub("TOMCATS", "TOM", "Carrizo", "tomcats", "Cat Palace", "#2F4F4F");
-    private static final Club CLUB14 = ClubFactory.getClub("VIKINGS", "VIK", "Gillroy", "vikings", "Valhalla", "#AFEEEE");
-    private static final Club CLUB15 = ClubFactory.getClub("WHITE RABBITS", "RAB", "Drummond", "white-rabbits", "Rabbit Hole", "#008080");
-    private static final Club CLUB16 = ClubFactory.getClub("WIZARDS", "WIZ", "Gallup", "wizards", "The Tower", "#FFF8DC");
+    private record ClubSpec(String name, String shortName, String city, String logo, String stadium, String color) {
+        Club create() {
+            return ClubFactory.getClub(name, shortName, city, logo, stadium, color);
+        }
+    }
+
+    private static final List<ClubSpec> CLUB_SPECS = List.of(
+        new ClubSpec("PALADINS", "PAL", "Dalton", "paladins", "The Arena", "#ADD8E6"),
+        new ClubSpec("SMOKIN' COWBOYS", "COW", "Oxnard", "smokin-cowboys", "Smokin' Range", "#800080"),
+        new ClubSpec("GREEN MARES", "GMR", "Willburn", "green-mares", "Horse pen", "#228B22"),
+        new ClubSpec("KING COBRAS", "CBR", "Turlock", "king-cobras", "The Nest", "#FFFF00"),
+        new ClubSpec("MINOTAURS", "MIN", "Cape Horn", "minotaurs", "Labyrinth", "#EE82EE"),
+        new ClubSpec("PIRATES", "PIR", "Blackwell", "pirates", "Black Pearl Cove", "#FFA500"),
+        new ClubSpec("SPARTANS", "SPA", "Cliff Rose", "spartans", "Sparta Field", "#8B0000"),
+        new ClubSpec("STEEL FALCONS", "FAL", "Nampa", "steel-falcons", "Steelwings Stadium", "#FFD700"),
+        new ClubSpec("SHARX", "SHX", "Lawton", "sharx", "Sharx Bay", "#000080"),
+        new ClubSpec("ASSASSINS", "ASA", "Melstone", "assassins", "Dark House", "#006400"),
+        new ClubSpec("RAGING BULLS", "BUL", "Barling", "raging-bulls", "Bull Ridge", "#D3D3D3"),
+        new ClubSpec("RAVENS", "RAV", "Andrews", "ravens", "Black Feather Field", "#A9A9A9"),
+        new ClubSpec("TOMCATS", "TOM", "Carrizo", "tomcats", "Cat Palace", "#2F4F4F"),
+        new ClubSpec("VIKINGS", "VIK", "Gillroy", "vikings", "Valhalla", "#AFEEEE"),
+        new ClubSpec("WHITE RABBITS", "RAB", "Drummond", "white-rabbits", "Rabbit Hole", "#008080"),
+        new ClubSpec("WIZARDS", "WIZ", "Gallup", "wizards", "The Tower", "#FFF8DC")
+    );
 
     public static void populateAssociation() {
         AssociationManager manager = AssociationManager.getInstance();
-        manager.registerClub(CLUB01);
-        manager.registerClub(CLUB02);
-        manager.registerClub(CLUB03);
-        manager.registerClub(CLUB04);
-        manager.registerClub(CLUB05);
-        manager.registerClub(CLUB06);
-        manager.registerClub(CLUB07);
-        manager.registerClub(CLUB08);
-        manager.registerClub(CLUB09);
-        manager.registerClub(CLUB10);
-        manager.registerClub(CLUB11);
-        manager.registerClub(CLUB12);
-        manager.registerClub(CLUB13);
-        manager.registerClub(CLUB14);
-        manager.registerClub(CLUB15);
-        manager.registerClub(CLUB16);
+        var clubs = CLUB_SPECS.stream().map(ClubSpec::create).toList();
+        clubs.forEach(manager::registerClub);
 
         // create leagues for the initial year
-        createLeagues();
+        createLeagues(clubs);
+
+        var userClub = clubs.getFirst();
 
         // TODO remove
         // to test a "B" team not participating in any league
-        CLUB01.formTeam(PlayerLevel.MSEN);
+        userClub.formTeam(PlayerLevel.MSEN);
 
         // TODO allow players to pick club
-        manager.getUser().setActiveClub(CLUB01);
-        manager.getUser().setFocusedClub(CLUB01);
-        manager.getUser().setFocusedTeam(CLUB01.getTeams().get(0));
+        manager.getUser().setActiveClub(userClub);
+        manager.getUser().setFocusedClub(userClub);
+        manager.getUser().setFocusedTeam(userClub.getTeams().getFirst());
     }
 
     // this is being called when the association is initialized for the first time
-    public static void createLeagues() {
+    public static void createLeagues(List<Club> clubs) {
         AssociationManager manager = AssociationManager.getInstance();
         int year = AssociationManager.getInstance().getClock().getYear();
 
@@ -73,14 +69,14 @@ public class AssociationFactory {
          */
 
         var leagueMen1 = manager.getLeagues(year).get(0);
-        var leagueMenTeams1 = createTeams(PlayerLevel.MSEN, Arrays.asList(CLUB01, CLUB02, CLUB03, CLUB04, CLUB05, CLUB06, CLUB07, CLUB08));
+        var leagueMenTeams1 = createTeams(PlayerLevel.MSEN, clubs.subList(0, 8));
         leagueMenTeams1.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueMen1.getId(), team));
         leagueMen1.scheduleMatches();
 
         // TODO more than one league
         /*
         var leagueMen2 = manager.getLeagues(year).get(1);
-        var leagueMenTeams2 = createTeams(PlayerLevel.MSEN, Arrays.asList(CLUB09, CLUB10, CLUB11, CLUB12, CLUB13, CLUB14, CLUB15, CLUB16));
+        var leagueMenTeams2 = createTeams(PlayerLevel.MSEN, clubs.subList(8, 16));
         leagueMenTeams2.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueMen2.getId(), team));
         leagueMen2.scheduleMatches();
 
@@ -90,12 +86,12 @@ public class AssociationFactory {
         leagueMen2.getLeagueInfo().persist();
 
         var leagueWomen1 = manager.getLeagues(year).get(2);
-        var leagueWomenTeams1 = createTeams(PlayerLevel.FSEN, Arrays.asList(CLUB01, CLUB02, CLUB03, CLUB04, CLUB05, CLUB06, CLUB09, CLUB10));
+        var leagueWomenTeams1 = createTeams(PlayerLevel.FSEN, List.of(clubs.get(0), clubs.get(1), clubs.get(2), clubs.get(3), clubs.get(4), clubs.get(5), clubs.get(8), clubs.get(9)));
         leagueWomenTeams1.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueWomen1.getId(), team));
         leagueWomen1.scheduleMatches();
 
         var leagueWomen2 = manager.getLeagues(year).get(3);
-        var leagueWomenTeams2 = createTeams(PlayerLevel.FSEN, Arrays.asList(CLUB07, CLUB08, CLUB11, CLUB12, CLUB13, CLUB14, CLUB15, CLUB16));
+        var leagueWomenTeams2 = createTeams(PlayerLevel.FSEN, List.of(clubs.get(6), clubs.get(7), clubs.get(10), clubs.get(11), clubs.get(12), clubs.get(13), clubs.get(14), clubs.get(15)));
         leagueWomenTeams2.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueWomen2.getId(), team));
         leagueWomen2.scheduleMatches();
 
@@ -105,12 +101,12 @@ public class AssociationFactory {
         leagueWomen2.getLeagueInfo().persist();
 
         var leagueJuniorBoys = manager.getLeagues(year).get(4);
-        var leagueJuniorBoysTeams = createTeams(PlayerLevel.MU18, Arrays.asList(CLUB01, CLUB02, CLUB04, CLUB05, CLUB06, CLUB08));
+        var leagueJuniorBoysTeams = createTeams(PlayerLevel.MU18, List.of(clubs.get(0), clubs.get(1), clubs.get(3), clubs.get(4), clubs.get(5), clubs.get(7)));
         leagueJuniorBoysTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueJuniorBoys.getId(), team));
         leagueJuniorBoys.scheduleMatches();
 
         var leagueJuniorGirls = manager.getLeagues(year).get(5);
-        var leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, Arrays.asList(CLUB01, CLUB04, CLUB05, CLUB08, CLUB09, CLUB10));
+        var leagueJuniorGirlsTeams = createTeams(PlayerLevel.FU18, List.of(clubs.get(0), clubs.get(3), clubs.get(4), clubs.get(7), clubs.get(8), clubs.get(9)));
         leagueJuniorGirlsTeams.forEach(team -> AssociationManager.getInstance().registerTeamIntoLeague(leagueJuniorGirls.getId(), team));
         leagueJuniorGirls.scheduleMatches();
          */

@@ -11,6 +11,7 @@ import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
+import elrh.softman.utils.factory.AssociationFactory;
 import elrh.softman.utils.factory.PlayerFactory;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -249,6 +250,31 @@ public class AssociationManagerTest {
             }
         }
         assertTrue(walkOffs > 0, "some games should have ended with a walk-off");
+    }
+
+    @Test
+    @DisplayName("populateAssociationCreatesFreshClubsOnResetTest")
+    void populateAssociationCreatesFreshClubsOnResetTest() {
+        AssociationFactory.populateAssociation();
+        var firstClub = manager.getUser().getActiveClub();
+        var firstTeam = manager.getUser().getFocusedTeam();
+        assertEquals(2, firstClub.getTeams().size(), "user club should have A and B teams");
+
+        // repeat twice more — previously failed on the 3rd game with "Max 3 teams allowed for each level"
+        for (int game = 2; game <= 3; game++) {
+            manager.reset();
+            AssociationFactory.populateAssociation();
+
+            var newClub = manager.getUser().getActiveClub();
+            var newTeam = manager.getUser().getFocusedTeam();
+            assertNotSame(firstClub, newClub, "new game should create a fresh Club instance");
+            assertNotEquals(firstClub.getId(), newClub.getId(), "new game club should have a fresh UUID");
+            assertNotEquals(firstTeam.getId(), newTeam.getId(), "new game focused team should be fresh");
+            assertEquals(2, newClub.getTeams().size(), "new game user club should not retain previous game teams");
+            assertEquals(16, manager.getClubs(true).size(), "all 16 clubs should be registered");
+            firstClub = newClub;
+            firstTeam = newTeam;
+        }
     }
 
     // returns number of players who entered from the bench

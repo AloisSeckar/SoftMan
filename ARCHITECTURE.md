@@ -206,7 +206,7 @@ Known bugs in the features below are tracked in [.creed/BACKLOG.md](./.creed/BAC
 | Promotion / relegation | `getAdvancingTeams()` / `getRelegatedTeams()` / `recreateLeagues()` are reachable (the year rollover fires on any 1 January), but with a single league there is no `leagueAbove` / `leagueBelow`, so the transfer branches never execute |
 | Multi-season progression | `recreateLeagues()` creates a fresh league and schedule each 1 January; rosters carry over unchanged, the new schedule reuses the fixed `LEAGUE_START` date, and the path has no test coverage |
 | Save slots | One fixed slot, `Constants.DEFAULT_GAME_ID = "career"`; no file picker, no multiple saves |
-| New game / Load game (menu) | Menu items exist and reset the world, but UI refresh is incomplete (date label, selectors, standings/schedule) and New game reuses static clubs from `AssociationFactory` |
+| New game / Load game (menu) | Menu items exist and reset the world cleanly, but UI refresh is incomplete (date label, selectors, standings/schedule) |
 | Career statistics | `PlayerTab` shows season totals; multi-season aggregation is a TODO |
 | Standings UI | `StandingsTab` still contains MOCK "Play league" / "Play round" buttons wired to broken `League.mockPlay*()` methods |
 | `MatchTab` refresh | Works, but refreshes the whole schedule after every play |
