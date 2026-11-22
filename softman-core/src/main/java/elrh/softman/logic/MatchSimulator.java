@@ -314,7 +314,7 @@ public class MatchSimulator {
         if (league != null) {
             league.saveMatch(match);
         } else {
-            ErrorUtils.raise(String.format("Unknown leagueId %d", leagueId));
+            ErrorUtils.raise(String.format("Unknown leagueId %s", leagueId));
         }
     }
 

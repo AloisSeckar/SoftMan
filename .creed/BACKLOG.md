@@ -17,7 +17,6 @@ Pending work, known bugs and deferred tasks. Entries marked **ARCHITECTURE.md:**
 3. `League.includeMatchIntoStandings()` uses a `do/while` with an `index > 9` guard that can throw `IndexOutOfBounds` for leagues with >10 teams and never short-circuits correctly.
 4. `League.mockPlayLeague/mockPlayRound/mockPreviewCurrentRound` just append `"MOCK BROKEN AND HOPEFULLY DEAD"`; still reachable from `StandingsTab` buttons.
 5. Likely attribute bug — `PlayerAttributes.getFieldingSkill()` averages `fieldingReach + gloveControl + pitchVariety`; `pitchVariety` looks like a copy/paste error (probably `throwControl`, which is instead used in `getPitchingSkill()`).
-6. Broken format string on an error path — `MatchSimulator.wrapUpMatch()` calls `ErrorUtils.raise(String.format("Unknown leagueId %d", leagueId))` with a `UUID`, which throws `IllegalFormatConversionException` instead of the intended assertion.
 
 ## Architecture
 
