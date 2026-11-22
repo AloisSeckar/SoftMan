@@ -8,23 +8,18 @@ import elrh.softman.gui.kit.Tokens;
 import elrh.softman.gui.table.LeagueStadingsTable;
 import elrh.softman.gui.utils.InfoUtils;
 import elrh.softman.logic.AssociationManager;
-import elrh.softman.logic.core.League;
-import elrh.softman.utils.Constants;
+import java.time.LocalDate;
 import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
-import lombok.extern.slf4j.Slf4j;
 import org.kordamp.ikonli.feather.Feather;
 
-@Slf4j
 public class StandingsTab extends GridPane {
-    
-    private final League testLeague;
-    
-    private final TextArea testTextArea;  
+
+    private final TextArea testTextArea;
     private final LeagueStadingsTable leagueTable;
     
     private static StandingsTab INSTANCE;
@@ -47,9 +42,6 @@ public class StandingsTab extends GridPane {
         column2.setPercentWidth(55);
         getColumnConstraints().addAll(column1, column2);
 
-        // TODO change dynamically according to User selection
-        testLeague = AssociationManager.getInstance().getLeagues(Constants.START_YEAR).get(0);
-        
         var testButton = new Button("MOCK Play league", Icons.of(Feather.FAST_FORWARD));
         testButton.setOnAction(e -> mockLeague());
         
@@ -64,35 +56,31 @@ public class StandingsTab extends GridPane {
         add(Layouts.grow(mockCard), 0, 0);
         
         leagueTable = new LeagueStadingsTable();
-        leagueTable.setLeague(testLeague); // TODO get rid of this mock
+        refresh();
         var standingsCard = Cards.titled("Standings", leagueTable);
         standingsCard.setMaxHeight(Region.USE_PREF_SIZE);
         GridPane.setValignment(standingsCard, VPos.TOP);
         add(standingsCard, 1, 0);
     }
 
-    // TODO delete mock and connect real leagues
-    private void mockLeague() {
-        try {
-            testLeague.mockPlayLeague(testTextArea::appendText);
-            leagueTable.refresh();
-            
-            InfoUtils.showMessage("Finished");
-            
-        } catch (Exception ex) {
-            LOG.error("LEAGUE FAILED", ex);
-            InfoUtils.showMessage("LEAGUE FAILED");
-        }
+    /** Reloads the standings table for the current season's league. */
+    public void refresh() {
+        var manager = AssociationManager.getInstance();
+        var leagues = manager.getLeagues(manager.getClock().getYear());
+        // TODO change dynamically according to User selection
+        leagueTable.setLeague(leagues.isEmpty() ? null : leagues.getFirst());
     }
-    
+
+    private void mockLeague() {
+        var manager = AssociationManager.getInstance();
+        var seasonEnd = LocalDate.of(manager.getClock().getYear(), 10, 31);
+        manager.simulateUntil(seasonEnd);
+    }
+
     private void mockRound() {
-        try {
-            testLeague.mockPreviewCurrentRound(testTextArea::appendText);
-            testLeague.mockPlayRound(testTextArea::appendText);
-            leagueTable.refresh();
-        } catch (Exception ex) {
-            LOG.error("ROUND FAILED", ex);
-            InfoUtils.showMessage("ROUND FAILED");
+        var result = AssociationManager.getInstance().simulateNextMatchDay();
+        if (result != null && !result.ok()) {
+            InfoUtils.showMessage(result.message());
         }
     }
 }

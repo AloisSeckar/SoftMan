@@ -293,6 +293,24 @@ public class AssociationManager {
         }
     }
 
+    /**
+     * Simulates all days up to and including the first upcoming day with unfinished matches.
+     *
+     * @return result of the simulation, or a failed result when no upcoming matches remain
+     */
+    public Result simulateNextMatchDay() {
+        var today = clock.getCurrentDate();
+        var nextMatchDay = currentMatches.values().stream()
+                .filter(match -> !match.isFinished())
+                .map(match -> match.getMatchInfo().getMatchDay())
+                .filter(day -> day != null && !day.isBefore(today))
+                .min(LocalDate::compareTo);
+        if (nextMatchDay.isEmpty()) {
+            return new Result(false, "No upcoming matches to simulate");
+        }
+        return simulateUntil(nextMatchDay.get().plusDays(1));
+    }
+
     ////////////////////////////////////////////////////////////////////////////
 
     private boolean isDayFinished() {

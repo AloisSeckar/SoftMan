@@ -2,6 +2,7 @@ package elrh.softman.gui.sim;
 
 import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.tab.ClubTab;
+import elrh.softman.gui.tab.StandingsTab;
 import elrh.softman.gui.utils.FormatUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.logic.MatchSimulator;
@@ -95,6 +96,7 @@ public class SimulationService extends Service<Result> {
                 Platform.runLater(() -> {
                     ActionFrame.getInstance().updateDateValue(clock.getCurrentDate());
                     ClubTab.getInstance().setDailySchedule();
+                    StandingsTab.getInstance().refresh();
                 });
             }
         }

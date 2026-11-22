@@ -74,6 +74,7 @@ public class ContentFrame extends TabPane {
 
     public void setUp() {
         ClubTab.getInstance().refresh();
+        StandingsTab.getInstance().refresh();
 
         var testMatches = AssociationManager.getInstance().getDailyMatchesForUser();
         var match = Utils.getFirstItem(testMatches);

@@ -15,7 +15,6 @@ Pending work, known bugs and deferred tasks. Entries marked **ARCHITECTURE.md:**
 1. Unexplained stats bug, observed once (2026-10-31): after a simulated match with a substitution (starter replaced by a bench player in the same spot), the saved and reloaded game credited both stats lines of that match to the starter; the substitute had none. The play-by-play stats printout was correct. Not reproducible: tests of a single match, 30 full simulated games, and a save/load round trip all credited stats correctly. The user will start a new simulation and watch whether it recurs. If it does, capture the save before and after loading, and check whether the starter's `PlayerStats` rows carry the substitute's `playerId`.
 2. Second season is scheduled in the past — `League.scheduleMatches()` always starts from the constant `LEAGUE_START = LocalDate.of(START_YEAR, 4, 1)`, so leagues created by `recreateLeagues()` in year N+1 get 2025 match dates.
 3. `League.includeMatchIntoStandings()` uses a `do/while` with an `index > 9` guard that can throw `IndexOutOfBounds` for leagues with >10 teams and never short-circuits correctly.
-4. `League.mockPlayLeague/mockPlayRound/mockPreviewCurrentRound` just append `"MOCK BROKEN AND HOPEFULLY DEAD"`; still reachable from `StandingsTab` buttons.
 
 ## Architecture
 

@@ -6,7 +6,6 @@ import elrh.softman.utils.Constants;
 import elrh.softman.logic.core.data.LeagueInfo;
 import elrh.softman.logic.core.data.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
-import elrh.softman.logic.interfaces.IMatchReporter;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -140,53 +139,6 @@ public class League {
     // used when reassembling a loaded world
     public void restoreMatch(Match match) {
         matches.put(match.getId(), match);
-    }
-
-    public void mockPlayLeague(IMatchReporter reporter) {
-        for (int i = 1; i <= 18; i++) {
-            mockPreviewCurrentRound(reporter);
-            mockPlayRound(reporter);
-        }
-    }
-
-    public void mockPlayRound(IMatchReporter reporter) {
-        // TODO REMOVE
-        reporter.report("MOCK BROKEN AND HOPEFULLY DEAD");
-        /*
-        Match match;
-        for (int i = 0; i < 5; i++) {
-            if (leagueInfo.getRound() % 2 == 0) {
-                match = new Match(LocalDate.now(), teams.get(i), teams.get(9 - i));
-            } else {
-                match = new Match(LocalDate.now(), teams.get(9 - i), teams.get(i));
-            }
-            match.simulate(target);
-            GameDBManager.getInstance().saveMatch(match);
-
-            includeMatchIntoStandings(match);
-        }
-
-        shiftTeams();
-        leagueInfo.setRoundPlayed();
-         */
-    }
-
-    public void mockPreviewCurrentRound(IMatchReporter reporter) {
-        // TODO REMOVE
-        reporter.report("MOCK BROKEN AND HOPEFULLY DEAD");
-        /*
-        StringBuilder sb = new StringBuilder();
-        sb.append("LEAGUE ROUND ").append(leagueInfo.getRound()).append("\n");
-        for (int i = 0; i < 5; i++) {
-            if (leagueInfo.getRound() % 2 == 0) {
-                sb.append(teams.get(i).getName()).append(" @ ").append(teams.get(9 - i).getName()).append("\n");
-            } else {
-                sb.append(teams.get(9 - i).getName()).append(" @ ").append(teams.get(i).getName()).append("\n");
-            }
-        }
-        sb.append("-----------------------\n");
-        target.appendText(sb.toString());
-         */
     }
 
     public UUID[] getAdvancingTeams() {

@@ -208,7 +208,7 @@ Known bugs in the features below are tracked in [.creed/BACKLOG.md](./.creed/BAC
 | Multi-season progression | `recreateLeagues()` creates a fresh league and schedule each 1 January; rosters carry over unchanged, the new schedule reuses the fixed `LEAGUE_START` date, and the path has no test coverage |
 | Save slots | One fixed slot, `Constants.DEFAULT_GAME_ID = "career"`; no file picker, no multiple saves |
 | Career statistics | `PlayerTab` shows season totals; multi-season aggregation is a TODO |
-| Standings UI | `StandingsTab` still contains MOCK "Play league" / "Play round" buttons wired to broken `League.mockPlay*()` methods |
+| Standings UI | `StandingsTab` still contains temporary "MOCK Play league" / "MOCK Play round" buttons, now wired to `AssociationManager.simulateUntil()` (31 Oct) and `AssociationManager.simulateNextMatchDay()` |
 | `MatchTab` refresh | Works, but refreshes the whole schedule after every play |
 | About dialog | `MenuFrame` item exists with an empty handler |
 

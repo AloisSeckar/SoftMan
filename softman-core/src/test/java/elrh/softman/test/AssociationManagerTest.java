@@ -342,6 +342,40 @@ public class AssociationManagerTest {
         assertTrue(match4.isFinished(), "4th match should be finished");
     }
 
+    @Test
+    @DisplayName("simulateNextMatchDayTest")
+    void simulateNextMatchDayTest() {
+        initMatches();
+
+        var league = manager.getLeagues(Constants.START_YEAR).get(0);
+        var match1 = league.getMatchesForRound(1).get(0);
+        var match2 = league.getMatchesForRound(2).get(0);
+        var match3 = league.getMatchesForRound(3).get(0);
+
+        // current date is a match day (01.04) -> plays it and advances to 02.04
+        result = manager.simulateNextMatchDay();
+        assertTrue(result.ok(), "simulating first match day should succeed");
+        assertEquals(LocalDate.of(Constants.START_YEAR, 4, 2), manager.getClock().getCurrentDate());
+        assertTrue(match1.isFinished(), "1st round match should be finished");
+        assertTrue(match2.isScheduled(), "2nd round match should still be scheduled");
+
+        // current date is an off day (02.04) -> advances through 08.04 to 09.04
+        result = manager.simulateNextMatchDay();
+        assertTrue(result.ok(), "simulating next upcoming match day should succeed");
+        assertEquals(LocalDate.of(Constants.START_YEAR, 4, 9), manager.getClock().getCurrentDate());
+        assertTrue(match2.isFinished(), "2nd round match should be finished");
+        assertTrue(match3.isScheduled(), "3rd round match should still be scheduled");
+
+        // after simulating until 31 October, all matches are finished and no upcoming match day remains
+        result = manager.simulateUntil(LocalDate.of(Constants.START_YEAR, 10, 31));
+        assertTrue(result.ok(), "simulating until 31 October should succeed");
+        assertEquals(LocalDate.of(Constants.START_YEAR, 10, 31), manager.getClock().getCurrentDate());
+        assertTrue(manager.getAllMatches().stream().allMatch(Match::isFinished), "all season matches should be finished");
+
+        result = manager.simulateNextMatchDay();
+        assertFalse(result.ok(), "simulating next match day when none remain should return failed result");
+    }
+
     private void initMatches() {
         var club1 = TestUtils.getTestClub();
         club1.formTeam(PlayerLevel.MSEN);
