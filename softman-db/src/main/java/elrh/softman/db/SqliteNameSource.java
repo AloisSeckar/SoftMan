@@ -9,6 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 public class SqliteNameSource implements INameSource, AutoCloseable {
 
     private static final String SOURCES_DB = "jdbc:sqlite:softman.db";
+    private static final String SQL_FIRST_NAME =
+            "SELECT name FROM softman_firstnames WHERE gender = ? ORDER BY RANDOM() LIMIT 1";
+    private static final String SQL_LAST_NAME =
+            "SELECT name FROM softman_lastnames WHERE gender = ? ORDER BY RANDOM() LIMIT 1";
 
     private final Connection conn;
 
@@ -18,12 +22,12 @@ public class SqliteNameSource implements INameSource, AutoCloseable {
 
     @Override
     public String getRandomFirstName(PlayerGender gender) {
-        return getRandomName(gender.toString(), "softman_firstnames");
+        return getRandomName(gender.toString(), SQL_FIRST_NAME);
     }
 
     @Override
     public String getRandomLastName() {
-        return getRandomName("x", "softman_lastnames");
+        return getRandomName("x", SQL_LAST_NAME);
     }
 
     @Override
@@ -55,10 +59,9 @@ public class SqliteNameSource implements INameSource, AutoCloseable {
         return newConnection;
     }
 
-    private String getRandomName(String gender, String table) {
+    private String getRandomName(String gender, String sql) {
         String ret = "Player";
 
-        var sql = "SELECT name FROM " + table + " WHERE gender = ? ORDER BY RANDOM() LIMIT 1";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, gender);
             try (ResultSet rs = stmt.executeQuery()) {
