@@ -286,7 +286,7 @@ public class SqliteGameRepository implements IGameRepository {
         db.standings.queryForAll().forEach(standing -> {
             var league = leagues.get(standing.getLeagueId());
             if (league != null) {
-                league.getStandings().add(standing);
+                league.restoreStanding(standing);
             }
         });
 

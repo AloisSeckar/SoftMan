@@ -4,10 +4,12 @@ import elrh.softman.logic.Result;
 import elrh.softman.logic.core.*;
 import elrh.softman.logic.core.stats.Standing;
 import elrh.softman.logic.core.data.LeagueInfo;
+import elrh.softman.logic.core.data.MatchInfo;
 import elrh.softman.logic.enums.PlayerLevel;
 import elrh.softman.test.utils.TestUtils;
 import static elrh.softman.test.utils.TestUtils.ELEMENT_NAME;
 import elrh.softman.utils.Constants;
+import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -86,7 +88,7 @@ public class LeagueTest {
         sTeam1.setLoses(1);
         sTeam1.setRunsFor(10);
         sTeam1.setRunsAgainst(5);
-        league.getStandings().add(sTeam1);
+        league.restoreStanding(sTeam1);
 
         // should be 3rd
         var sTeam2 = new Standing(LEAGUE_ID, team2.getId(), team2.getName());
@@ -95,7 +97,7 @@ public class LeagueTest {
         sTeam2.setLoses(1);
         sTeam2.setRunsFor(8);
         sTeam2.setRunsAgainst(9);
-        league.getStandings().add(sTeam2);
+        league.restoreStanding(sTeam2);
 
         // should be 1st
         var sTeam3 = new Standing(LEAGUE_ID, team3.getId(), team3.getName());
@@ -104,7 +106,7 @@ public class LeagueTest {
         sTeam3.setLoses(0);
         sTeam3.setRunsFor(15);
         sTeam3.setRunsAgainst(5);
-        league.getStandings().add(sTeam3);
+        league.restoreStanding(sTeam3);
 
         // should be 6th
         var sTeam4 = new Standing(LEAGUE_ID, team4.getId(), team4.getName());
@@ -113,7 +115,7 @@ public class LeagueTest {
         sTeam4.setLoses(3);
         sTeam4.setRunsFor(4);
         sTeam4.setRunsAgainst(17);
-        league.getStandings().add(sTeam4);
+        league.restoreStanding(sTeam4);
 
         // should be 4th
         var sTeam5 = new Standing(LEAGUE_ID, team5.getId(), team5.getName());
@@ -122,7 +124,7 @@ public class LeagueTest {
         sTeam5.setLoses(2);
         sTeam5.setRunsFor(7);
         sTeam5.setRunsAgainst(8);
-        league.getStandings().add(sTeam5);
+        league.restoreStanding(sTeam5);
 
         // should be 5th
         var sTeam6 = new Standing(LEAGUE_ID, team6.getId(), team6.getName());
@@ -131,7 +133,7 @@ public class LeagueTest {
         sTeam6.setLoses(2);
         sTeam6.setRunsFor(9);
         sTeam6.setRunsAgainst(14);
-        league.getStandings().add(sTeam6);
+        league.restoreStanding(sTeam6);
 
         var advancing = league.getAdvancingTeams();
         assertEquals(advancing[0], team3.getId(), "Team 3 should be 1st");
@@ -141,6 +143,60 @@ public class LeagueTest {
         assertEquals(relegated[0], team6.getId(), "Team 6 should be 5th");
         assertEquals(relegated[1], team4.getId(), "Team 4 should be 6th");
 
+    }
+
+    @Test
+    @DisplayName("saveMatchMoreThanTenTeamsTest")
+    void saveMatchMoreThanTenTeamsTest() {
+        var teams = new ArrayList<Team>();
+        for (int i = 1; i <= 12; i++) {
+            var team = new Team(PlayerLevel.MSEN, ELEMENT_NAME + i, CLUB);
+            league.registerTeam(team);
+            teams.add(team);
+        }
+
+        var awayTeam = teams.get(10);
+        var homeTeam = teams.get(11);
+        var match = new Match(new MatchInfo(), awayTeam.getDefaultLineup(), homeTeam.getDefaultLineup());
+        match.getBoxScore().addPoint(1, false);
+        match.getBoxScore().addPoint(2, false);
+        match.getBoxScore().addPoint(1, true);
+
+        result = league.saveMatch(match);
+        assertTrue(result.ok(), "saving a match for teams past index 9 should succeed");
+
+        var homeStanding = league.getStandings().stream()
+            .filter(s -> homeTeam.getId().equals(s.getTeamId()))
+            .findFirst()
+            .orElseThrow();
+        var awayStanding = league.getStandings().stream()
+            .filter(s -> awayTeam.getId().equals(s.getTeamId()))
+            .findFirst()
+            .orElseThrow();
+
+        assertEquals(1, homeStanding.getGames());
+        assertEquals(1, homeStanding.getWins());
+        assertEquals(0, homeStanding.getLoses());
+        assertEquals(2, homeStanding.getRunsFor());
+        assertEquals(1, homeStanding.getRunsAgainst());
+
+        assertEquals(1, awayStanding.getGames());
+        assertEquals(0, awayStanding.getWins());
+        assertEquals(1, awayStanding.getLoses());
+        assertEquals(1, awayStanding.getRunsFor());
+        assertEquals(2, awayStanding.getRunsAgainst());
+    }
+
+    @Test
+    @DisplayName("saveMatchUnregisteredTeamTest")
+    void saveMatchUnregisteredTeamTest() {
+        var registered = new Team(PlayerLevel.MSEN, ELEMENT_NAME + "1", CLUB);
+        var unregistered = new Team(PlayerLevel.MSEN, ELEMENT_NAME + "2", CLUB);
+        league.registerTeam(registered);
+
+        var match = new Match(new MatchInfo(), unregistered.getDefaultLineup(), registered.getDefaultLineup());
+        result = league.saveMatch(match);
+        assertFalse(result.ok(), "saving a match with an unregistered team should fail cleanly");
     }
 
 }

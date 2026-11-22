@@ -35,8 +35,7 @@ public class League {
 
     private final Map<UUID, Match> matches = new LinkedHashMap<>();
 
-    @Getter
-    private final ArrayList<Standing> standings = new ArrayList<>();
+    private final Map<UUID, Standing> standings = new LinkedHashMap<>();
 
     public UUID getId() {
         return leagueInfo.getLeagueId();
@@ -46,10 +45,19 @@ public class League {
         return leagueInfo.getLeagueName() + " " + leagueInfo.getYear();
     }
 
+    /**
+     * Returns the league standings sorted by rank.
+     *
+     * @return unmodifiable list of standings in descending rank order
+     */
+    public List<Standing> getStandings() {
+        return standings.values().stream().sorted().toList();
+    }
+
     public Result registerTeam(Team team) {
         try {
             teams.add(team);
-            standings.add(new Standing(getId(), team.getId(), team.getName()));
+            standings.put(team.getId(), new Standing(getId(), team.getId(), team.getName()));
             team.getTeamInfo().setLeagueInfo(this.leagueInfo);
             LOG.info("Team {} registered", team.getId());
             return Constants.RESULT_OK;
@@ -143,14 +151,23 @@ public class League {
         matches.put(match.getId(), match);
     }
 
+    /**
+     * Restores a standing entry when reassembling a loaded world.
+     *
+     * @param standing standing entry to insert, keyed by its team ID
+     */
+    public void restoreStanding(Standing standing) {
+        standings.put(standing.getTeamId(), standing);
+    }
+
     public UUID[] getAdvancingTeams() {
-        Collections.sort(standings);
-        return new UUID[] {standings.get(0).getTeamId(), standings.get(1).getTeamId()};
+        var sorted = getStandings();
+        return new UUID[] {sorted.get(0).getTeamId(), sorted.get(1).getTeamId()};
     }
 
     public UUID[] getRelegatedTeams() {
-        Collections.sort(standings);
-        return new UUID[] {standings.get(standings.size() - 2).getTeamId(), standings.get(standings.size() - 1).getTeamId()};
+        var sorted = getStandings();
+        return new UUID[] {sorted.get(sorted.size() - 2).getTeamId(), sorted.get(sorted.size() - 1).getTeamId()};
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -168,21 +185,17 @@ public class League {
     }
 
     private void includeMatchIntoStandings(Match match) {
-        var homeTeamName = match.getHomeLineup().getLineupInfo().getTeamName();
-        Standing homeTeamStanding;
-        int homeTeamIndex = -1;
-        do {
-            homeTeamIndex++;
-            homeTeamStanding = standings.get(homeTeamIndex);
-        } while (!homeTeamName.equals(homeTeamStanding.getTeam()) || homeTeamIndex > 9);
+        var homeTeamId = match.getHomeLineup().getLineupInfo().getTeamId();
+        var homeTeamStanding = standings.get(homeTeamId);
+        if (homeTeamStanding == null) {
+            throw new IllegalStateException("Home team not found in league standings: " + homeTeamId);
+        }
 
-        var awayTeamName = match.getAwayLineup().getLineupInfo().getTeamName();
-        Standing awayTeamStanding;
-        int awayTeamIndex = -1;
-        do {
-            awayTeamIndex++;
-            awayTeamStanding = standings.get(awayTeamIndex);
-        } while (!awayTeamName.equals(awayTeamStanding.getTeam()) || awayTeamIndex > 9);
+        var awayTeamId = match.getAwayLineup().getLineupInfo().getTeamId();
+        var awayTeamStanding = standings.get(awayTeamId);
+        if (awayTeamStanding == null) {
+            throw new IllegalStateException("Away team not found in league standings: " + awayTeamId);
+        }
 
         homeTeamStanding.setGames(homeTeamStanding.getGames() + 1);
         awayTeamStanding.setGames(awayTeamStanding.getGames() + 1);

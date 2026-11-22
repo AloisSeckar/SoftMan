@@ -121,7 +121,6 @@ public class AssociationFactory {
             var info = league.getLeagueInfo();
             var teams = league.getTeams().size();
             var standings = league.getStandings();
-            Collections.sort(standings);
 
             // setup new league
             manager.createNewLeague(info.getLeagueName(), info.getLevel(), info.getTier());
