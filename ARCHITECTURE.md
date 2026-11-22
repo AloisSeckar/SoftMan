@@ -167,7 +167,7 @@ Entry points: `Softman` (JavaFX `Application`), `AssociationFactory.populateAsso
 
 ### Season structure
 
-- The clock starts on `Constants.START_DATE` (1 April); the season starts on the fixed `League.LEAGUE_START = LocalDate.of(START_YEAR, 4, 1)`, one round per week.
+- The clock starts on `Constants.START_DATE` (1 April); each season starts on `League.LEAGUE_START` (`MonthDay.of(4, 1)`) of the league's year, one round per week.
 - `getTotalRounds() = (teams - 1) * 4` → **28 rounds** for 8 teams (quadruple round-robin), 4 matches per round.
 - Standings points = `wins * 2 + loses` (participation point per loss); tiebreak: points → games → run diff → RF → RA.
 
@@ -205,7 +205,7 @@ Known bugs in the features below are tracked in [.creed/BACKLOG.md](./.creed/BAC
 | --- | --- |
 | Multi-league / multi-tier pyramid | Fully coded in `AssociationFactory.createLeagues()` but **commented out** for start-up speed; only 1 league is live |
 | Promotion / relegation | `getAdvancingTeams()` / `getRelegatedTeams()` / `recreateLeagues()` are reachable (the year rollover fires on any 1 January), but with a single league there is no `leagueAbove` / `leagueBelow`, so the transfer branches never execute |
-| Multi-season progression | `recreateLeagues()` creates a fresh league and schedule each 1 January; rosters carry over unchanged, the new schedule reuses the fixed `LEAGUE_START` date, and the path has no test coverage |
+| Multi-season progression | `recreateLeagues()` creates a fresh league and schedule each 1 January for the new year; rosters carry over unchanged |
 | Save slots | One fixed slot, `Constants.DEFAULT_GAME_ID = "career"`; no file picker, no multiple saves |
 | Career statistics | `PlayerTab` shows season totals; multi-season aggregation is a TODO |
 | Standings UI | `StandingsTab` still contains temporary "MOCK Play league" / "MOCK Play round" buttons, now wired to `AssociationManager.simulateUntil()` (31 Oct) and `AssociationManager.simulateNextMatchDay()` |
@@ -230,7 +230,7 @@ Known bugs in the features below are tracked in [.creed/BACKLOG.md](./.creed/BAC
 - `softman-desktop` — `GuiSmokeTest` (TestFX, `Headless` glass platform, `-Dtest.glass.platform=Win` shows the window): all tabs present and render, `switchTo` navigation, every tile constructs and loads, kit components, dark theme.
 - `softman-db` — no test sources.
 
-**Not covered:** the persistence layer including the save/load round-trip, `MatchSimulator` and the `SimUtils` probability model (only the walk-off rule is checked statistically), `StatsUtils` computations, GUI behaviour beyond smoke rendering, `SimulationService` concurrency, `AssociationFactory.recreateLeagues()`.
+**Not covered:** the persistence layer including the save/load round-trip, `MatchSimulator` and the `SimUtils` probability model (only the walk-off rule is checked statistically), `StatsUtils` computations, GUI behaviour beyond smoke rendering, `SimulationService` concurrency.
 
 ## Repository Layout and Resources
 

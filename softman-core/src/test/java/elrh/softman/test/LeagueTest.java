@@ -50,7 +50,23 @@ public class LeagueTest {
         result = league.scheduleMatches();
         assertTrue(result.ok(), "scheduling matches should be successful");
         assertEquals(2, league.getMatchesForRound(1).size(), "there should be 2 matches in 1st round");
-        assertEquals(2, league.getMatchesForDay(League.LEAGUE_START).size(), "there should be 2 matches at 1st day");
+        assertEquals(2, league.getMatchesForDay(League.LEAGUE_START.atYear(Constants.START_YEAR)).size(), "there should be 2 matches at 1st day");
+    }
+
+    @Test
+    @DisplayName("scheduleMatchesFutureSeasonTest")
+    void scheduleMatchesFutureSeasonTest() {
+        int nextYear = Constants.START_YEAR + 1;
+        var futureLeague = new League(new LeagueInfo(ELEMENT_NAME, PlayerLevel.MSEN, nextYear, 1, 1000));
+        futureLeague.registerTeam(new Team(PlayerLevel.MSEN, ELEMENT_NAME, CLUB));
+        futureLeague.registerTeam(new Team(PlayerLevel.MSEN, ELEMENT_NAME, CLUB));
+
+        result = futureLeague.scheduleMatches();
+        assertTrue(result.ok(), "scheduling future season matches should be successful");
+        assertEquals(0, futureLeague.getMatchesForDay(League.LEAGUE_START.atYear(Constants.START_YEAR)).size(),
+            "future season should not have matches in the initial year");
+        assertEquals(1, futureLeague.getMatchesForDay(League.LEAGUE_START.atYear(nextYear)).size(),
+            "future season should start on LEAGUE_START of its own year");
     }
 
     @Test

@@ -8,6 +8,7 @@ import elrh.softman.logic.core.data.MatchInfo;
 import elrh.softman.logic.core.stats.Standing;
 import elrh.softman.utils.ErrorUtils;
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -22,7 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j @RequiredArgsConstructor
 public class League {
 
-    public static final LocalDate LEAGUE_START = LocalDate.of(Constants.START_YEAR,4,1);
+    /** Month and day on which every league season starts. */
+    public static final MonthDay LEAGUE_START = MonthDay.of(4, 1);
 
     @Getter
     @NonNull
@@ -61,7 +63,7 @@ public class League {
             var matchNumberBase = leagueInfo.getMatchNumber();
             var matchesPerRound = teams.size() / 2;
             var rounds = getTotalRounds();
-            var roundDate = LEAGUE_START;
+            var roundDate = LEAGUE_START.atYear(leagueInfo.getYear());
 
             Collections.shuffle(teams);
 

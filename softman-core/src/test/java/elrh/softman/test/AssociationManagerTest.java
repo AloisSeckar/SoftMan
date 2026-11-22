@@ -376,6 +376,26 @@ public class AssociationManagerTest {
         assertFalse(result.ok(), "simulating next match day when none remain should return failed result");
     }
 
+    @Test
+    @DisplayName("recreateLeaguesSchedulesNewYearTest")
+    void recreateLeaguesSchedulesNewYearTest() {
+        initMatches();
+
+        for (int season = 1; season <= 2; season++) {
+            int expectedYear = Constants.START_YEAR + season;
+            manager.getClock().nextYear();
+            AssociationFactory.recreateLeagues();
+
+            var newLeagues = manager.getLeagues(expectedYear);
+            assertEquals(1, newLeagues.size(), "one league should be recreated for year " + expectedYear);
+            var recreated = newLeagues.getFirst();
+            assertEquals(0, recreated.getMatchesForDay(League.LEAGUE_START.atYear(Constants.START_YEAR)).size(),
+                "recreated league must not schedule matches in the initial year");
+            assertEquals(1, recreated.getMatchesForDay(League.LEAGUE_START.atYear(expectedYear)).size(),
+                "recreated league should schedule round 1 on LEAGUE_START of year " + expectedYear);
+        }
+    }
+
     private void initMatches() {
         var club1 = TestUtils.getTestClub();
         club1.formTeam(PlayerLevel.MSEN);
