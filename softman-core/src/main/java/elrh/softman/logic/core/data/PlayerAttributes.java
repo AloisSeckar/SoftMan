@@ -70,11 +70,11 @@ public class PlayerAttributes extends AbstractEntity {
     }
 
     public int getPitchingSkill() {
-        return (pitchingSpeed + ballControl + throwControl) / 3;
+        return (pitchingSpeed + ballControl + pitchVariety) / 3;
     }
 
     public int getFieldingSkill() {
-        return (fieldingReach + gloveControl + pitchVariety) / 3;
+        return (fieldingReach + gloveControl + throwControl) / 3;
     }
 
     public int getPhysicalSkill() {
