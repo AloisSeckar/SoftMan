@@ -19,7 +19,6 @@ Pending work, known bugs and deferred tasks. Entries marked **ARCHITECTURE.md:**
 5. Likely attribute bug — `PlayerAttributes.getFieldingSkill()` averages `fieldingReach + gloveControl + pitchVariety`; `pitchVariety` looks like a copy/paste error (probably `throwControl`, which is instead used in `getPitchingSkill()`).
 6. Broken format string on an error path — `MatchSimulator.wrapUpMatch()` calls `ErrorUtils.raise(String.format("Unknown leagueId %d", leagueId))` with a `UUID`, which throws `IllegalFormatConversionException` instead of the intended assertion.
 7. Table name concatenated into SQL in `SqliteNameSource.getRandomName()` — internal constants today, but the pattern is injection-prone.
-8. `@SuppressWarnings("unchecked")` in `GameDatabase.dao()` and `Lineup.positionPlayers` (generic array) — flagged TODOs.
 
 ## Architecture
 

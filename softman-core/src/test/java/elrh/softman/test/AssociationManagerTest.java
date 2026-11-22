@@ -282,7 +282,7 @@ public class AssociationManagerTest {
         int entered = 0;
         var spotOfPlayer = new HashMap<UUID, Integer>();
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
-            var spot = lineup.getPositionPlayers()[i];
+            var spot = lineup.getPositionPlayers().get(i);
             if (spot == null || spot.isEmpty()) {
                 continue;
             }

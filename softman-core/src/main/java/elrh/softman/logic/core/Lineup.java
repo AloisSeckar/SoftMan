@@ -23,9 +23,8 @@ public class Lineup {
     @Getter
     private final LineupInfo lineupInfo;
 
-    @SuppressWarnings("unchecked") // TODO try to solve
     @Getter
-    private final ArrayList<PlayerRecord>[] positionPlayers = new ArrayList[POSITION_PLAYERS];
+    private final List<List<PlayerRecord>> positionPlayers = new ArrayList<>(POSITION_PLAYERS);
 
     @Getter
     private final PlayerRecord[] substitutes = new PlayerRecord[SUBSTITUTES]; // TODO change type to PlayerInfo
@@ -42,8 +41,9 @@ public class Lineup {
     }
 
     public void reset() {
+        positionPlayers.clear();
         for (int i = 0; i < POSITION_PLAYERS; i++) {
-            positionPlayers[i] = new ArrayList<>();
+            positionPlayers.add(new ArrayList<>());
         }
         Arrays.fill(substitutes, null);
     }
@@ -52,7 +52,7 @@ public class Lineup {
         if (batOrder > 0 && batOrder <= POSITION_PLAYERS) {
             var newList = new ArrayList<PlayerRecord>();
             newList.add(player);
-            positionPlayers[batOrder - 1] = newList;
+            positionPlayers.set(batOrder - 1, newList);
             return Constants.RESULT_OK;
         } else {
             return new Result(false, String.format("Batting order %d out of bounds (1 - %d)", batOrder, POSITION_PLAYERS));
@@ -70,7 +70,7 @@ public class Lineup {
 
     public Result substitutePlayer(int batOrder, PlayerRecord player) {
         if (batOrder > 0 && batOrder <= POSITION_PLAYERS) {
-            var records = positionPlayers[batOrder - 1];
+            var records = positionPlayers.get(batOrder - 1);
             if (Utils.listNotEmpty(records)) {
                 records.add(player);
                 return Constants.RESULT_OK;
@@ -183,7 +183,7 @@ public class Lineup {
             var position = allowed.contains(PlayerPosition.DESIGNATED_PLAYER) ? PlayerPosition.DESIGNATED_PLAYER
                 : !missing.isEmpty() ? missing.removeFirst() : null;
             if (position != null) {
-                changed.add(appendRecord(positionPlayers[batOrder - 1], getCurrentBatter(batOrder).getPlayer(), position));
+                changed.add(appendRecord(positionPlayers.get(batOrder - 1), getCurrentBatter(batOrder).getPlayer(), position));
             }
         }
         return changed;
@@ -191,7 +191,7 @@ public class Lineup {
 
     public PlayerRecord getCurrentBatter(int batOrder) {
         if (batOrder > 0 && batOrder <= POSITION_PLAYERS) {
-            var lineupSpot = positionPlayers[batOrder - 1];
+            var lineupSpot = positionPlayers.get(batOrder - 1);
             if (Utils.listNotEmpty(lineupSpot)) {
                 return lineupSpot.get(lineupSpot.size() - 1);
             }
@@ -203,7 +203,7 @@ public class Lineup {
         PlayerRecord ret = null;
         if (position != null) {
             for (int i = 0; i < POSITION_PLAYERS; i++) {
-                var lineupSpot = positionPlayers[i];
+                var lineupSpot = positionPlayers.get(i);
                 if (Utils.listNotEmpty(lineupSpot)) {
                     var player = lineupSpot.get(lineupSpot.size() - 1);
                     if (position == player.getPosition()) {
@@ -231,7 +231,7 @@ public class Lineup {
     }
 
     public boolean useDP() {
-        return Utils.listNotEmpty(positionPlayers[POSITION_PLAYERS - 1]);
+        return Utils.listNotEmpty(positionPlayers.get(POSITION_PLAYERS - 1));
     }
 
     public void setUp(UUID matchId, String matchStr) {
@@ -239,20 +239,21 @@ public class Lineup {
         var team = AssociationManager.getInstance().getTeamById(teamId);
         var lineup = team.getDefaultLineup();
 
-        System.arraycopy(lineup.getPositionPlayers(), 0, positionPlayers, 0, POSITION_PLAYERS);
+        var defaultSpots = lineup.getPositionPlayers();
         System.arraycopy(lineup.getSubstitutes(), 0, substitutes, 0, SUBSTITUTES);
 
         for (int i = 0; i < POSITION_PLAYERS; i++) {
-            var lineupSpot = positionPlayers[i];
+            var lineupSpot = defaultSpots.get(i);
+            var freshSpot = new ArrayList<PlayerRecord>();
             if (Utils.listNotEmpty(lineupSpot)) {
-                var first = lineupSpot.get(0);
+                var first = lineupSpot.getFirst();
                 var stats = new PlayerStats();
                 var playerString = String.format("%s, %s", first, first.getPosition());
                 stats.init(matchId, matchStr, first.getPlayer().getPlayerId(), playerString);
                 first.setStats(stats);
-                positionPlayers[i] = new ArrayList<>();
-                positionPlayers[i].add(first);
+                freshSpot.add(first);
             }
+            positionPlayers.set(i, freshSpot);
         }
         for (int i = 0; i < SUBSTITUTES; i++) {
             var substitute = substitutes[i];
@@ -262,9 +263,9 @@ public class Lineup {
         }
     }
 
-    private ArrayList<PlayerRecord> getSpot(int batOrder) {
-        if (batOrder > 0 && batOrder <= POSITION_PLAYERS && Utils.listNotEmpty(positionPlayers[batOrder - 1])) {
-            return positionPlayers[batOrder - 1];
+    private List<PlayerRecord> getSpot(int batOrder) {
+        if (batOrder > 0 && batOrder <= POSITION_PLAYERS && Utils.listNotEmpty(positionPlayers.get(batOrder - 1))) {
+            return positionPlayers.get(batOrder - 1);
         }
         return null;
     }

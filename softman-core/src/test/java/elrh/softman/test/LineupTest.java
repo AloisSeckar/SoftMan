@@ -35,7 +35,7 @@ public class LineupTest {
         result = lineup.initPositionPlayer(1, playerRecord1);
         assertTrue(result.ok(), "init player 1 should be successful");
 
-        var retrieved = lineup.getPositionPlayers()[0].get(0);
+        var retrieved = lineup.getPositionPlayers().get(0).get(0);
         assertEquals(1, retrieved.getPlayer().getNumber(), "player should be #1");
         assertEquals(PlayerPosition.PITCHER, retrieved.getPosition(), "position should be P");
 
@@ -74,7 +74,7 @@ public class LineupTest {
         result = lineup.substitutePlayer(1, playerRecord2);
         assertTrue(result.ok(), "substitution 1 should be successful");
 
-        var retrieved = lineup.getPositionPlayers()[0].get(1);
+        var retrieved = lineup.getPositionPlayers().get(0).get(1);
         assertEquals(2, retrieved.getPlayer().getNumber(), "player should be #2");
         assertEquals(PlayerPosition.CATCHER, retrieved.getPosition(), "position should be C");
 
@@ -181,7 +181,7 @@ public class LineupTest {
 
         assertTrue(lineup.replacePlayer(1, starters[0], PlayerPosition.PITCHER).ok(), "starter should re-enter");
         assertTrue(lineup.getAvailableReplacements(1).isEmpty(), "removed sub and re-entered starter cannot come back");
-        assertSame(lineup.getPositionPlayers()[0].get(0).getStats(), lineup.getCurrentBatter(1).getStats(),
+        assertSame(lineup.getPositionPlayers().get(0).get(0).getStats(), lineup.getCurrentBatter(1).getStats(),
             "re-entered starter keeps one stats line");
     }
 
@@ -204,7 +204,7 @@ public class LineupTest {
         assertFalse(lineup.checkDefense().ok(), "two catchers and no pitcher is invalid");
         assertTrue(lineup.changePosition(2, PlayerPosition.PITCHER).ok(), "position change should be accepted");
         assertTrue(lineup.checkDefense().ok(), "swapped defense should be valid");
-        assertEquals(PlayerPosition.PITCHER, lineup.getPositionPlayers()[0].get(0).getPosition(), "starter record stays untouched");
+        assertEquals(PlayerPosition.PITCHER, lineup.getPositionPlayers().get(0).get(0).getPosition(), "starter record stays untouched");
     }
 
 }

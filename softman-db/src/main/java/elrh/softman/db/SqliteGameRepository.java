@@ -43,7 +43,7 @@ public class SqliteGameRepository implements IGameRepository {
     @Override
     public Result load(String gameId, AssociationManager world) {
         try (var db = GameDatabase.open(gameId, false)) {
-            var meta = first(db.dao(GameMeta.class).queryForAll());
+            var meta = first(db.gameMetas.queryForAll());
             if (meta == null) {
                 return new Result(false, "Save file for '" + gameId + "' holds no game");
             }
@@ -85,23 +85,23 @@ public class SqliteGameRepository implements IGameRepository {
         }
 
         // order matters: referenced rows must exist before the rows pointing at them
-        writeAll(db, PlayerAttributes.class, attributes.values());
-        writeAll(db, PlayerInfo.class, playerInfos.values());
-        writeAll(db, PlayerStats.class, stats.values());
-        writeAll(db, PlayerRecord.class, records.values());
+        writeAll(db.playerAttributes, attributes.values());
+        writeAll(db.playerInfos, playerInfos.values());
+        writeAll(db.playerStats, stats.values());
+        writeAll(db.playerRecords, records.values());
 
-        writeAll(db, ClubInfo.class, world.getClubs(false).stream().map(Club::getClubInfo).toList());
-        writeAll(db, LeagueInfo.class, world.getAllLeagues().stream().map(League::getLeagueInfo).toList());
-        writeAll(db, TeamInfo.class, world.getAllTeams().stream().map(Team::getTeamInfo).toList());
-        writeAll(db, LineupInfo.class, lineups.values().stream().map(Lineup::getLineupInfo).toList());
+        writeAll(db.clubInfos, world.getClubs(false).stream().map(Club::getClubInfo).toList());
+        writeAll(db.leagueInfos, world.getAllLeagues().stream().map(League::getLeagueInfo).toList());
+        writeAll(db.teamInfos, world.getAllTeams().stream().map(Team::getTeamInfo).toList());
+        writeAll(db.lineupInfos, lineups.values().stream().map(Lineup::getLineupInfo).toList());
 
-        writeAll(db, TeamPlayerRow.class, teamPlayerRows(world));
-        writeAll(db, LineupSpotRow.class, lineupSpotRows(lineups.values()));
+        writeAll(db.teamPlayerRows, teamPlayerRows(world));
+        writeAll(db.lineupSpotRows, lineupSpotRows(lineups.values()));
 
-        writeAll(db, MatchInfo.class, world.getAllMatches().stream().map(Match::getMatchInfo).toList());
-        writeAll(db, MatchPlayByPlay.class, world.getAllMatches().stream().flatMap(m -> m.getPlayByPlay().stream()).toList());
-        writeAll(db, BoxScoreRow.class, boxScoreRows(world));
-        writeAll(db, Standing.class, world.getAllLeagues().stream().flatMap(l -> l.getStandings().stream()).toList());
+        writeAll(db.matchInfos, world.getAllMatches().stream().map(Match::getMatchInfo).toList());
+        writeAll(db.matchPlayByPlays, world.getAllMatches().stream().flatMap(m -> m.getPlayByPlay().stream()).toList());
+        writeAll(db.boxScoreRows, boxScoreRows(world));
+        writeAll(db.standings, world.getAllLeagues().stream().flatMap(l -> l.getStandings().stream()).toList());
 
         var meta = new GameMeta();
         meta.setGameId(gameId);
@@ -111,7 +111,7 @@ public class SqliteGameRepository implements IGameRepository {
         meta.setActiveClubId(idOf(world.getUser().getActiveClub()));
         meta.setFocusedClubId(idOf(world.getUser().getFocusedClub()));
         meta.setFocusedTeamId(world.getUser().getFocusedTeam() != null ? world.getUser().getFocusedTeam().getId() : null);
-        db.dao(GameMeta.class).create(meta);
+        db.gameMetas.create(meta);
     }
 
     private void collectPlayer(PlayerInfo info, Map<UUID, PlayerInfo> infos, Map<UUID, PlayerAttributes> attributes) {
@@ -182,14 +182,14 @@ public class SqliteGameRepository implements IGameRepository {
     // load
 
     private void readWorld(GameDatabase db, GameMeta meta, AssociationManager world) throws Exception {
-        var attributes = byId(db.dao(PlayerAttributes.class).queryForAll());
-        var playerInfos = byId(db.dao(PlayerInfo.class).queryForAll());
-        var stats = byId(db.dao(PlayerStats.class).queryForAll());
-        var records = byId(db.dao(PlayerRecord.class).queryForAll());
-        var clubInfos = byId(db.dao(ClubInfo.class).queryForAll());
-        var leagueInfos = byId(db.dao(LeagueInfo.class).queryForAll());
-        var teamInfos = byId(db.dao(TeamInfo.class).queryForAll());
-        var lineupInfos = byId(db.dao(LineupInfo.class).queryForAll());
+        var attributes = byId(db.playerAttributes.queryForAll());
+        var playerInfos = byId(db.playerInfos.queryForAll());
+        var stats = byId(db.playerStats.queryForAll());
+        var records = byId(db.playerRecords.queryForAll());
+        var clubInfos = byId(db.clubInfos.queryForAll());
+        var leagueInfos = byId(db.leagueInfos.queryForAll());
+        var teamInfos = byId(db.teamInfos.queryForAll());
+        var lineupInfos = byId(db.lineupInfos.queryForAll());
 
         // OrmLite's auto-refresh hands back fresh instances per row; collapse them onto one object per id
         playerInfos.values().forEach(p -> p.setAttributes(canonical(attributes, p.getAttributes())));
@@ -234,12 +234,12 @@ public class SqliteGameRepository implements IGameRepository {
                 }
             });
 
-        var spotsByLineup = groupBy(db.dao(LineupSpotRow.class).queryForAll(), LineupSpotRow::getLineupId);
+        var spotsByLineup = groupBy(db.lineupSpotRows.queryForAll(), LineupSpotRow::getLineupId);
         var lineups = new LinkedHashMap<UUID, Lineup>();
         lineupInfos.values().forEach(info ->
             lineups.put(info.getId(), buildLineup(info, spotsByLineup.get(info.getId()), records)));
 
-        var rosterByTeam = groupBy(db.dao(TeamPlayerRow.class).queryForAll(), TeamPlayerRow::getTeamId);
+        var rosterByTeam = groupBy(db.teamPlayerRows.queryForAll(), TeamPlayerRow::getTeamId);
         teamInfos.values().forEach(info -> {
             var defaultLineup = lineups.values().stream()
                 .filter(l -> info.getId().equals(l.getLineupInfo().getTeamId()))
@@ -266,9 +266,9 @@ public class SqliteGameRepository implements IGameRepository {
             }
         });
 
-        var pbpByMatch = groupBy(db.dao(MatchPlayByPlay.class).queryForAll(), MatchPlayByPlay::getMatchId);
-        var boxByMatch = groupBy(db.dao(BoxScoreRow.class).queryForAll(), BoxScoreRow::getMatchId);
-        for (var info : db.dao(MatchInfo.class).queryForAll()) {
+        var pbpByMatch = groupBy(db.matchPlayByPlays.queryForAll(), MatchPlayByPlay::getMatchId);
+        var boxByMatch = groupBy(db.boxScoreRows.queryForAll(), BoxScoreRow::getMatchId);
+        for (var info : db.matchInfos.queryForAll()) {
             var status = info.getStatus();
             var away = lineups.get(info.getAwayLineupId());
             var home = lineups.get(info.getHomeLineupId());
@@ -283,7 +283,7 @@ public class SqliteGameRepository implements IGameRepository {
             }
         }
 
-        db.dao(Standing.class).queryForAll().forEach(standing -> {
+        db.standings.queryForAll().forEach(standing -> {
             var league = leagues.get(standing.getLeagueId());
             if (league != null) {
                 league.getStandings().add(standing);
@@ -346,7 +346,7 @@ public class SqliteGameRepository implements IGameRepository {
 
     private void forEachRecord(Lineup lineup, RecordVisitor visitor) {
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
-            var slot = lineup.getPositionPlayers()[i];
+            var slot = lineup.getPositionPlayers().get(i);
             if (slot != null) {
                 for (int depth = 0; depth < slot.size(); depth++) {
                     visitor.visit(LineupSpotRow.KIND_POSITION, i + 1, depth, slot.get(depth));
@@ -361,8 +361,7 @@ public class SqliteGameRepository implements IGameRepository {
         }
     }
 
-    private <T> void writeAll(GameDatabase db, Class<T> type, Collection<T> rows) throws Exception {
-        Dao<T, Object> dao = db.dao(type);
+    private <T> void writeAll(Dao<T, UUID> dao, Collection<T> rows) throws Exception {
         for (T row : rows) {
             dao.create(row);
         }

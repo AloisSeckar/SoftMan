@@ -438,7 +438,7 @@ public class MatchSimulator {
         appendText("PLAYER                         | PA | AB |  H |  R | RBI |   AVG |  O |  IP | \n");
 
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
-            var players = lineup.getPositionPlayers()[i];
+            var players = lineup.getPositionPlayers().get(i);
             if (Utils.listNotEmpty(players)) {
                 // records of one player share a stats line, print it once with all his positions
                 var lines = new ArrayList<PlayerStats>();

@@ -144,7 +144,7 @@ All entities are identified by `UUID`.
 
 Derived: `battingSkill`, `pitchingSkill`, `fieldingSkill`, `physicalSkill`, `total`.
 
-### Persisted tables (`TableConfigs.all()`)
+### Persisted tables (`TableConfigs`)
 
 `softman_club_info`, `softman_league_info`, `softman_team_info`, `softman_lineup_info`, `softman_match_info`,
 `softman_match_pbp`, `softman_player_info`, `softman_player_attributes`, `softman_player_record`,

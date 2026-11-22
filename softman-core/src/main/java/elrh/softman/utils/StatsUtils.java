@@ -18,7 +18,7 @@ public class StatsUtils {
         // several records of one player share the same stats object
         var saved = Collections.newSetFromMap(new IdentityHashMap<PlayerStats, Boolean>());
         for (int i = 0; i < Lineup.POSITION_PLAYERS; i++) {
-            var current = lineup.getPositionPlayers()[i];
+            var current = lineup.getPositionPlayers().get(i);
             if (Utils.listNotEmpty(current)) {
                 current.forEach(data -> {
                     var stats = data.getStats();

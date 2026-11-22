@@ -73,7 +73,7 @@ public class RandomSubstitutionStrategy implements ISubstitutionStrategy {
     // the position the spot held before PH/PR came in
     private PlayerPosition lastDefensivePosition(Lineup lineup, int batOrder) {
         var allowed = lineup.getDefensivePositions(batOrder);
-        var spot = lineup.getPositionPlayers()[batOrder - 1];
+        var spot = lineup.getPositionPlayers().get(batOrder - 1);
         for (int i = spot.size() - 1; i >= 0; i--) {
             var position = spot.get(i).getPosition();
             if (allowed.contains(position)) {
