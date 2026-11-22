@@ -166,7 +166,7 @@ Entry points: `Softman` (JavaFX `Application`), `AssociationFactory.populateAsso
 
 ### Season structure
 
-- The clock starts on `Constants.START_DATE` (31 March); the season starts on the fixed `League.LEAGUE_START = LocalDate.of(START_YEAR, 4, 1)`, one round per week.
+- The clock starts on `Constants.START_DATE` (1 April); the season starts on the fixed `League.LEAGUE_START = LocalDate.of(START_YEAR, 4, 1)`, one round per week.
 - `getTotalRounds() = (teams - 1) * 4` → **28 rounds** for 8 teams (quadruple round-robin), 4 matches per round.
 - Standings points = `wins * 2 + loses` (participation point per loss); tiebreak: points → games → run diff → RF → RA.
 

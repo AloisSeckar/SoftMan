@@ -10,15 +10,16 @@ public class ClockManagerTest {
 
     private static final int YEAR = Constants.START_YEAR;
     private static final LocalDate TODAY = Constants.START_DATE;
-    private static final LocalDate YESTERDAY = LocalDate.of(YEAR, 3, 30);
-    private static final LocalDate TOMORROW = LocalDate.of(YEAR, 4, 1);
+    private static final LocalDate YESTERDAY = LocalDate.of(YEAR, 3, 31);
+    private static final LocalDate TOMORROW = LocalDate.of(YEAR, 4, 2);
     private static final LocalDate NEW_YEAR = LocalDate.of(YEAR + 1, 1, 1);
 
     private ClockManager clock;
 
     @BeforeEach
     void setUp() {
-        // initial date is Constants.START_DATE ("LocalDate.of(Constants.START_YEAR, 3, 31)")
+        // initial date is Constants.START_DATE 
+        // ("LocalDate.of(Constants.START_YEAR, 4, 1)")
         clock = new ClockManager();
     }
 
