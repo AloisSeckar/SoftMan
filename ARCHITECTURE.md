@@ -117,6 +117,7 @@ graph TD
 | Action | Command |
 | --- | --- |
 | Full build | `mvn clean install` |
+| Fast test run | `mvn -pl softman-<module> test` |
 | Fast compile check | `mvn -pl softman-desktop -am compile` |
 | Test (headless) | `mvn -pl softman-desktop -am test` |
 | Test (visible window) | `mvn -pl softman-desktop -am test "-Dtest.glass.platform=Win"` |

@@ -163,8 +163,6 @@ public class AssociationManagerTest {
         initMatches();
 
         var match = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
-        assertFalse(manager.isTodayMatch(match), "test match should be played tomorrow");
-        result = manager.nextDay();
         assertTrue(manager.isTodayMatch(match), "test match should be played today");
         result = manager.nextDay();
         assertFalse(manager.isTodayMatch(match), "test match should be played yesterday");
@@ -174,7 +172,6 @@ public class AssociationManagerTest {
     @DisplayName("nextDayTest")
     void nextDayTest() {
         initMatches();
-        manager.nextDay();
 
         var match = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
         assertTrue(match.isScheduled(), "match should be scheduled");
@@ -191,9 +188,11 @@ public class AssociationManagerTest {
     @DisplayName("nextDayIgnoresViewDateTest")
     void nextDayIgnoresViewDateTest() {
         initMatches();
-        var match = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(1).get(0);
+        var match = manager.getLeagues(Constants.START_YEAR).get(0).getMatchesForRound(2).get(0);
 
-        manager.getClock().nextViewDay();
+        for (int i = 0; i < 7; i++) {
+            manager.getClock().nextViewDay();
+        }
         result = manager.nextDay();
         assertTrue(result.ok(), "advancing to next day should be successful");
         assertTrue(match.isScheduled(), "match on the viewed date must not be simulated before its day");
