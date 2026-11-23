@@ -53,7 +53,3 @@ Carried over from the archived [2026-architecture-changes.md](../docs/archive/20
  2. **`ProgressIndicatorUtil` is unused** — third-party gist with inline black/white styles; delete it or restyle on theme vars if a dimming overlay is wanted (the live spinner is in `Softman.setupStage`).
  3. **Theme preference** — the dark-theme choice is not persisted and the app always starts light; optionally seed from `Platform.getPreferences().getColorScheme()`. **ARCHITECTURE.md:** Cross-cutting patterns (GUI kit); also the "`NordLight` by default" theme bullet in `gui.instructions.md`.
  4. **Dev tools (GUI plan 3.3, optional)** — dev-only DevToolsFX or Scenic View for live scene-graph inspection. **ARCHITECTURE.md:** Tech Stack (UI and Run plugin rows), Quick Commands if it adds a launch profile.
-
-## Documentation
-
- 1. `docs/README.md` is not linked from `ARCHITECTURE.md` or `README.md` (unreachable documentation file), and its references still point to `.creed/SUGGESTIONS.md` instead of `.creed/BACKLOG.md` for pending work, known bugs and the backlog. Link it from `ARCHITECTURE.md`/`README.md` (and update its links) or remove it.

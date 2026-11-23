@@ -253,6 +253,7 @@ SoftMan/
 
 | Path | Contents |
 | --- | --- |
+| `docs/` | Project documents: `archive/` (historical plans) and `screenshots/old/`; index in [docs/README.md](./docs/README.md) |
 | `softman-desktop/src/main/resources/css/softman.css` | `sm-*` token layer over AtlantaFX NordLight/NordDark |
 | `softman-desktop/src/main/resources/img/faces/` | AI-generated portraits (`m*` / `f*`) |
 | `softman-desktop/src/main/resources/img/teams/` | club logos |

@@ -2,7 +2,7 @@
 
 This folder contains documents (mostly AI-generated) used for project development. Files are kept there while working on them and for further reference.
 
-Current state of the codebase is in [ARCHITECTURE.md](../ARCHITECTURE.md); pending work, known bugs and the backlog are in [.creed/SUGGESTIONS.md](../.creed/SUGGESTIONS.md).
+Current state of the codebase is in [ARCHITECTURE.md](../ARCHITECTURE.md); pending work, known bugs and the backlog are in [.creed/BACKLOG.md](../.creed/BACKLOG.md).
 
 ## TOC
 
