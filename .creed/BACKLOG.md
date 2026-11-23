@@ -49,7 +49,6 @@ Carried over from the archived [2026-architecture-changes.md](../docs/archive/20
 
 ## GUI
 
- 1. **Migrate to AtlantaFX 3.0.0** — released 2026-09-24; the project is on 2.1.0. Check the changelog for breaking changes (theme classes, `Styles` constants, looked-up `-color-*` vars), bump in root `pom.xml`, run `GuiSmokeTest`. **ARCHITECTURE.md:** Tech Stack (UI row), Cross-cutting patterns (GUI kit) if theme names change; also the theme bullet in `gui.instructions.md`.
- 2. **`ProgressIndicatorUtil` is unused** — third-party gist with inline black/white styles; delete it or restyle on theme vars if a dimming overlay is wanted (the live spinner is in `Softman.setupStage`).
- 3. **Theme preference** — the dark-theme choice is not persisted and the app always starts light; optionally seed from `Platform.getPreferences().getColorScheme()`. **ARCHITECTURE.md:** Cross-cutting patterns (GUI kit); also the "`NordLight` by default" theme bullet in `gui.instructions.md`.
- 4. **Dev tools (GUI plan 3.3, optional)** — dev-only DevToolsFX or Scenic View for live scene-graph inspection. **ARCHITECTURE.md:** Tech Stack (UI and Run plugin rows), Quick Commands if it adds a launch profile.
+ 1. **`ProgressIndicatorUtil` is unused** — third-party gist with inline black/white styles; delete it or restyle on theme vars if a dimming overlay is wanted (the live spinner is in `Softman.setupStage`).
+ 2. **Theme preference** — the dark-theme choice is not persisted and the app always starts light; optionally seed from `Platform.getPreferences().getColorScheme()`. **ARCHITECTURE.md:** Cross-cutting patterns (GUI kit); also the "`NordLight` by default" theme bullet in `gui.instructions.md`.
+ 3. **Dev tools (GUI plan 3.3, optional)** — dev-only DevToolsFX or Scenic View for live scene-graph inspection. **ARCHITECTURE.md:** Tech Stack (UI and Run plugin rows), Quick Commands if it adds a launch profile.

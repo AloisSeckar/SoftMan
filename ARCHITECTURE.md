@@ -19,7 +19,7 @@ This file describes the current state. Pending work, known bugs and the backlog 
 | --- | --- |
 | Language | Java 27 (`maven.compiler.release` 27), OpenJDK; no `module-info.java`, JavaFX runs on the classpath |
 | Build | Maven multi-module (`elrh:softman:1.0-SNAPSHOT`, packaging `pom`), compiler plugin 3.15.0 (Lombok annotation processor), surefire 3.5.4 |
-| UI | JavaFX 27 (base/controls/graphics; programmatic, **no FXML**, built through `gui.kit`), AtlantaFX 2.1.0 (`NordLight` / `NordDark`, `Card`), Ikonli 12.4.0 + Feather pack, ControlsFX 11.2.4 (`GridView`) |
+| UI | JavaFX 27 (base/controls/graphics; programmatic, **no FXML**, built through `gui.kit`), AtlantaFX 3.0.0 (`NordLight` / `NordDark`, `Card`), Ikonli 12.4.0 + Feather pack, ControlsFX 11.2.4 (`GridView`) |
 | Persistence | SQLite (`sqlite-jdbc` 3.51.1.0) via `ormlite-jdbc` 6.1 — snapshot save/load, not active record |
 | Utilities | Lombok 1.18.48 (`LOG` field via `lombok.config`), commons-lang3 3.20.0 |
 | Logging | SLF4J 2.0.17 API + Logback 1.6.8 (`logback-classic`, see Repository Layout and Resources) |

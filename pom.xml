@@ -112,7 +112,7 @@
             <dependency>
                 <groupId>io.github.mkpaz</groupId>
                 <artifactId>atlantafx-base</artifactId>
-                <version>2.1.0</version>
+                <version>3.0.0</version>
             </dependency>
 
             <!-- icons - https://kordamp.org/ikonli/ -->
