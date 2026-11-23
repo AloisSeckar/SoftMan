@@ -6,6 +6,6 @@ Current state of the codebase is in [ARCHITECTURE.md](../ARCHITECTURE.md); pendi
 
 ## TOC
 
-- [archive/2026-architecture-changes.md](./archive/2026-architecture-changes.md) — long-term architecture (remaining items moved to SUGGESTIONS.md)
+- [archive/2026-architecture-changes.md](./archive/2026-architecture-changes.md) — long-term architecture (remaining items moved to backlog)
 - [archive/2026-javafx-gui-update.md](./archive/2026-javafx-gui-update.md) — GUI technology decisions and (completed) modernization plan
 - `screenshots/old` — referential images taken in old version of the app

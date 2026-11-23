@@ -1,7 +1,7 @@
 # SoftMan — Architectural Plan
 
 > **Archived 2026-10-02.** Done: module split, JavaFX purged from core, snapshot save/load, UUID identity,
-> repository interface, AtlantaFX/Ikonli migration. Remaining items moved to [SUGGESTIONS.md](../../.creed/SUGGESTIONS.md#architecture).
+> repository interface, AtlantaFX/Ikonli migration. Remaining items were moved to backlog.
 > Code references below describe the codebase as of 2026-07-30; the current state is in [ARCHITECTURE.md](../../ARCHITECTURE.md).
 >
 > Reframing note, 2026-07-30. Goal: finish a single-player desktop game first, but build the core so it can later back an asynchronous online multiplayer league (teams controlled by real players, matches resolved once a week in real time).

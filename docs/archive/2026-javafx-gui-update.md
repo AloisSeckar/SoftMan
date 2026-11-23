@@ -89,8 +89,8 @@ The existing stylesheet assumes dark surfaces. NordLight requires inversion, not
 - [x] 2.9 Asset contrast pass — logos/faces rounded, field on a card; human-approved
 - [x] Human review of Phase 2 screens — approved; minor follow-ups deferred
 - [x] 3.1 Drop old libs — BootstrapFX, FontAwesomeFX, Medusa removed from both poms
-- [x] 3.2 Light/dark toggle — Show → Dark theme (`Softman.setDarkTheme`); starts light, no OS seeding
-- [-] 3.3 Dev tools (optional) — skipped, moved to `.creed/SUGGESTIONS.md`
+- [x] 3.2 Light/dark toggle — Settings → Dark theme (`Softman.setDarkTheme`); starts light, no OS seeding
+- [-] 3.3 Dev tools (optional) — skipped, moved to backlog
 
 ### Phase -1 — Groundwork for AI-assisted work (do FIRST)
 

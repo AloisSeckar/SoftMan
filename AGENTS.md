@@ -69,6 +69,8 @@ status are in [ARCHITECTURE.md](./ARCHITECTURE.md); pending work, known bugs and
 
 Never edit or read for context: `target/`, `sav/`, `log/`, generated sources, `*.db`.
 
+Skip `docs\archive` folder when peforming `creed-scan` or `creed-check` skill.
+
 ## Coding conventions
 
 - **Language** — Target Java 27 and use modern Java features (records, sealed types, pattern matching).
@@ -83,8 +85,9 @@ Never edit or read for context: `target/`, `sav/`, `log/`, generated sources, `*
 
 ## GUI work
 
-Rules for `softman-desktop/**` are in [.github/instructions/gui.instructions.md](./.github/instructions/gui.instructions.md).
-[docs/archive/2026-javafx-gui-update.md](./docs/archive/2026-javafx-gui-update.md) is background only — its versions are
+Rules for `softman-desktop/**` are in [.github/instructions/gui.instructions.md](./.github/instructions/gui.instructions.md). If implementation changes, the file can be updated as part of the task.
+
+The [docs/archive/2026-javafx-gui-update.md](./docs/archive/2026-javafx-gui-update.md) file is background only — its versions are
 historical; `ARCHITECTURE.md` holds the current stack.
 
 ## Verification split
