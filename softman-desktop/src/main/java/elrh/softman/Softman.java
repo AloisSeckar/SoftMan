@@ -12,6 +12,8 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.AssociationFactory;
 import elrh.softman.utils.factory.PlayerFactory;
+import java.util.Objects;
+import java.util.prefs.Preferences;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
@@ -95,20 +97,52 @@ public class Softman extends Application {
         });
     }
 
+    private static final String PREF_DARK_THEME = "darkTheme";
+    private static Preferences preferences = Preferences.userNodeForPackage(Softman.class);
+    private static boolean darkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
+
+    /**
+     * Applies the active theme and the application stylesheet to a scene.
+     *
+     * @param scene the scene to style
+     */
     public static void applyTheme(Scene scene) {
-        setDarkTheme(darkTheme);
+        applyStylesheet(darkTheme);
         scene.getStylesheets().add(Softman.class.getResource("/css/softman.css").toExternalForm());
     }
 
-    private static boolean darkTheme;
-
+    /**
+     * Returns whether the dark theme is active.
+     *
+     * @return {@code true} if dark theme is enabled, {@code false} for light theme
+     */
     public static boolean isDarkTheme() {
         return darkTheme;
     }
 
-    // the user-agent stylesheet is global, so every open scene switches at once
+    /**
+     * Switches the active theme and persists the choice in user preferences.
+     *
+     * @param dark {@code true} for dark theme, {@code false} for light theme
+     */
     public static void setDarkTheme(boolean dark) {
         darkTheme = dark;
+        preferences.putBoolean(PREF_DARK_THEME, dark);
+        applyStylesheet(dark);
+    }
+
+    /**
+     * Replaces the backing preference store and reloads the saved theme choice.
+     *
+     * @param prefs the preference node to use
+     */
+    public static void setPreferences(Preferences prefs) {
+        preferences = Objects.requireNonNull(prefs);
+        darkTheme = preferences.getBoolean(PREF_DARK_THEME, false);
+    }
+
+    // the user-agent stylesheet is global, so every open scene switches at once
+    private static void applyStylesheet(boolean dark) {
         Theme theme = dark ? new NordDark() : new NordLight();
         Application.setUserAgentStylesheet(theme.getUserAgentStylesheet());
     }

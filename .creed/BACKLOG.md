@@ -49,5 +49,4 @@ Carried over from the archived [2026-architecture-changes.md](../docs/archive/20
 
 ## GUI
 
- 1. **Theme preference** — the dark-theme choice is not persisted and the app always starts light; optionally seed from `Platform.getPreferences().getColorScheme()`. **ARCHITECTURE.md:** Cross-cutting patterns (GUI kit); also the "`NordLight` by default" theme bullet in `gui.instructions.md`.
- 2. **Dev tools (GUI plan 3.3, optional)** — dev-only DevToolsFX or Scenic View for live scene-graph inspection. **ARCHITECTURE.md:** Tech Stack (UI and Run plugin rows), Quick Commands if it adds a launch profile.
+ 1. **Dev tools (GUI plan 3.3, optional)** — dev-only DevToolsFX or Scenic View for live scene-graph inspection. **ARCHITECTURE.md:** Tech Stack (UI and Run plugin rows), Quick Commands if it adds a launch profile.

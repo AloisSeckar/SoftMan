@@ -64,7 +64,7 @@ graph TD
 
 | Module | Package | Contents |
 | --- | --- | --- |
-| desktop | `.` | `Softman` — JavaFX `Application` entry point, game setup/teardown, theme switch |
+| desktop | `.` | `Softman` — JavaFX `Application` entry point, game setup/teardown, theme switch and persistence |
 | desktop | `gui` | `MainLayout` (BorderPane root) |
 | desktop | `gui.frame` | `MenuFrame`, `FocusFrame`, `ContentFrame` (+ `Screen` enum for navigation), `ActionFrame` |
 | desktop | `gui.kit` | `Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens` — shared UI component and styling factories |
@@ -96,7 +96,7 @@ graph TD
 - **Schema lives outside the domain** — OrmLite `DatabaseTableConfig`s are built by hand in `softman-db/TableConfigs`, so no persistence annotations leak into core.
 - **UUID identity** — every entity is keyed by `UUID`; managers hold `LinkedHashMap<UUID, …>` to keep insertion order stable.
 - **Observer** — `UserManager` broadcasts focused-club/focused-team changes to registered tabs (`IFocusedClubListener` / `IFocusedTeamListener`).
-- **GUI kit** — screens are composed from `gui.kit` factories on AtlantaFX `NordLight`/`NordDark` (runtime toggle via Show → Dark theme); tab navigation goes through `ContentFrame.switchTo(Screen)`. Every tab sits in a fit-to-size `ScrollPane` (scrollbars only below the content's min size); `MainLayout` carries `sm-compact`, a tighter control density.
+- **GUI kit** — screens are composed from `gui.kit` factories on AtlantaFX `NordLight`/`NordDark` (starts light on first run, runtime toggle via Settings → Dark Theme / Light Theme, persisted via `java.util.prefs.Preferences`); tab navigation goes through `ContentFrame.switchTo(Screen)`. Every tab sits in a fit-to-size `ScrollPane` (scrollbars only below the content's min size); `MainLayout` carries `sm-compact`, a tighter control density.
 - **Two databases** — read-only `softman.db` (name pools, seeded from `names.sql`) and the save file `sav/game-<id>.db` — a single slot today, `sav/game-career.db`.
 
 ## Conventions

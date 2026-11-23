@@ -5,7 +5,7 @@ applyTo: "softman-desktop/**"
 # GUI rules (background and history: `docs/archive/2026-javafx-gui-update.md`)
 
 - JavaFX in plain Java (no Kotlin, Compose or web frontend), data-driven screens — no FXML, no Scene Builder
-- Theme is AtlantaFX `NordLight` by default with a runtime `NordDark` toggle (Show → Dark theme) — every rule must read on both; never hardcode surface or text colours; accent is Nord Frost (`-color-accent-5`); match results use `-sm-color-win` / `-sm-color-loss` / `-sm-color-draw`
+- Theme is AtlantaFX `NordLight` on first start with a runtime `NordDark` toggle (Settings → Dark Theme / Light Theme), persisted via `java.util.prefs.Preferences` — every rule must read on both; never hardcode surface or text colours; accent is Nord Frost (`-color-accent-5`); match results use `-sm-color-win` / `-sm-color-loss` / `-sm-color-draw`
 - Build UI through `elrh.softman.gui.kit` (`Cards`, `Tables`, `Ratings`, `Icons`, `Images`, `Layouts`, `Tokens`) — never ad-hoc
 - Reference implementation: `ClubInfoTile` (a tile is a `Card`; header = identity, body = content). Row items inside a card are plain rows, not cards
 - Navigation: `ContentFrame.getInstance().switchTo(Screen.X)`; new tabs get a `Screen` constant

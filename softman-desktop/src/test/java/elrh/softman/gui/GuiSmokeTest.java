@@ -11,6 +11,7 @@ import elrh.softman.gui.frame.ActionFrame;
 import elrh.softman.gui.frame.ContentFrame;
 import elrh.softman.gui.frame.ContentFrame.Screen;
 import elrh.softman.gui.frame.FocusFrame;
+import elrh.softman.gui.frame.MenuFrame;
 import elrh.softman.gui.kit.Cards;
 import elrh.softman.gui.kit.Icons;
 import elrh.softman.gui.kit.Images;
@@ -35,9 +36,13 @@ import elrh.softman.gui.utils.FormatUtils;
 import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.AssociationFactory;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.prefs.AbstractPreferences;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
@@ -54,6 +59,9 @@ class GuiSmokeTest {
 
     @BeforeAll
     static void setUpWorld() {
+        // isolate tests from the user's real OS preferences
+        Softman.setPreferences(new InMemoryPreferences());
+
         var manager = AssociationManager.getInstance();
         manager.reset();
         // test mode skips the confirmation dialog and the background simulation runner
@@ -197,6 +205,59 @@ class GuiSmokeTest {
     }
 
     @Test
+    void themePreferenceDefaultsToLightAndPersistsChoice() throws Throwable {
+        var prefs = new InMemoryPreferences();
+        try {
+            Softman.setPreferences(prefs);
+            assertThat(Softman.isDarkTheme(), is(false));
+
+            FxToolkit.setupFixture(() -> Softman.setDarkTheme(true));
+            Softman.setPreferences(prefs);
+            assertThat(Softman.isDarkTheme(), is(true));
+
+            FxToolkit.setupFixture(() -> Softman.setDarkTheme(false));
+            Softman.setPreferences(prefs);
+            assertThat(Softman.isDarkTheme(), is(false));
+            WaitForAsyncUtils.checkException();
+        } finally {
+            Softman.setPreferences(new InMemoryPreferences());
+            FxToolkit.setupFixture(() -> Softman.setDarkTheme(false));
+        }
+    }
+
+    @Test
+    void settingsMenuTogglesThemeLabel() throws Throwable {
+        var menuBar = MenuFrame.getInstance().getChildren().stream()
+            .filter(MenuBar.class::isInstance)
+            .map(MenuBar.class::cast)
+            .findFirst()
+            .orElseThrow();
+        var settingsMenu = menuBar.getMenus().stream()
+            .filter(m -> "Settings".equals(m.getText()))
+            .findFirst()
+            .orElseThrow();
+        var themeToggle = settingsMenu.getItems().getFirst();
+
+        try {
+            assertThat(Softman.isDarkTheme(), is(false));
+            assertThat(themeToggle.getText(), is("Dark Theme"));
+
+            FxToolkit.setupFixture(themeToggle::fire);
+            assertThat(Softman.isDarkTheme(), is(true));
+            assertThat(themeToggle.getText(), is("Light Theme"));
+
+            FxToolkit.setupFixture(themeToggle::fire);
+            assertThat(Softman.isDarkTheme(), is(false));
+            assertThat(themeToggle.getText(), is("Dark Theme"));
+            WaitForAsyncUtils.checkException();
+        } finally {
+            if (Softman.isDarkTheme()) {
+                FxToolkit.setupFixture(themeToggle::fire);
+            }
+        }
+    }
+
+    @Test
     void teamListenersHandleNullFocus() throws Throwable {
         var team = AssociationManager.getInstance().getUser().getFocusedTeam();
         try {
@@ -244,5 +305,24 @@ class GuiSmokeTest {
             .anyMatch(label -> expectedDate.equals(label.getText()));
         assertThat(dateDisplayed, is(true));
         assertThat(ContentFrame.getInstance().getSelectionModel().getSelectedItem().getText(), is(Screen.CLUB.getTitle()));
+    }
+
+    private static final class InMemoryPreferences extends AbstractPreferences {
+
+        private final Map<String, String> values = new HashMap<>();
+
+        private InMemoryPreferences() {
+            super(null, "");
+        }
+
+        @Override protected void putSpi(String key, String value) { values.put(key, value); }
+        @Override protected String getSpi(String key) { return values.get(key); }
+        @Override protected void removeSpi(String key) { values.remove(key); }
+        @Override protected void removeNodeSpi() { values.clear(); }
+        @Override protected String[] keysSpi() { return values.keySet().toArray(String[]::new); }
+        @Override protected String[] childrenNamesSpi() { return new String[0]; }
+        @Override protected AbstractPreferences childSpi(String name) { return new InMemoryPreferences(); }
+        @Override protected void syncSpi() {}
+        @Override protected void flushSpi() {}
     }
 }

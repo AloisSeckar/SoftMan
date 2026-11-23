@@ -12,7 +12,6 @@ import elrh.softman.logic.AssociationManager;
 import elrh.softman.utils.Constants;
 import elrh.softman.utils.factory.AssociationFactory;
 import javafx.geometry.Pos;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -82,14 +81,27 @@ public class MenuFrame extends HBox {
         var menuGame = new Menu("Game");
         menuGame.getItems().addAll(newGame, loadGame, saveGame, new SeparatorMenuItem(), info, new SeparatorMenuItem(), exit);
 
-        var darkTheme = new CheckMenuItem("Dark theme", Icons.of(Feather.MOON));
-        darkTheme.setSelected(Softman.isDarkTheme());
-        darkTheme.setOnAction(e -> Softman.setDarkTheme(darkTheme.isSelected()));
+        var themeToggle = new MenuItem();
+        updateThemeToggle(themeToggle);
+        themeToggle.setOnAction(e -> {
+            Softman.setDarkTheme(!Softman.isDarkTheme());
+            updateThemeToggle(themeToggle);
+        });
 
-        var menuShow = new Menu("Show");
-        menuShow.getItems().add(darkTheme);
+        var menuSettings = new Menu("Settings");
+        menuSettings.getItems().add(themeToggle);
 
-        getChildren().addAll(brand, new MenuBar(menuGame, menuShow));
+        getChildren().addAll(brand, new MenuBar(menuGame, menuSettings));
+    }
+
+    private static void updateThemeToggle(MenuItem toggle) {
+        if (Softman.isDarkTheme()) {
+            toggle.setText("Light Theme");
+            toggle.setGraphic(Icons.of(Feather.SUN));
+        } else {
+            toggle.setText("Dark Theme");
+            toggle.setGraphic(Icons.of(Feather.MOON));
+        }
     }
 
     private static MenuItem item(String text, Ikon icon, Runnable action) {
