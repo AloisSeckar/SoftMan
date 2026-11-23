@@ -18,7 +18,7 @@ This file describes the current state. Pending work, known bugs and the backlog 
 | Category | Technology |
 | --- | --- |
 | Language | Java 27 (`maven.compiler.release` 27), OpenJDK; no `module-info.java`, JavaFX runs on the classpath |
-| Build | Maven multi-module (`elrh:softman:1.0-SNAPSHOT`, packaging `pom`), compiler plugin 3.15.0 (Lombok annotation processor), surefire 3.5.4 |
+| Build | Maven multi-module (`elrh:softman:1.0-SNAPSHOT`, packaging `pom`), compiler plugin 3.15.0 (Lombok annotation processor), surefire 3.5.4, `maven-build-cache-extension` 1.3.0 (`.mvn/`) |
 | UI | JavaFX 27 (base/controls/graphics; programmatic, **no FXML**, built through `gui.kit`), AtlantaFX 3.0.0 (`NordLight` / `NordDark`, `Card`), Ikonli 12.4.0 + Feather pack, ControlsFX 11.2.4 (`GridView`) |
 | Persistence | SQLite (`sqlite-jdbc` 3.51.1.0) via `ormlite-jdbc` 6.1 — snapshot save/load, not active record |
 | Utilities | Lombok 1.18.48 (`LOG` field via `lombok.config`), commons-lang3 3.20.0 |
@@ -123,6 +123,8 @@ graph TD
 | Test (visible window) | `mvn -pl softman-desktop -am test "-Dtest.glass.platform=Win"` |
 | Run | `mvn -pl softman-desktop -am javafx:run` |
 | Debug (JDWP :8000, waits for the debugger) | `mvn -pl softman-desktop -am javafx:run@debug` |
+
+Local Maven build cache (`.mvn/maven-build-cache-config.xml`) is enabled by default: unchanged modules restore compiled classes/artifacts from `~/.m2/build-cache/` and skip tests. Pass `-Dmaven.build.cache.enabled=false` to bypass the cache for a single run.
 
 On Windows PowerShell 5.1, JDK warnings on stderr cause `2>&1` pipes to surface as failed commands; redirecting Maven output to a file (`*> out.txt`) avoids this.
 
@@ -236,6 +238,7 @@ Known bugs in the features below are tracked in [.creed/BACKLOG.md](./.creed/BAC
 
 ```text
 SoftMan/
+├── .mvn/                   # Maven core extensions (maven-build-cache-extension) and build cache config
 ├── pom.xml                 # parent POM: modules, dependencyManagement, plugin config
 ├── lombok.config           # log field renamed to LOG
 ├── names.sql               # seed data for the softman.db name pool
