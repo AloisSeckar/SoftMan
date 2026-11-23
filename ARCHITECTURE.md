@@ -72,7 +72,7 @@ graph TD
 | desktop | `gui.tile` | `ClubInfoTile`, `CalendarTile`, `ScheduleRowTile`, `MatchHeaderTile`, `BoxScoreTile`, `LineupTile`, `LineupRowTile`, `DefenseTile`, `PlayerInfoTile`, `PlayerAttributesTile` |
 | desktop | `gui.table` | `LeagueStadingsTable`, `TeamPlayersTable` |
 | desktop | `gui.sim` | `SimulationController`, `SimulationService` |
-| desktop | `gui.utils` | `FormatUtils`, `GUIUtils`, `InfoUtils`, `ProgressIndicatorUtil` |
+| desktop | `gui.utils` | `FormatUtils`, `GUIUtils`, `InfoUtils` |
 | db | `db` | `GameDatabase` (connection + DAOs), `TableConfigs` (the whole schema), `SqliteGameRepository`, `SqliteNameSource`, `LocalDatePersister`, and the persistence-only rows `GameMeta`, `TeamPlayerRow`, `LineupSpotRow`, `BoxScoreRow` |
 | core | `logic` | `AssociationManager`, `MatchSimulator`, `Result` (a `record`) |
 | core | `logic.core` | `League`, `Club`, `Team`, `Player`, `Match`, `Lineup` |
